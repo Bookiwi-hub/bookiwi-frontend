@@ -5,7 +5,6 @@ import SidebarPanels from "./panels";
 import { TabType } from "./tab-type";
 import SidebarTrigger from "./trigger";
 
-import { Separator } from "#/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -23,7 +22,6 @@ function Sidebar() {
         <SheetOverlay className="bg-transparent" />
         <SheetContent side="left" className="flex flex-row p-0 sm:max-w-md">
           <SidebarNav activeTab={activeTab} setActiveTab={setActiveTab} />
-          <Separator orientation="vertical" />
           <SidebarPanels activeTab={activeTab} />
         </SheetContent>
       </SheetPortal>

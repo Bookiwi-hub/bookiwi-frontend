@@ -44,7 +44,7 @@ const navItems: Array<{ icon: ReactNode; type: TabType; label: string }> = [
 ];
 function SidebarNav({ activeTab, setActiveTab }: SidebarNavProps) {
   return (
-    <nav className="flex w-16 flex-col items-center gap-6 py-6">
+    <nav className="flex w-16 flex-col items-center gap-6 border-r  py-6">
       {navItems.map((item) => (
         <NavIconButton
           key={item.type}
