@@ -15,7 +15,11 @@ function BookmarkButton() {
       onClick={toggleBookmark}
       aria-label="Toggle bookmark"
     >
-      <Bookmark size={22} fill={isBookmarked ? "currentColor" : "none"} />
+      <Bookmark
+        size={22}
+        fill={isBookmarked ? "currentColor" : "none"}
+        className={isBookmarked ? "text-gray-500" : ""}
+      />
     </button>
   );
 }
