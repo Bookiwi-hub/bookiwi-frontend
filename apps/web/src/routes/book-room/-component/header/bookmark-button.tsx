@@ -18,7 +18,7 @@ function BookmarkButton() {
       <Bookmark
         size={22}
         fill={isBookmarked ? "currentColor" : "none"}
-        className={isBookmarked ? "text-gray-500" : ""}
+        className={isBookmarked ? "text-red-400" : ""}
       />
     </button>
   );
