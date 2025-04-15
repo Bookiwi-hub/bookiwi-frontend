@@ -4,9 +4,9 @@ import Annotation from "./-component/annotation";
 import Header from "./-component/header";
 import Reader from "./-component/reader";
 import {
-  PrimaryView,
-  SecondaryView,
+  SplitViewItem,
   SplitViewProvider,
+  SplitViewGroup,
 } from "./-component/split-view";
 import { ReaderProvider } from "./-reader";
 
@@ -49,15 +49,14 @@ function BookRoomContent() {
         profileImage="https://github.com/shadcn.png"
         color="green"
       />
-      <div className="relative flex size-full">
-        <PrimaryView>
+      <SplitViewGroup>
+        <SplitViewItem id="reader" preferredSize={500}>
           <Reader />
-        </PrimaryView>
-
-        <SecondaryView>
+        </SplitViewItem>
+        <SplitViewItem id="annotation" preferredSize={500}>
           <Annotation />
-        </SecondaryView>
-      </div>
+        </SplitViewItem>
+      </SplitViewGroup>
     </main>
   );
 }
