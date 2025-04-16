@@ -1,13 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import Annotation from "./-component/annotation";
 import Header from "./-component/header";
-import Reader from "./-component/reader";
-import {
-  PrimaryView,
-  SecondaryView,
-  SplitViewProvider,
-} from "./-component/split-view";
+import { SplitViewProvider } from "./-component/split-view";
+import Viewer from "./-component/viewer";
+import { AnnotationViewProvider } from "./-component/viewer/annotation/context";
 import { ReaderProvider } from "./-reader";
 
 import bookRooms from "#/DB/book-room";
@@ -49,15 +45,7 @@ function BookRoomContent() {
         profileImage="https://github.com/shadcn.png"
         color="green"
       />
-      <div className="relative flex size-full">
-        <PrimaryView>
-          <Reader />
-        </PrimaryView>
-
-        <SecondaryView>
-          <Annotation />
-        </SecondaryView>
-      </div>
+      <Viewer />
     </main>
   );
 }
@@ -66,7 +54,9 @@ function BookRoom() {
   return (
     <ReaderProvider>
       <SplitViewProvider>
-        <BookRoomContent />
+        <AnnotationViewProvider>
+          <BookRoomContent />
+        </AnnotationViewProvider>
       </SplitViewProvider>
     </ReaderProvider>
   );

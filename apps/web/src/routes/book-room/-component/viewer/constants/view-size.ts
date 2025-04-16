@@ -1,0 +1,2 @@
+export const ANNOTATION_VIEW_SIZE_MIN = 350;
+export const READER_VIEW_SIZE_MIN = 500;

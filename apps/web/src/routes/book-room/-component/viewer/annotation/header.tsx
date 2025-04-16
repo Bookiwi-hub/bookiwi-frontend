@@ -1,18 +1,30 @@
 import { Pin, X } from "lucide-react";
 
-import { useSplitView } from "../split-view";
+import { useView } from "../../split-view";
+import { READER_VIEW_ID } from "../constants/view-id";
+import { ANNOTATION_VIEW_SIZE_MIN } from "../constants/view-size";
+
+import { useAnnotationView } from "./context";
 
 import { cn } from "#/lib/utils";
 
 function AnnotationHeader() {
-  const { isPinned, pin, unpin, close } = useSplitView();
+  const { isPinned, pin, unpin, close } = useAnnotationView();
+  const view = useView(READER_VIEW_ID);
 
-  const togglePin = () => {
+  const handlePin = () => {
     if (isPinned) {
       unpin();
+      view.setSize(window.innerWidth);
     } else {
       pin();
+      view.setSize(window.innerWidth - ANNOTATION_VIEW_SIZE_MIN);
     }
+  };
+
+  const handleClose = () => {
+    close();
+    view.setSize(window.innerWidth);
   };
 
   return (
@@ -21,7 +33,7 @@ function AnnotationHeader() {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={togglePin}
+          onClick={handlePin}
           className={cn(
             "rounded-md p-2",
             isPinned ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
@@ -32,7 +44,7 @@ function AnnotationHeader() {
         </button>
         <button
           type="button"
-          onClick={close}
+          onClick={handleClose}
           className="rounded-md p-2 hover:bg-gray-100"
           aria-label="Close panel"
         >
