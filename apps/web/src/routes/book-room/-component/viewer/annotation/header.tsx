@@ -1,8 +1,8 @@
 import { Pin, X } from "lucide-react";
 
-import { READER_VIEW_ID } from "../../-constants/view-id";
-import { ANNOTATION_VIEW_SIZE } from "../../-constants/view-size";
-import useView from "../split-view/hooks/use-view";
+import { READER_VIEW_ID } from "../../../-constants/view-id";
+import { ANNOTATION_VIEW_SIZE } from "../../../-constants/view-size";
+import { useView } from "../../split-view";
 
 import { useAnnotationView } from "./context";
 

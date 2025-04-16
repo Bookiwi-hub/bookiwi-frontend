@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AnnotationViewProvider } from "./-component/annotation/context";
 import Header from "./-component/header";
 import { SplitViewProvider } from "./-component/split-view";
 import Viewer from "./-component/viewer";
+import { AnnotationViewProvider } from "./-component/viewer/annotation/context";
 import { ReaderProvider } from "./-reader";
 
 import bookRooms from "#/DB/book-room";

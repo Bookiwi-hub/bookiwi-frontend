@@ -1,9 +1,9 @@
 import { ANNOTATION_VIEW_ID, READER_VIEW_ID } from "../../-constants/view-id";
 import { ANNOTATION_VIEW_SIZE } from "../../-constants/view-size";
-import Annotation from "../annotation";
-import { useAnnotationView } from "../annotation/context";
 import { SplitViewGroup, SplitViewItem } from "../split-view";
 
+import Annotation from "./annotation";
+import { useAnnotationView } from "./annotation/context";
 import Reader from "./reader";
 
 import { cn } from "#/lib/utils";
