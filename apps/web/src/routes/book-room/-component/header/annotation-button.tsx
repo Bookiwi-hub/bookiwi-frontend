@@ -1,16 +1,30 @@
 import { MessageSquareQuote } from "lucide-react";
 
+import { READER_VIEW_ID } from "../../-constants/view-id";
+import { useAnnotationView } from "../annotation/context";
+import useView from "../split-view/hooks/use-view";
+
 import { cn } from "#/lib/utils";
 
 function AnnotationButton() {
+  const { isOpen, toggle } = useAnnotationView();
+  const view = useView(READER_VIEW_ID);
+
+  const handleClick = () => {
+    if (isOpen) {
+      view.setSize(window.innerWidth);
+    }
+    toggle();
+  };
+
   return (
     <button
       type="button"
       className={cn(
         "relative flex items-center justify-center rounded-md p-2",
-        // isOpen ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
+        isOpen ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
       )}
-      // onClick={toggle}
+      onClick={handleClick}
       aria-label="Toggle notes and comments"
     >
       <MessageSquareQuote size={24} />
