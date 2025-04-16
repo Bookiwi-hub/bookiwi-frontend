@@ -4,7 +4,7 @@ import { useSplitViewContext } from "../context";
 import clamp from "../utils/clamp";
 
 export interface UseSplitViewPrams {
-  preferredSize: number;
+  preferredSize?: number;
   minSize?: number;
   maxSize?: number;
 }
@@ -12,7 +12,7 @@ export interface UseSplitViewPrams {
 const useSplitView = (
   key: React.FC | string,
   {
-    preferredSize,
+    preferredSize = 0,
     minSize = 0,
     maxSize = Number.POSITIVE_INFINITY,
   }: UseSplitViewPrams,
@@ -39,8 +39,10 @@ const useSplitView = (
     () => ({
       key: stringKey,
       resize: resizeView,
+      size,
+      setSize,
     }),
-    [stringKey, resizeView],
+    [stringKey, resizeView, size],
   );
 
   // 뷰를 SplitView에 등록

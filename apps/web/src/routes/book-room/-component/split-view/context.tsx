@@ -10,6 +10,8 @@ import {
 export interface SplitViewType {
   key: string;
   resize?: (size: number) => void;
+  size: number;
+  setSize: (size: number) => void;
 }
 
 interface SplitViewContextType {
