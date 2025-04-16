@@ -5,7 +5,7 @@ import {
   ReaderNextPageButton,
   ReaderPageProgress,
   ReaderPrevPageButton,
-} from "../-reader";
+} from "../../-reader";
 
 function Reader() {
   return (
