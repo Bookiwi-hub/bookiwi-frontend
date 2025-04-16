@@ -1,7 +1,7 @@
 import { Pin, X } from "lucide-react";
 
 import { READER_VIEW_ID } from "../../../-constants/view-id";
-import { ANNOTATION_VIEW_SIZE } from "../../../-constants/view-size";
+import { ANNOTATION_VIEW_SIZE_MIN } from "../../../-constants/view-size";
 import { useView } from "../../split-view";
 
 import { useAnnotationView } from "./context";
@@ -18,7 +18,7 @@ function AnnotationHeader() {
       view.setSize(window.innerWidth);
     } else {
       pin();
-      view.setSize(window.innerWidth - ANNOTATION_VIEW_SIZE);
+      view.setSize(window.innerWidth - ANNOTATION_VIEW_SIZE_MIN);
     }
   };
 
