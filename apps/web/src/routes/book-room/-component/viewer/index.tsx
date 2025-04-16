@@ -1,12 +1,12 @@
-import { ANNOTATION_VIEW_ID, READER_VIEW_ID } from "../../-constants/view-id";
-import {
-  READER_VIEW_SIZE_MIN,
-  ANNOTATION_VIEW_SIZE_MIN,
-} from "../../-constants/view-size";
 import { SplitViewGroup, SplitViewItem } from "../split-view";
 
 import Annotation from "./annotation";
 import { useAnnotationView } from "./annotation/context";
+import { ANNOTATION_VIEW_ID, READER_VIEW_ID } from "./constants/view-id";
+import {
+  READER_VIEW_SIZE_MIN,
+  ANNOTATION_VIEW_SIZE_MIN,
+} from "./constants/view-size";
 import Reader from "./reader";
 
 function Viewer() {

@@ -1,8 +1,8 @@
 import { MessageSquareQuote } from "lucide-react";
 
-import { READER_VIEW_ID } from "../../-constants/view-id";
 import { useView } from "../split-view";
 import { useAnnotationView } from "../viewer/annotation/context";
+import { READER_VIEW_ID } from "../viewer/constants/view-id";
 
 import { cn } from "#/lib/utils";
 
