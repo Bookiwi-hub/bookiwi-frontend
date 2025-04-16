@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import Sidebar from "../sidebar";
 
 import AnnotationButton from "./annotation-button";
@@ -14,10 +16,21 @@ interface HeaderProps {
 
 function Header({ title, profileImage, color }: HeaderProps) {
   return (
-    <header>
+    <header className="relative">
       <div className="flex items-center justify-between p-1">
-        <Sidebar />
-        <h1 className="text-lg">{title}</h1>
+        <div className="flex items-center gap-2">
+          <Link to="/">
+            <img
+              src="/images/logo.png"
+              alt="Bookiwi logo"
+              className="size-9 mobile:size-8"
+            />
+          </Link>
+          <Sidebar />
+        </div>
+        <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-lg">
+          {title}
+        </h1>
         <div className="flex items-center gap-4 pr-3">
           <BookmarkButton />
           <AnnotationButton />
