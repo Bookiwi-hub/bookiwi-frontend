@@ -1,0 +1,1 @@
+export const ANNOTATION_VIEW_SIZE = 400;
