@@ -20,7 +20,10 @@ function Sidebar() {
       <SidebarTrigger />
       <SheetPortal>
         <SheetOverlay className="bg-transparent" />
-        <SheetContent side="left" className="flex flex-row p-0 sm:max-w-md">
+        <SheetContent
+          side="left"
+          className="flex flex-row gap-1 p-0 sm:max-w-md"
+        >
           <SidebarNav activeTab={activeTab} setActiveTab={setActiveTab} />
           <SidebarPanels activeTab={activeTab} />
         </SheetContent>

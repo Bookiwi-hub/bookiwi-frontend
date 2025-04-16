@@ -18,7 +18,7 @@ function NavIconButton({ icon, isActive, onClick, label }: NavIconProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-1 rounded-md p-2 transition-colors",
+        "flex flex-col items-center gap-1 rounded-md p-2 transition-colors w-14",
         isActive
           ? "text-primary bg-primary/10"
           : "text-muted-foreground hover:text-foreground hover:bg-accent",
@@ -26,7 +26,7 @@ function NavIconButton({ icon, isActive, onClick, label }: NavIconProps) {
       title={label}
     >
       {icon}
-      <span className="text-xs">{label}</span>
+      <span className="w-full truncate text-center text-xs">{label}</span>
     </button>
   );
 }

@@ -12,8 +12,13 @@ function Header() {
         <div className="flex items-center">
           <Link
             to="/"
-            className="text-xl font-bold text-primary mobile:text-lg"
+            className="flex items-center gap-2 text-xl font-bold text-primary mobile:text-lg"
           >
+            <img
+              src="/images/logo.png"
+              alt="Bookiwi logo"
+              className="size-12 mobile:size-10"
+            />
             Bookiwi
           </Link>
         </div>
