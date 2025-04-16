@@ -19,7 +19,6 @@ function SplitViewItem({
   id,
   ...props
 }: SplitViewItemProps) {
-  console.log("id", id);
   const { vertical } = useSplitViewContext();
 
   const { size } = useSplitView(id, {

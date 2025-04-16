@@ -1,7 +1,7 @@
 import { Children, ComponentProps, isValidElement, ReactElement } from "react";
 
 import { useSplitViewContext } from "./context";
-import SplitViewHandler from "./handler";
+import SplitViewSeparator from "./separator";
 
 import { cn } from "#/lib/utils";
 
@@ -31,7 +31,7 @@ function SplitViewGroup({ children, className }: SplitViewGroupProps) {
       {childList.reduce((a, c, i) => (
         <>
           {a}
-          <SplitViewHandler
+          <SplitViewSeparator
             viewKeys={[viewKeys[i - 1], viewKeys[i]] as [string, string]}
           />
           {c}
