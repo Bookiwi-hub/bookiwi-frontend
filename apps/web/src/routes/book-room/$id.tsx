@@ -1,13 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import Annotation from "./-component/annotation";
 import Header from "./-component/header";
-import Reader from "./-component/reader";
-import {
-  SplitViewItem,
-  SplitViewProvider,
-  SplitViewGroup,
-} from "./-component/split-view";
+import { SplitViewProvider } from "./-component/split-view";
+import Viewer from "./-component/viewer";
 import { ReaderProvider } from "./-reader";
 
 import bookRooms from "#/DB/book-room";
@@ -49,14 +44,7 @@ function BookRoomContent() {
         profileImage="https://github.com/shadcn.png"
         color="green"
       />
-      <SplitViewGroup>
-        <SplitViewItem id="reader" preferredSize={500}>
-          <Reader />
-        </SplitViewItem>
-        <SplitViewItem id="annotation" preferredSize={500}>
-          <Annotation />
-        </SplitViewItem>
-      </SplitViewGroup>
+      <Viewer />
     </main>
   );
 }
