@@ -29,7 +29,7 @@ function SplitViewItem({
   return (
     <div
       id={`${id}`}
-      className={cn("", className)}
+      className={cn("", size && "shrink-0", className)}
       style={{
         [vertical ? "height" : "width"]: size,
       }}

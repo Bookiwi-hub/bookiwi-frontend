@@ -27,7 +27,7 @@ function SplitViewGroup({ children, className }: SplitViewGroupProps) {
     .map((c) => c.props.id);
 
   return (
-    <div className={cn("flex h-full", vertical && "flex-col", className)}>
+    <div className={cn("flex size-full", vertical && "flex-col", className)}>
       {childList.reduce((a, c, i) => (
         <>
           {a}
