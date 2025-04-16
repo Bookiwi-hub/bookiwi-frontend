@@ -15,7 +15,6 @@ function SplitViewItem({
   preferredSize,
   minSize,
   maxSize,
-  visible,
   id,
   ...props
 }: SplitViewItemProps) {
@@ -25,7 +24,6 @@ function SplitViewItem({
     preferredSize,
     minSize,
     maxSize,
-    visible,
   });
 
   return (

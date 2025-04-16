@@ -9,7 +9,6 @@ import {
 
 export interface SplitViewType {
   key: string;
-  visible?: boolean;
   resize?: (size: number) => void;
 }
 

@@ -7,7 +7,6 @@ export interface UseSplitViewPrams {
   preferredSize: number;
   minSize?: number;
   maxSize?: number;
-  visible?: boolean;
 }
 
 const useSplitView = (
@@ -16,7 +15,6 @@ const useSplitView = (
     preferredSize,
     minSize = 0,
     maxSize = Number.POSITIVE_INFINITY,
-    visible = true,
   }: UseSplitViewPrams,
 ) => {
   // 크기 상태와 조절 함수 생성
@@ -41,9 +39,8 @@ const useSplitView = (
     () => ({
       key: stringKey,
       resize: resizeView,
-      visible,
     }),
-    [stringKey, resizeView, visible],
+    [stringKey, resizeView],
   );
 
   // 뷰를 SplitView에 등록

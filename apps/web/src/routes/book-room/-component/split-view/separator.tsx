@@ -28,7 +28,7 @@ function SplitViewSeparator({ viewKeys }: SplitViewSeparatorProps) {
     .filter(Boolean) as SplitViewType[];
 
   // 모든 뷰가 visible하고 resize 함수가 있을 때만 활성화
-  const enabled = views.every((v) => v.visible && v.resize);
+  const enabled = views.every((v) => v.resize);
 
   const handleMouseDown = () => {
     setActive(true);

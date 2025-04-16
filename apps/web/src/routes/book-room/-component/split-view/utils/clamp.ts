@@ -10,6 +10,7 @@
  * clamp(0, 1, 10); // 1
  * clamp(15, 1, 10); // 10
  */
+
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
