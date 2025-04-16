@@ -1,12 +1,13 @@
 import { MessageSquareQuote } from "lucide-react";
 
-import { useView } from "../split-view";
-import { useAnnotationView } from "../viewer/annotation/context";
-import { READER_VIEW_ID } from "../viewer/constants/view-id";
+import { useView } from "../../split-view";
+import { READER_VIEW_ID } from "../constants/view-id";
+
+import { useAnnotationView } from "./context";
 
 import { cn } from "#/lib/utils";
 
-function AnnotationButton() {
+function AnnotationTrigger() {
   const { isOpen, toggle } = useAnnotationView();
   const view = useView(READER_VIEW_ID);
 
@@ -33,4 +34,4 @@ function AnnotationButton() {
   );
 }
 
-export default AnnotationButton;
+export default AnnotationTrigger;
