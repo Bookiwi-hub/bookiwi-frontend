@@ -79,7 +79,7 @@ function SplitViewSeparator({
         )}
       />
       {/* 드래그 중일 때 전체 화면에 투명 오버레이 추가 (다른 요소의 이벤트 차단) */}
-      {active && <Overlay className="!bg-transparent" />}
+      {active && <Overlay className="z-30 !bg-transparent" />}
     </div>
   );
 }
