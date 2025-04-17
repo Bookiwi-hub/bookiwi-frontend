@@ -3,7 +3,7 @@ import { useEffect, useMemo, useCallback, useState } from "react";
 import { useSplitViewContext } from "../context";
 import clamp from "../utils/clamp";
 
-export interface UseSplitViewPrams {
+export interface UseSplitViewPaneParams {
   preferredSize?: number;
   minSize?: number;
   maxSize?: number;
@@ -15,7 +15,7 @@ const useSplitViewPane = (
     preferredSize = 0,
     minSize = 0,
     maxSize = Number.POSITIVE_INFINITY,
-  }: UseSplitViewPrams,
+  }: UseSplitViewPaneParams,
 ) => {
   // 크기 상태와 조절 함수 생성
   const [size, setSize] = useState(preferredSize);
