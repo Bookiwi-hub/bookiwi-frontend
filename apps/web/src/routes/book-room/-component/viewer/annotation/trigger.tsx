@@ -9,11 +9,11 @@ import { cn } from "#/lib/utils";
 
 function AnnotationTrigger() {
   const { isOpen, toggle } = useAnnotationView();
-  const view = usePane(BOOK_PANE_ID);
+  const bookPane = usePane(BOOK_PANE_ID);
 
   const handleClick = () => {
     if (isOpen) {
-      view.setSize(window.innerWidth);
+      bookPane.setSize(window.innerWidth);
     }
     toggle();
   };
