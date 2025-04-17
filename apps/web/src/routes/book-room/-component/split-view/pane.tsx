@@ -1,26 +1,30 @@
 import { ComponentProps } from "react";
 
 import { useSplitViewContext } from "./context";
-import useSplitView, { UseSplitViewPrams } from "./hooks/use-split-view";
+import useSplitViewPane, {
+  UseSplitViewPaneParams,
+} from "./hooks/use-split-view-pane";
 
 import { cn } from "#/lib/utils";
 
-interface SplitViewItemProps extends UseSplitViewPrams, ComponentProps<"div"> {
-  id: string;
+interface SplitViewPaneProps
+  extends UseSplitViewPaneParams,
+    ComponentProps<"div"> {
+  paneId: string;
 }
 
-function SplitViewItem({
+function SplitViewPane({
   children,
   className,
   preferredSize,
   minSize,
   maxSize,
-  id,
+  paneId,
   ...props
-}: SplitViewItemProps) {
+}: SplitViewPaneProps) {
   const { vertical } = useSplitViewContext();
 
-  const { size } = useSplitView(id, {
+  const { size } = useSplitViewPane(paneId, {
     preferredSize,
     minSize,
     maxSize,
@@ -28,7 +32,7 @@ function SplitViewItem({
 
   return (
     <div
-      id={`${id}`}
+      id={`${paneId}`}
       className={cn("", size && "shrink-0", className)}
       style={{
         [vertical ? "height" : "width"]: size,
@@ -40,4 +44,4 @@ function SplitViewItem({
   );
 }
 
-export default SplitViewItem;
+export default SplitViewPane;
