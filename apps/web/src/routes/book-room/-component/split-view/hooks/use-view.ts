@@ -1,11 +1,11 @@
-import { useSplitViewContext, SplitViewType } from "../context";
+import { useSplitViewContext, ViewType } from "../context";
 
-const useView = (key: string) => {
+const useView = (viewId: string) => {
   const { viewMap } = useSplitViewContext();
 
-  const view = viewMap.get(key);
+  const view = viewMap.get(viewId);
   if (!view) {
-    return {} as SplitViewType;
+    return {} as ViewType;
   }
   return view;
 };

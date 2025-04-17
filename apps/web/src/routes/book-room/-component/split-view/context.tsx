@@ -7,16 +7,15 @@ import {
   useState,
 } from "react";
 
-export interface SplitViewType {
-  key: string;
+export interface ViewType {
   resize?: (size: number) => void;
   size: number;
   setSize: (size: number) => void;
 }
 
 interface SplitViewContextType {
-  viewMap: Map<string, SplitViewType>;
-  registerView(key: string, view: SplitViewType): void;
+  viewMap: Map<string, ViewType>;
+  registerView(viewId: string, view: ViewType): void;
   vertical: boolean;
 }
 
@@ -44,12 +43,12 @@ export function SplitViewProvider({
   vertical = false,
 }: SplitViewProps) {
   // 등록된 뷰 맵 관리
-  const [viewMap, setViewMap] = useState(new Map<string, SplitViewType>());
+  const [viewMap, setViewMap] = useState(new Map<string, ViewType>());
 
   // 새 뷰 등록 함수
-  const registerView = useCallback((key: string, view: SplitViewType) => {
+  const registerView = useCallback((viewId: string, view: ViewType) => {
     setViewMap((map) => {
-      map.set(key, view);
+      map.set(viewId, view);
       return new Map(map); // 새 맵 객체 생성하여 리렌더링 트리거
     });
   }, []);

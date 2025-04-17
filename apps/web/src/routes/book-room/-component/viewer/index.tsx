@@ -16,7 +16,7 @@ function Viewer() {
     <div className="relative size-full">
       <SplitViewGroup>
         <SplitViewItem
-          id={READER_VIEW_ID}
+          viewId={READER_VIEW_ID}
           preferredSize={window.innerWidth}
           minSize={READER_VIEW_SIZE_MIN}
           maxSize={window.innerWidth - ANNOTATION_VIEW_SIZE_MIN}
@@ -26,7 +26,7 @@ function Viewer() {
 
         {isPinned && (
           <SplitViewItem
-            id={ANNOTATION_VIEW_ID}
+            viewId={ANNOTATION_VIEW_ID}
             preferredSize={ANNOTATION_VIEW_SIZE_MIN}
             minSize={ANNOTATION_VIEW_SIZE_MIN}
             maxSize={window.innerWidth - READER_VIEW_SIZE_MIN}

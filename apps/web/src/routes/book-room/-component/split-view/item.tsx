@@ -6,7 +6,7 @@ import useSplitView, { UseSplitViewPrams } from "./hooks/use-split-view";
 import { cn } from "#/lib/utils";
 
 interface SplitViewItemProps extends UseSplitViewPrams, ComponentProps<"div"> {
-  id: string;
+  viewId: string;
 }
 
 function SplitViewItem({
@@ -15,12 +15,12 @@ function SplitViewItem({
   preferredSize,
   minSize,
   maxSize,
-  id,
+  viewId,
   ...props
 }: SplitViewItemProps) {
   const { vertical } = useSplitViewContext();
 
-  const { size } = useSplitView(id, {
+  const { size } = useSplitView(viewId, {
     preferredSize,
     minSize,
     maxSize,
@@ -28,7 +28,7 @@ function SplitViewItem({
 
   return (
     <div
-      id={`${id}`}
+      id={`${viewId}`}
       className={cn("", size && "shrink-0", className)}
       style={{
         [vertical ? "height" : "width"]: size,

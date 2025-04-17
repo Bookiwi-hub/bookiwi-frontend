@@ -15,26 +15,27 @@ function SplitViewGroup({ children, className }: SplitViewGroupProps) {
 
   if (!childList.length) return null;
 
-  const viewKeys = childList
+  const viewIds = childList
     .filter(
-      (c): c is ReactElement<{ id: string }> =>
+      (c): c is ReactElement<{ viewId: string }> =>
         isValidElement(c) &&
         c.props !== null &&
         typeof c.props === "object" &&
-        "id" in c.props &&
-        typeof c.props.id === "string",
+        "viewId" in c.props &&
+        typeof c.props.viewId === "string",
     )
-    .map((c) => c.props.id);
+    .map((c) => c.props.viewId);
 
   return (
     <div className={cn("flex size-full", vertical && "flex-col", className)}>
-      {childList.reduce((a, c, i) => (
+      {childList.reduce((prevViews, CurrentView, i) => (
         <>
-          {a}
+          {prevViews}
           <SplitViewSeparator
-            viewKeys={[viewKeys[i - 1], viewKeys[i]] as [string, string]}
+            prevViewId={viewIds[i - 1] ?? ""}
+            currentViewId={viewIds[i] ?? ""}
           />
-          {c}
+          {CurrentView}
         </>
       ))}
     </div>
