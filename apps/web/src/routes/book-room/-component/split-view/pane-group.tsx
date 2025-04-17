@@ -28,14 +28,14 @@ function SplitViewPaneGroup({ children, className }: SplitViewGroupProps) {
 
   return (
     <div className={cn("flex size-full", vertical && "flex-col", className)}>
-      {childList.reduce((prevViews, CurrentView, i) => (
+      {childList.reduce((prevPanes, CurrentPane, i) => (
         <>
-          {prevViews}
+          {prevPanes}
           <SplitViewSeparator
             prevPaneId={paneIds[i - 1] ?? ""}
             currentPaneId={paneIds[i] ?? ""}
           />
-          {CurrentView}
+          {CurrentPane}
         </>
       ))}
     </div>
