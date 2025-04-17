@@ -5,9 +5,15 @@ import SplitViewSeparator from "./separator";
 
 import { cn } from "#/lib/utils";
 
-interface SplitViewGroupProps extends ComponentProps<"div"> {}
+interface SplitViewGroupProps extends ComponentProps<"div"> {
+  separatorThickness?: number;
+}
 
-function SplitViewPaneGroup({ children, className }: SplitViewGroupProps) {
+function SplitViewPaneGroup({
+  children,
+  className,
+  separatorThickness = 4,
+}: SplitViewGroupProps) {
   const { vertical } = useSplitViewContext();
 
   // 자식 컴포넌트 배열로 변환
@@ -34,6 +40,7 @@ function SplitViewPaneGroup({ children, className }: SplitViewGroupProps) {
           <SplitViewSeparator
             prevPaneId={paneIds[i - 1] ?? ""}
             currentPaneId={paneIds[i] ?? ""}
+            separatorThickness={separatorThickness}
           />
           {CurrentPane}
         </>

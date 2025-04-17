@@ -10,13 +10,13 @@ import { cn } from "#/lib/utils";
 interface SplitViewSeparatorProps {
   prevPaneId: string;
   currentPaneId: string;
+  separatorThickness?: number;
 }
-
-const SEPARATOR_SIZE = 4;
 
 function SplitViewSeparator({
   prevPaneId,
   currentPaneId,
+  separatorThickness = 4,
 }: SplitViewSeparatorProps) {
   // 호버 및 활성 상태 관리
   const [hover, setHover] = useState(false);
@@ -63,8 +63,8 @@ function SplitViewSeparator({
       )}
       style={{
         // 수직/수평에 따른 크기 설정
-        [vertical ? "height" : "width"]: SEPARATOR_SIZE,
-        [vertical ? "marginBlock" : "marginInline"]: -SEPARATOR_SIZE / 2, // 마진을 음수로 설정하여 겹치는 효과
+        [vertical ? "height" : "width"]: separatorThickness,
+        [vertical ? "marginBlock" : "marginInline"]: -separatorThickness / 2, // 마진을 음수로 설정하여 겹치는 효과
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
