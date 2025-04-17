@@ -42,10 +42,9 @@ export function SplitViewProvider({
   children,
   vertical = false,
 }: SplitViewProps) {
-  // 등록된 뷰 맵 관리
   const [paneMap, setPaneMap] = useState(new Map<string, PaneType>());
 
-  // 새 뷰 등록 함수
+  // 새 Pane 등록 함수
   const registerPane = useCallback((paneId: string, pane: PaneType) => {
     setPaneMap((map) => {
       map.set(paneId, pane);
@@ -53,7 +52,6 @@ export function SplitViewProvider({
     });
   }, []);
 
-  // Context value를 메모이제이션
   const contextValue = useMemo(
     () => ({ paneMap, registerPane, vertical }),
     [registerPane, paneMap, vertical],

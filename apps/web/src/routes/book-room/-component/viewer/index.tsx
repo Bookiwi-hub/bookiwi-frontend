@@ -2,13 +2,13 @@ import { SplitViewPane, SplitViewPaneGroup } from "../split-view";
 
 import Annotation from "./annotation";
 import { useAnnotationView } from "./annotation/context";
+import Book from "./book";
 import {
   ANNOTATION_PANE_ID,
-  READER_PANE_ID,
+  BOOK_PANE_ID,
   ANNOTATION_PANE_SIZE_MIN,
-  READER_PANE_SIZE_MIN,
+  BOOK_PANE_SIZE_MIN,
 } from "./constants/pane";
-import Reader from "./reader";
 
 function Viewer() {
   const { isOpen, isPinned } = useAnnotationView();
@@ -17,12 +17,12 @@ function Viewer() {
     <div className="relative size-full">
       <SplitViewPaneGroup>
         <SplitViewPane
-          paneId={READER_PANE_ID}
+          paneId={BOOK_PANE_ID}
           preferredSize={window.innerWidth}
-          minSize={READER_PANE_SIZE_MIN}
+          minSize={BOOK_PANE_SIZE_MIN}
           maxSize={window.innerWidth - ANNOTATION_PANE_SIZE_MIN}
         >
-          <Reader />
+          <Book />
         </SplitViewPane>
 
         {isPinned && (
@@ -30,7 +30,7 @@ function Viewer() {
             paneId={ANNOTATION_PANE_ID}
             preferredSize={ANNOTATION_PANE_SIZE_MIN}
             minSize={ANNOTATION_PANE_SIZE_MIN}
-            maxSize={window.innerWidth - READER_PANE_SIZE_MIN}
+            maxSize={window.innerWidth - BOOK_PANE_SIZE_MIN}
           >
             <Annotation />
           </SplitViewPane>

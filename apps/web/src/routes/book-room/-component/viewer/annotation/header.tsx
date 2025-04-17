@@ -1,7 +1,7 @@
 import { Pin, X } from "lucide-react";
 
 import { useView } from "../../split-view";
-import { READER_PANE_ID, ANNOTATION_PANE_SIZE_MIN } from "../constants/pane";
+import { BOOK_PANE_ID, ANNOTATION_PANE_SIZE_MIN } from "../constants/pane";
 
 import { useAnnotationView } from "./context";
 
@@ -9,7 +9,7 @@ import { cn } from "#/lib/utils";
 
 function AnnotationHeader() {
   const { isPinned, pin, unpin, close } = useAnnotationView();
-  const view = useView(READER_PANE_ID);
+  const view = useView(BOOK_PANE_ID);
 
   const handlePin = () => {
     if (isPinned) {
