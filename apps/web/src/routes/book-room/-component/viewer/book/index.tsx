@@ -5,9 +5,9 @@ import {
   ReaderNextPageButton,
   ReaderPageProgress,
   ReaderPrevPageButton,
-} from "../../-reader";
+} from "../../../-reader";
 
-function Reader() {
+function Book() {
   return (
     <section className="relative flex size-full flex-col px-12">
       <ReaderPrevPageButton className="absolute left-0 top-0 flex h-full w-12 items-center justify-center">
@@ -22,4 +22,4 @@ function Reader() {
   );
 }
 
-export default Reader;
+export default Book;

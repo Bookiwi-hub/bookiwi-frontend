@@ -1,34 +1,31 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState } from "react";
 
-import { SplitViewType, useSplitViewContext } from "./context";
+import { useSplitViewContext } from "./context";
 
 import Overlay from "#/components/ui/overlay";
 import { Separator } from "#/components/ui/separator";
 import { cn } from "#/lib/utils";
 
 interface SplitViewSeparatorProps {
-  viewKeys: [string, string];
+  prevPaneId: string;
+  currentPaneId: string;
 }
 
-/**
- * 구분선(Sash)의 크기 (픽셀)
- */
 const SEPARATOR_SIZE = 4;
 
-function SplitViewSeparator({ viewKeys }: SplitViewSeparatorProps) {
+function SplitViewSeparator({
+  prevPaneId,
+  currentPaneId,
+}: SplitViewSeparatorProps) {
   // 호버 및 활성 상태 관리
   const [hover, setHover] = useState(false);
   const [active, setActive] = useState(false);
 
-  const { viewMap, vertical } = useSplitViewContext();
+  const { paneMap, vertical } = useSplitViewContext();
 
   // viewKeys로 viewMap에서 view 객체들을 찾음
-  const views = viewKeys
-    .map((key) => viewMap.get(key))
-    .filter(Boolean) as SplitViewType[];
-
-  // 모든 뷰가 visible하고 resize 함수가 있을 때만 활성화
-  const enabled = views.every((v) => v.resize);
+  const panes = [paneMap.get(prevPaneId), paneMap.get(currentPaneId)];
 
   const handleMouseDown = () => {
     setActive(true);
@@ -39,8 +36,8 @@ function SplitViewSeparator({ viewKeys }: SplitViewSeparatorProps) {
 
       // 연결된 모든 뷰에 크기 변경 적용
       // 첫 번째 뷰는 양수로, 두 번째 뷰는 음수로 적용 (서로 반대 방향)
-      views.forEach((v, i) => {
-        v.resize?.(delta * (-1) ** i);
+      panes.forEach((p, i) => {
+        p?.resize(delta * (-1) ** i);
       });
     };
 
@@ -62,7 +59,6 @@ function SplitViewSeparator({ viewKeys }: SplitViewSeparatorProps) {
     <div
       className={cn(
         "relative z-30 shrink-0 flex items-center justify-center",
-        !enabled && "pointer-events-none", // 모바일이거나 비활성화 시 이벤트 무시
         vertical ? "cursor-ns-resize" : "cursor-ew-resize", // 수직/수평에 따른 커서 스타일
       )}
       style={{
@@ -73,8 +69,6 @@ function SplitViewSeparator({ viewKeys }: SplitViewSeparatorProps) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onMouseDown={handleMouseDown}
-      role="button"
-      tabIndex={-1}
     >
       {/* 구분선 시각적 표시 */}
       <Separator
