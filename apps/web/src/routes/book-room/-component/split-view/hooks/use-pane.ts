@@ -1,6 +1,6 @@
 import { PaneType, useSplitViewContext } from "../context";
 
-const useView = (paneId: string) => {
+const usePane = (paneId: string) => {
   const { paneMap } = useSplitViewContext();
 
   const pane = paneMap.get(paneId);
@@ -10,4 +10,4 @@ const useView = (paneId: string) => {
   return pane;
 };
 
-export default useView;
+export default usePane;
