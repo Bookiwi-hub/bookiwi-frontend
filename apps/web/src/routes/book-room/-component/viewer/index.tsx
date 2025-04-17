@@ -1,12 +1,13 @@
-import { SplitViewGroup, SplitViewItem } from "../split-view";
+import { SplitViewPane, SplitViewPaneGroup } from "../split-view";
 
 import Annotation from "./annotation";
 import { useAnnotationView } from "./annotation/context";
-import { ANNOTATION_VIEW_ID, READER_VIEW_ID } from "./constants/view-id";
 import {
-  READER_VIEW_SIZE_MIN,
-  ANNOTATION_VIEW_SIZE_MIN,
-} from "./constants/view-size";
+  ANNOTATION_PANE_ID,
+  READER_PANE_ID,
+  ANNOTATION_PANE_SIZE_MIN,
+  READER_PANE_SIZE_MIN,
+} from "./constants/pane";
 import Reader from "./reader";
 
 function Viewer() {
@@ -14,32 +15,32 @@ function Viewer() {
 
   return (
     <div className="relative size-full">
-      <SplitViewGroup>
-        <SplitViewItem
-          viewId={READER_VIEW_ID}
+      <SplitViewPaneGroup>
+        <SplitViewPane
+          paneId={READER_PANE_ID}
           preferredSize={window.innerWidth}
-          minSize={READER_VIEW_SIZE_MIN}
-          maxSize={window.innerWidth - ANNOTATION_VIEW_SIZE_MIN}
+          minSize={READER_PANE_SIZE_MIN}
+          maxSize={window.innerWidth - ANNOTATION_PANE_SIZE_MIN}
         >
           <Reader />
-        </SplitViewItem>
+        </SplitViewPane>
 
         {isPinned && (
-          <SplitViewItem
-            viewId={ANNOTATION_VIEW_ID}
-            preferredSize={ANNOTATION_VIEW_SIZE_MIN}
-            minSize={ANNOTATION_VIEW_SIZE_MIN}
-            maxSize={window.innerWidth - READER_VIEW_SIZE_MIN}
+          <SplitViewPane
+            paneId={ANNOTATION_PANE_ID}
+            preferredSize={ANNOTATION_PANE_SIZE_MIN}
+            minSize={ANNOTATION_PANE_SIZE_MIN}
+            maxSize={window.innerWidth - READER_PANE_SIZE_MIN}
           >
             <Annotation />
-          </SplitViewItem>
+          </SplitViewPane>
         )}
-      </SplitViewGroup>
+      </SplitViewPaneGroup>
       {isOpen && !isPinned && (
         <div
           className="absolute right-0 top-0 z-10 h-full border-l border-gray-200 bg-white p-1 shadow-xl"
           style={{
-            width: ANNOTATION_VIEW_SIZE_MIN,
+            width: ANNOTATION_PANE_SIZE_MIN,
           }}
         >
           <Annotation />

@@ -9,8 +9,8 @@ export interface UseSplitViewPrams {
   maxSize?: number;
 }
 
-const useSplitView = (
-  viewId: string,
+const useSplitViewPane = (
+  paneId: string,
   {
     preferredSize = 0,
     minSize = 0,
@@ -29,26 +29,29 @@ const useSplitView = (
   );
 
   // 최소/최대 크기가 같으면 크기 조절 불가능
-  const resizeView = minSize === maxSize ? undefined : resize;
+  const resizePane = useMemo(
+    () => (minSize === maxSize ? () => {} : resize),
+    [minSize, maxSize, resize],
+  );
 
   // 뷰 객체 생성 (메모이제이션으로 불필요한 리렌더링 방지)
-  const view = useMemo(
+  const pane = useMemo(
     () => ({
-      resize: resizeView,
+      resize: resizePane,
       size,
       setSize,
     }),
-    [resizeView, size],
+    [resizePane, size],
   );
 
   // 뷰를 SplitView에 등록
-  const { registerView } = useSplitViewContext();
+  const { registerPane } = useSplitViewContext();
 
   useEffect(() => {
-    registerView(viewId, view);
-  }, [viewId, registerView, view]);
+    registerPane(paneId, pane);
+  }, [paneId, registerPane, pane]);
 
   return { size };
 };
 
-export default useSplitView;
+export default useSplitViewPane;

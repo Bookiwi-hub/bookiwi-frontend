@@ -7,7 +7,7 @@ import { cn } from "#/lib/utils";
 
 interface SplitViewGroupProps extends ComponentProps<"div"> {}
 
-function SplitViewGroup({ children, className }: SplitViewGroupProps) {
+function SplitViewPaneGroup({ children, className }: SplitViewGroupProps) {
   const { vertical } = useSplitViewContext();
 
   // 자식 컴포넌트 배열로 변환
@@ -15,16 +15,16 @@ function SplitViewGroup({ children, className }: SplitViewGroupProps) {
 
   if (!childList.length) return null;
 
-  const viewIds = childList
+  const paneIds = childList
     .filter(
-      (c): c is ReactElement<{ viewId: string }> =>
+      (c): c is ReactElement<{ paneId: string }> =>
         isValidElement(c) &&
         c.props !== null &&
         typeof c.props === "object" &&
-        "viewId" in c.props &&
-        typeof c.props.viewId === "string",
+        "paneId" in c.props &&
+        typeof c.props.paneId === "string",
     )
-    .map((c) => c.props.viewId);
+    .map((c) => c.props.paneId);
 
   return (
     <div className={cn("flex size-full", vertical && "flex-col", className)}>
@@ -32,8 +32,8 @@ function SplitViewGroup({ children, className }: SplitViewGroupProps) {
         <>
           {prevViews}
           <SplitViewSeparator
-            prevViewId={viewIds[i - 1] ?? ""}
-            currentViewId={viewIds[i] ?? ""}
+            prevPaneId={paneIds[i - 1] ?? ""}
+            currentPaneId={paneIds[i] ?? ""}
           />
           {CurrentView}
         </>
@@ -42,4 +42,4 @@ function SplitViewGroup({ children, className }: SplitViewGroupProps) {
   );
 }
 
-export default SplitViewGroup;
+export default SplitViewPaneGroup;

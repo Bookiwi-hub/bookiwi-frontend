@@ -7,15 +7,15 @@ import {
   useState,
 } from "react";
 
-export interface ViewType {
-  resize?: (size: number) => void;
+export interface PaneType {
+  resize: (size: number) => void;
   size: number;
   setSize: (size: number) => void;
 }
 
 interface SplitViewContextType {
-  viewMap: Map<string, ViewType>;
-  registerView(viewId: string, view: ViewType): void;
+  paneMap: Map<string, PaneType>;
+  registerPane(paneId: string, pane: PaneType): void;
   vertical: boolean;
 }
 
@@ -43,20 +43,20 @@ export function SplitViewProvider({
   vertical = false,
 }: SplitViewProps) {
   // 등록된 뷰 맵 관리
-  const [viewMap, setViewMap] = useState(new Map<string, ViewType>());
+  const [paneMap, setPaneMap] = useState(new Map<string, PaneType>());
 
   // 새 뷰 등록 함수
-  const registerView = useCallback((viewId: string, view: ViewType) => {
-    setViewMap((map) => {
-      map.set(viewId, view);
+  const registerPane = useCallback((paneId: string, pane: PaneType) => {
+    setPaneMap((map) => {
+      map.set(paneId, pane);
       return new Map(map); // 새 맵 객체 생성하여 리렌더링 트리거
     });
   }, []);
 
   // Context value를 메모이제이션
   const contextValue = useMemo(
-    () => ({ viewMap, registerView, vertical }),
-    [registerView, viewMap, vertical],
+    () => ({ paneMap, registerPane, vertical }),
+    [registerPane, paneMap, vertical],
   );
 
   return (
