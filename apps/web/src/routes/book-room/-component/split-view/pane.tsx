@@ -1,41 +1,34 @@
-import { ComponentProps, memo } from "react";
+import { ComponentProps, memo, useEffect } from "react";
 
-import { useSplitViewContext } from "./context";
-import useSplitViewPane, {
-  UseSplitViewPaneParams,
-} from "./hooks/use-split-view-pane";
+import { Pane } from "./constants/type";
+import usePane from "./hooks/use-pane";
 
 import { cn } from "#/lib/utils";
 
-interface SplitViewPaneProps
-  extends UseSplitViewPaneParams,
-    ComponentProps<"div"> {
-  paneId: string;
+interface SplitViewPaneProps extends ComponentProps<"div"> {
+  pane: Pane;
+  resizable?: boolean;
 }
 
 function SplitViewPane({
   children,
   className,
-  preferredSize,
-  minSize,
-  maxSize,
-  paneId,
+  pane,
+  resizable = true,
   ...props
 }: SplitViewPaneProps) {
-  const { vertical } = useSplitViewContext();
+  const thisPane = usePane(pane);
 
-  const { size } = useSplitViewPane(paneId, {
-    preferredSize,
-    minSize,
-    maxSize,
-  });
+  useEffect(() => {
+    thisPane.resizable = resizable;
+  }, [thisPane, resizable]);
 
   return (
     <div
-      id={`${paneId}`}
-      className={cn("", size && "shrink-0", className)}
+      id={`${pane}`}
+      className={cn("", thisPane.size && "shrink-0", className)}
       style={{
-        [vertical ? "height" : "width"]: size,
+        width: thisPane.size,
       }}
       {...props}
     >

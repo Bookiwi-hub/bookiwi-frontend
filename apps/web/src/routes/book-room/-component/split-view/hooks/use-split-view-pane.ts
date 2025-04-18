@@ -1,22 +1,20 @@
-import { useEffect, useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState } from "react";
 
-import { useSplitViewContext } from "../context";
 import clamp from "../utils/clamp";
 
 export interface UseSplitViewPaneParams {
   preferredSize?: number;
   minSize?: number;
   maxSize?: number;
+  resizable?: boolean;
 }
 
-const useSplitViewPane = (
-  paneId: string,
-  {
-    preferredSize = 0,
-    minSize = 0,
-    maxSize = Number.POSITIVE_INFINITY,
-  }: UseSplitViewPaneParams,
-) => {
+const useSplitViewPane = ({
+  preferredSize = 0,
+  minSize = 0,
+  maxSize = Number.POSITIVE_INFINITY,
+  resizable = true,
+}: UseSplitViewPaneParams) => {
   // 크기 상태와 조절 함수 생성
   const [size, setSize] = useState(preferredSize);
 
@@ -34,24 +32,15 @@ const useSplitViewPane = (
     [minSize, maxSize, resize],
   );
 
-  // 뷰 객체 생성 (메모이제이션으로 불필요한 리렌더링 방지)
-  const pane = useMemo(
+  return useMemo(
     () => ({
       resize: resizePane,
       size,
       setSize,
+      resizable,
     }),
-    [resizePane, size],
+    [resizePane, size, setSize, resizable],
   );
-
-  // 뷰를 SplitView에 등록
-  const { registerPane } = useSplitViewContext();
-
-  useEffect(() => {
-    registerPane(paneId, pane);
-  }, [paneId, registerPane, pane]);
-
-  return { size };
 };
 
 export default useSplitViewPane;
