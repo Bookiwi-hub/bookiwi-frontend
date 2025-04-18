@@ -9,8 +9,10 @@ import Annotation from "./annotation";
 import { useAnnotationView } from "./annotation/context";
 import Book from "./book";
 
+import Overlay from "#/components/ui/overlay";
+
 function Viewer() {
-  const { isOpen, isPinned } = useAnnotationView();
+  const { isOpen, isPinned, close } = useAnnotationView();
 
   return (
     <div className="relative size-full">
@@ -23,10 +25,13 @@ function Viewer() {
           <Book />
         </SplitViewPane>
 
-        {isOpen && <SplitViewSeparator separatorThickness={isPinned ? 4 : 3} />}
+        {isOpen && <SplitViewSeparator separatorThickness={isPinned ? 4 : 2} />}
+        {isOpen && !isPinned && (
+          <Overlay className="absolute z-10 bg-transparent" onClick={close} />
+        )}
 
         {isOpen && (
-          <SplitViewPane pane={Pane.ANNOTATION} className="z-10">
+          <SplitViewPane pane={Pane.ANNOTATION} className="z-20">
             <Annotation />
           </SplitViewPane>
         )}
