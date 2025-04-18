@@ -8,7 +8,7 @@ import MobileBookRoom from "./-mobile";
 import { ReaderProvider } from "./-reader";
 
 import bookRooms from "#/DB/book-room";
-import { isMobile } from "#/constants/device-type";
+import { isDesktop } from "#/constants/device-type";
 
 interface BookRoomData {
   id: string;
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/book-room/$id")({
       },
     ],
   }),
-  component: isMobile ? MobileBookRoom : BookRoom,
+  component: isDesktop ? BookRoom : MobileBookRoom,
 });
 
 function BookRoomContent() {
