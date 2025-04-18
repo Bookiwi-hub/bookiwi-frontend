@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState } from "react";
 
+import { useAnnotationPane } from "../viewer/annotation/context";
+
 import { useSplitViewContext } from "./context";
 
 import Overlay from "#/components/ui/overlay";
@@ -20,6 +22,7 @@ function SplitViewSeparator({
   const [active, setActive] = useState(false);
 
   const { bookPane, annotationPane } = useSplitViewContext();
+  const { isPinned } = useAnnotationPane();
 
   const handleMouseDown = () => {
     setActive(true);
@@ -27,8 +30,8 @@ function SplitViewSeparator({
     const handleMouseMove = (e: MouseEvent) => {
       const delta = e.movementX;
 
-      if (bookPane.resizable) bookPane.resize(delta);
-      if (annotationPane.resizable) annotationPane.resize(-delta);
+      if (isPinned) bookPane.resize(delta);
+      annotationPane.resize(-delta);
     };
 
     const handleMouseUp = () => {
@@ -39,7 +42,6 @@ function SplitViewSeparator({
       window.removeEventListener("mouseup", handleMouseUp);
     };
 
-    // 전역 이벤트 리스너 등록
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
   };
@@ -59,7 +61,6 @@ function SplitViewSeparator({
       onMouseLeave={() => setHover(false)}
       onMouseDown={handleMouseDown}
     >
-      {/* 구분선 시각적 표시 */}
       <Separator
         orientation="vertical"
         className={cn(
@@ -67,7 +68,6 @@ function SplitViewSeparator({
           (hover || active) && "bg-primary/30",
         )}
       />
-      {/* 드래그 중일 때 전체 화면에 투명 오버레이 추가 (다른 요소의 이벤트 차단) */}
       {active && <Overlay className="z-30 !bg-transparent" />}
     </div>
   );

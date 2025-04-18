@@ -1,4 +1,4 @@
-import { ComponentProps, memo, useEffect } from "react";
+import { ComponentProps, memo } from "react";
 
 import { Pane } from "./constants/type";
 import usePane from "./hooks/use-pane";
@@ -14,14 +14,9 @@ function SplitViewPane({
   children,
   className,
   pane,
-  resizable = true,
   ...props
 }: SplitViewPaneProps) {
   const thisPane = usePane(pane);
-
-  useEffect(() => {
-    thisPane.resizable = resizable;
-  }, [thisPane, resizable]);
 
   return (
     <div

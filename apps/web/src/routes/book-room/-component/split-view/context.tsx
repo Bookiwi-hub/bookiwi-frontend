@@ -17,7 +17,6 @@ export interface PaneType {
   resize: (delta: number) => void;
   size: number;
   setSize: Dispatch<SetStateAction<number>>;
-  resizable: boolean;
 }
 
 interface SplitViewContextType {

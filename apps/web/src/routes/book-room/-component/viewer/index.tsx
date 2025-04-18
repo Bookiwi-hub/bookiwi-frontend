@@ -20,10 +20,9 @@ function Viewer() {
       <SplitViewPaneGroup className="flex size-full justify-end">
         <SplitViewPane
           pane={Pane.BOOK}
-          resizable={isPinned}
           className={cn(
             "absolute left-0 z-0 size-full",
-            "transition-all duration-200 ease-in-out",
+            "transition-all duration-200",
           )}
         >
           <Book />
