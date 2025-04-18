@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import Header from "./-component/header";
 import { SplitViewProvider } from "./-component/split-view";
 import Viewer from "./-component/viewer";
-import { AnnotationViewProvider } from "./-component/viewer/annotation/context";
+import { AnnotationPaneProvider } from "./-component/viewer/annotation/context";
 import { ReaderProvider } from "./-reader";
 
 import bookRooms from "#/DB/book-room";
@@ -54,9 +54,9 @@ function BookRoom() {
   return (
     <ReaderProvider>
       <SplitViewProvider>
-        <AnnotationViewProvider>
+        <AnnotationPaneProvider>
           <BookRoomContent />
-        </AnnotationViewProvider>
+        </AnnotationPaneProvider>
       </SplitViewProvider>
     </ReaderProvider>
   );

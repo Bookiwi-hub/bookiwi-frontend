@@ -3,12 +3,12 @@ import { MessageSquareQuote } from "lucide-react";
 import { usePane } from "../../split-view";
 import { Pane } from "../../split-view/constants/type";
 
-import { useAnnotationView } from "./context";
+import { useAnnotationPane } from "./context";
 
 import { cn } from "#/lib/utils";
 
 function AnnotationTrigger() {
-  const { isOpen, toggle } = useAnnotationView();
+  const { isOpen, toggle } = useAnnotationPane();
   const bookPane = usePane(Pane.BOOK);
 
   const handleClick = () => {

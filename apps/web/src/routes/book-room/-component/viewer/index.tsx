@@ -6,14 +6,14 @@ import {
 import { Pane } from "../split-view/constants/type";
 
 import Annotation from "./annotation";
-import { useAnnotationView } from "./annotation/context";
+import { useAnnotationPane } from "./annotation/context";
 import Book from "./book";
 
 import Overlay from "#/components/ui/overlay";
 import { cn } from "#/lib/utils";
 
 function Viewer() {
-  const { isOpen, isPinned, close } = useAnnotationView();
+  const { isOpen, isPinned, close } = useAnnotationPane();
 
   return (
     <div className="relative size-full">
