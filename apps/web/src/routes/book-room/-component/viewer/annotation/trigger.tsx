@@ -1,19 +1,19 @@
 import { MessageSquareQuote } from "lucide-react";
 
-import { useView } from "../../split-view";
-import { BOOK_PANE_ID } from "../constants/pane";
+import { usePane } from "../../split-view";
+import { Pane } from "../../split-view/constants/type";
 
-import { useAnnotationView } from "./context";
+import { useAnnotationPane } from "./context";
 
 import { cn } from "#/lib/utils";
 
 function AnnotationTrigger() {
-  const { isOpen, toggle } = useAnnotationView();
-  const view = useView(BOOK_PANE_ID);
+  const { isOpen, toggle } = useAnnotationPane();
+  const bookPane = usePane(Pane.BOOK);
 
   const handleClick = () => {
     if (isOpen) {
-      view.setSize(window.innerWidth);
+      bookPane.setSize(window.innerWidth);
     }
     toggle();
   };

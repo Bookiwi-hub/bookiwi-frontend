@@ -1,14 +1,14 @@
 import { createContext, Dispatch, useContext, useMemo, useState } from "react";
 
-export enum AnnotationViewState {
+export enum AnnotationPaneState {
   CLOSED,
   OPEN,
   PINNED,
 }
 
-interface AnnotationViewContextType {
-  viewState: AnnotationViewState;
-  setViewState: Dispatch<React.SetStateAction<AnnotationViewState>>;
+interface AnnotationPaneContextType {
+  paneState: AnnotationPaneState;
+  setPaneState: Dispatch<React.SetStateAction<AnnotationPaneState>>;
   isOpen: boolean;
   isPinned: boolean;
   open: () => void;
@@ -18,57 +18,57 @@ interface AnnotationViewContextType {
   unpin: () => void;
 }
 
-const AnnotationViewContext = createContext<
-  AnnotationViewContextType | undefined
+const AnnotationPaneContext = createContext<
+  AnnotationPaneContextType | undefined
 >(undefined);
 
-export const useAnnotationView = () => {
-  const context = useContext(AnnotationViewContext);
+export const useAnnotationPane = () => {
+  const context = useContext(AnnotationPaneContext);
   if (context === undefined) {
     throw new Error(
-      "useAnnotationView must be used within a AnnotationViewProvider",
+      "useAnnotationPane must be used within a AnnotationPaneProvider",
     );
   }
   return context;
 };
 
-export function AnnotationViewProvider({
+export function AnnotationPaneProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [viewState, setViewState] = useState<AnnotationViewState>(
-    AnnotationViewState.CLOSED,
+  const [paneState, setPaneState] = useState<AnnotationPaneState>(
+    AnnotationPaneState.CLOSED,
   );
 
   const isOpen =
-    viewState === AnnotationViewState.OPEN ||
-    viewState === AnnotationViewState.PINNED;
-  const isPinned = viewState === AnnotationViewState.PINNED;
+    paneState === AnnotationPaneState.OPEN ||
+    paneState === AnnotationPaneState.PINNED;
+  const isPinned = paneState === AnnotationPaneState.PINNED;
 
   const value = useMemo(() => {
-    const open = () => setViewState(AnnotationViewState.OPEN);
-    const close = () => setViewState(AnnotationViewState.CLOSED);
+    const open = () => setPaneState(AnnotationPaneState.OPEN);
+    const close = () => setPaneState(AnnotationPaneState.CLOSED);
     const toggle = () =>
-      setViewState((prev) =>
-        prev === AnnotationViewState.CLOSED
-          ? AnnotationViewState.OPEN
-          : AnnotationViewState.CLOSED,
+      setPaneState((prev) =>
+        prev === AnnotationPaneState.CLOSED
+          ? AnnotationPaneState.OPEN
+          : AnnotationPaneState.CLOSED,
       );
     const pin = () => {
       if (isOpen) {
-        setViewState(AnnotationViewState.PINNED);
+        setPaneState(AnnotationPaneState.PINNED);
       }
     };
     const unpin = () => {
       if (isPinned) {
-        setViewState(AnnotationViewState.OPEN);
+        setPaneState(AnnotationPaneState.OPEN);
       }
     };
 
     return {
-      viewState,
-      setViewState,
+      paneState,
+      setPaneState,
       isOpen,
       isPinned,
       open,
@@ -77,11 +77,11 @@ export function AnnotationViewProvider({
       pin,
       unpin,
     };
-  }, [viewState, isOpen, isPinned]);
+  }, [paneState, isOpen, isPinned]);
 
   return (
-    <AnnotationViewContext.Provider value={value}>
+    <AnnotationPaneContext.Provider value={value}>
       {children}
-    </AnnotationViewContext.Provider>
+    </AnnotationPaneContext.Provider>
   );
 }

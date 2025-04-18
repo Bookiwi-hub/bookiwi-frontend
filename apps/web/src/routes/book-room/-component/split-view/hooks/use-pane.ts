@@ -1,13 +1,10 @@
-import { PaneType, useSplitViewContext } from "../context";
+import { Pane } from "../constants/type";
+import { useSplitViewContext } from "../context";
 
-const useView = (paneId: string) => {
-  const { paneMap } = useSplitViewContext();
+const usePane = (paneId: Pane) => {
+  const { bookPane, annotationPane } = useSplitViewContext();
 
-  const pane = paneMap.get(paneId);
-  if (!pane) {
-    return {} as PaneType;
-  }
-  return pane;
+  return paneId === Pane.BOOK ? bookPane : annotationPane;
 };
 
-export default useView;
+export default usePane;
