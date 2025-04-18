@@ -1,8 +1,19 @@
+import Highlight from "./tabs/highlight";
+import HighlightList from "./tabs/highlight-list";
+import { AnnotationTab } from "./tabs/tab";
+
+import { TabsContent } from "#/components/ui/tabs";
+
 function AnnotationContents() {
   return (
-    <div className="text-center text-gray-500">
-      <p>Notes and comments will appear here</p>
-    </div>
+    <>
+      <TabsContent value={AnnotationTab.HIGHLIGHT}>
+        <Highlight />
+      </TabsContent>
+      <TabsContent value={AnnotationTab.HIGHLIGHT_LIST}>
+        <HighlightList />
+      </TabsContent>
+    </>
   );
 }
 
