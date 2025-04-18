@@ -1,51 +1,52 @@
-import { SplitViewPane, SplitViewPaneGroup } from "../split-view";
+import {
+  SplitViewPane,
+  SplitViewPaneGroup,
+  SplitViewSeparator,
+} from "../split-view";
+import { Pane } from "../split-view/constants/type";
 
 import Annotation from "./annotation";
-import { useAnnotationView } from "./annotation/context";
+import { useAnnotationPane } from "./annotation/context";
 import Book from "./book";
-import {
-  ANNOTATION_PANE_ID,
-  BOOK_PANE_ID,
-  ANNOTATION_PANE_SIZE_MIN,
-  BOOK_PANE_SIZE_MIN,
-} from "./constants/pane";
+
+import Overlay from "#/components/ui/overlay";
+import { cn } from "#/lib/utils";
 
 function Viewer() {
-  const { isOpen, isPinned } = useAnnotationView();
+  const { isOpen, isPinned, close } = useAnnotationPane();
 
   return (
     <div className="relative size-full">
-      <SplitViewPaneGroup>
+      <SplitViewPaneGroup className="flex size-full justify-end">
         <SplitViewPane
-          paneId={BOOK_PANE_ID}
-          preferredSize={window.innerWidth}
-          minSize={BOOK_PANE_SIZE_MIN}
-          maxSize={window.innerWidth - ANNOTATION_PANE_SIZE_MIN}
+          pane={Pane.BOOK}
+          className={cn(
+            "absolute left-0 z-0 size-full",
+            "transition-all duration-200",
+          )}
         >
           <Book />
         </SplitViewPane>
 
-        {isPinned && (
+        {isOpen && (
+          <SplitViewSeparator
+            separatorThickness={isPinned ? 4 : 2}
+            className="animate-slide-in-right"
+          />
+        )}
+        {isOpen && !isPinned && (
+          <Overlay className="absolute z-10 bg-transparent " onClick={close} />
+        )}
+
+        {isOpen && (
           <SplitViewPane
-            paneId={ANNOTATION_PANE_ID}
-            preferredSize={ANNOTATION_PANE_SIZE_MIN}
-            minSize={ANNOTATION_PANE_SIZE_MIN}
-            maxSize={window.innerWidth - BOOK_PANE_SIZE_MIN}
+            pane={Pane.ANNOTATION}
+            className="z-20 animate-slide-in-right shadow-2xl"
           >
             <Annotation />
           </SplitViewPane>
         )}
       </SplitViewPaneGroup>
-      {isOpen && !isPinned && (
-        <div
-          className="absolute right-0 top-0 z-10 h-full border-l border-gray-200 bg-white p-1 shadow-xl"
-          style={{
-            width: ANNOTATION_PANE_SIZE_MIN,
-          }}
-        >
-          <Annotation />
-        </div>
-      )}
     </div>
   );
 }

@@ -1,22 +1,27 @@
 import {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useMemo,
-  useState,
+  Dispatch,
+  SetStateAction,
 } from "react";
 
+import {
+  BOOK_PANE_SIZE_MIN,
+  ANNOTATION_PANE_SIZE_MIN,
+} from "./constants/pane-size";
+import useSplitViewPane from "./hooks/use-split-view-pane";
+
 export interface PaneType {
-  resize: (size: number) => void;
+  resize: (delta: number) => void;
   size: number;
-  setSize: (size: number) => void;
+  setSize: Dispatch<SetStateAction<number>>;
 }
 
 interface SplitViewContextType {
-  paneMap: Map<string, PaneType>;
-  registerPane(paneId: string, pane: PaneType): void;
-  vertical: boolean;
+  bookPane: PaneType;
+  annotationPane: PaneType;
 }
 
 const SplitViewContext = createContext<SplitViewContextType | undefined>(
@@ -35,26 +40,24 @@ export function useSplitViewContext() {
 
 interface SplitViewProps {
   children: ReactNode;
-  vertical?: boolean;
 }
 
-export function SplitViewProvider({
-  children,
-  vertical = false,
-}: SplitViewProps) {
-  const [paneMap, setPaneMap] = useState(new Map<string, PaneType>());
+export function SplitViewProvider({ children }: SplitViewProps) {
+  const bookPane = useSplitViewPane({
+    preferredSize: window.innerWidth,
+    minSize: BOOK_PANE_SIZE_MIN,
+    maxSize: window.innerWidth - ANNOTATION_PANE_SIZE_MIN,
+  });
 
-  // 새 Pane 등록 함수
-  const registerPane = useCallback((paneId: string, pane: PaneType) => {
-    setPaneMap((map) => {
-      map.set(paneId, pane);
-      return new Map(map); // 새 맵 객체 생성하여 리렌더링 트리거
-    });
-  }, []);
+  const annotationPane = useSplitViewPane({
+    preferredSize: ANNOTATION_PANE_SIZE_MIN,
+    minSize: ANNOTATION_PANE_SIZE_MIN,
+    maxSize: window.innerWidth - BOOK_PANE_SIZE_MIN,
+  });
 
   const contextValue = useMemo(
-    () => ({ paneMap, registerPane, vertical }),
-    [registerPane, paneMap, vertical],
+    () => ({ bookPane, annotationPane }),
+    [bookPane, annotationPane],
   );
 
   return (
