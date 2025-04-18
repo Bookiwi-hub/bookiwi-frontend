@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps, memo } from "react";
 
 import { useSplitViewContext } from "./context";
 import useSplitViewPane, {
@@ -44,4 +44,4 @@ function SplitViewPane({
   );
 }
 
-export default SplitViewPane;
+export default memo(SplitViewPane);

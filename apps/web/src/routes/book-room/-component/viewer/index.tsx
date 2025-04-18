@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { SplitViewPane, SplitViewSeparator } from "../split-view";
+import { SplitViewPane, SplitViewSeparator, usePane } from "../split-view";
 
 import Annotation from "./annotation";
 import { useAnnotationView } from "./annotation/context";
@@ -16,6 +16,7 @@ import { cn } from "#/lib/utils";
 
 function Viewer() {
   const { isOpen, isPinned, close } = useAnnotationView();
+  const annotationPane = usePane(ANNOTATION_PANE_ID);
 
   return (
     <div className="relative size-full">
@@ -33,7 +34,11 @@ function Viewer() {
         {isOpen && !isPinned && (
           <SplitViewPane
             paneId="transparent"
-            preferredSize={window.innerWidth - ANNOTATION_PANE_SIZE_MIN}
+            preferredSize={
+              annotationPane.size
+                ? window.innerWidth - annotationPane.size
+                : window.innerWidth - ANNOTATION_PANE_SIZE_MIN
+            }
             minSize={BOOK_PANE_SIZE_MIN}
             maxSize={window.innerWidth - ANNOTATION_PANE_SIZE_MIN}
             className="z-10 size-full bg-transparent"
