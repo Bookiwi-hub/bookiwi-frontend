@@ -1,6 +1,5 @@
 import { ReaderProvider } from "../-reader";
 
-import { MobileContextProvider } from "./context";
 import MobileHeader from "./header";
 import MobileMenu from "./menu";
 import MobileViewer from "./viewer";
@@ -18,9 +17,7 @@ function MobileBookRoomContent() {
 function MobileBookRoom() {
   return (
     <ReaderProvider>
-      <MobileContextProvider>
-        <MobileBookRoomContent />
-      </MobileContextProvider>
+      <MobileBookRoomContent />
     </ReaderProvider>
   );
 }
