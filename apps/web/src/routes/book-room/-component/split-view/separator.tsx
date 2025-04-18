@@ -9,10 +9,12 @@ import { cn } from "#/lib/utils";
 
 interface SplitViewSeparatorProps {
   separatorThickness?: number;
+  className?: string;
 }
 
 function SplitViewSeparator({
   separatorThickness = 4,
+  className,
 }: SplitViewSeparatorProps) {
   const [hover, setHover] = useState(false);
   const [active, setActive] = useState(false);
@@ -47,6 +49,7 @@ function SplitViewSeparator({
       className={cn(
         "relative z-30 shrink-0 flex items-center justify-center",
         "cursor-ew-resize",
+        className,
       )}
       style={{
         width: separatorThickness,

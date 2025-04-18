@@ -10,6 +10,7 @@ import { useAnnotationView } from "./annotation/context";
 import Book from "./book";
 
 import Overlay from "#/components/ui/overlay";
+import { cn } from "#/lib/utils";
 
 function Viewer() {
   const { isOpen, isPinned, close } = useAnnotationView();
@@ -20,18 +21,29 @@ function Viewer() {
         <SplitViewPane
           pane={Pane.BOOK}
           resizable={isPinned}
-          className="absolute left-0 z-0 size-full"
+          className={cn(
+            "absolute left-0 z-0 size-full",
+            "transition-all duration-200 ease-in-out",
+          )}
         >
           <Book />
         </SplitViewPane>
 
-        {isOpen && <SplitViewSeparator separatorThickness={isPinned ? 4 : 2} />}
+        {isOpen && (
+          <SplitViewSeparator
+            separatorThickness={isPinned ? 4 : 2}
+            className="animate-slide-in-right"
+          />
+        )}
         {isOpen && !isPinned && (
-          <Overlay className="absolute z-10 bg-transparent" onClick={close} />
+          <Overlay className="absolute z-10 bg-transparent " onClick={close} />
         )}
 
         {isOpen && (
-          <SplitViewPane pane={Pane.ANNOTATION} className="z-20">
+          <SplitViewPane
+            pane={Pane.ANNOTATION}
+            className="z-20 animate-slide-in-right shadow-2xl"
+          >
             <Annotation />
           </SplitViewPane>
         )}
