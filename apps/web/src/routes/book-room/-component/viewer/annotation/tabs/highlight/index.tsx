@@ -2,6 +2,7 @@ import { MessageSquare, Send } from "lucide-react";
 import { useState } from "react";
 
 import { highlightData } from "#/DB/annotation-highlight";
+import { participants } from "#/DB/participants";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
@@ -10,12 +11,7 @@ import { cn } from "#/lib/utils";
 function Highlight() {
   const [currentHighlight, setCurrentHighlight] = useState(highlightData);
 
-  const currentUser = {
-    id: "currentUser",
-    name: "KIWI",
-    profileImg: "https://github.com/shadcn.png",
-    color: "rgba(186, 230, 55, 1)",
-  };
+  const currentUser = participants[0]!;
 
   const [newComment, setNewComment] = useState("");
 
@@ -34,7 +30,7 @@ function Highlight() {
           id: currentHighlight.comments.length + 1,
           text: newComment,
           date: currentDate,
-          participant: currentUser,
+          creator: currentUser,
         },
       ],
     };
@@ -79,7 +75,7 @@ function Highlight() {
           ) : (
             <div className="space-y-4">
               {currentHighlight.comments.map((comment) => {
-                const isCurrentUser = comment.participant.id === currentUser.id;
+                const isCurrentUser = comment.creator.id === currentUser.id;
 
                 return (
                   <div
@@ -90,9 +86,9 @@ function Highlight() {
                       {!isCurrentUser && (
                         <div className="mr-2 shrink-0">
                           <Avatar className="size-7">
-                            <AvatarImage src={comment.participant.profileImg} />
-                            <AvatarFallback>
-                              {comment.participant.name.charAt(0)}
+                            <AvatarImage src={comment.creator.profileImage} />
+                            <AvatarFallback className="text-xs">
+                              {comment.creator.name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
                         </div>
@@ -101,7 +97,7 @@ function Highlight() {
                       <div className="flex flex-col">
                         {!isCurrentUser && (
                           <span className="mb-1 text-xs font-medium text-foreground/80">
-                            {comment.participant.name}
+                            {comment.creator.name}
                           </span>
                         )}
                         <div
@@ -112,7 +108,7 @@ function Highlight() {
                               : "rounded-tl-none",
                           )}
                           style={{
-                            borderBottom: `3px solid ${comment.participant.color}`,
+                            borderBottom: `3px solid ${comment.creator.color}`,
                           }}
                         >
                           <p className="text-sm text-foreground">
@@ -127,9 +123,9 @@ function Highlight() {
                       {isCurrentUser && (
                         <div className="ml-2 shrink-0">
                           <Avatar className="size-7">
-                            <AvatarImage src={comment.participant.profileImg} />
+                            <AvatarImage src={comment.creator.profileImage} />
                             <AvatarFallback>
-                              {comment.participant.name.charAt(0)}
+                              {comment.creator.name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
                         </div>

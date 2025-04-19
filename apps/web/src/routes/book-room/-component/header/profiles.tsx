@@ -1,4 +1,4 @@
-import participants from "#/DB/participants";
+import { participants } from "#/DB/participants";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import {
   Popover,
