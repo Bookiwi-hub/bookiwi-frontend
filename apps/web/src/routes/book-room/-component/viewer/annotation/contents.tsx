@@ -7,10 +7,10 @@ import { TabsContent } from "#/components/ui/tabs";
 function AnnotationContents() {
   return (
     <>
-      <TabsContent value={AnnotationTab.HIGHLIGHT}>
+      <TabsContent value={AnnotationTab.HIGHLIGHT} className="size-full">
         <Highlight />
       </TabsContent>
-      <TabsContent value={AnnotationTab.HIGHLIGHT_LIST}>
+      <TabsContent value={AnnotationTab.HIGHLIGHT_LIST} className="size-full">
         <HighlightList />
       </TabsContent>
     </>
