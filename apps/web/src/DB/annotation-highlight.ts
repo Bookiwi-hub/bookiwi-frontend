@@ -1,22 +1,22 @@
-import { Participant, participants } from "./participants";
+import { ParticipantType, participants } from "./participants";
 
-interface Comment {
+export interface CommentType {
   id: number;
   text: string;
   date: string;
-  creator: Participant;
+  creator: ParticipantType;
 }
 
-interface Highlight {
+export interface HighlightType {
   id: number;
   text: string;
   page: number;
   date: string;
-  creator: Participant;
-  comments: Comment[];
+  creator: ParticipantType;
+  comments: CommentType[];
 }
 
-export const highlightData: Highlight = {
+export const highlightData: HighlightType = {
   id: 1,
   text: "이것은 책에서 하이라이트된 문장입니다. 중요한 개념이나 인상적인 구절을 표시하는데 사용됩니다.",
   page: 42,

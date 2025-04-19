@@ -1,13 +1,13 @@
 import color from "./color";
 
-export interface Participant {
+export interface ParticipantType {
   id: number;
   name: string;
   profileImage: string;
   color: string;
 }
 
-export const participants: Participant[] = [
+export const participants: ParticipantType[] = [
   {
     id: 0,
     name: "KIWI",
