@@ -3,13 +3,13 @@ import { useState } from "react";
 
 import { highlightData } from "#/DB/annotation-highlight";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { cn } from "#/lib/utils";
 
 function Highlight() {
-  // Mock data for highlighted text and comments with user information
-  // In a real implementation, this would come from a state management system or API
   const [currentHighlight, setCurrentHighlight] = useState(highlightData);
 
-  // Current user info - DB와 동일한 값으로 설정
   const currentUser = {
     id: "currentUser",
     name: "KIWI",
@@ -91,31 +91,34 @@ function Highlight() {
                         <div className="mr-2 shrink-0">
                           <Avatar className="size-7">
                             <AvatarImage src={comment.participant.profileImg} />
-                            <AvatarFallback>U</AvatarFallback>
+                            <AvatarFallback>
+                              {comment.participant.name.charAt(0)}
+                            </AvatarFallback>
                           </Avatar>
                         </div>
                       )}
 
                       <div className="flex flex-col">
                         {!isCurrentUser && (
-                          <span className="mb-1 text-xs font-medium text-gray-700">
+                          <span className="mb-1 text-xs font-medium text-foreground/80">
                             {comment.participant.name}
                           </span>
                         )}
                         <div
-                          className={`rounded-lg bg-gray-100 p-3 shadow-sm ${
+                          className={cn(
+                            "rounded-lg bg-accent p-3 shadow-sm",
                             isCurrentUser
                               ? "rounded-tr-none"
-                              : "rounded-tl-none"
-                          }`}
+                              : "rounded-tl-none",
+                          )}
                           style={{
                             borderBottom: `3px solid ${comment.participant.color}`,
                           }}
                         >
-                          <p className="text-sm text-gray-900">
+                          <p className="text-sm text-foreground">
                             {comment.text}
                           </p>
-                          <span className="mt-1 block text-right text-xs text-gray-600">
+                          <span className="mt-1 block text-right text-xs text-muted-foreground">
                             {comment.date}
                           </span>
                         </div>
@@ -123,14 +126,12 @@ function Highlight() {
 
                       {isCurrentUser && (
                         <div className="ml-2 shrink-0">
-                          <img
-                            src={
-                              comment.participant.profileImg ||
-                              `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.participant.id}`
-                            }
-                            alt={comment.participant.name}
-                            className="size-8 rounded-full"
-                          />
+                          <Avatar className="size-7">
+                            <AvatarImage src={comment.participant.profileImg} />
+                            <AvatarFallback>
+                              {comment.participant.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
                         </div>
                       )}
                     </div>
@@ -145,20 +146,24 @@ function Highlight() {
       {/* Comment input */}
       <div className="mt-auto border-t pt-3">
         <form onSubmit={handleCommentSubmit} className="flex gap-2">
-          <input
+          <Input
             type="text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="코멘트를 입력하세요..."
-            className="flex-1 rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="flex-1"
           />
-          <button
+          <Button
             type="submit"
+            variant="outline"
+            size="icon"
             disabled={!newComment.trim()}
-            className="rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600 disabled:bg-gray-300"
+            style={{
+              backgroundColor: newComment.trim() ? currentUser.color : "",
+            }}
           >
             <Send size={16} />
-          </button>
+          </Button>
         </form>
       </div>
     </div>
