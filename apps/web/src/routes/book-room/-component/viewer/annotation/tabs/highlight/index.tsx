@@ -2,6 +2,7 @@ import { MessageSquare, Send } from "lucide-react";
 import { useState } from "react";
 
 import { highlightData } from "#/DB/annotation-highlight";
+import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 
 function Highlight() {
   // Mock data for highlighted text and comments with user information
@@ -47,9 +48,9 @@ function Highlight() {
       <div className="flex flex-col gap-4">
         {/* Highlighted text section */}
         <div
-          className="mb-2 rounded-md border p-3"
+          className="mb-2 rounded-md bg-gray-50 p-3 shadow-sm"
           style={{
-            backgroundColor: currentHighlight.creator.color,
+            borderBottom: `4px solid ${currentHighlight.creator.color}`,
           }}
         >
           <p className="text-sm font-bold text-gray-900">
@@ -88,14 +89,10 @@ function Highlight() {
                     <div className="flex max-w-[85%]">
                       {!isCurrentUser && (
                         <div className="mr-2 shrink-0">
-                          <img
-                            src={
-                              comment.participant.profileImg ||
-                              `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.participant.id}`
-                            }
-                            alt={comment.participant.name}
-                            className="size-8 rounded-full"
-                          />
+                          <Avatar className="size-7">
+                            <AvatarImage src={comment.participant.profileImg} />
+                            <AvatarFallback>U</AvatarFallback>
+                          </Avatar>
                         </div>
                       )}
 
@@ -106,13 +103,13 @@ function Highlight() {
                           </span>
                         )}
                         <div
-                          className={`rounded-lg p-3 ${
+                          className={`rounded-lg bg-gray-100 p-3 shadow-sm ${
                             isCurrentUser
                               ? "rounded-tr-none"
                               : "rounded-tl-none"
                           }`}
                           style={{
-                            backgroundColor: comment.participant.color,
+                            borderBottom: `3px solid ${comment.participant.color}`,
                           }}
                         >
                           <p className="text-sm text-gray-900">
