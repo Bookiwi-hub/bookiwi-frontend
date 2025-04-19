@@ -19,7 +19,9 @@ function CommentsList({ comments, currentUser }: CommentsListProps) {
       {comments.map((comment) => (
         <CommentItem
           key={comment.id}
-          comment={comment}
+          creator={comment.creator}
+          text={comment.text}
+          date={comment.date}
           currentUser={currentUser}
         />
       ))}

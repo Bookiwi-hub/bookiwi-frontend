@@ -34,7 +34,12 @@ function Highlight() {
   return (
     <div className="flex h-full flex-col justify-between p-4">
       <div className="flex flex-col gap-4">
-        <HighlightedText highlight={currentHighlight} />
+        <HighlightedText
+          color={currentHighlight.creator.color}
+          text={currentHighlight.text}
+          page={currentHighlight.page}
+          date={currentHighlight.date}
+        />
         <CommentsList
           comments={currentHighlight.comments}
           currentUser={currentUser}

@@ -1,15 +1,18 @@
-import { CommentType } from "#/DB/annotation-highlight";
+import { memo } from "react";
+
 import { ParticipantType } from "#/DB/participants";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { cn } from "#/lib/utils";
 
 interface CommentItemProps {
-  comment: CommentType;
+  creator: ParticipantType;
+  text: string;
+  date: string;
   currentUser: ParticipantType;
 }
 
-function CommentItem({ comment, currentUser }: CommentItemProps) {
-  const isCurrentUser = comment.creator.id === currentUser.id;
+function CommentItem({ creator, text, date, currentUser }: CommentItemProps) {
+  const isCurrentUser = creator.id === currentUser.id;
 
   return (
     <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
@@ -17,9 +20,9 @@ function CommentItem({ comment, currentUser }: CommentItemProps) {
         {!isCurrentUser && (
           <div className="mr-2 shrink-0">
             <Avatar className="size-7">
-              <AvatarImage src={comment.creator.profileImage} />
+              <AvatarImage src={creator.profileImage} />
               <AvatarFallback className="text-xs">
-                {comment.creator.name.charAt(0)}
+                {creator.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -28,7 +31,7 @@ function CommentItem({ comment, currentUser }: CommentItemProps) {
         <div className="flex flex-col">
           {!isCurrentUser && (
             <span className="mb-1 text-xs font-medium text-foreground/80">
-              {comment.creator.name}
+              {creator.name}
             </span>
           )}
           <div
@@ -37,12 +40,12 @@ function CommentItem({ comment, currentUser }: CommentItemProps) {
               isCurrentUser ? "rounded-tr-none" : "rounded-tl-none",
             )}
             style={{
-              borderBottom: `3px solid ${comment.creator.color}`,
+              borderBottom: `3px solid ${creator.color}`,
             }}
           >
-            <p className="text-sm text-foreground">{comment.text}</p>
+            <p className="text-sm text-foreground">{text}</p>
             <span className="mt-1 block text-right text-xs text-muted-foreground">
-              {comment.date}
+              {date}
             </span>
           </div>
         </div>
@@ -50,8 +53,8 @@ function CommentItem({ comment, currentUser }: CommentItemProps) {
         {isCurrentUser && (
           <div className="ml-2 shrink-0">
             <Avatar className="size-7">
-              <AvatarImage src={comment.creator.profileImage} />
-              <AvatarFallback>{comment.creator.name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={currentUser.profileImage} />
+              <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
             </Avatar>
           </div>
         )}
@@ -60,4 +63,4 @@ function CommentItem({ comment, currentUser }: CommentItemProps) {
   );
 }
 
-export default CommentItem;
+export default memo(CommentItem);
