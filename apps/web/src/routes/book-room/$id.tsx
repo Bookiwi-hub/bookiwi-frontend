@@ -45,7 +45,7 @@ function BookRoomContent() {
       <Header
         title={bookTitle}
         profileImage="https://github.com/shadcn.png"
-        color="green"
+        color="rgba(186, 230, 55, 1)"
       />
       <Viewer />
     </main>
