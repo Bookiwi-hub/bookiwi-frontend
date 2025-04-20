@@ -22,7 +22,10 @@ function CommentForm({ onSubmit, currentUser }: CommentFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 border-t pt-3">
+    <form
+      onSubmit={handleSubmit}
+      className="absolute inset-x-0 bottom-3 flex gap-2 border-t p-3"
+    >
       <Input
         type="text"
         value={newComment}

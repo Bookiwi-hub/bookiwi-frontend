@@ -6,6 +6,7 @@ import HighlightedText from "./highlighted-text";
 
 import { highlightData } from "#/DB/annotation-highlight";
 import { participants } from "#/DB/participants";
+import { ScrollArea } from "#/components/ui/scroll-area";
 
 function Highlight() {
   const [currentHighlight, setCurrentHighlight] = useState(highlightData);
@@ -32,7 +33,7 @@ function Highlight() {
   };
 
   return (
-    <div className="flex size-full flex-col justify-between gap-4 p-4">
+    <ScrollArea className="relative flex size-full flex-col justify-between gap-4 p-4">
       <div className="flex size-full grow flex-col gap-4">
         <HighlightedText
           color={currentHighlight.creator.color}
@@ -47,7 +48,7 @@ function Highlight() {
       </div>
 
       <CommentForm onSubmit={handleCommentSubmit} currentUser={currentUser} />
-    </div>
+    </ScrollArea>
   );
 }
 
