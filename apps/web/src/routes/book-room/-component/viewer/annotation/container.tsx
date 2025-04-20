@@ -10,10 +10,11 @@ interface SplitViewProps {
 
 function AnnotationContainer({ children }: SplitViewProps) {
   return (
-    <Tabs defaultValue={AnnotationTab.HIGHLIGHT} className="size-full">
-      <div className="flex size-full flex-col bg-white shadow-2xl">
-        {children}
-      </div>
+    <Tabs
+      defaultValue={AnnotationTab.HIGHLIGHT}
+      className="flex size-full flex-col bg-white shadow-2xl"
+    >
+      {children}
     </Tabs>
   );
 }

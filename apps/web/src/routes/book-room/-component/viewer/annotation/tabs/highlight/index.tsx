@@ -32,8 +32,8 @@ function Highlight() {
   };
 
   return (
-    <div className="flex h-full flex-col justify-between p-4">
-      <div className="flex flex-col gap-4">
+    <div className="flex size-full flex-col justify-between gap-4 p-4">
+      <div className="flex size-full grow flex-col gap-4">
         <HighlightedText
           color={currentHighlight.creator.color}
           text={currentHighlight.text}
@@ -45,6 +45,7 @@ function Highlight() {
           currentUser={currentUser}
         />
       </div>
+
       <CommentForm onSubmit={handleCommentSubmit} currentUser={currentUser} />
     </div>
   );

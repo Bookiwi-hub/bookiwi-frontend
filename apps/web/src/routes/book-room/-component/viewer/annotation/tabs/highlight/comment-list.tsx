@@ -15,7 +15,7 @@ function CommentsList({ comments, currentUser }: CommentsListProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex  max-h-full grow flex-col gap-4">
       {comments.map((comment) => (
         <CommentItem
           key={comment.id}
