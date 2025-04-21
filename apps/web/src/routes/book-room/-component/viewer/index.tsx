@@ -16,38 +16,36 @@ function Viewer() {
   const { isOpen, isPinned, close } = useAnnotationPane();
 
   return (
-    <div className="relative size-full">
-      <SplitViewPaneGroup className="flex size-full justify-end">
+    <SplitViewPaneGroup className="relative min-h-0 flex-1 justify-end">
+      <SplitViewPane
+        pane={Pane.BOOK}
+        className={cn(
+          "absolute left-0 z-0 size-full",
+          "transition-all duration-200",
+        )}
+      >
+        <Book />
+      </SplitViewPane>
+
+      {isOpen && (
+        <SplitViewSeparator
+          separatorThickness={isPinned ? 4 : 2}
+          className="animate-slide-in-right"
+        />
+      )}
+      {isOpen && !isPinned && (
+        <Overlay className="absolute z-10 bg-transparent " onClick={close} />
+      )}
+
+      {isOpen && (
         <SplitViewPane
-          pane={Pane.BOOK}
-          className={cn(
-            "absolute left-0 z-0 size-full",
-            "transition-all duration-200",
-          )}
+          pane={Pane.ANNOTATION}
+          className="z-20 animate-slide-in-right bg-white shadow-2xl"
         >
-          <Book />
+          <Annotation />
         </SplitViewPane>
-
-        {isOpen && (
-          <SplitViewSeparator
-            separatorThickness={isPinned ? 4 : 2}
-            className="animate-slide-in-right"
-          />
-        )}
-        {isOpen && !isPinned && (
-          <Overlay className="absolute z-10 bg-transparent " onClick={close} />
-        )}
-
-        {isOpen && (
-          <SplitViewPane
-            pane={Pane.ANNOTATION}
-            className="z-20 animate-slide-in-right shadow-2xl"
-          >
-            <Annotation />
-          </SplitViewPane>
-        )}
-      </SplitViewPaneGroup>
-    </div>
+      )}
+    </SplitViewPaneGroup>
   );
 }
 

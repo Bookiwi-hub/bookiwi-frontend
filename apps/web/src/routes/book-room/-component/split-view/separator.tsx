@@ -49,7 +49,7 @@ function SplitViewSeparator({
   return (
     <div
       className={cn(
-        "relative z-30 shrink-0 flex items-center justify-center",
+        "relative z-30 flex items-center justify-center",
         "cursor-ew-resize",
         className,
       )}

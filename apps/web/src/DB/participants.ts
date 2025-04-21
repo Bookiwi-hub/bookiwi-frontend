@@ -1,16 +1,47 @@
-// Mock data for room participants
-const participants = [
+import color from "./color";
+
+export interface ParticipantType {
+  id: number;
+  name: string;
+  profileImage: string;
+  color: string;
+}
+
+export const participants: ParticipantType[] = [
   {
-    id: "0",
+    id: 0,
     name: "KIWI",
     profileImage: "https://github.com/shadcn.png",
-    color: "green",
+    color: color[0]!,
   },
-  { id: "1", name: "조현지", profileImage: "", color: "red" },
-  { id: "2", name: "임진조", profileImage: "", color: "blue" },
-  { id: "3", name: "홍서하", profileImage: "", color: "yellow" },
-  { id: "4", name: "한상우", profileImage: "", color: "purple" },
-  { id: "5", name: "채종민", profileImage: "", color: "orange" },
+  {
+    id: 1,
+    name: "조현지",
+    profileImage: "",
+    color: color[1]!,
+  },
+  {
+    id: 2,
+    name: "임진조",
+    profileImage: "",
+    color: color[2]!,
+  },
+  {
+    id: 3,
+    name: "홍서하",
+    profileImage: "",
+    color: color[3]!,
+  },
+  {
+    id: 4,
+    name: "한상우",
+    profileImage: "",
+    color: color[4]!,
+  },
+  {
+    id: 5,
+    name: "채종민",
+    profileImage: "",
+    color: color[5]!,
+  },
 ];
-
-export default participants;

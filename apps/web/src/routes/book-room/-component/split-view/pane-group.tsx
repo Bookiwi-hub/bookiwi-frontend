@@ -10,7 +10,7 @@ function SplitViewPaneGroup({
   ...props
 }: SplitViewGroupProps) {
   return (
-    <div className={cn("flex size-full", className)} {...props}>
+    <div className={cn("flex", className)} {...props}>
       {children}
     </div>
   );
