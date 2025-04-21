@@ -4,7 +4,9 @@ import { usePane } from "../../split-view";
 import { Pane } from "../../split-view/constants/type";
 
 import { useAnnotationPane } from "./context";
+import { AnnotationTab } from "./tabs/tab";
 
+import { TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { cn } from "#/lib/utils";
 
 function AnnotationHeader() {
@@ -28,8 +30,15 @@ function AnnotationHeader() {
   };
 
   return (
-    <div className="flex items-center justify-between border-b border-gray-200 p-3">
-      <h2 className="text-lg font-semibold">Notes & Comments</h2>
+    <div className="flex items-center justify-between gap-2 border-b border-gray-200 p-3">
+      <TabsList className="w-full">
+        <TabsTrigger className="w-full" value={AnnotationTab.HIGHLIGHT}>
+          하이라이트
+        </TabsTrigger>
+        <TabsTrigger className="w-full" value={AnnotationTab.HIGHLIGHT_LIST}>
+          목록
+        </TabsTrigger>
+      </TabsList>
       <div className="flex items-center gap-2">
         <button
           type="button"
