@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import CommentForm from "./comment-form";
 import CommentsList from "./comment-list";
@@ -11,6 +11,7 @@ import { ScrollArea } from "#/components/ui/scroll-area";
 function Highlight() {
   const [currentHighlight, setCurrentHighlight] = useState(highlightData);
   const currentUser = participants[0]!;
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const handleCommentSubmit = (commentText: string) => {
     const currentDate = new Date().toISOString().split("T")[0];
@@ -32,9 +33,20 @@ function Highlight() {
     setCurrentHighlight(updatedHighlight);
   };
 
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]",
+      );
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+    }
+  }, [currentHighlight.comments]);
+
   return (
     <div className="flex size-full flex-col justify-between">
-      <ScrollArea className="flex flex-col p-4">
+      <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
         <HighlightedText
           color={currentHighlight.creator.color}
           text={currentHighlight.text}
