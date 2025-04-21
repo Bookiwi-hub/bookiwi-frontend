@@ -1,25 +1,28 @@
 import AnnotationHeader from "./header";
+import { useAnnotationTab, TabType } from "./tabs/context";
 import Highlight from "./tabs/highlight";
 import HighlightList from "./tabs/highlight-list";
-import { AnnotationTab } from "./tabs/tab";
 
 import { Tabs, TabsContent } from "#/components/ui/tabs";
 
 function Annotation() {
+  const { tabState, setTabState } = useAnnotationTab();
+
   return (
     <Tabs
-      defaultValue={AnnotationTab.HIGHLIGHT}
+      value={tabState}
+      onValueChange={(value) => setTabState(value as TabType)}
       className="flex h-full flex-col shadow-2xl"
     >
       <AnnotationHeader />
       <TabsContent
-        value={AnnotationTab.HIGHLIGHT}
+        value={TabType.HIGHLIGHT}
         className="relative min-h-0 w-full flex-1"
       >
         <Highlight />
       </TabsContent>
       <TabsContent
-        value={AnnotationTab.HIGHLIGHT_LIST}
+        value={TabType.HIGHLIGHT_LIST}
         className="relative min-h-0 w-full flex-1"
       >
         <HighlightList />

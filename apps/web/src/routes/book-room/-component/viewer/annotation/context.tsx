@@ -1,4 +1,14 @@
-import { createContext, Dispatch, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+
+import { AnnotationTabProvider } from "./tabs/context";
 
 export enum AnnotationPaneState {
   CLOSED,
@@ -8,7 +18,7 @@ export enum AnnotationPaneState {
 
 interface AnnotationPaneContextType {
   paneState: AnnotationPaneState;
-  setPaneState: Dispatch<React.SetStateAction<AnnotationPaneState>>;
+  setPaneState: Dispatch<SetStateAction<AnnotationPaneState>>;
   isOpen: boolean;
   isPinned: boolean;
   open: () => void;
@@ -32,11 +42,7 @@ export const useAnnotationPane = () => {
   return context;
 };
 
-export function AnnotationPaneProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function AnnotationPaneProvider({ children }: { children: ReactNode }) {
   const [paneState, setPaneState] = useState<AnnotationPaneState>(
     AnnotationPaneState.CLOSED,
   );
@@ -81,7 +87,7 @@ export function AnnotationPaneProvider({
 
   return (
     <AnnotationPaneContext.Provider value={value}>
-      {children}
+      <AnnotationTabProvider>{children}</AnnotationTabProvider>
     </AnnotationPaneContext.Provider>
   );
 }
