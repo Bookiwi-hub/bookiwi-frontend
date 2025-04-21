@@ -38,7 +38,15 @@ function HighlightList() {
       <ScrollArea className="size-full px-4 pb-4">
         {filteredHighlights.length > 0 ? (
           filteredHighlights.map((highlight) => (
-            <HighlightItem key={highlight.id} highlight={highlight} />
+            <HighlightItem
+              key={highlight.id}
+              text={highlight.text}
+              color={highlight.creator.color}
+              name={highlight.creator.name}
+              page={highlight.page}
+              date={highlight.date}
+              totalComments={highlight.totalComments}
+            />
           ))
         ) : (
           <div className="flex h-full items-center justify-center text-gray-500">
