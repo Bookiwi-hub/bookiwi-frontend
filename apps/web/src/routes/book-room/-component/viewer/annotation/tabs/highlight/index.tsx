@@ -14,7 +14,7 @@ function Highlight() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const handleCommentSubmit = (commentText: string) => {
-    const currentDate = new Date().toISOString().split("T")[0];
+    const currentDate = new Date().toISOString();
     if (!currentDate) return;
 
     const updatedHighlight = {
