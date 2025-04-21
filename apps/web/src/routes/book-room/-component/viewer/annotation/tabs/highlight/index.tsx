@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 
+// import { useAnnotationTab } from "../context";
+
 import CommentForm from "./comment-form";
 import CommentsList from "./comment-list";
 import HighlightedText from "./highlighted-text";
@@ -9,6 +11,8 @@ import { participants } from "#/DB/participants";
 import { ScrollArea } from "#/components/ui/scroll-area";
 
 function Highlight() {
+  // const { highlightId } = useAnnotationTab();
+
   const [currentHighlight, setCurrentHighlight] = useState(highlightData);
   const currentUser = participants[0]!;
   const scrollAreaRef = useRef<HTMLDivElement>(null);
