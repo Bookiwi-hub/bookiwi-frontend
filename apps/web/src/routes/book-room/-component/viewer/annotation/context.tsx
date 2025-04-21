@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import { AnnotationTabProvider } from "./tabs/context";
+
 export enum AnnotationPaneState {
   CLOSED,
   OPEN,
@@ -85,7 +87,7 @@ export function AnnotationPaneProvider({ children }: { children: ReactNode }) {
 
   return (
     <AnnotationPaneContext.Provider value={value}>
-      {children}
+      <AnnotationTabProvider>{children}</AnnotationTabProvider>
     </AnnotationPaneContext.Provider>
   );
 }

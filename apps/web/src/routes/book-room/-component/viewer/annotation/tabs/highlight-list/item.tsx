@@ -1,3 +1,5 @@
+import { TabType, useAnnotationTab } from "../context";
+
 import { useTruncatedText } from "#/routes/book-room/-component/viewer/annotation/tabs/hooks/use-truncated-text";
 import { formatDate } from "#/utils/format-date";
 
@@ -23,8 +25,20 @@ function HighlightItem({
     maxLength: 100,
   });
 
+  const { setTabState } = useAnnotationTab();
+
   return (
-    <div className="mb-6 rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
+    <div
+      className="mb-6 rounded-lg border border-gray-200 p-4 hover:bg-gray-50"
+      onClick={() => setTabState(TabType.HIGHLIGHT)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          setTabState(TabType.HIGHLIGHT);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+    >
       <div className="mb-2 text-sm font-medium" style={{ color }}>
         {name}
       </div>
