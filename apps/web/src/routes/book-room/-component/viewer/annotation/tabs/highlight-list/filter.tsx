@@ -37,10 +37,10 @@ function CreatorFilter({
     onCreatorsChange([]);
   };
 
-  let displayText = "작성자 선택";
+  let displayText = "전체 목록";
   if (selectedCreators.length > 0) {
     if (selectedCreators.length === participants.length) {
-      displayText = "모든 작성자";
+      displayText = "전체 목록";
     } else {
       displayText = `${selectedCreators.length}명 선택됨`;
     }
