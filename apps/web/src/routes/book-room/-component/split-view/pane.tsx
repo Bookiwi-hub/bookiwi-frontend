@@ -21,7 +21,7 @@ function SplitViewPane({
   return (
     <div
       id={`${pane}`}
-      className={cn(thisPane.size && "shrink-0", className)}
+      className={cn(className)}
       style={{
         width: thisPane.size,
       }}

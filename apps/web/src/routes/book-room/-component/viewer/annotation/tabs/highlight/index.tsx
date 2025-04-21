@@ -33,8 +33,8 @@ function Highlight() {
   };
 
   return (
-    <ScrollArea className="relative flex size-full flex-col justify-between gap-4 p-4">
-      <div className="flex size-full grow flex-col gap-4">
+    <div className="flex size-full flex-col justify-between">
+      <ScrollArea className="flex flex-col p-4">
         <HighlightedText
           color={currentHighlight.creator.color}
           text={currentHighlight.text}
@@ -45,10 +45,10 @@ function Highlight() {
           comments={currentHighlight.comments}
           currentUser={currentUser}
         />
-      </div>
+      </ScrollArea>
 
       <CommentForm onSubmit={handleCommentSubmit} currentUser={currentUser} />
-    </ScrollArea>
+    </div>
   );
 }
 

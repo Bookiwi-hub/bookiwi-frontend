@@ -16,7 +16,7 @@ function Viewer() {
   const { isOpen, isPinned, close } = useAnnotationPane();
 
   return (
-    <SplitViewPaneGroup className="relative flex size-full justify-end">
+    <SplitViewPaneGroup className="relative min-h-0 flex-1 justify-end">
       <SplitViewPane
         pane={Pane.BOOK}
         className={cn(
@@ -40,7 +40,7 @@ function Viewer() {
       {isOpen && (
         <SplitViewPane
           pane={Pane.ANNOTATION}
-          className="z-20 h-full max-h-full animate-slide-in-right bg-blue-500 shadow-2xl"
+          className="z-20 animate-slide-in-right bg-white shadow-2xl"
         >
           <Annotation />
         </SplitViewPane>

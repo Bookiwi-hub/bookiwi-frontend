@@ -10,7 +10,7 @@ interface HighlightedTextProps {
 function HighlightedText({ color, text, page, date }: HighlightedTextProps) {
   return (
     <div
-      className="mb-2 rounded-md bg-gray-50 p-3 shadow-sm"
+      className="my-4 rounded-md bg-gray-50 p-3 shadow-sm"
       style={{
         borderBottom: `4px solid ${color}`,
       }}
