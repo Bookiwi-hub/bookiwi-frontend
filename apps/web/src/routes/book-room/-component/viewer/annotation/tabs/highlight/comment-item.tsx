@@ -3,7 +3,7 @@ import { memo } from "react";
 import { ParticipantType } from "#/DB/participants";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { cn } from "#/lib/utils";
-import { formatTimeAgo } from "#/utils/format-date";
+import { formatDate } from "#/utils/format-date";
 
 interface CommentItemProps {
   creator: ParticipantType;
@@ -14,7 +14,7 @@ interface CommentItemProps {
 
 function CommentItem({ creator, text, date, currentUser }: CommentItemProps) {
   const isCurrentUser = creator.id === currentUser.id;
-  const formattedDate = formatTimeAgo(date);
+  const formattedDate = formatDate(date);
 
   return (
     <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>

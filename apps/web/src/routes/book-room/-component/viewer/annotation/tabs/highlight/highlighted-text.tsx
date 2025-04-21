@@ -1,6 +1,7 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 
-import { formatTimeAgo } from "#/utils/format-date";
+import { useTruncatedText } from "#/routes/book-room/-component/viewer/annotation/tabs/hooks/use-truncated-text";
+import { formatDate } from "#/utils/format-date";
 
 interface HighlightedTextProps {
   color: string;
@@ -10,13 +11,12 @@ interface HighlightedTextProps {
 }
 
 function HighlightedText({ color, text, page, date }: HighlightedTextProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const maxLength = 100;
-  const isTruncated = text.length > maxLength;
-  const formattedDate = formatTimeAgo(date);
-
-  const displayText =
-    isExpanded || !isTruncated ? text : `${text.slice(0, maxLength)}...`;
+  const { displayText, isTruncated, isExpanded, toggleExpanded } =
+    useTruncatedText({
+      text,
+      maxLength: 100,
+    });
+  const formattedDate = formatDate(date);
 
   return (
     <div
@@ -31,8 +31,8 @@ function HighlightedText({ color, text, page, date }: HighlightedTextProps) {
       {isTruncated && (
         <button
           type="button"
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="mt-1 text-xs text-gray-700"
+          onClick={toggleExpanded}
+          className="mt-1 text-xs text-gray-700 hover:underline"
         >
           {isExpanded ? "접기" : "더 보기"}
         </button>

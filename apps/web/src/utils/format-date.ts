@@ -12,7 +12,7 @@ function formatDateTime(date: Date): string {
   return `${year}-${month}-${day} ${period} ${displayHours}:${minutes}`;
 }
 
-export function formatTimeAgo(dateString: string): string {
+export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
 
