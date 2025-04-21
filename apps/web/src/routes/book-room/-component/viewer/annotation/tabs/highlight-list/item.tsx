@@ -4,6 +4,7 @@ import { useTruncatedText } from "#/routes/book-room/-component/viewer/annotatio
 import { formatDate } from "#/utils/format-date";
 
 interface HighlightItemProps {
+  id: number;
   text: string;
   color: string;
   name: string;
@@ -13,6 +14,7 @@ interface HighlightItemProps {
 }
 
 function HighlightItem({
+  id,
   text,
   color,
   name,
@@ -25,15 +27,20 @@ function HighlightItem({
     maxLength: 100,
   });
 
-  const { setTabState } = useAnnotationTab();
+  const { setTabState, setHighlightId } = useAnnotationTab();
+
+  const handleClick = () => {
+    setTabState(TabType.HIGHLIGHT);
+    setHighlightId(id);
+  };
 
   return (
     <div
       className="mb-6 rounded-lg border border-gray-200 p-4 hover:bg-gray-50"
-      onClick={() => setTabState(TabType.HIGHLIGHT)}
+      onClick={handleClick}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          setTabState(TabType.HIGHLIGHT);
+          handleClick();
         }
       }}
       role="button"

@@ -35,7 +35,7 @@ export const useAnnotationTab = () => {
 };
 
 export function AnnotationTabProvider({ children }: { children: ReactNode }) {
-  const [tabState, setTabState] = useState<TabType>(TabType.HIGHLIGHT);
+  const [tabState, setTabState] = useState<TabType>(TabType.HIGHLIGHT_LIST);
   const [highlightId, setHighlightId] = useState<number>(0);
 
   const value = useMemo(

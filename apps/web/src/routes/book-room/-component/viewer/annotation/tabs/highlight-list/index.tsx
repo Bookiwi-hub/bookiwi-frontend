@@ -40,6 +40,7 @@ function HighlightList() {
           filteredHighlights.map((highlight) => (
             <HighlightItem
               key={highlight.id}
+              id={highlight.id}
               text={highlight.text}
               color={highlight.creator.color}
               name={highlight.creator.name}
