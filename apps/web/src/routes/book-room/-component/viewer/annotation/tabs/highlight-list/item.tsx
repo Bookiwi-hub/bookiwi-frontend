@@ -3,11 +3,10 @@ import { useTruncatedText } from "#/routes/book-room/-component/viewer/annotatio
 import { formatDate } from "#/utils/format-date";
 
 function HighlightItem({ highlight }: { highlight: HighlightListType }) {
-  const { displayText, isTruncated, isExpanded, toggleExpanded } =
-    useTruncatedText({
-      text: highlight.text,
-      maxLength: 100,
-    });
+  const { displayText } = useTruncatedText({
+    text: highlight.text,
+    maxLength: 100,
+  });
 
   return (
     <div className="mb-6 rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
@@ -17,18 +16,7 @@ function HighlightItem({ highlight }: { highlight: HighlightListType }) {
       >
         {highlight.creator.name}
       </div>
-      <div className="mb-3 text-sm text-gray-700">
-        {displayText}
-        {isTruncated && (
-          <button
-            type="button"
-            onClick={toggleExpanded}
-            className="ml-1 text-xs text-gray-700 hover:underline"
-          >
-            {isExpanded ? "접기" : "더 보기"}
-          </button>
-        )}
-      </div>
+      <div className="mb-3 text-sm text-gray-700">{displayText}</div>
       <div className="flex items-center justify-between text-xs text-gray-500">
         <div>페이지 {highlight.page}</div>
         <div>{formatDate(highlight.date)}</div>
