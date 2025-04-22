@@ -19,10 +19,7 @@ function Viewer() {
     <SplitViewPaneGroup className="relative min-h-0 flex-1 justify-end">
       <SplitViewPane
         pane={Pane.BOOK}
-        className={cn(
-          "absolute left-0 z-0 size-full",
-          "transition-all duration-200",
-        )}
+        className={cn("absolute z-0 inset-0", "transition-all duration-200")}
       >
         <Book />
       </SplitViewPane>
