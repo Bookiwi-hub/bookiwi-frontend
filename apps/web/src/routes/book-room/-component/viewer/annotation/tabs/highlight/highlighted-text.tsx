@@ -8,9 +8,16 @@ interface HighlightedTextProps {
   text: string;
   page: number;
   date: string;
+  creatorName: string;
 }
 
-function HighlightedText({ color, text, page, date }: HighlightedTextProps) {
+function HighlightedText({
+  color,
+  text,
+  page,
+  date,
+  creatorName,
+}: HighlightedTextProps) {
   const { displayText, isTruncated, isExpanded, toggleExpanded } =
     useTruncatedText({
       text,
@@ -38,7 +45,10 @@ function HighlightedText({ color, text, page, date }: HighlightedTextProps) {
         </button>
       )}
       <div className="mt-2 flex items-center justify-between">
-        <span className="text-xs text-gray-700">{page} 페이지</span>
+        <div>
+          <span className="text-xs text-gray-700">{page} 페이지</span>
+          <span className="ml-2 text-xs text-gray-600">by {creatorName}</span>
+        </div>
         <span className="text-xs text-gray-700">{formattedDate}</span>
       </div>
     </div>
