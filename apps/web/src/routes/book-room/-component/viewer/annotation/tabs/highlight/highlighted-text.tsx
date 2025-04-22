@@ -34,16 +34,16 @@ function HighlightedText({
     >
       <p className="text-sm font-bold text-gray-900">
         &ldquo;{displayText}&rdquo;
+        {isTruncated && (
+          <button
+            type="button"
+            onClick={toggleExpanded}
+            className="ml-1 text-xs text-gray-700 hover:underline"
+          >
+            {isExpanded ? "접기" : "더 보기"}
+          </button>
+        )}
       </p>
-      {isTruncated && (
-        <button
-          type="button"
-          onClick={toggleExpanded}
-          className="mt-1 text-xs text-gray-700 hover:underline"
-        >
-          {isExpanded ? "접기" : "더 보기"}
-        </button>
-      )}
       <div className="mt-2 flex items-center justify-between">
         <div>
           <span className="text-xs text-gray-700">{page} 페이지</span>

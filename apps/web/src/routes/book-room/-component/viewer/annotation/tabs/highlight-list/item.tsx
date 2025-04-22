@@ -22,10 +22,11 @@ function HighlightItem({
   date,
   totalComments,
 }: HighlightItemProps) {
-  const { displayText } = useTruncatedText({
-    text,
-    maxLength: 100,
-  });
+  const { displayText, isTruncated, isExpanded, toggleExpanded } =
+    useTruncatedText({
+      text,
+      maxLength: 100,
+    });
 
   const { setTabState, setHighlightId } = useAnnotationTab();
 
@@ -49,7 +50,21 @@ function HighlightItem({
       <div className="mb-2 text-sm font-medium" style={{ color }}>
         {name}
       </div>
-      <div className="mb-3 text-sm text-gray-700">{displayText}</div>
+      <div className="mb-3 text-sm text-gray-700">
+        {displayText}
+        {isTruncated && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleExpanded();
+            }}
+            className="ml-1 text-xs text-gray-700 hover:underline"
+          >
+            {isExpanded ? "접기" : "더 보기"}
+          </button>
+        )}
+      </div>
       <div className="flex items-center justify-between text-xs text-gray-500">
         <div>페이지 {page}</div>
         <div>{formatDate(date)}</div>
