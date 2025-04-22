@@ -22,10 +22,18 @@ function ReaderPageProgress() {
     // Track if user is dragging
     let isDragging = false;
 
-    const handleTouchAndClick = () => {
-      if (!isDragging) {
+    const handleTouchAndClick = (e: MouseEvent | TouchEvent) => {
+      // Check if there's any text selected
+      const iframe = e.currentTarget as Document;
+      const selection = iframe.getSelection();
+
+      // Only toggle if not dragging and no text is selected
+      if (!isDragging && (!selection || selection.toString().trim() === "")) {
         setIsContentTouched((prev) => !prev);
       }
+
+      // Reset the dragging state
+      isDragging = false;
     };
 
     const handleMouseDown = () => {
