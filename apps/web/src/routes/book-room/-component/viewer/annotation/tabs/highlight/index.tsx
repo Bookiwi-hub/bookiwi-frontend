@@ -56,6 +56,7 @@ function Highlight() {
           text={currentHighlight.text}
           page={currentHighlight.page}
           date={currentHighlight.date}
+          creatorName={currentHighlight.creator.name}
         />
         <CommentsList
           comments={currentHighlight.comments}
