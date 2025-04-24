@@ -42,11 +42,11 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
   return (
     <>
       <Card
-        className="group relative flex h-[420px] w-64 flex-col overflow-hidden rounded-xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)] mobile:w-full"
+        className="group relative flex h-[420px] w-full flex-col overflow-hidden rounded-xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
         onClick={handleCardClick}
       >
         {/* 이미지 영역 */}
-        <div className="relative aspect-[4/5] overflow-hidden">
+        <div className="relative aspect-[3/4] overflow-hidden">
           <img
             src={image || fallbackImageUrl}
             alt="Book cover"
