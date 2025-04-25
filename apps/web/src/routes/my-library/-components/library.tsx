@@ -46,7 +46,7 @@ export default function Library({ bookRooms, onCreateBookRoom }: LibraryProps) {
               <Plus size={20} />새 북룸 만들기
             </Button>
           </div>
-          <div className="grid grid-cols-2 gap-3 px-1 md:grid-cols-3 md:gap-4 md:px-0 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-1 justify-items-center gap-3 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {bookRooms.map((bookRoom) => (
               <BookRoomCard key={bookRoom.id} bookRoom={bookRoom} />
             ))}
