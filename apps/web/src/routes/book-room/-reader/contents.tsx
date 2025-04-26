@@ -18,6 +18,18 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
     // Display the first page
     book.rendition.display();
+
+    // eslint-disable-next-line
+    return () => {
+      // 컴포넌트 언마운트 시 rendition 정리
+      if (book && book.rendition) {
+        try {
+          book.rendition.destroy();
+        } catch (e) {
+          console.error("Error destroying rendition:", e);
+        }
+      }
+    };
   }, [book]);
 
   return <div ref={viewerRef} {...props} />;
