@@ -30,12 +30,14 @@ export default function Library({ bookRooms }: LibraryProps) {
         <>
           <div className="mb-8 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">내 키위 컬렉션</h2>
-              <Button className="flex items-center gap-2">
-                <Plus size={20} />새 키위 만들기
-              </Button>
+              <h2 className="text-2xl font-bold">내 키위</h2>
+              <div className="flex items-center gap-2">
+                <LinkInput />
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Plus size={16} />새 키위 만들기
+                </Button>
+              </div>
             </div>
-            <LinkInput />
           </div>
           <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {bookRooms.map((bookRoom) => (

@@ -27,6 +27,13 @@ export interface ActivityProps {
   time: string;
 }
 
+export interface Member {
+  id: number;
+  name: string;
+  avatar: string;
+  progress: number;
+}
+
 export interface BookRoom {
   id: string;
   name: string;
@@ -43,4 +50,5 @@ export interface BookRoom {
   activities?: ActivityProps[];
   createdAt?: string;
   admin?: string;
+  members?: Member[];
 }

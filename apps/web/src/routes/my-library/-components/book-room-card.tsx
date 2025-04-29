@@ -108,7 +108,7 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
               className="read-button w-full bg-primary/90 text-white backdrop-blur-sm hover:bg-primary"
               variant="secondary"
             >
-              키위 입장하기
+              입장하기
             </Button>
           </Link>
         </div>
