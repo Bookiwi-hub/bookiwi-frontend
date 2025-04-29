@@ -40,7 +40,7 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
     isPrivate,
     memberCount = 0,
     progress = 0,
-    books = [],
+    book,
     discussions = [],
     events = [],
     activities = [],
@@ -68,7 +68,7 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
           defaultValue="info"
           className="flex h-[calc(85vh-180px)] flex-col"
         >
-          <TabsList className="grid w-full grid-cols-3 border-b px-6">
+          <TabsList className="my-2 grid w-full grid-cols-3 border-b">
             <TabsTrigger value="info">기본 정보</TabsTrigger>
             <TabsTrigger value="activities">활동 내역</TabsTrigger>
             <TabsTrigger value="discussions">토론 및 이벤트</TabsTrigger>
@@ -105,10 +105,14 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
                         <Users size={16} className="text-muted-foreground" />
                         <span>멤버 {memberCount}명</span>
                       </li>
-                      <li className="flex items-center gap-2">
-                        <Book size={16} className="text-muted-foreground" />
-                        <span>책 {books.length}권</span>
-                      </li>
+                      {book && (
+                        <li className="flex items-center gap-2">
+                          <Book size={16} className="text-muted-foreground" />
+                          <span>
+                            {book.title} - {book.author}
+                          </span>
+                        </li>
+                      )}
                       {createdAt && (
                         <li className="flex items-center gap-2">
                           <Calendar
@@ -148,36 +152,6 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
                   <p className="text-sm text-muted-foreground">
                     {detailDescription}
                   </p>
-                </div>
-              )}
-
-              {books.length > 0 && (
-                <div className="space-y-2">
-                  <h3 className="font-medium">포함된 책</h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    {books.map((book) => (
-                      <div
-                        key={`book-${book.title}-${book.author}`}
-                        className="space-y-1"
-                      >
-                        <div className="aspect-[3/4] overflow-hidden rounded-md bg-gray-100">
-                          <img
-                            src={book.cover || fallbackImageUrl}
-                            alt={book.title}
-                            className="size-full object-cover"
-                          />
-                        </div>
-                        <div className="text-xs">
-                          <p className="line-clamp-1 font-medium">
-                            {book.title}
-                          </p>
-                          <p className="line-clamp-1 text-muted-foreground">
-                            {book.author}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               )}
             </TabsContent>

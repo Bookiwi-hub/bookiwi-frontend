@@ -11,9 +11,11 @@ const bookRooms = [
     isPrivate: false,
     memberCount: 12,
     progress: 75,
-    books: [
-      { title: "데미안", author: "헤르만 헤세", cover: "/images/demian.jpg" },
-    ],
+    book: {
+      title: "데미안",
+      author: "헤르만 헤세",
+      cover: "/images/demian.jpg",
+    },
     discussions: [
       {
         id: "101",
@@ -87,18 +89,11 @@ const bookRooms = [
     isPrivate: false,
     memberCount: 24,
     progress: 60,
-    books: [
-      {
-        title: "해리포터와 마법사의 돌",
-        author: "J.K. 롤링",
-        cover: "/images/harry-potter.jpg",
-      },
-      {
-        title: "해리포터와 비밀의 방",
-        author: "J.K. 롤링",
-        cover: "/images/harry-potter2.jpg",
-      },
-    ],
+    book: {
+      title: "해리포터와 마법사의 돌",
+      author: "J.K. 롤링",
+      cover: "/images/harry-potter.jpg",
+    },
     discussions: [
       {
         id: "111",
@@ -158,14 +153,11 @@ const bookRooms = [
     isPrivate: true,
     memberCount: 8,
     progress: 40,
-    books: [
-      { title: "코스모스", author: "칼 세이건", cover: "/images/cosmos.jpg" },
-      {
-        title: "빅 히스토리",
-        author: "데이비드 크리스천",
-        cover: "/images/big-history.jpg",
-      },
-    ],
+    book: {
+      title: "코스모스",
+      author: "칼 세이건",
+      cover: "/images/cosmos.jpg",
+    },
     discussions: [
       {
         id: "121",
@@ -219,13 +211,11 @@ const bookRooms = [
     isPrivate: false,
     memberCount: 15,
     progress: 50,
-    books: [
-      {
-        title: "소설 쓰기의 모든 것",
-        author: "제임스 스콧 벨",
-        cover: "/images/writing.jpg",
-      },
-    ],
+    book: {
+      title: "소설 쓰기의 모든 것",
+      author: "제임스 스콧 벨",
+      cover: "/images/writing.jpg",
+    },
     discussions: [
       {
         id: "131",
@@ -279,14 +269,7 @@ const bookRooms = [
     isPrivate: false,
     memberCount: 10,
     progress: 80,
-    books: [
-      { title: "윤동주 전집", author: "윤동주", cover: "/images/yoon.jpg" },
-      {
-        title: "세계 명시 모음집",
-        author: "다양한 저자",
-        cover: "/images/poems-collection.jpg",
-      },
-    ],
+    book: { title: "윤동주 전집", author: "윤동주", cover: "/images/yoon.jpg" },
     discussions: [
       {
         id: "141",

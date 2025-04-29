@@ -37,7 +37,7 @@ export interface BookRoom {
   isPrivate?: boolean;
   memberCount?: number;
   progress?: number;
-  books?: BookProps[];
+  book?: BookProps;
   discussions?: DiscussionProps[];
   events?: EventProps[];
   activities?: ActivityProps[];
