@@ -1,30 +1,20 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
 
 import BookRoomCard from "./book-room-card";
-import CreateBookRoomModal from "./create-book-room-modal";
 
 import { Button } from "#/components/ui/button";
 import { BookRoom } from "#/types/book-room";
 
 interface LibraryProps {
   bookRooms: BookRoom[];
-  onCreateBookRoom: (data: {
-    name: string;
-    description: string;
-    image?: string;
-  }) => Promise<void>;
 }
 
-export default function Library({ bookRooms, onCreateBookRoom }: LibraryProps) {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
+export default function Library({ bookRooms }: LibraryProps) {
   return (
     <div className="w-full">
       {bookRooms.length === 0 ? (
         <Button
           variant="outline"
-          onClick={() => setIsCreateModalOpen(true)}
           className="flex min-h-[300px] w-full flex-col items-center justify-center gap-4 border border-dashed bg-transparent transition-colors hover:border-primary hover:bg-primary/5"
         >
           <div className="flex items-center gap-2 text-muted-foreground">
@@ -39,10 +29,7 @@ export default function Library({ bookRooms, onCreateBookRoom }: LibraryProps) {
         <>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-2xl font-bold">나의 북룸</h2>
-            <Button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-2"
-            >
+            <Button className="flex items-center gap-2">
               <Plus size={20} />새 북룸 만들기
             </Button>
           </div>
@@ -54,11 +41,11 @@ export default function Library({ bookRooms, onCreateBookRoom }: LibraryProps) {
         </>
       )}
 
-      <CreateBookRoomModal
+      {/* <CreateBookRoomModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onCreateBookRoom={onCreateBookRoom}
-      />
+      /> */}
     </div>
   );
 }
