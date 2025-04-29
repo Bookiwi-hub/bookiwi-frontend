@@ -45,7 +45,9 @@ function CommentItem({ creator, text, date, currentUser }: CommentItemProps) {
               borderBottom: `3px solid ${creator.color}`,
             }}
           >
-            <p className="text-sm text-foreground">{text}</p>
+            <p className="whitespace-pre-wrap text-sm text-foreground">
+              {text}
+            </p>
             <span className="mt-1 block text-right text-xs text-muted-foreground">
               {formattedDate}
             </span>
