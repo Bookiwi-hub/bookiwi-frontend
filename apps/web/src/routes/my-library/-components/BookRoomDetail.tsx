@@ -114,7 +114,14 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
                       )}
                       <li className="flex items-center gap-2">
                         <Users size={16} className="text-muted-foreground" />
-                        <span>멤버 {memberCount}명</span>
+                        <span className="flex items-center gap-1">
+                          <span className="font-medium text-primary">
+                            {members.length}명
+                          </span>
+                          <span className="text-muted-foreground">
+                            / {memberCount}명
+                          </span>
+                        </span>
                       </li>
                       {book && (
                         <li className="flex items-center gap-2">
