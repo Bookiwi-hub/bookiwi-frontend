@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 
 import BookRoomCard from "./book-room-card";
+import LinkInput from "./link-input";
 
 import { Button } from "#/components/ui/button";
 import { BookRoom } from "#/types/book-room";
@@ -19,21 +20,24 @@ export default function Library({ bookRooms }: LibraryProps) {
         >
           <div className="flex items-center gap-2 text-muted-foreground">
             <Plus size={20} />
-            <span>새로운 북룸 만들기</span>
+            <span>새로운 키위 만들기</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            함께 읽고 토론할 수 있는 새로운 북룸을 만들어보세요.
+            책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요.
           </p>
         </Button>
       ) : (
         <>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-2xl font-bold">나의 북룸</h2>
-            <Button className="flex items-center gap-2">
-              <Plus size={20} />새 북룸 만들기
-            </Button>
+          <div className="mb-8 space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">내 키위 컬렉션</h2>
+              <Button className="flex items-center gap-2">
+                <Plus size={20} />새 키위 만들기
+              </Button>
+            </div>
+            <LinkInput />
           </div>
-          <div className="grid grid-cols-1 justify-items-center gap-3 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
             {bookRooms.map((bookRoom) => (
               <BookRoomCard key={bookRoom.id} bookRoom={bookRoom} />
             ))}

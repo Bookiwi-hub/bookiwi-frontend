@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Clock } from "lucide-react";
+import { Clock, Users } from "lucide-react";
 import { memo, useCallback, useState } from "react";
 
 import BookRoomDetail from "./BookRoomDetail";
@@ -24,6 +24,7 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
     image,
     lastActivityAt,
     progress = 0,
+    memberCount = 0,
   } = bookRoom;
 
   // useCallback을 사용하여 카드 클릭 핸들러 메모이제이션
@@ -42,7 +43,7 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
   return (
     <>
       <Card
-        className="group relative flex h-[420px] w-full max-w-[280px] cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
+        className="group relative flex h-[420px] w-full max-w-[280px] cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
         onClick={handleCardClick}
       >
         {/* 이미지 영역 */}
@@ -62,6 +63,10 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
               <span className="text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
                 {progress}% 읽음
               </span>
+              <div className="flex items-center gap-1 text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
+                <Users size={12} />
+                <span>{memberCount}명 참여중</span>
+              </div>
             </div>
             <div className="h-1 overflow-hidden rounded-full bg-white/20 backdrop-blur-sm">
               <div
@@ -87,7 +92,7 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <Clock size={12} />
-              <span>{lastActivityAt}</span>
+              <span>마지막 활동: {lastActivityAt}</span>
             </div>
           </div>
         </div>
@@ -100,10 +105,10 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <Button
-              className="w-full bg-primary/90 text-white backdrop-blur-sm hover:bg-primary"
+              className="read-button w-full bg-primary/90 text-white backdrop-blur-sm hover:bg-primary"
               variant="secondary"
             >
-              바로 읽으러 가기
+              키위 입장하기
             </Button>
           </Link>
         </div>
