@@ -44,27 +44,10 @@ export function ReaderProvider({ children }: { children: React.ReactNode }) {
         }
       });
 
-    // Cleanup function
     return () => {
       mounted = false;
-
-      // 현재 상태의 book과 새로 생성된 epubBook 모두 정리
-      if (epubBook) {
-        if (epubBook.rendition) {
-          try {
-            epubBook.rendition.destroy();
-          } catch (e) {
-            console.error("Error destroying rendition:", e);
-          }
-        }
-        try {
-          epubBook.destroy();
-        } catch (e) {
-          console.error("Error destroying book:", e);
-        }
-      }
-
-      setBook(null); // 상태 명시적으로 비움
+      epubBook.destroy();
+      setBook(null);
     };
   }, [navigate]);
 
