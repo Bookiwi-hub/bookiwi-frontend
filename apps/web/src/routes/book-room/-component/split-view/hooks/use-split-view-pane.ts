@@ -9,7 +9,7 @@ export interface UseSplitViewPaneParams {
 }
 
 const useSplitViewPane = ({
-  preferredSize = 0,
+  preferredSize,
   minSize = 0,
   maxSize = Number.POSITIVE_INFINITY,
 }: UseSplitViewPaneParams) => {
@@ -17,7 +17,12 @@ const useSplitViewPane = ({
 
   const resize = useCallback(
     (delta: number) => {
-      setSize((prev) => prev && clamp(prev + delta, minSize, maxSize));
+      setSize((prev) => {
+        if (prev) {
+          return clamp(prev + delta, minSize, maxSize);
+        }
+        return prev;
+      });
     },
     [maxSize, minSize],
   );

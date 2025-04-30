@@ -5,23 +5,26 @@ import {
   useMemo,
   Dispatch,
   SetStateAction,
+  useState,
 } from "react";
 
 import {
-  BOOK_PANE_SIZE_MIN,
   ANNOTATION_PANE_SIZE_MIN,
+  BOOK_PANE_SIZE_MIN,
 } from "./constants/pane-size";
 import useSplitViewPane from "./hooks/use-split-view-pane";
 
 export interface PaneType {
   resize: (delta: number) => void;
-  size: number;
-  setSize: Dispatch<SetStateAction<number>>;
+  size?: number;
+  setSize: Dispatch<SetStateAction<number | undefined>>;
 }
 
 interface SplitViewContextType {
   bookPane: PaneType;
   annotationPane: PaneType;
+  splitViewWidth: number | undefined;
+  setSplitViewWidth: Dispatch<SetStateAction<number | undefined>>;
 }
 
 const SplitViewContext = createContext<SplitViewContextType | undefined>(
@@ -43,21 +46,25 @@ interface SplitViewProps {
 }
 
 export function SplitViewProvider({ children }: SplitViewProps) {
+  const [splitViewWidth, setSplitViewWidth] = useState<number | undefined>();
+
   const bookPane = useSplitViewPane({
-    preferredSize: window.innerWidth,
+    preferredSize: splitViewWidth,
+    maxSize: splitViewWidth
+      ? splitViewWidth - ANNOTATION_PANE_SIZE_MIN
+      : undefined,
     minSize: BOOK_PANE_SIZE_MIN,
-    maxSize: window.innerWidth - ANNOTATION_PANE_SIZE_MIN,
   });
 
   const annotationPane = useSplitViewPane({
     preferredSize: ANNOTATION_PANE_SIZE_MIN,
+    maxSize: splitViewWidth ? splitViewWidth - BOOK_PANE_SIZE_MIN : undefined,
     minSize: ANNOTATION_PANE_SIZE_MIN,
-    maxSize: window.innerWidth - BOOK_PANE_SIZE_MIN,
   });
 
   const contextValue = useMemo(
-    () => ({ bookPane, annotationPane }),
-    [bookPane, annotationPane],
+    () => ({ bookPane, annotationPane, splitViewWidth, setSplitViewWidth }),
+    [bookPane, annotationPane, splitViewWidth, setSplitViewWidth],
   );
 
   return (

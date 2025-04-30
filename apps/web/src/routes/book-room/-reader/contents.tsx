@@ -1,24 +1,38 @@
-import { useCallback, ComponentPropsWithoutRef } from "react";
+import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 
 import { useReader } from "./context";
 
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useReader();
+  const prevSize = useRef(0);
 
   const setViewerRef = useCallback(
     (node: HTMLDivElement | null) => {
-      // DOM 요소가 없거나 book이 없으면 아무것도 하지 않음
-      if (!node || !book) return;
+      if (!node || !book) return () => {};
 
-      // Render the book in the viewer
-      book.renderTo(node, {
+      const rendition = book.renderTo(node, {
         width: "100%",
         height: "100%",
-        allowScriptedContent: true,
+        allowScriptedContent: true, // 자바스크립트 실행 허용
       });
 
-      // Display the first page
-      book.rendition.display();
+      rendition.display();
+
+      const observer = new ResizeObserver(([e]) => {
+        const size = e?.contentRect.width ?? 0;
+
+        if (size !== 0 && prevSize.current !== 0 && size !== prevSize.current) {
+          rendition.resize();
+        }
+
+        prevSize.current = size;
+      });
+
+      observer.observe(node);
+
+      return () => {
+        observer.disconnect();
+      };
     },
     [book],
   );
