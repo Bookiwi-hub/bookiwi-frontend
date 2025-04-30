@@ -1,9 +1,10 @@
-import { useCallback, ComponentPropsWithoutRef } from "react";
+import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 
 import { useReader } from "./context";
 
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useReader();
+  const prevSize = useRef(0);
 
   const setViewerRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -17,8 +18,14 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       rendition.display();
 
-      const observer = new ResizeObserver(() => {
-        rendition.resize();
+      const observer = new ResizeObserver(([e]) => {
+        const size = e?.contentRect.width ?? 0;
+
+        if (size !== 0 && prevSize.current !== 0 && size !== prevSize.current) {
+          rendition.resize();
+        }
+
+        prevSize.current = size;
       });
 
       observer.observe(node);
