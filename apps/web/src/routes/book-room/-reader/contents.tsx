@@ -19,20 +19,8 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       // Display the first page
       book.rendition.display();
-
-      // eslint-disable-next-line
-      return () => {
-        // 컴포넌트 언마운트 시 rendition 정리
-        if (book && book.rendition) {
-          try {
-            book.rendition.destroy();
-          } catch (e) {
-            console.error("Error destroying rendition:", e);
-          }
-        }
-      };
     },
-    [book], // book이 변경될 때만 콜백 재생성
+    [book],
   );
 
   return <div ref={setViewerRef} {...props} />;
