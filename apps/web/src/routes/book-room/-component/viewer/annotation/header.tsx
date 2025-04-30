@@ -1,7 +1,6 @@
 import { Pin, X } from "lucide-react";
 
-import { usePane } from "../../split-view";
-import { Pane } from "../../split-view/constants/type";
+import { Pane, usePane, useSplitViewContext } from "../../split-view";
 
 import { useAnnotationPane } from "./context";
 import { useAnnotationTab, TabType } from "./tabs/context";
@@ -14,20 +13,26 @@ function AnnotationHeader() {
   const { setTabState } = useAnnotationTab();
   const bookPane = usePane(Pane.BOOK);
   const annotationPane = usePane(Pane.ANNOTATION);
+  const { splitViewWidth } = useSplitViewContext();
 
   const handlePin = () => {
     if (isPinned) {
       unpin();
-      bookPane.setSize(window.innerWidth);
+      bookPane.setSize(splitViewWidth);
     } else {
       pin();
-      bookPane.setSize(window.innerWidth - annotationPane.size);
+      bookPane.setSize(() => {
+        if (splitViewWidth && annotationPane.size) {
+          return splitViewWidth - annotationPane.size;
+        }
+        return splitViewWidth;
+      });
     }
   };
 
   const handleClose = () => {
     close();
-    bookPane.setSize(window.innerWidth);
+    bookPane.setSize(undefined);
   };
 
   const handleTabChange = (value: TabType) => {

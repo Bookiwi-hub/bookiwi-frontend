@@ -4,3 +4,5 @@ export { default as SplitViewSeparator } from "./separator";
 export * from "./context";
 export { default as useSplitViewPane } from "./hooks/use-split-view-pane";
 export { default as usePane } from "./hooks/use-pane";
+export * from "./constants/pane-size";
+export * from "./constants/type";

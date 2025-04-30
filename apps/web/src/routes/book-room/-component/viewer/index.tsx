@@ -1,16 +1,15 @@
 import {
+  Pane,
   SplitViewPane,
   SplitViewPaneGroup,
   SplitViewSeparator,
 } from "../split-view";
-import { Pane } from "../split-view/constants/type";
 
 import Annotation from "./annotation";
 import { useAnnotationPane } from "./annotation/context";
 import Book from "./book";
 
 import Overlay from "#/components/ui/overlay";
-import { cn } from "#/lib/utils";
 
 function Viewer() {
   const { isOpen, isPinned, close } = useAnnotationPane();
@@ -19,7 +18,7 @@ function Viewer() {
     <SplitViewPaneGroup className="relative min-h-0 flex-1 justify-end">
       <SplitViewPane
         pane={Pane.BOOK}
-        className={cn("absolute z-0 inset-0", "transition-all duration-200")}
+        className="absolute inset-0 z-0 transition-all duration-200"
       >
         <Book />
       </SplitViewPane>
