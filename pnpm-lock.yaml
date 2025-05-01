@@ -183,9 +183,6 @@ importers:
 
   packages/epubjs:
     dependencies:
-      '@types/localforage':
-        specifier: 0.0.34
-        version: 0.0.34
       '@xmldom/xmldom':
         specifier: ^0.7.5
         version: 0.7.13
@@ -229,6 +226,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.15.4
         version: 7.27.0
+      '@types/localforage':
+        specifier: 0.0.34
+        version: 0.0.34
       babel-loader:
         specifier: ^8.2.3
         version: 8.4.1(@babel/core@7.26.10)(webpack@4.47.0(webpack-cli@3.3.12))
