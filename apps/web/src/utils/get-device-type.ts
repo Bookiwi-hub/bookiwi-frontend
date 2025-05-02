@@ -1,6 +1,22 @@
 import { DeviceType } from "#/constants/device-type";
 
-export function getDeviceType(userAgent?: string): DeviceType {
+/**
+ * 사용자 에이전트 문자열을 기반으로 장치 유형을 감지합니다.
+ *
+ * @param userAgent - 장치 감지에 사용할 사용자 에이전트 문자열 (선택적)
+ *                    제공되지 않으면 브라우저의 navigator.userAgent를 사용합니다.
+ * @returns 감지된 장치 유형 (DESKTOP, MOBILE, TABLET)
+ *
+ * @example
+ * // 브라우저의 navigator.userAgent 사용
+ * const deviceType = getDeviceType();
+ *
+ * // 특정 사용자 에이전트 문자열 제공
+ * getDeviceType("Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)"); // DeviceType.MOBILE
+ * getDeviceType("Mozilla/5.0 (iPad; CPU OS 14_0 like Mac OS X)"); // DeviceType.TABLET
+ * getDeviceType("Mozilla/5.0 (Windows NT 10.0; Win64; x64)"); // DeviceType.DESKTOP
+ */
+export const getDeviceType = (userAgent?: string): DeviceType => {
   const ua =
     userAgent ||
     (typeof window !== "undefined" ? window.navigator.userAgent : "");
@@ -82,4 +98,4 @@ export function getDeviceType(userAgent?: string): DeviceType {
 
   // 기본값
   return DeviceType.DESKTOP;
-}
+};
