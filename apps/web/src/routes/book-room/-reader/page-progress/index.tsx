@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useReader } from "../context";
 
 import usePage from "./hooks/use-page";
+import usePercentage from "./hooks/use-percentage";
 import useToggle from "./hooks/use-toggle";
 
 import { Slider } from "#/components/ui/slider";
@@ -12,12 +13,15 @@ function ReaderPageProgress() {
   const { book } = useReader();
   const { currentSection, page, total, callbackRef: pageRef } = usePage(book);
   const { isContentTouched, callbackRef: toggleRef } = useToggle(book);
+  const { percentage, callbackRef: percentageRef } = usePercentage(book);
+
   const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
       pageRef(node);
       toggleRef(node);
+      percentageRef(node);
     },
-    [pageRef, toggleRef],
+    [pageRef, toggleRef, percentageRef],
   );
 
   return (
@@ -33,7 +37,7 @@ function ReaderPageProgress() {
             <span>{currentSection}</span>
             <span> {page && total ? ` (${page}/${total})` : ""}</span>
           </div>
-          <span>{currentPercentage}</span>
+          <span>{percentage}</span>
         </div>
         {page && total && <Slider className="w-full" />}
       </div>
