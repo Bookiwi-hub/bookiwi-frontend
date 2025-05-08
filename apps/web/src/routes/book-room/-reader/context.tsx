@@ -28,6 +28,7 @@ export function ReaderProvider({ children }: { children: React.ReactNode }) {
     const epubBook = new Book(
       "https://s3.amazonaws.com/moby-dick/moby-dick.epub",
     );
+    // "/Alice's Adventures in Wonderland.epub"
 
     // Wait for the book to be fully loaded before setting it
     epubBook.ready
