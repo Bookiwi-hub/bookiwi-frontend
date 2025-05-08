@@ -7,7 +7,7 @@ import truncate from "#/utils/truncate";
 
 const MAX_SECTION_LENGTH = 25;
 
-const usePageInfo = (book: Book | null) => {
+const usePage = (book: Book | null) => {
   const [page, setPage] = useState<number | null>(null);
   const [total, setTotal] = useState<number | null>(null);
   const [currentSection, setCurrentSection] = useState<string>("");
@@ -42,4 +42,4 @@ const usePageInfo = (book: Book | null) => {
   return { currentSection, page, total, callbackRef };
 };
 
-export default usePageInfo;
+export default usePage;
