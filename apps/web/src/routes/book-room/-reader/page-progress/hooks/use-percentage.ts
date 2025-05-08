@@ -25,7 +25,7 @@ const usePercentage = (book: Book | null) => {
       };
       updatePercentage();
 
-      book.rendition.on("locationChanged", updatePercentage);
+      book.rendition.on("relocated", updatePercentage);
     },
     [book],
   );
