@@ -10,7 +10,12 @@ import { cn } from "#/lib/utils";
 
 function ReaderPageProgress() {
   const { book } = useReader();
-  const { page, total, callbackRef: pageRef } = usePageInfo(book);
+  const {
+    currentSection,
+    page,
+    total,
+    callbackRef: pageRef,
+  } = usePageInfo(book);
   const { isContentTouched, callbackRef: toggleRef } = useToggle(book);
   const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -28,8 +33,11 @@ function ReaderPageProgress() {
           isContentTouched ? "opacity-100" : "opacity-0",
         )}
       >
-        <div className="size-full text-center text-black">
-          {page && total ? `${page}/${total}` : "페이지를 계산할 수 없습니다"}
+        <div className="flex size-full justify-between text-sm text-black">
+          <div>
+            <span>{currentSection}</span>
+            <span> {page && total ? ` (${page}/${total})` : ""}</span>
+          </div>
         </div>
         {page && total && <Slider className="w-full" />}
       </div>
