@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import truncate from "#/utils/truncate";
+
 interface UseTruncatedTextProps {
   text: string;
   maxLength?: number;
@@ -54,7 +56,7 @@ export function useTruncatedText({
   const isTruncated = text.length > maxLength;
 
   const displayText =
-    isExpanded || !isTruncated ? text : `${text.slice(0, maxLength)}...`;
+    isExpanded || !isTruncated ? text : `${truncate(text, maxLength)}...`;
 
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
