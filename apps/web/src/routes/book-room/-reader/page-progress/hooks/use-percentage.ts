@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { Book } from "@bookiwi/epubjs";
 
 const usePercentage = (book: Book | null) => {
-  const [percentage, setPercentage] = useState<string>("");
+  const [percentage, setPercentage] = useState<number | null>(null);
 
   const callbackRef = useCallback(
     async (node: HTMLDivElement | null) => {
@@ -27,7 +27,7 @@ const usePercentage = (book: Book | null) => {
           const currentPercentage = Math.floor(
             book.locations.percentageFromCfi(cfi) * 100,
           );
-          setPercentage(`${currentPercentage}%`);
+          setPercentage(currentPercentage);
         }
       };
       updatePercentage();

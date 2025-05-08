@@ -24,6 +24,12 @@ function ReaderPageProgress() {
     [pageRef, toggleRef, percentageRef],
   );
 
+  const handleChangeSlider = (value: number[]) => {
+    if (!book || !value[0]) return;
+    const cfi = book.locations.cfiFromPercentage(value[0] / 100);
+    book.rendition.display(cfi);
+  };
+
   return (
     <div className="size-full" ref={callbackRef}>
       <div
@@ -37,9 +43,17 @@ function ReaderPageProgress() {
             <span>{currentSection || "이번 챕터"}</span>
             <span>{page && total ? ` ${page}/${total}` : ""}</span>
           </div>
-          <span>{percentage || "계산 중입니다."}</span>
+          <span>
+            {percentage !== null ? `${percentage}%` : "계산 중입니다."}
+          </span>
         </div>
-        {percentage && <Slider className="w-full" />}
+        {percentage !== null && (
+          <Slider
+            className="w-full"
+            value={[percentage]}
+            onValueChange={handleChangeSlider}
+          />
+        )}
       </div>
     </div>
   );
