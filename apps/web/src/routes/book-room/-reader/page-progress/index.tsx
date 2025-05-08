@@ -35,11 +35,11 @@ function ReaderPageProgress() {
         <div className="flex size-full justify-between text-sm text-black">
           <div>
             <span>{currentSection}</span>
-            <span> {page && total ? ` (${page}/${total})` : ""}</span>
+            <span> {page && total ? ` ${page}/${total}` : ""}</span>
           </div>
-          <span>{percentage}</span>
+          <span>{percentage || "계산 중입니다."}</span>
         </div>
-        {page && total && <Slider className="w-full" />}
+        {percentage && <Slider className="w-full" />}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ const usePercentage = (book: Book | null) => {
   const callbackRef = useCallback(
     async (node: HTMLDivElement | null) => {
       if (!node || !book) return;
-      await book.locations.generate(1600);
+      await book.locations.generate(1000);
 
       const updatePercentage = () => {
         if (
