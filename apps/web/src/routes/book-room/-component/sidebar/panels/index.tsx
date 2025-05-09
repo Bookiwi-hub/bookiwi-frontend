@@ -2,7 +2,7 @@ import { TabType } from "../tab-type";
 
 import Bookmarks from "./bookmarks";
 import SearchPanel from "./search";
-import SettingsPanel from "./setting";
+import SettingsPanel from "./settings";
 import TableOfContents from "./toc";
 
 interface SidebarPanelsProps {

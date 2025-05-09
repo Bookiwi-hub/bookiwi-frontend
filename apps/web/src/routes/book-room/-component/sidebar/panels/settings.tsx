@@ -11,21 +11,36 @@ import {
 } from "#/components/ui/select";
 import { Separator } from "#/components/ui/separator";
 import { Switch } from "#/components/ui/switch";
+import { useReader } from "#/routes/book-room/-reader";
+import { useSettings } from "#/routes/book-room/-reader/settings-context";
 
 function SinglePageToggle() {
-  const [checked, setChecked] = useState(false);
+  const { isSinglePage, setIsSinglePage } = useSettings();
+  const { book } = useReader();
+
+  const handleCheckedChange = (checked: boolean) => {
+    if (!book) return;
+    if (checked) {
+      book.rendition.spread("none");
+      setIsSinglePage(true);
+    } else {
+      book.rendition.spread("auto", 800);
+      setIsSinglePage(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-between">
       <span className="text-sm font-medium">한 페이지로 보기</span>
       <Switch
         id="theme-switch"
-        checked={checked}
-        onCheckedChange={setChecked}
+        checked={isSinglePage}
+        onCheckedChange={handleCheckedChange}
       />
     </div>
   );
 }
+
 function FontFamilySelect() {
   const [value, setValue] = useState("original");
 
