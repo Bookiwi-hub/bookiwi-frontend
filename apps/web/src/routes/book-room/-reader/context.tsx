@@ -12,7 +12,6 @@ import { Book } from "@bookiwi/epubjs";
 
 interface ReaderContextType {
   book: Book | null;
-  setBook: (book: Book | null) => void;
 }
 
 const ReaderContext = createContext<ReaderContextType | undefined>(undefined);
@@ -67,9 +66,8 @@ export function ReaderProvider({ children, epubFile }: ReaderProviderProps) {
   const value = useMemo(
     () => ({
       book,
-      setBook,
     }),
-    [book, setBook],
+    [book],
   );
 
   return (
