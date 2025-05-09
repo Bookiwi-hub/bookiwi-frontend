@@ -55,6 +55,16 @@ const useToggle = (book: Book | null) => {
         }
       });
 
+      book.rendition.off("rendered", () => {
+        if (iframe) {
+          iframe.removeEventListener("click", handleTouchAndClick);
+          iframe.removeEventListener("mousedown", handleMouseDown);
+          iframe.removeEventListener("mousemove", handleMouseMove);
+          iframe.removeEventListener("touchstart", handleTouchStart);
+          iframe.removeEventListener("touchmove", handleTouchMove);
+        }
+      });
+
       node.addEventListener("click", handleNodeClick);
       node.addEventListener("touchstart", handleNodeTouchStart);
 
