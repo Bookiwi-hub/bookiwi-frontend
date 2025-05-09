@@ -1,20 +1,11 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
-import { Contents } from "@bookiwi/epubjs";
+import { Book, Rendition } from "@bookiwi/epubjs";
 
-import { useReader } from "./context";
-import usePageInfo from "./hooks/use-page-info";
-
-import { Slider } from "#/components/ui/slider";
-import { cn } from "#/lib/utils";
-
-function ReaderPageProgress() {
-  const { page, total } = usePageInfo();
-
+const useToggle = (book: Book | null) => {
   const [isContentTouched, setIsContentTouched] = useState(false);
-  const { book } = useReader();
 
-  const setRef = useCallback(
+  const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node || !book) return () => {};
 
@@ -51,10 +42,8 @@ function ReaderPageProgress() {
         isDragging = false;
       };
 
-      // After the book is rendered, the iframe will be available
-      book.rendition.on("rendered", () => {
-        const contents = book.rendition.getContents() as unknown as Contents[];
-        iframe = contents[0]?.document;
+      book.rendition.on("rendered", (r: Rendition, i: Window) => {
+        iframe = i.document;
         if (iframe) {
           iframe.addEventListener("click", handleTouchAndClick);
 
@@ -63,6 +52,16 @@ function ReaderPageProgress() {
           iframe.addEventListener("mousemove", handleMouseMove);
           iframe.addEventListener("touchstart", handleTouchStart);
           iframe.addEventListener("touchmove", handleTouchMove);
+        }
+      });
+
+      book.rendition.off("rendered", () => {
+        if (iframe) {
+          iframe.removeEventListener("click", handleTouchAndClick);
+          iframe.removeEventListener("mousedown", handleMouseDown);
+          iframe.removeEventListener("mousemove", handleMouseMove);
+          iframe.removeEventListener("touchstart", handleTouchStart);
+          iframe.removeEventListener("touchmove", handleTouchMove);
         }
       });
 
@@ -88,21 +87,7 @@ function ReaderPageProgress() {
     [book],
   );
 
-  return (
-    <div className="size-full" ref={setRef}>
-      <div
-        className={cn(
-          "w-full space-y-2 px-3 transition-opacity duration-200",
-          isContentTouched ? "opacity-100" : "opacity-0",
-        )}
-      >
-        <div className="size-full text-center text-black">
-          {page && total ? `${page}/${total}` : "페이지를 계산할 수 없습니다"}
-        </div>
-        {page && total && <Slider className="w-full" />}
-      </div>
-    </div>
-  );
-}
+  return { isContentTouched, callbackRef };
+};
 
-export { ReaderPageProgress };
+export default useToggle;

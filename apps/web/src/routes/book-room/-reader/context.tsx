@@ -25,7 +25,10 @@ export function ReaderProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
     // Create a new Book instance
-    const epubBook = new Book("/Alice's Adventures in Wonderland.epub");
+    const epubBook = new Book(
+      "https://s3.amazonaws.com/moby-dick/moby-dick.epub",
+    );
+    // "/Alice's Adventures in Wonderland.epub"
 
     // Wait for the book to be fully loaded before setting it
     epubBook.ready
