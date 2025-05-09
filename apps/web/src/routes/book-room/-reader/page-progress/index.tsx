@@ -34,7 +34,7 @@ function ReaderPageProgress() {
     <div className="size-full" ref={callbackRef}>
       <div
         className={cn(
-          "w-full space-y-2 px-3 transition-opacity duration-200",
+          "w-full space-y-2 px-3 pt-2 transition-opacity duration-200 bg-zinc-50",
           isContentTouched ? "opacity-100" : "opacity-0",
         )}
       >
