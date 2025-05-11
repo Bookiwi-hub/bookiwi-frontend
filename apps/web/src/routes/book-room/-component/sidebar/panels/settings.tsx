@@ -66,12 +66,11 @@ function FontSizeSetting() {
       return;
     }
 
+    const currentValue = fontSize ?? initialStep;
     if (action === "increase") {
-      await setFontSize(fontSize ? fontSize + step : initialStep + step);
+      await setFontSize(currentValue + step);
     } else {
-      await setFontSize(
-        Math.max(min, fontSize ? fontSize - step : initialStep - step),
-      );
+      await setFontSize(Math.max(min, currentValue - step));
     }
   };
 
@@ -113,24 +112,24 @@ function FontSizeSetting() {
   );
 }
 
-function ParagraphSpacingSetting() {
-  const [value, setValue] = useState<"default" | number>("default");
+function LineHeightSetting() {
+  const { lineHeight, setLineHeight } = useSettings();
   const defaultLabel = "원본";
-  const initialValue = 1.5;
+  const initialValue = 1;
   const min = 1;
   const step = 0.1;
 
   const handleChange = (action: "increase" | "decrease" | "reset") => {
     if (action === "reset") {
-      setValue("default");
+      setLineHeight(undefined);
       return;
     }
 
-    const currentValue = value === "default" ? initialValue : value;
+    const currentValue = lineHeight ?? initialValue;
     if (action === "increase") {
-      setValue(Number((currentValue + step).toFixed(1)));
+      setLineHeight(Number((currentValue + step).toFixed(1)));
     } else {
-      setValue(Number(Math.max(min, currentValue - step).toFixed(1)));
+      setLineHeight(Number(Math.max(min, currentValue - step).toFixed(1)));
     }
   };
 
@@ -148,7 +147,7 @@ function ParagraphSpacingSetting() {
             <MinusIcon className="size-4" />
           </Button>
           <div className="min-w-14 px-2 text-center text-sm">
-            {value === "default" ? defaultLabel : value}
+            {lineHeight || defaultLabel}
           </div>
           <Button
             variant="ghost"
@@ -182,7 +181,7 @@ function SettingsPanel() {
         <Separator />
         <FontFamilySelect />
         <FontSizeSetting />
-        <ParagraphSpacingSetting />
+        <LineHeightSetting />
       </div>
     </div>
   );
