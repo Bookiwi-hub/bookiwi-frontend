@@ -8,14 +8,15 @@ import {
 } from "react";
 
 import { useReader } from "./context";
-import { DefaultNumber, Settings } from "./types/settings";
+import { updateCustomStyle } from "./styles";
+import { Settings } from "./types/settings";
 
 interface SettingsContextType extends Settings {
   setIsSinglePage: (isSinglePage: boolean) => void;
-  setFontFamily: (fontFamily: string) => void;
-  setFontSize: (fontSize: DefaultNumber) => void;
-  setParagraphSpacing: (paragraphSpacing: DefaultNumber) => void;
-  setFontWeight: (fontWeight: DefaultNumber) => void;
+  setFontFamily: (fontFamily?: string) => Promise<void>;
+  setFontSize: (fontSize?: number) => Promise<void>;
+  setLineHeight: (lineHeight?: number) => Promise<void>;
+  setFontWeight: (fontWeight?: number) => Promise<void>;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -46,9 +47,7 @@ export function SettingsProvider({
   );
   const [fontFamily, setFontFamilyState] = useState(initialSettings.fontFamily);
   const [fontSize, setFontSizeState] = useState(initialSettings.fontSize);
-  const [paragraphSpacing, setParagraphSpacingState] = useState(
-    initialSettings.paragraphSpacing,
-  );
+  const [lineHeight, setLineHeightState] = useState(initialSettings.lineHeight);
   const [fontWeight, setFontWeightState] = useState(initialSettings.fontWeight);
 
   // Helper function to save settings to localStorage
@@ -58,7 +57,7 @@ export function SettingsProvider({
         isSinglePage,
         fontFamily,
         fontSize,
-        paragraphSpacing,
+        lineHeight,
         fontWeight,
       };
 
@@ -67,7 +66,7 @@ export function SettingsProvider({
         JSON.stringify({ ...currentSettings, ...newSettings }),
       );
     },
-    [isSinglePage, fontFamily, fontSize, paragraphSpacing, fontWeight, key],
+    [isSinglePage, fontFamily, fontSize, lineHeight, fontWeight, key],
   );
 
   // Custom setter functions that update both state and localStorage
@@ -80,35 +79,67 @@ export function SettingsProvider({
   );
 
   const setFontFamily = useCallback(
-    (value: string) => {
+    async (value?: string) => {
+      const contents = book?.rendition?.getContents()[0];
+      if (!contents) return;
       setFontFamilyState(value);
       saveSettings({ fontFamily: value });
+      await updateCustomStyle(contents, {
+        fontFamily: value,
+        fontSize,
+        fontWeight,
+        lineHeight,
+      });
     },
-    [saveSettings],
+    [saveSettings, fontSize, fontWeight, lineHeight, book],
   );
 
   const setFontSize = useCallback(
-    (value: DefaultNumber) => {
+    async (value?: number) => {
+      const contents = book?.rendition?.getContents()[0];
+      if (!contents) return;
       setFontSizeState(value);
       saveSettings({ fontSize: value });
+      await updateCustomStyle(contents, {
+        fontSize: value,
+        fontFamily,
+        fontWeight,
+        lineHeight,
+      });
     },
-    [saveSettings],
+    [saveSettings, fontFamily, fontWeight, lineHeight, book],
   );
 
-  const setParagraphSpacing = useCallback(
-    (value: DefaultNumber) => {
-      setParagraphSpacingState(value);
-      saveSettings({ paragraphSpacing: value });
+  const setLineHeight = useCallback(
+    async (value?: number) => {
+      const contents = book?.rendition?.getContents()[0];
+      if (!contents) return;
+      setLineHeightState(value);
+      saveSettings({ lineHeight: value });
+      await updateCustomStyle(contents, {
+        fontSize,
+        fontFamily,
+        fontWeight,
+        lineHeight: value,
+      });
     },
-    [saveSettings],
+    [saveSettings, fontSize, fontFamily, fontWeight, book],
   );
 
   const setFontWeight = useCallback(
-    (value: DefaultNumber) => {
+    async (value?: number) => {
+      const contents = book?.rendition?.getContents()[0];
+      if (!contents) return;
       setFontWeightState(value);
       saveSettings({ fontWeight: value });
+      await updateCustomStyle(contents, {
+        fontSize,
+        fontFamily,
+        fontWeight: value,
+        lineHeight,
+      });
     },
-    [saveSettings],
+    [saveSettings, fontSize, fontFamily, lineHeight, book],
   );
 
   const value = useMemo(
@@ -119,8 +150,8 @@ export function SettingsProvider({
       setFontFamily,
       fontSize,
       setFontSize,
-      paragraphSpacing,
-      setParagraphSpacing,
+      lineHeight,
+      setLineHeight,
       fontWeight,
       setFontWeight,
     }),
@@ -128,12 +159,12 @@ export function SettingsProvider({
       isSinglePage,
       fontFamily,
       fontSize,
-      paragraphSpacing,
+      lineHeight,
       fontWeight,
       setIsSinglePage,
       setFontFamily,
       setFontSize,
-      setParagraphSpacing,
+      setLineHeight,
       setFontWeight,
     ],
   );
