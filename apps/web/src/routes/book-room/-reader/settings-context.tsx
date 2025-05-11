@@ -74,8 +74,9 @@ export function SettingsProvider({
     (value: boolean) => {
       setIsSinglePageState(value);
       saveSettings({ isSinglePage: value });
+      book?.rendition.spread(value ? "none" : "auto");
     },
-    [saveSettings],
+    [saveSettings, book],
   );
 
   const setFontFamily = useCallback(

@@ -11,22 +11,13 @@ import {
 } from "#/components/ui/select";
 import { Separator } from "#/components/ui/separator";
 import { Switch } from "#/components/ui/switch";
-import { useReader } from "#/routes/book-room/-reader";
 import { useSettings } from "#/routes/book-room/-reader/settings-context";
 
 function SinglePageToggle() {
   const { isSinglePage, setIsSinglePage } = useSettings();
-  const { book } = useReader();
 
   const handleCheckedChange = (checked: boolean) => {
-    if (!book) return;
-    if (checked) {
-      book.rendition.spread("none");
-      setIsSinglePage(true);
-    } else {
-      book.rendition.spread("auto", 800);
-      setIsSinglePage(false);
-    }
+    setIsSinglePage(checked);
   };
 
   return (
