@@ -15,6 +15,8 @@ function SettingsPanel() {
     setFontWeight,
     lineHeight,
     setLineHeight,
+    fontFamily,
+    setFontFamily,
   } = useSettings();
   return (
     <div>
@@ -25,7 +27,10 @@ function SettingsPanel() {
           handleCheckedChange={setIsSinglePage}
         />
         <Separator />
-        <FontFamilySelector />
+        <FontFamilySelector
+          fontFamily={fontFamily}
+          setFontFamily={setFontFamily}
+        />
         <ButtonController
           label="글자 크기"
           value={fontSize}
