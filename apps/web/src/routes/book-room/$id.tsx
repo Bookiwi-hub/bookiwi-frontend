@@ -20,10 +20,6 @@ export const Route = createFileRoute("/book-room/$id")({
     );
     let initialSettings: Settings = {
       isSinglePage: false,
-      fontFamily: "original",
-      fontSize: "default",
-      paragraphSpacing: "default",
-      fontWeight: "default",
     };
     if (savedSettings) {
       initialSettings = JSON.parse(savedSettings);

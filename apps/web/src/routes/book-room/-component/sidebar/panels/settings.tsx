@@ -62,23 +62,25 @@ function FontFamilySelect() {
 }
 
 function FontSizeSetting() {
-  const [value, setValue] = useState<"default" | number>("default");
+  const { fontSize, setFontSize } = useSettings();
+
   const defaultLabel = "원본";
   const initialStep = 16;
   const min = 8;
   const step = 1;
 
-  const handleChange = (action: "increase" | "decrease" | "reset") => {
+  const handleChange = async (action: "increase" | "decrease" | "reset") => {
     if (action === "reset") {
-      setValue("default");
+      await setFontSize(undefined);
       return;
     }
 
-    const currentValue = value === "default" ? initialStep : value;
     if (action === "increase") {
-      setValue(currentValue + step);
+      await setFontSize(fontSize ? fontSize + step : initialStep + step);
     } else {
-      setValue(Math.max(min, currentValue - step));
+      await setFontSize(
+        Math.max(min, fontSize ? fontSize - step : initialStep - step),
+      );
     }
   };
 
@@ -96,7 +98,7 @@ function FontSizeSetting() {
             <MinusIcon className="size-4" />
           </Button>
           <div className="min-w-14 px-2 text-center text-sm">
-            {value === "default" ? defaultLabel : value}
+            {fontSize || defaultLabel}
           </div>
           <Button
             variant="ghost"
@@ -111,7 +113,6 @@ function FontSizeSetting() {
             size="icon"
             className="size-8 rounded-none border-l"
             onClick={() => handleChange("reset")}
-            title={`${defaultLabel}으로`}
           >
             <RotateCcwIcon className="size-4" />
           </Button>
