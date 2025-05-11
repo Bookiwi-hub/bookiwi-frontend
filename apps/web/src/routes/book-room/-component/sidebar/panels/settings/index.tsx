@@ -33,6 +33,7 @@ function SettingsPanel() {
           defaultLabel="원본"
           initialValue={16}
           min={8}
+          max={30}
           step={1}
         />
         <ButtonController
@@ -42,6 +43,7 @@ function SettingsPanel() {
           defaultLabel="원본"
           initialValue={100}
           min={100}
+          max={900}
           step={100}
         />
         <ButtonController
@@ -51,6 +53,7 @@ function SettingsPanel() {
           defaultLabel="원본"
           initialValue={1}
           min={1}
+          max={5}
           step={0.1}
           formatValue={(val) => Number(val).toFixed(1)}
         />

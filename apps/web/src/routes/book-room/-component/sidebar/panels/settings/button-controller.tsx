@@ -10,6 +10,7 @@ interface ButtonControllerProps<T> {
   defaultLabel: string;
   initialValue: T;
   min: T;
+  max: T;
   step: number;
   formatValue?: (value: T) => string | number;
 }
@@ -21,6 +22,7 @@ function ButtonController<T extends number>({
   defaultLabel,
   initialValue,
   min,
+  max,
   step,
   formatValue = (val) => val,
 }: ButtonControllerProps<T>) {
@@ -32,7 +34,7 @@ function ButtonController<T extends number>({
 
     const currentValue = value ?? initialValue;
     if (action === "increase") {
-      const newValue = Number(currentValue + step);
+      const newValue = Number(Math.min(max, currentValue + step));
       await setValue(newValue as T);
     } else {
       const newValue = Number(Math.max(min, currentValue - step));
