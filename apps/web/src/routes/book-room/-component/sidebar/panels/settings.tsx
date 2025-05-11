@@ -112,6 +112,66 @@ function FontSizeSetting() {
   );
 }
 
+function FontWeightSetting() {
+  const { fontWeight, setFontWeight } = useSettings();
+  const defaultLabel = "원본";
+  const initialValue = 100;
+  const min = 100;
+  const step = 100;
+
+  const handleChange = (action: "increase" | "decrease" | "reset") => {
+    if (action === "reset") {
+      setFontWeight(undefined);
+      return;
+    }
+
+    const currentValue = fontWeight ?? initialValue;
+    if (action === "increase") {
+      setFontWeight(currentValue + step);
+    } else {
+      setFontWeight(Math.max(min, currentValue - step));
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium">글자 두께</span>
+        <div className="flex items-center gap-1 overflow-hidden rounded-md border">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 rounded-none"
+            onClick={() => handleChange("decrease")}
+          >
+            <MinusIcon className="size-4" />
+          </Button>
+          <div className="min-w-14 px-2 text-center text-sm">
+            {fontWeight || defaultLabel}
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 rounded-none"
+            onClick={() => handleChange("increase")}
+          >
+            <PlusIcon className="size-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 rounded-none border-l"
+            onClick={() => handleChange("reset")}
+            title={`${defaultLabel}으로`}
+          >
+            <RotateCcwIcon className="size-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LineHeightSetting() {
   const { lineHeight, setLineHeight } = useSettings();
   const defaultLabel = "원본";
@@ -181,6 +241,7 @@ function SettingsPanel() {
         <Separator />
         <FontFamilySelect />
         <FontSizeSetting />
+        <FontWeightSetting />
         <LineHeightSetting />
       </div>
     </div>
