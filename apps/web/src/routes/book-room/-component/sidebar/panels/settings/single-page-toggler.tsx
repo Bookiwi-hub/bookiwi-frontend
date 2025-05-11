@@ -1,5 +1,3 @@
-import { memo } from "react";
-
 import { Switch } from "#/components/ui/switch";
 
 interface SinglePageToggleProps {
@@ -23,4 +21,4 @@ function SinglePageToggler({
   );
 }
 
-export default memo(SinglePageToggler);
+export default SinglePageToggler;
