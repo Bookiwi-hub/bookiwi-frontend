@@ -22,6 +22,7 @@ function CommentForm({ onSubmit, currentUser }: CommentFormProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    e.stopPropagation();
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (newComment.trim()) {

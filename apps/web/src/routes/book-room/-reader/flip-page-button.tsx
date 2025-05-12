@@ -18,6 +18,7 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      e.preventDefault();
       if (e.code === "ArrowLeft" || e.code === "ArrowUp") {
         goToPrevPage();
       }
@@ -39,7 +40,13 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
   useEventListener("keydown", handleKeyDown);
 
   return (
-    <button type="button" {...rest} onClick={goToPrevPage}>
+    <button
+      type="button"
+      {...rest}
+      onClick={goToPrevPage}
+      onMouseDown={(e) => e.preventDefault()}
+      tabIndex={-1}
+    >
       {children}
     </button>
   );
@@ -57,6 +64,7 @@ function ReaderNextPageButton(props: ComponentProps<"button">) {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      e.preventDefault();
       if (e.code === "ArrowRight" || e.code === "ArrowDown") {
         goToNextPage();
       }
@@ -78,7 +86,13 @@ function ReaderNextPageButton(props: ComponentProps<"button">) {
   useEventListener("keydown", handleKeyDown);
 
   return (
-    <button type="button" {...rest} onClick={goToNextPage}>
+    <button
+      type="button"
+      {...rest}
+      onClick={goToNextPage}
+      onMouseDown={(e) => e.preventDefault()}
+      tabIndex={-1}
+    >
       {children}
     </button>
   );

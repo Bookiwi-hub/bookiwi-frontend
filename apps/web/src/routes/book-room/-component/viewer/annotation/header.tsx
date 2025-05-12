@@ -46,6 +46,8 @@ function AnnotationHeader() {
           className="w-full"
           value={TabType.HIGHLIGHT}
           onClick={() => handleTabChange(TabType.HIGHLIGHT)}
+          onMouseDown={(e) => e.preventDefault()}
+          tabIndex={-1}
         >
           하이라이트
         </TabsTrigger>
@@ -53,6 +55,8 @@ function AnnotationHeader() {
           className="w-full"
           value={TabType.HIGHLIGHT_LIST}
           onClick={() => handleTabChange(TabType.HIGHLIGHT_LIST)}
+          onMouseDown={(e) => e.preventDefault()}
+          tabIndex={-1}
         >
           목록
         </TabsTrigger>
@@ -66,6 +70,8 @@ function AnnotationHeader() {
             isPinned ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
           )}
           aria-label={isPinned ? "Unpin panel" : "Pin panel"}
+          onMouseDown={(e) => e.preventDefault()}
+          tabIndex={-1}
         >
           <Pin size={18} />
         </button>

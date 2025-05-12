@@ -54,6 +54,8 @@ function CreatorFilter({
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"
+          onMouseDown={(e) => e.preventDefault()}
+          tabIndex={-1}
         >
           {displayText}
           <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
@@ -61,10 +63,22 @@ function CreatorFilter({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <div className="flex items-center justify-between px-3 py-2">
-          <Button variant="ghost" size="sm" onClick={selectAll}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={selectAll}
+            onMouseDown={(e) => e.preventDefault()}
+            tabIndex={-1}
+          >
             모두 선택
           </Button>
-          <Button variant="ghost" size="sm" onClick={clearAll}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearAll}
+            onMouseDown={(e) => e.preventDefault()}
+            tabIndex={-1}
+          >
             모두 해제
           </Button>
         </div>
@@ -78,6 +92,8 @@ function CreatorFilter({
                 selectedCreators.includes(participant.id) && "bg-accent/50",
               )}
               onClick={() => handleToggleCreator(participant.id)}
+              onMouseDown={(e) => e.preventDefault()}
+              tabIndex={-1}
             >
               <div
                 className="mr-2 size-3 rounded-full"
