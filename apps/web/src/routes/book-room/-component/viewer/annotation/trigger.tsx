@@ -26,6 +26,8 @@ function AnnotationTrigger() {
         isOpen ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
       )}
       onClick={handleClick}
+      onMouseDown={(e) => e.preventDefault()}
+      tabIndex={-1}
       aria-label="Toggle notes and comments"
     >
       <MessageSquareQuote size={24} />

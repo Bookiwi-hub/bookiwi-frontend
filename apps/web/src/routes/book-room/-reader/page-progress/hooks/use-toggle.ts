@@ -9,8 +9,6 @@ const useToggle = (book: Book | null) => {
     (node: HTMLDivElement | null) => {
       if (!node || !book) return () => {};
 
-      let iframe: Document | undefined;
-
       // Track if user is dragging
       let isDragging = false;
       const handleMouseDown = () => {
@@ -42,8 +40,8 @@ const useToggle = (book: Book | null) => {
         isDragging = false;
       };
 
-      book.rendition.on("rendered", (r: Rendition, i: Window) => {
-        iframe = i.document;
+      const handleRendered = (r: Rendition, i: Window) => {
+        const iframe = i.document;
         if (iframe) {
           iframe.addEventListener("click", handleTouchAndClick);
 
@@ -53,35 +51,16 @@ const useToggle = (book: Book | null) => {
           iframe.addEventListener("touchstart", handleTouchStart);
           iframe.addEventListener("touchmove", handleTouchMove);
         }
-      });
+      };
 
-      book.rendition.off("rendered", () => {
-        if (iframe) {
-          iframe.removeEventListener("click", handleTouchAndClick);
-          iframe.removeEventListener("mousedown", handleMouseDown);
-          iframe.removeEventListener("mousemove", handleMouseMove);
-          iframe.removeEventListener("touchstart", handleTouchStart);
-          iframe.removeEventListener("touchmove", handleTouchMove);
-        }
-      });
+      book.rendition.on("rendered", handleRendered);
 
       node.addEventListener("click", handleNodeClick);
       node.addEventListener("touchstart", handleNodeTouchStart);
 
-      const removeEventListeners = () => {
-        if (iframe) {
-          iframe.removeEventListener("click", handleTouchAndClick);
-          iframe.removeEventListener("mousedown", handleMouseDown);
-          iframe.removeEventListener("mousemove", handleMouseMove);
-          iframe.removeEventListener("touchstart", handleTouchStart);
-          iframe.removeEventListener("touchmove", handleTouchMove);
-        }
+      return () => {
         node.removeEventListener("click", handleNodeClick);
         node.removeEventListener("touchstart", handleNodeTouchStart);
-      };
-
-      return () => {
-        removeEventListeners();
       };
     },
     [book],
