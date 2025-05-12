@@ -89,7 +89,7 @@ export default class Rendition {
 
   flow(flow: string): void;
 
-  getContents(): Contents;
+  getContents(): Contents[];
 
   getRange(cfi: string, ignoreClass?: string): Range;
 
