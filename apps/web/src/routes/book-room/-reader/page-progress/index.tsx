@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useReader } from "../context";
 
@@ -8,6 +8,7 @@ import useToggle from "./hooks/use-toggle";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
+import { throttle } from "#/utils/throttle";
 
 function ReaderPageProgress() {
   const { book } = useReader();
@@ -24,10 +25,18 @@ function ReaderPageProgress() {
     [pageRef, toggleRef, percentageRef],
   );
 
+  const throttledDisplay = useMemo(() => {
+    if (!book) return null;
+    return throttle((value: number) => {
+      if (!book || !value) return;
+      const cfi = book.locations.cfiFromPercentage(value / 100);
+      book.rendition.display(cfi);
+    }, 200);
+  }, [book]);
+
   const handleChangeSlider = (value: number[]) => {
-    if (!book || !value[0]) return;
-    const cfi = book.locations.cfiFromPercentage(value[0] / 100);
-    book.rendition.display(cfi);
+    if (!book || !value[0] || !throttledDisplay) return;
+    throttledDisplay(value[0]);
   };
 
   return (
