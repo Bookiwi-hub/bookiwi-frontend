@@ -1,11 +1,17 @@
 import { useNavigate } from "@tanstack/react-router";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { Book } from "@bookiwi/epubjs";
 
 interface ReaderContextType {
   book: Book | null;
-  setBook: (book: Book | null) => void;
 }
 
 const ReaderContext = createContext<ReaderContextType | undefined>(undefined);
@@ -18,16 +24,19 @@ export const useReader = () => {
   return context;
 };
 
-export function ReaderProvider({ children }: { children: React.ReactNode }) {
+interface ReaderProviderProps {
+  children: ReactNode;
+  epubFile: string;
+}
+
+export function ReaderProvider({ children, epubFile }: ReaderProviderProps) {
   const [book, setBook] = useState<Book | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     let mounted = true;
     // Create a new Book instance
-    const epubBook = new Book(
-      "https://s3.amazonaws.com/moby-dick/moby-dick.epub",
-    );
+    const epubBook = new Book(epubFile);
     // "/Alice's Adventures in Wonderland.epub"
 
     // Wait for the book to be fully loaded before setting it
@@ -52,14 +61,13 @@ export function ReaderProvider({ children }: { children: React.ReactNode }) {
       epubBook.destroy();
       setBook(null);
     };
-  }, [navigate]);
+  }, [navigate, epubFile]);
 
   const value = useMemo(
     () => ({
       book,
-      setBook,
     }),
-    [book, setBook],
+    [book],
   );
 
   return (

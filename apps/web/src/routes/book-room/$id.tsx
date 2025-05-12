@@ -6,40 +6,45 @@ import Viewer from "./-component/viewer";
 import { AnnotationPaneProvider } from "./-component/viewer/annotation/context";
 import MobileBookRoom from "./-mobile";
 import { ReaderProvider } from "./-reader";
+import { SettingsProvider } from "./-reader/settings-context";
+import { Settings } from "./-reader/types/settings";
 
-import bookRooms from "#/DB/book-room";
 import { isDesktop } from "#/constants/device-type";
 
-interface BookRoomData {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  lastActivityAt: string;
-}
-
 export const Route = createFileRoute("/book-room/$id")({
-  loader: async ({ params }) => {
+  loader: async () => {
     // 실제로는 ID를 기반으로 책 정보를 API에서 가져오는 코드
-    const bookRoom = bookRooms.find(
-      (room: BookRoomData) => room.id === params.id,
+    const epubFile = "https://s3.amazonaws.com/moby-dick/moby-dick.epub";
+    const savedSettings = localStorage.getItem(
+      "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-settings",
     );
-    return { bookRoom };
+    let initialSettings: Settings = {
+      isSinglePage: false,
+    };
+    if (savedSettings) {
+      initialSettings = JSON.parse(savedSettings);
+    } else {
+      localStorage.setItem(
+        "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-settings",
+        JSON.stringify(initialSettings),
+      );
+    }
+
+    const bookTitle = "모비딕";
+
+    return { epubFile, initialSettings, bookTitle };
   },
   head: ({ loaderData }) => ({
     meta: [
       {
-        title: `Book Room | ${loaderData.bookRoom?.name}`,
+        title: `Book Room | ${loaderData.bookTitle}`,
       },
     ],
   }),
   component: isDesktop ? BookRoom : MobileBookRoom,
 });
 
-function BookRoomContent() {
-  const { bookRoom } = Route.useLoaderData();
-  const bookTitle = bookRoom?.name || "Alice's Adventures in Wonderland";
-
+function BookRoomContent({ bookTitle }: { bookTitle: string }) {
   return (
     <main className="flex size-full flex-col overflow-hidden">
       <Header
@@ -53,13 +58,16 @@ function BookRoomContent() {
 }
 
 function BookRoom() {
+  const { epubFile, initialSettings, bookTitle } = Route.useLoaderData();
   return (
-    <ReaderProvider>
-      <SplitViewProvider>
-        <AnnotationPaneProvider>
-          <BookRoomContent />
-        </AnnotationPaneProvider>
-      </SplitViewProvider>
+    <ReaderProvider epubFile={epubFile}>
+      <SettingsProvider initialSettings={initialSettings}>
+        <SplitViewProvider>
+          <AnnotationPaneProvider>
+            <BookRoomContent bookTitle={bookTitle} />
+          </AnnotationPaneProvider>
+        </SplitViewProvider>
+      </SettingsProvider>
     </ReaderProvider>
   );
 }

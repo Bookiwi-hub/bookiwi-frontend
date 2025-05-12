@@ -1,11 +1,15 @@
 import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 
 import { useReader } from "./context";
+import { useSettings } from "./settings-context";
+import { defaultStyle, updateCustomStyle } from "./styles";
 
 import { debounce } from "#/utils/debounce";
 
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useReader();
+  const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
+    useSettings();
   const prevSize = useRef(0);
   const resizeRef = useRef<(() => void) | null>(null);
 
@@ -17,6 +21,21 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
         width: "100%",
         height: "100%",
         allowScriptedContent: true, // 자바스크립트 실행 허용
+        spread: isSinglePage ? "none" : "auto",
+      });
+
+      rendition.themes.default(defaultStyle);
+
+      rendition.on("rendered", () => {
+        const contents = rendition.getContents()[0];
+        if (contents) {
+          updateCustomStyle(contents, {
+            fontSize,
+            fontFamily,
+            fontWeight,
+            lineHeight,
+          });
+        }
       });
 
       rendition.display();
@@ -43,6 +62,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
         observer.disconnect();
       };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [book],
   );
 
