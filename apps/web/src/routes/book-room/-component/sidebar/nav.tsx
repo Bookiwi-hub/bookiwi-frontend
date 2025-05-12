@@ -24,6 +24,8 @@ function NavIconButton({ icon, isActive, onClick, label }: NavIconProps) {
           : "text-muted-foreground hover:text-foreground hover:bg-accent",
       )}
       title={label}
+      onMouseDown={(e) => e.preventDefault()}
+      tabIndex={-1}
     >
       {icon}
       <span className="w-full truncate text-center text-xs">{label}</span>
