@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 
 import { useReader } from "../../../-reader";
 
@@ -82,14 +82,14 @@ function TocPanel() {
   const { book } = useReader();
   const [toc, setToc] = useState<NavItem[]>([]);
 
-  // 콜백 ref 사용으로 마운트 시 목차 데이터 가져오기
-  const tocRef = (node: HTMLDivElement | null) => {
-    if (node && book && book.navigation) {
-      // 타입 단언(Type Assertion)을 사용하여 타입 오류 해결
-      setToc(book.navigation.toc as unknown as NavItem[]);
-    }
-  };
-
+  const tocRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node && book && book.navigation) {
+        setToc(book.navigation.toc as unknown as NavItem[]);
+      }
+    },
+    [book],
+  );
   // 목차 항목 클릭 시 해당 페이지로 이동
   const handleNavClick = (href: string) => {
     if (book && book.rendition) {
