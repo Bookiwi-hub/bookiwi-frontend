@@ -52,7 +52,7 @@ export function ReaderProvider({ children, epubFile }: ReaderProviderProps) {
           alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
           // eslint-disable-next-line no-console
           console.error(error);
-          navigate({ to: "/my-library" });
+          navigate({ to: "/my-kiwis" });
         }
       });
 
