@@ -25,7 +25,7 @@ export function ReaderProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
     // Create a new Book instance
-    const epubBook = new Book("/Alice's Adventures in Wonderland.epub");
+    const epubBook = new Book("/Aesop's Fables; a new translation.epub");
 
     // Wait for the book to be fully loaded before setting it
     epubBook.ready
