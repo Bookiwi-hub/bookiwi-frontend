@@ -10,123 +10,123 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as MyPageIndexImport } from './routes/my-page/index'
-import { Route as MyLibraryIndexImport } from './routes/my-library/index'
-import { Route as BookRoomIdImport } from './routes/book-room/$id'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as IndexImport } from "./routes/index";
+import { Route as MyPageIndexImport } from "./routes/my-page/index";
+import { Route as MyLibraryIndexImport } from "./routes/my-library/index";
+import { Route as KiwiIdImport } from "./routes/kiwi/$id";
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const MyPageIndexRoute = MyPageIndexImport.update({
-  id: '/my-page/',
-  path: '/my-page/',
+  id: "/my-page/",
+  path: "/my-page/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const MyLibraryIndexRoute = MyLibraryIndexImport.update({
-  id: '/my-library/',
-  path: '/my-library/',
+  id: "/my-library/",
+  path: "/my-library/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
-const BookRoomIdRoute = BookRoomIdImport.update({
-  id: '/book-room/$id',
-  path: '/book-room/$id',
+const KiwiIdRoute = KiwiIdImport.update({
+  id: "/kiwi/$id",
+  path: "/kiwi/$id",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/book-room/$id': {
-      id: '/book-room/$id'
-      path: '/book-room/$id'
-      fullPath: '/book-room/$id'
-      preLoaderRoute: typeof BookRoomIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/my-library/': {
-      id: '/my-library/'
-      path: '/my-library'
-      fullPath: '/my-library'
-      preLoaderRoute: typeof MyLibraryIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/my-page/': {
-      id: '/my-page/'
-      path: '/my-page'
-      fullPath: '/my-page'
-      preLoaderRoute: typeof MyPageIndexImport
-      parentRoute: typeof rootRoute
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/kiwi/$id": {
+      id: "/kiwi/$id";
+      path: "/kiwi/$id";
+      fullPath: "/kiwi/$id";
+      preLoaderRoute: typeof KiwiIdImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/my-library/": {
+      id: "/my-library/";
+      path: "/my-library";
+      fullPath: "/my-library";
+      preLoaderRoute: typeof MyLibraryIndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/my-page/": {
+      id: "/my-page/";
+      path: "/my-page";
+      fullPath: "/my-page";
+      preLoaderRoute: typeof MyPageIndexImport;
+      parentRoute: typeof rootRoute;
+    };
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/book-room/$id': typeof BookRoomIdRoute
-  '/my-library': typeof MyLibraryIndexRoute
-  '/my-page': typeof MyPageIndexRoute
+  "/": typeof IndexRoute;
+  "/kiwi/$id": typeof KiwiIdRoute;
+  "/my-library": typeof MyLibraryIndexRoute;
+  "/my-page": typeof MyPageIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/book-room/$id': typeof BookRoomIdRoute
-  '/my-library': typeof MyLibraryIndexRoute
-  '/my-page': typeof MyPageIndexRoute
+  "/": typeof IndexRoute;
+  "/kiwi/$id": typeof KiwiIdRoute;
+  "/my-library": typeof MyLibraryIndexRoute;
+  "/my-page": typeof MyPageIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/book-room/$id': typeof BookRoomIdRoute
-  '/my-library/': typeof MyLibraryIndexRoute
-  '/my-page/': typeof MyPageIndexRoute
+  __root__: typeof rootRoute;
+  "/": typeof IndexRoute;
+  "/kiwi/$id": typeof KiwiIdRoute;
+  "/my-library/": typeof MyLibraryIndexRoute;
+  "/my-page/": typeof MyPageIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/book-room/$id' | '/my-library' | '/my-page'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/book-room/$id' | '/my-library' | '/my-page'
-  id: '__root__' | '/' | '/book-room/$id' | '/my-library/' | '/my-page/'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: "/" | "/kiwi/$id" | "/my-library" | "/my-page";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/kiwi/$id" | "/my-library" | "/my-page";
+  id: "__root__" | "/" | "/kiwi/$id" | "/my-library/" | "/my-page/";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  BookRoomIdRoute: typeof BookRoomIdRoute
-  MyLibraryIndexRoute: typeof MyLibraryIndexRoute
-  MyPageIndexRoute: typeof MyPageIndexRoute
+  IndexRoute: typeof IndexRoute;
+  KiwiIdRoute: typeof KiwiIdRoute;
+  MyLibraryIndexRoute: typeof MyLibraryIndexRoute;
+  MyPageIndexRoute: typeof MyPageIndexRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BookRoomIdRoute: BookRoomIdRoute,
+  KiwiIdRoute: KiwiIdRoute,
   MyLibraryIndexRoute: MyLibraryIndexRoute,
   MyPageIndexRoute: MyPageIndexRoute,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
@@ -135,7 +135,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/book-room/$id",
+        "/kiwi/$id",
         "/my-library/",
         "/my-page/"
       ]
@@ -143,8 +143,8 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
-    "/book-room/$id": {
-      "filePath": "book-room/$id.tsx"
+    "/kiwi/$id": {
+      "filePath": "kiwi/$id.tsx"
     },
     "/my-library/": {
       "filePath": "my-library/index.tsx"

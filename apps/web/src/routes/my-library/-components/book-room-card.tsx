@@ -100,7 +100,7 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
         {/* 바로 읽으러 가기 버튼 */}
         <div className="p-4 pt-0">
           <Link
-            to="/book-room/$id"
+            to="/kiwi/$id"
             params={{ id }}
             onClick={(e) => e.stopPropagation()}
           >

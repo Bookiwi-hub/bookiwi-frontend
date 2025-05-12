@@ -398,11 +398,7 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
           <Button variant="outline" onClick={onClose}>
             닫기
           </Button>
-          <Link
-            to="/book-room/$id"
-            params={{ id }}
-            className="w-full sm:w-auto"
-          >
+          <Link to="/kiwi/$id" params={{ id }} className="w-full sm:w-auto">
             <Button className="w-full">
               입장하기
               <ChevronRight className="ml-2 size-4" />
