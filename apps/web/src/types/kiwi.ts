@@ -34,7 +34,7 @@ export interface Member {
   progress: number;
 }
 
-export interface BookRoom {
+export interface Kiwi {
   id: string;
   name: string;
   description: string;

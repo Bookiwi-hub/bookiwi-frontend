@@ -1,5 +1,5 @@
 // 더미 데이터 배열
-const bookRooms = [
+const kiwis = [
   {
     id: "1",
     name: "데미안 읽는 방",
@@ -313,4 +313,4 @@ const bookRooms = [
     admin: "정시인",
   },
 ];
-export default bookRooms;
+export default kiwis;

@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import Header from "./-components/header";
-import Library from "./-components/library";
+import Header from "./-header";
+import Kiwis from "./-kiwis";
 
-import bookRooms from "#/DB/book-room";
+import kiwis from "#/DB/kiwis";
 
-export const Route = createFileRoute("/my-library/")({
+export const Route = createFileRoute("/my-kiwis/")({
   head: () => ({
     meta: [
       {
@@ -13,15 +13,15 @@ export const Route = createFileRoute("/my-library/")({
       },
     ],
   }),
-  component: MyLibrary,
+  component: MyKiwis,
 });
 
-function MyLibrary() {
+function MyKiwis() {
   return (
     <div className="flex size-full flex-col">
       <Header />
       <main className="size-full bg-white p-6 mobile:p-4">
-        <Library bookRooms={bookRooms} />
+        <Kiwis kiwis={kiwis} />
       </main>
     </div>
   );

@@ -22,15 +22,15 @@ import {
 } from "#/components/ui/dialog";
 import { Separator } from "#/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#/components/ui/tabs";
-import { BookRoom, Member } from "#/types/book-room";
+import { Kiwi, Member } from "#/types/kiwi";
 
-interface BookRoomDetailProps {
-  bookRoom: BookRoom;
+interface KiwiDetailProps {
+  kiwi: Kiwi;
   isOpen: boolean;
   onClose: () => void;
 }
 
-function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
+function KiwiDetail({ kiwi, isOpen, onClose }: KiwiDetailProps) {
   const {
     id,
     name,
@@ -57,7 +57,7 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
       { id: 2, name: "채종민", avatar: "", progress: 45 },
       { id: 3, name: "한상우", avatar: "", progress: 60 },
     ],
-  } = bookRoom;
+  } = kiwi;
 
   const fallbackImageUrl =
     "https://placehold.co/300x400/e2e8f0/64748b?text=No+Cover";
@@ -410,4 +410,4 @@ function BookRoomDetail({ bookRoom, isOpen, onClose }: BookRoomDetailProps) {
   );
 }
 
-export default BookRoomDetail;
+export default KiwiDetail;

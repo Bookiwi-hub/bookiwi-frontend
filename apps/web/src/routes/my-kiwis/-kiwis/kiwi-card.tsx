@@ -2,17 +2,17 @@ import { Link } from "@tanstack/react-router";
 import { Clock, Users } from "lucide-react";
 import { memo, useCallback, useState } from "react";
 
-import BookRoomDetail from "./BookRoomDetail";
+import KiwiDetail from "./kiwi-detail";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
-import { BookRoom } from "#/types/book-room";
+import { Kiwi } from "#/types/kiwi";
 
-interface BookRoomCardProps {
-  bookRoom: BookRoom;
+interface KiwiCardProps {
+  kiwi: Kiwi;
 }
 
-function BookRoomCard({ bookRoom }: BookRoomCardProps) {
+function KiwiCard({ kiwi }: KiwiCardProps) {
   const [openDetail, setOpenDetail] = useState(false);
   const fallbackImageUrl =
     "https://placehold.co/300x400/e2e8f0/64748b?text=No+Cover";
@@ -25,7 +25,7 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
     lastActivityAt,
     progress = 0,
     memberCount = 0,
-  } = bookRoom;
+  } = kiwi;
 
   // useCallback을 사용하여 카드 클릭 핸들러 메모이제이션
   const handleCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -105,7 +105,7 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <Button
-              className="read-button w-full bg-primary/90 text-white backdrop-blur-sm hover:bg-primary"
+              className="w-full bg-primary/90 text-white backdrop-blur-sm hover:bg-primary"
               variant="secondary"
             >
               입장하기
@@ -116,8 +116,8 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
 
       {/* 상세 정보 모달 */}
       {openDetail && (
-        <BookRoomDetail
-          bookRoom={bookRoom}
+        <KiwiDetail
+          kiwi={kiwi}
           isOpen={openDetail}
           onClose={handleCloseModal}
         />
@@ -126,4 +126,4 @@ function BookRoomCard({ bookRoom }: BookRoomCardProps) {
   );
 }
 
-export default memo(BookRoomCard);
+export default memo(KiwiCard);

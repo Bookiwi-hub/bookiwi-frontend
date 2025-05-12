@@ -1,19 +1,19 @@
 import { Plus } from "lucide-react";
 
-import BookRoomCard from "./book-room-card";
+import KiwiCard from "./kiwi-card";
 import LinkInput from "./link-input";
 
 import { Button } from "#/components/ui/button";
-import { BookRoom } from "#/types/book-room";
+import { Kiwi } from "#/types/kiwi";
 
-interface LibraryProps {
-  bookRooms: BookRoom[];
+interface KiwisProps {
+  kiwis: Kiwi[];
 }
 
-export default function Library({ bookRooms }: LibraryProps) {
+export default function Kiwis({ kiwis }: KiwisProps) {
   return (
     <div className="w-full">
-      {bookRooms.length === 0 ? (
+      {kiwis.length === 0 ? (
         <Button
           variant="outline"
           className="flex min-h-[300px] w-full flex-col items-center justify-center gap-4 border border-dashed bg-transparent transition-colors hover:border-primary hover:bg-primary/5"
@@ -40,8 +40,8 @@ export default function Library({ bookRooms }: LibraryProps) {
             </div>
           </div>
           <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-            {bookRooms.map((bookRoom) => (
-              <BookRoomCard key={bookRoom.id} bookRoom={bookRoom} />
+            {kiwis.map((kiwi) => (
+              <KiwiCard key={kiwi.id} kiwi={kiwi} />
             ))}
           </div>
         </>
