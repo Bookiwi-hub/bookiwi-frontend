@@ -51,9 +51,7 @@ function ReaderPageProgress() {
             <span>{currentSection || "이번 챕터"}</span>
             <span>{page && total ? ` ${page}/${total}` : ""}</span>
           </div>
-          <span>
-            {percentage !== null ? `${percentage}%` : "계산 중입니다."}
-          </span>
+          <span>{`${percentage}%`}</span>
         </div>
         {percentage !== null && (
           <Slider
