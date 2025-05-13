@@ -5,3 +5,8 @@ export interface Settings {
   lineHeight?: number;
   fontWeight?: number;
 }
+
+export interface Record {
+  lastCfi: string | null;
+  percentage: number | null;
+}

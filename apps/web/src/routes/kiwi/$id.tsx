@@ -2,18 +2,34 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
-import { BookProvider, SettingsProvider } from "./-reader";
+import { ReaderProvider } from "./-reader";
 import Viewer from "./-viewer";
-import { AnnotationPaneProvider } from "./-viewer/annotation/context";
-import { SplitViewProvider } from "./-viewer/split-view";
+import ViewerProvider from "./-viewer/provider";
 
 import { isDesktop } from "#/constants/device-type";
-import { Settings } from "#/types/settings";
+import { Settings, Record } from "#/types/reader";
 
 export const Route = createFileRoute("/kiwi/$id")({
   loader: async () => {
     // 실제로는 ID를 기반으로 책 정보를 API에서 가져오는 코드
     const epubFile = "https://s3.amazonaws.com/moby-dick/moby-dick.epub";
+
+    const savedRecord = localStorage.getItem(
+      "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-record",
+    );
+    let record: Record = {
+      lastCfi: null,
+      percentage: null,
+    };
+
+    if (savedRecord) {
+      record = JSON.parse(savedRecord);
+    }
+
+    const locations = localStorage.getItem(
+      "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-locations",
+    );
+
     const savedSettings = localStorage.getItem(
       "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-settings",
     );
@@ -31,7 +47,13 @@ export const Route = createFileRoute("/kiwi/$id")({
 
     const bookTitle = "모비딕";
 
-    return { epubFile, initialSettings, bookTitle };
+    return {
+      epubFile,
+      initialSettings,
+      bookTitle,
+      record,
+      locations,
+    };
   },
   head: ({ loaderData }) => ({
     meta: [
@@ -57,16 +79,18 @@ function KiwiContent({ bookTitle }: { bookTitle: string }) {
 }
 
 function Kiwi() {
-  const { epubFile, initialSettings, bookTitle } = Route.useLoaderData();
+  const { epubFile, initialSettings, bookTitle, record, locations } =
+    Route.useLoaderData();
   return (
-    <BookProvider epubFile={epubFile}>
-      <SettingsProvider initialSettings={initialSettings}>
-        <SplitViewProvider>
-          <AnnotationPaneProvider>
-            <KiwiContent bookTitle={bookTitle} />
-          </AnnotationPaneProvider>
-        </SplitViewProvider>
-      </SettingsProvider>
-    </BookProvider>
+    <ReaderProvider
+      epubFile={epubFile}
+      initialSettings={initialSettings}
+      record={record}
+      locations={locations}
+    >
+      <ViewerProvider>
+        <KiwiContent bookTitle={bookTitle} />
+      </ViewerProvider>
+    </ReaderProvider>
   );
 }

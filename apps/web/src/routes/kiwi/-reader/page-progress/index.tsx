@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react";
 
 import { useBook } from "../book-context";
+import { useRecord } from "../record-context";
 
 import usePage from "./hooks/use-page";
-import usePercentage from "./hooks/use-percentage";
 import useToggle from "./hooks/use-toggle";
 
 import { Slider } from "#/components/ui/slider";
@@ -14,15 +14,14 @@ function ReaderPageProgress() {
   const { book } = useBook();
   const { currentSection, page, total, callbackRef: pageRef } = usePage(book);
   const { isContentTouched, callbackRef: toggleRef } = useToggle(book);
-  const { percentage, callbackRef: percentageRef } = usePercentage(book);
+  const { percentage } = useRecord();
 
   const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
       pageRef(node);
       toggleRef(node);
-      percentageRef(node);
     },
-    [pageRef, toggleRef, percentageRef],
+    [pageRef, toggleRef],
   );
 
   const throttledDisplay = useMemo(() => {

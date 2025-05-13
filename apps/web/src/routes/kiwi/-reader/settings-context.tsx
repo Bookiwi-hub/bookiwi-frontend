@@ -10,7 +10,7 @@ import {
 import { useBook } from "./book-context";
 import { updateCustomStyle } from "./styles";
 
-import { Settings } from "#/types/settings";
+import { Settings } from "#/types/reader";
 
 interface SettingsContextType extends Settings {
   setIsSinglePage: (isSinglePage: boolean) => void;
@@ -53,7 +53,7 @@ export function SettingsProvider({
 
   // Helper function to save settings to localStorage
   const saveSettings = useCallback(
-    (newSettings: Partial<SettingsContextType>) => {
+    (newSettings: Partial<Settings>) => {
       const currentSettings = {
         isSinglePage,
         fontFamily,

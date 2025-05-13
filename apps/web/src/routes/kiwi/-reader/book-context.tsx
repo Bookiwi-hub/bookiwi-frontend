@@ -27,9 +27,14 @@ export const useBook = () => {
 interface BookProviderProps {
   children: ReactNode;
   epubFile: string;
+  locations: string | null;
 }
 
-export function BookProvider({ children, epubFile }: BookProviderProps) {
+export function BookProvider({
+  children,
+  epubFile,
+  locations,
+}: BookProviderProps) {
   const [book, setBook] = useState<Book | null>(null);
   const navigate = useNavigate();
 
@@ -40,13 +45,23 @@ export function BookProvider({ children, epubFile }: BookProviderProps) {
     // "/Alice's Adventures in Wonderland.epub"
 
     // Wait for the book to be fully loaded before setting it
-    epubBook.ready
-      .then(() => {
+    const loadBook = async () => {
+      try {
+        await epubBook.ready;
+        if (locations) {
+          epubBook.locations.load(locations);
+        } else {
+          await epubBook.locations.generate(1000);
+          localStorage.setItem(
+            `${epubBook.key()}-locations`,
+            epubBook.locations.save(),
+          );
+        }
+
         if (mounted) {
           setBook(epubBook);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         if (mounted) {
           // eslint-disable-next-line no-alert
           alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
@@ -54,14 +69,17 @@ export function BookProvider({ children, epubFile }: BookProviderProps) {
           console.error(error);
           navigate({ to: "/my-kiwis" });
         }
-      });
+      }
+    };
+
+    loadBook();
 
     return () => {
       mounted = false;
       epubBook.destroy();
       setBook(null);
     };
-  }, [navigate, epubFile]);
+  }, [navigate, epubFile, locations]);
 
   const value = useMemo(
     () => ({

@@ -3,6 +3,7 @@ import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 import { Location } from "@bookiwi/epubjs";
 
 import { useBook } from "./book-context";
+import { useRecord } from "./record-context";
 import { useSettings } from "./settings-context";
 import { defaultStyle, updateCustomStyle } from "./styles";
 
@@ -12,6 +13,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useBook();
   const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
     useSettings();
+  const { lastCfi, setLastCfi } = useRecord();
   const prevSize = useRef(0);
   const resizeRef = useRef<(() => void) | null>(null);
 
@@ -52,13 +54,11 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       globalThis.addEventListener("keydown", handleKeyDown);
 
-      const lastLocation = localStorage.getItem(`${book.key()}-last-location`);
-
-      rendition.display(lastLocation || "0");
+      rendition.display(lastCfi || undefined);
 
       rendition.on("relocated", (location: Location) => {
         const currentCfi = location.start.cfi;
-        localStorage.setItem(`${book.key()}-last-location`, currentCfi);
+        setLastCfi(currentCfi);
       });
 
       const handleResize = debounce(() => {
