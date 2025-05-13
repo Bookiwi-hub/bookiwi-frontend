@@ -7,6 +7,6 @@ export interface Settings {
 }
 
 export interface Record {
-  lastCfi: string | null;
+  currentCfi: string | null;
   percentage: number | null;
 }

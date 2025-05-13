@@ -18,7 +18,7 @@ export const Route = createFileRoute("/kiwi/$id")({
       "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-record",
     );
     let record: Record = {
-      lastCfi: null,
+      currentCfi: null,
       percentage: null,
     };
 

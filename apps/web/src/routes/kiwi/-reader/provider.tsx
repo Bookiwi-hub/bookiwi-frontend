@@ -24,7 +24,9 @@ function ReaderProvider({
   return (
     <BookProvider epubFile={epubFile} locations={locations}>
       <SettingsProvider initialSettings={initialSettings}>
-        <RecordProvider lastCfi={record.lastCfi}>{children}</RecordProvider>
+        <RecordProvider currentCfi={record.currentCfi}>
+          {children}
+        </RecordProvider>
       </SettingsProvider>
     </BookProvider>
   );

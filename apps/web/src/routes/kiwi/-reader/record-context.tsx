@@ -12,7 +12,7 @@ import { useBook } from "./book-context";
 import { Record } from "#/types/reader";
 
 interface RecordContextType extends Record {
-  setLastCfi: (lastCfi: string) => void;
+  setCurrentCfi: (currentCfi: string) => void;
 }
 
 const RecordContext = createContext<RecordContextType | undefined>(undefined);
@@ -27,26 +27,26 @@ export const useRecord = () => {
 
 interface RecordProviderProps {
   children: ReactNode;
-  lastCfi: string | null;
+  currentCfi: string | null;
 }
 
-export function RecordProvider({ children, lastCfi }: RecordProviderProps) {
+export function RecordProvider({ children, currentCfi }: RecordProviderProps) {
   const { book } = useBook();
-  const [lastCfiState, setLastCfiState] = useState(lastCfi);
+  const [currentCfiState, setCurrentCfiState] = useState(currentCfi);
   const [percentageState, setPercentageState] = useState<number | null>(null);
 
   const key = book?.key();
 
-  const setLastCfi = useCallback(
+  const setCurrentCfi = useCallback(
     (cfi: string) => {
       if (!book) return;
-      setLastCfiState(cfi);
+      setCurrentCfiState(cfi);
       const percent = Math.floor(book.locations.percentageFromCfi(cfi) * 100);
       setPercentageState(percent);
       localStorage.setItem(
         `${key}-record`,
         JSON.stringify({
-          lastCfi: cfi,
+          currentCfi: cfi,
           percentage: percent,
         }),
       );
@@ -56,11 +56,11 @@ export function RecordProvider({ children, lastCfi }: RecordProviderProps) {
 
   const value = useMemo(
     () => ({
-      lastCfi: lastCfiState,
-      setLastCfi,
+      currentCfi: currentCfiState,
+      setCurrentCfi,
       percentage: percentageState,
     }),
-    [lastCfiState, setLastCfi, percentageState],
+    [currentCfiState, setCurrentCfi, percentageState],
   );
 
   return (

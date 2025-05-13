@@ -13,7 +13,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useBook();
   const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
     useSettings();
-  const { lastCfi, setLastCfi } = useRecord();
+  const { currentCfi, setCurrentCfi } = useRecord();
   const prevSize = useRef(0);
   const resizeRef = useRef<(() => void) | null>(null);
 
@@ -54,11 +54,11 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       globalThis.addEventListener("keydown", handleKeyDown);
 
-      rendition.display(lastCfi || undefined);
+      rendition.display(currentCfi || undefined);
 
       rendition.on("relocated", (location: Location) => {
-        const currentCfi = location.start.cfi;
-        setLastCfi(currentCfi);
+        const { cfi } = location.start;
+        setCurrentCfi(cfi);
       });
 
       const handleResize = debounce(() => {
