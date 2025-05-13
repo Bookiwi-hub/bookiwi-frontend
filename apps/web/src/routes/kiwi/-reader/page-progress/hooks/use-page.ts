@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { Book } from "@bookiwi/epubjs";
+import { Book, Location } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
 
 import truncate from "#/utils/truncate";
@@ -20,21 +20,13 @@ const usePage = (book: Book | null) => {
 
         setCurrentSection(truncate(current?.label || "", MAX_SECTION_LENGTH));
       });
-      const updateLocation = () => {
-        if (
-          book.rendition.location &&
-          book.rendition.location.start.displayed
-        ) {
-          const { page: currentPage, total: totalPages } =
-            book.rendition.location.start.displayed;
-          setPage(currentPage);
-          setTotal(totalPages);
-        }
-      };
 
-      updateLocation();
-
-      book.rendition.on("locationChanged", updateLocation);
+      book.rendition.on("relocated", (location: Location) => {
+        const { page: currentPage, total: totalPages } =
+          location.start.displayed;
+        setPage(currentPage);
+        setTotal(totalPages);
+      });
     },
     [book],
   );
