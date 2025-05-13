@@ -1,7 +1,5 @@
 import { ComponentProps, useCallback, useEffect } from "react";
 
-import { Rendition } from "@bookiwi/epubjs";
-
 import { useReader } from "./context";
 
 import { useEventListener } from "#/hooks/use-event-listener";
@@ -29,13 +27,12 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
   useEffect(() => {
     if (!book) return;
 
-    book.rendition.on("rendered", (r: Rendition, i: Window) => {
-      const iframe = i.document;
-      if (iframe) {
-        iframe.addEventListener("keydown", handleKeyDown);
+    book.rendition.on("keydown", (e: KeyboardEvent) => {
+      if (e.code === "ArrowLeft" || e.code === "ArrowUp") {
+        goToPrevPage();
       }
     });
-  }, [book, handleKeyDown]);
+  }, [book, goToPrevPage]);
 
   useEventListener("keydown", handleKeyDown);
 
@@ -75,13 +72,12 @@ function ReaderNextPageButton(props: ComponentProps<"button">) {
   useEffect(() => {
     if (!book) return;
 
-    book.rendition.on("rendered", (r: Rendition, i: Window) => {
-      const iframe = i.document;
-      if (iframe) {
-        iframe.addEventListener("keydown", handleKeyDown);
+    book.rendition.on("keydown", (e: KeyboardEvent) => {
+      if (e.code === "ArrowRight" || e.code === "ArrowDown") {
+        goToNextPage();
       }
     });
-  }, [book, handleKeyDown]);
+  }, [book, goToNextPage]);
 
   useEventListener("keydown", handleKeyDown);
 
