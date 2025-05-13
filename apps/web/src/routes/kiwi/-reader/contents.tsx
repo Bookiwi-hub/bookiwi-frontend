@@ -2,14 +2,14 @@ import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 
 import { Location } from "@bookiwi/epubjs";
 
-import { useReader } from "./context";
+import { useBook } from "./book-context";
 import { useSettings } from "./settings-context";
 import { defaultStyle, updateCustomStyle } from "./styles";
 
 import { debounce } from "#/utils/debounce";
 
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
-  const { book } = useReader();
+  const { book } = useBook();
   const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
     useSettings();
   const prevSize = useRef(0);
@@ -91,4 +91,4 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   return <div ref={setViewerRef} {...props} />;
 }
 
-export { ReaderContents };
+export default ReaderContents;

@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 
-import { useReader } from "./context";
+import { useBook } from "./book-context";
 import { updateCustomStyle } from "./styles";
 
 import { Settings } from "#/types/settings";
@@ -39,7 +39,7 @@ export function SettingsProvider({
   children,
   initialSettings,
 }: SettingsProviderProps) {
-  const { book } = useReader();
+  const { book } = useBook();
 
   const key = `${book?.key()}-settings`;
 

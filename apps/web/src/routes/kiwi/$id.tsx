@@ -2,8 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
-import { ReaderProvider } from "./-reader";
-import { SettingsProvider } from "./-reader/settings-context";
+import { BookProvider, SettingsProvider } from "./-reader";
 import Viewer from "./-viewer";
 import { AnnotationPaneProvider } from "./-viewer/annotation/context";
 import { SplitViewProvider } from "./-viewer/split-view";
@@ -60,7 +59,7 @@ function KiwiContent({ bookTitle }: { bookTitle: string }) {
 function Kiwi() {
   const { epubFile, initialSettings, bookTitle } = Route.useLoaderData();
   return (
-    <ReaderProvider epubFile={epubFile}>
+    <BookProvider epubFile={epubFile}>
       <SettingsProvider initialSettings={initialSettings}>
         <SplitViewProvider>
           <AnnotationPaneProvider>
@@ -68,6 +67,6 @@ function Kiwi() {
           </AnnotationPaneProvider>
         </SplitViewProvider>
       </SettingsProvider>
-    </ReaderProvider>
+    </BookProvider>
   );
 }

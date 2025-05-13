@@ -1,9 +1,9 @@
 import { ComponentProps } from "react";
 
-import { useReader } from "./context";
+import { useBook } from "./book-context";
 
 function ReaderPrevPageButton(props: ComponentProps<"button">) {
-  const { book } = useReader();
+  const { book } = useBook();
   const { children, ...rest } = props;
 
   const goToPrevPage = () => {
@@ -26,7 +26,7 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
 }
 
 function ReaderNextPageButton(props: ComponentProps<"button">) {
-  const { book } = useReader();
+  const { book } = useBook();
   const { children, ...rest } = props;
 
   const goToNextPage = () => {

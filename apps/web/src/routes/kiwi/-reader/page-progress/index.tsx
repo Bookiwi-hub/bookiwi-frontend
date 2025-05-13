@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-import { useReader } from "../context";
+import { useBook } from "../book-context";
 
 import usePage from "./hooks/use-page";
 import usePercentage from "./hooks/use-percentage";
@@ -11,7 +11,7 @@ import { cn } from "#/lib/utils";
 import { throttle } from "#/utils/throttle";
 
 function ReaderPageProgress() {
-  const { book } = useReader();
+  const { book } = useBook();
   const { currentSection, page, total, callbackRef: pageRef } = usePage(book);
   const { isContentTouched, callbackRef: toggleRef } = useToggle(book);
   const { percentage, callbackRef: percentageRef } = usePercentage(book);
