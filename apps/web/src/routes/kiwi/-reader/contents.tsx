@@ -1,5 +1,7 @@
 import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 
+import { Location } from "@bookiwi/epubjs";
+
 import { useReader } from "./context";
 import { useSettings } from "./settings-context";
 import { defaultStyle, updateCustomStyle } from "./styles";
@@ -50,7 +52,14 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       globalThis.addEventListener("keydown", handleKeyDown);
 
-      rendition.display();
+      const lastLocation = localStorage.getItem(`${book.key()}-last-location`);
+
+      rendition.display(lastLocation || "0");
+
+      rendition.on("relocated", (location: Location) => {
+        const currentCfi = location.start.cfi;
+        localStorage.setItem(`${book.key()}-last-location`, currentCfi);
+      });
 
       const handleResize = debounce(() => {
         rendition.resize();
