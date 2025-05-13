@@ -38,6 +38,18 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
         }
       });
 
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.code === "ArrowRight" || e.code === "ArrowDown") {
+          rendition.next();
+        } else if (e.code === "ArrowLeft" || e.code === "ArrowUp") {
+          rendition.prev();
+        }
+      };
+
+      rendition.on("keydown", handleKeyDown);
+
+      globalThis.addEventListener("keydown", handleKeyDown);
+
       rendition.display();
 
       const handleResize = debounce(() => {
@@ -60,6 +72,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       return () => {
         observer.disconnect();
+        globalThis.removeEventListener("keydown", handleKeyDown);
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
