@@ -1,10 +1,15 @@
+import { PageControls } from "../-components/page-controls";
 import { ReaderContents, ReaderPageProgress } from "../../-reader";
 
 function MobileBook() {
   return (
-    <section className="relative flex size-full flex-col px-9">
-      <ReaderContents className="size-full" />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-white">
+    <section className="relative mx-auto flex size-full flex-col">
+      <div className="relative grow">
+        <PageControls>
+          <ReaderContents className="size-full" />
+        </PageControls>
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-white">
         <ReaderPageProgress />
       </div>
     </section>
