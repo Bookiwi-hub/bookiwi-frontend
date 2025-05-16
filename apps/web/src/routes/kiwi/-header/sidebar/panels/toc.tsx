@@ -1,7 +1,10 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
 import { useState, memo, useCallback } from "react";
 
-import { useBook } from "../../../-reader";
+import Section from "@bookiwi/epubjs/types/section";
+
+import { cn } from "#/lib/utils";
+import { useBook } from "#/routes/kiwi/-reader";
 
 // EPUBJS의 Navigation 항목 타입 정의
 interface NavItem {
@@ -14,11 +17,13 @@ interface TocItemComponentProps {
   item: NavItem;
   handleNavClick: (href: string) => void;
   level?: number;
+  currentSection?: string;
 }
 function TocItemComponent({
   item,
   handleNavClick,
   level = 0,
+  currentSection,
 }: TocItemComponentProps) {
   const [isOpen, setIsOpen] = useState(level === 0);
 
@@ -28,7 +33,10 @@ function TocItemComponent({
   return (
     <li>
       <div
-        className="group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100"
+        className={cn(
+          "group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100",
+          currentSection === item.href && "bg-gray-100",
+        )}
         onClick={() => handleNavClick(item.href)}
         role="button"
         tabIndex={-1}
@@ -68,6 +76,7 @@ function TocItemComponent({
               item={subitem}
               handleNavClick={handleNavClick}
               level={level + 1}
+              currentSection={currentSection}
             />
           ))}
         </ul>
@@ -81,7 +90,7 @@ const MemoizedTocItemComponent = memo(TocItemComponent);
 function TocPanel() {
   const { book } = useBook();
   const [toc, setToc] = useState<NavItem[]>([]);
-  // const [currentSection, setCurrentSection] = useState<string | null>(null);
+  const [currentSection, setCurrentSection] = useState<string>();
 
   const tocRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -90,9 +99,9 @@ function TocPanel() {
         setToc(navigation.toc);
       });
 
-      // book.rendition.on("rendered", (section: Section) => {
-      //   setCurrentSection(section.href);
-      // });
+      book.rendition.on("rendered", (section: Section) => {
+        setCurrentSection(section.href);
+      });
     },
     [book],
   );
@@ -113,6 +122,7 @@ function TocPanel() {
               key={item.id || index}
               item={item}
               handleNavClick={handleNavClick}
+              currentSection={currentSection}
             />
           ))}
         </ul>
