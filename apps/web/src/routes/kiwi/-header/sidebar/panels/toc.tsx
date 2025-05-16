@@ -1,114 +1,146 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
 import { useState, memo, useCallback } from "react";
 
-import { useReader } from "../../../-reader";
+import { cn } from "#/lib/utils";
+import { useBook } from "#/routes/kiwi/-reader";
+import { useRecord } from "#/routes/kiwi/-reader/record-context";
 
-// EPUBJS의 Navigation 항목 타입 정의
 interface NavItem {
   href: string;
   id?: string;
   label: string;
   subitems?: NavItem[];
 }
+interface TocItemComponentProps {
+  item: NavItem;
+  handleNavClick: (href: string) => void;
+  level?: number;
+  currentSection?: string;
+  isActive?: boolean;
+}
+function TocItemComponent({
+  item,
+  handleNavClick,
+  level = 0,
+  currentSection,
+  isActive,
+}: TocItemComponentProps) {
+  const [isOpen, setIsOpen] = useState(level === 0);
 
-const TocItemComponent = memo(
-  ({
-    item,
-    handleNavClick,
-    level = 0,
-  }: {
-    item: NavItem;
-    handleNavClick: (href: string) => void;
-    level?: number;
-  }) => {
-    const [isOpen, setIsOpen] = useState(level === 0);
+  // 서브목차 존재 여부 확인
+  const hasSubitems = item.subitems && item.subitems.length > 0;
 
-    // 서브목차 존재 여부 확인
-    const hasSubitems = item.subitems && item.subitems.length > 0;
+  return (
+    <li>
+      <div
+        className={cn(
+          "group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100",
+          isActive && "bg-gray-100",
+        )}
+        onClick={() => handleNavClick(item.href)}
+        role="button"
+        tabIndex={-1}
+        onMouseDown={(e) => e.preventDefault()}
+        onKeyDown={(e) => e.preventDefault()}
+      >
+        <BookOpen size={16} className="mr-1 text-gray-500" />
 
-    return (
-      <li>
-        {/* eslint-disable-next-line */}
-        <div
-          className="group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100"
-          onClick={() => handleNavClick(item.href)}
+        <span
+          className="flex-1 truncate text-sm transition-colors group-hover:text-primary"
+          style={{ paddingLeft: level > 0 ? `${level * 12}px` : "0" }}
         >
-          {hasSubitems ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsOpen((prev) => !prev);
-              }}
-              className="mr-1 rounded-full p-1 hover:bg-gray-200 focus:outline-none"
-            >
-              {isOpen ? (
-                <ChevronDown size={16} className="text-gray-500" />
-              ) : (
-                <ChevronRight size={16} className="text-gray-500" />
-              )}
-            </button>
-          ) : (
-            <BookOpen size={16} className="mr-1 text-gray-500" />
-          )}
-
-          <span
-            className="flex-1 truncate text-sm transition-colors group-hover:text-primary"
-            style={{ paddingLeft: level > 0 ? `${level * 12}px` : "0" }}
+          {item.label}
+        </span>
+        {hasSubitems && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen((prev) => !prev);
+            }}
+            className="mr-1 rounded-full p-1 hover:bg-gray-200 focus:outline-none"
           >
-            {item.label}
-          </span>
-        </div>
-        {hasSubitems && isOpen && (
-          <ul className="ml-2 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
-            {item.subitems!.map((subitem, i) => (
+            {isOpen ? (
+              <ChevronDown size={16} className="text-gray-500" />
+            ) : (
+              <ChevronRight size={16} className="text-gray-500" />
+            )}
+          </button>
+        )}
+      </div>
+      {hasSubitems && isOpen && (
+        <ul className="ml-2 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
+          {item.subitems!.map((subitem, i) => {
+            const isActiveSubitem = currentSection === subitem.href;
+            return (
               <TocItemComponent
                 key={`${subitem.id || i}`}
                 item={subitem}
                 handleNavClick={handleNavClick}
                 level={level + 1}
+                isActive={isActiveSubitem}
+                currentSection={
+                  !isActiveSubitem && subitem.subitems?.length
+                    ? currentSection
+                    : undefined
+                }
               />
-            ))}
-          </ul>
-        )}
-      </li>
-    );
-  },
-);
+            );
+          })}
+        </ul>
+      )}
+    </li>
+  );
+}
 
-TocItemComponent.displayName = "TocItemComponent";
+const MemoizedTocItemComponent = memo(TocItemComponent);
 
 function TocPanel() {
-  const { book } = useReader();
+  const { book } = useBook();
   const [toc, setToc] = useState<NavItem[]>([]);
+  const { currentSection } = useRecord();
 
   const tocRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (node && book && book.navigation) {
-        setToc(book.navigation.toc as unknown as NavItem[]);
-      }
+      if (!node || !book) return;
+      book.loaded.navigation.then((navigation) => {
+        setToc(navigation.toc);
+      });
     },
     [book],
   );
   // 목차 항목 클릭 시 해당 페이지로 이동
-  const handleNavClick = (href: string) => {
-    if (book && book.rendition) {
-      book.rendition.display(href);
-    }
-  };
+  const handleNavClick = useCallback(
+    (href: string) => {
+      if (book && book.rendition) {
+        book.rendition.display(href);
+      }
+    },
+    [book],
+  );
 
   return (
     <div ref={tocRef}>
       <h3 className="mb-4 text-lg font-medium">목차</h3>
       {toc.length > 0 ? (
         <ul className="space-y-2">
-          {toc.map((item, index) => (
-            <TocItemComponent
-              key={item.id || index}
-              item={item}
-              handleNavClick={handleNavClick}
-            />
-          ))}
+          {toc.map((item, index) => {
+            const isActive = currentSection === item.href;
+
+            return (
+              <MemoizedTocItemComponent
+                key={item.id || index}
+                item={item}
+                handleNavClick={handleNavClick}
+                isActive={isActive}
+                currentSection={
+                  !isActive && item.subitems?.length
+                    ? currentSection
+                    : undefined
+                }
+              />
+            );
+          })}
         </ul>
       ) : (
         <div className="flex flex-col items-center justify-center py-6 text-center">
