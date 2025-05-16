@@ -1,5 +1,8 @@
 import { Outlet, createRootRoute, HeadContent } from "@tanstack/react-router";
-// import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+
+import { PWA } from "#/components/pwa";
+
+// import { TanStackRouterDevtools } from "@tanstack/router-plugin-vite";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,6 +21,7 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <HeadContent />
+      <PWA />
       <Outlet />
       {/* <TanStackRouterDevtools /> */}
     </>

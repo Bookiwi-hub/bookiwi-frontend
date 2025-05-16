@@ -1,0 +1,18 @@
+{
+  "name": "북키위",
+  "short_name": "북키위",
+  "start_url": "/",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "description": "소셜 이북 리더기, 함께 읽는 즐거움",
+  "lang": "ko-KR",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
