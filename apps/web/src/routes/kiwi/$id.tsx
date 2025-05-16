@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import getBook from "./-apis/get-book";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
 import { ReaderProvider } from "./-reader";
@@ -7,45 +8,12 @@ import Viewer from "./-viewer";
 import ViewerProvider from "./-viewer/provider";
 
 import { isDesktop } from "#/constants/device-type";
-import { Settings, Record } from "#/types/reader";
 
 export const Route = createFileRoute("/kiwi/$id")({
-  loader: async () => {
+  loader: async ({ params }) => {
     // 실제로는 ID를 기반으로 책 정보를 API에서 가져오는 코드
-    const epubFile = "https://s3.amazonaws.com/moby-dick/moby-dick.epub";
-
-    const savedRecord = localStorage.getItem(
-      "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-record",
-    );
-    let record: Record = {
-      currentCfi: null,
-      percentage: null,
-    };
-
-    if (savedRecord) {
-      record = JSON.parse(savedRecord);
-    }
-
-    const locations = localStorage.getItem(
-      "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-locations",
-    );
-
-    const savedSettings = localStorage.getItem(
-      "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-settings",
-    );
-    let initialSettings: Settings = {
-      isSinglePage: false,
-    };
-    if (savedSettings) {
-      initialSettings = JSON.parse(savedSettings);
-    } else {
-      localStorage.setItem(
-        "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic-settings",
-        JSON.stringify(initialSettings),
-      );
-    }
-
-    const bookTitle = "모비딕";
+    const { epubFile, initialSettings, bookTitle, record, locations } =
+      await getBook(params.id);
 
     return {
       epubFile,
