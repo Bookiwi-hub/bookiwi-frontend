@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
 import { useState, memo, useCallback } from "react";
 
-import { useReader } from "../../../-reader";
+import { useBook } from "../../../-reader";
 
 // EPUBJS의 Navigation 항목 타입 정의
 interface NavItem {
@@ -10,83 +10,86 @@ interface NavItem {
   label: string;
   subitems?: NavItem[];
 }
+interface TocItemComponentProps {
+  item: NavItem;
+  handleNavClick: (href: string) => void;
+  level?: number;
+}
+function TocItemComponent({
+  item,
+  handleNavClick,
+  level = 0,
+}: TocItemComponentProps) {
+  const [isOpen, setIsOpen] = useState(level === 0);
 
-const TocItemComponent = memo(
-  ({
-    item,
-    handleNavClick,
-    level = 0,
-  }: {
-    item: NavItem;
-    handleNavClick: (href: string) => void;
-    level?: number;
-  }) => {
-    const [isOpen, setIsOpen] = useState(level === 0);
+  // 서브목차 존재 여부 확인
+  const hasSubitems = item.subitems && item.subitems.length > 0;
 
-    // 서브목차 존재 여부 확인
-    const hasSubitems = item.subitems && item.subitems.length > 0;
+  return (
+    <li>
+      {/* eslint-disable-next-line */}
+      <div
+        className="group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100"
+        onClick={() => handleNavClick(item.href)}
+      >
+        <BookOpen size={16} className="mr-1 text-gray-500" />
 
-    return (
-      <li>
-        {/* eslint-disable-next-line */}
-        <div
-          className="group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100"
-          onClick={() => handleNavClick(item.href)}
+        <span
+          className="flex-1 truncate text-sm transition-colors group-hover:text-primary"
+          style={{ paddingLeft: level > 0 ? `${level * 12}px` : "0" }}
         >
-          {hasSubitems ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsOpen((prev) => !prev);
-              }}
-              className="mr-1 rounded-full p-1 hover:bg-gray-200 focus:outline-none"
-            >
-              {isOpen ? (
-                <ChevronDown size={16} className="text-gray-500" />
-              ) : (
-                <ChevronRight size={16} className="text-gray-500" />
-              )}
-            </button>
-          ) : (
-            <BookOpen size={16} className="mr-1 text-gray-500" />
-          )}
-
-          <span
-            className="flex-1 truncate text-sm transition-colors group-hover:text-primary"
-            style={{ paddingLeft: level > 0 ? `${level * 12}px` : "0" }}
+          {item.label}
+        </span>
+        {hasSubitems && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen((prev) => !prev);
+            }}
+            className="mr-1 rounded-full p-1 hover:bg-gray-200 focus:outline-none"
           >
-            {item.label}
-          </span>
-        </div>
-        {hasSubitems && isOpen && (
-          <ul className="ml-2 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
-            {item.subitems!.map((subitem, i) => (
-              <TocItemComponent
-                key={`${subitem.id || i}`}
-                item={subitem}
-                handleNavClick={handleNavClick}
-                level={level + 1}
-              />
-            ))}
-          </ul>
+            {isOpen ? (
+              <ChevronDown size={16} className="text-gray-500" />
+            ) : (
+              <ChevronRight size={16} className="text-gray-500" />
+            )}
+          </button>
         )}
-      </li>
-    );
-  },
-);
+      </div>
+      {hasSubitems && isOpen && (
+        <ul className="ml-2 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
+          {item.subitems!.map((subitem, i) => (
+            <TocItemComponent
+              key={`${subitem.id || i}`}
+              item={subitem}
+              handleNavClick={handleNavClick}
+              level={level + 1}
+            />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
 
-TocItemComponent.displayName = "TocItemComponent";
+const MemoizedTocItemComponent = memo(TocItemComponent);
 
 function TocPanel() {
-  const { book } = useReader();
+  const { book } = useBook();
   const [toc, setToc] = useState<NavItem[]>([]);
+  // const [currentSection, setCurrentSection] = useState<string | null>(null);
 
   const tocRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (node && book && book.navigation) {
-        setToc(book.navigation.toc as unknown as NavItem[]);
-      }
+      if (!node || !book) return;
+      book.loaded.navigation.then((navigation) => {
+        setToc(navigation.toc);
+      });
+
+      // book.rendition.on("rendered", (section: Section) => {
+      //   setCurrentSection(section.href);
+      // });
     },
     [book],
   );
@@ -103,7 +106,7 @@ function TocPanel() {
       {toc.length > 0 ? (
         <ul className="space-y-2">
           {toc.map((item, index) => (
-            <TocItemComponent
+            <MemoizedTocItemComponent
               key={item.id || index}
               item={item}
               handleNavClick={handleNavClick}
