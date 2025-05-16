@@ -1,6 +1,6 @@
 import { useLoaderData } from "@tanstack/react-router";
 
-import { BookProvider } from "../-reader";
+import { ReaderProvider } from "../-reader";
 import { SettingsProvider } from "../-reader/settings-context";
 
 import MobileHeader from "./header";
@@ -18,15 +18,20 @@ function MobileKiwiContent() {
 }
 
 function MobileKiwi() {
-  const { epubFile, initialSettings } = useLoaderData({
+  const { epubFile, initialSettings, record, locations } = useLoaderData({
     from: "/kiwi/$id",
   });
   return (
-    <BookProvider epubFile={epubFile}>
+    <ReaderProvider
+      epubFile={epubFile}
+      initialSettings={initialSettings}
+      record={record}
+      locations={locations}
+    >
       <SettingsProvider initialSettings={initialSettings}>
         <MobileKiwiContent />
       </SettingsProvider>
-    </BookProvider>
+    </ReaderProvider>
   );
 }
 
