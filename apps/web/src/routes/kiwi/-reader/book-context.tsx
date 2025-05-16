@@ -27,7 +27,7 @@ export const useBook = () => {
 interface BookProviderProps {
   children: ReactNode;
   epubFile: string;
-  locations: string | null;
+  locations: string;
 }
 
 export function BookProvider({
@@ -48,15 +48,7 @@ export function BookProvider({
     const loadBook = async () => {
       try {
         await epubBook.ready;
-        if (locations) {
-          epubBook.locations.load(locations);
-        } else {
-          await epubBook.locations.generate(1000);
-          localStorage.setItem(
-            `${epubBook.key()}-locations`,
-            epubBook.locations.save(),
-          );
-        }
+        epubBook.locations.load(locations);
 
         if (mounted) {
           setBook(epubBook);

@@ -9,7 +9,7 @@ import { Settings, Record } from "#/types/reader";
 interface ReaderProviderProps {
   children: ReactNode;
   epubFile: string;
-  locations: string | null;
+  locations: string;
   initialSettings: Settings;
   record: Record;
 }
