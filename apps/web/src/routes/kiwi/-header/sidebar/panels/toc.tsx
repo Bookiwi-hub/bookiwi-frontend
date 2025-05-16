@@ -27,10 +27,13 @@ function TocItemComponent({
 
   return (
     <li>
-      {/* eslint-disable-next-line */}
       <div
         className="group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100"
         onClick={() => handleNavClick(item.href)}
+        role="button"
+        tabIndex={-1}
+        onMouseDown={(e) => e.preventDefault()}
+        onKeyDown={(e) => e.preventDefault()}
       >
         <BookOpen size={16} className="mr-1 text-gray-500" />
 
