@@ -1,15 +1,19 @@
 import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 
-import { useReader } from "./context";
+import { Location } from "@bookiwi/epubjs";
+
+import { useBook } from "./book-context";
+import { useRecord } from "./record-context";
 import { useSettings } from "./settings-context";
 import { defaultStyle, updateCustomStyle } from "./styles";
 
 import { debounce } from "#/utils/debounce";
 
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
-  const { book } = useReader();
+  const { book } = useBook();
   const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
     useSettings();
+  const { currentCfi, setCurrentCfi } = useRecord();
   const prevSize = useRef(0);
   const resizeRef = useRef<(() => void) | null>(null);
 
@@ -38,7 +42,24 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
         }
       });
 
-      rendition.display();
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.code === "ArrowRight" || e.code === "ArrowDown") {
+          rendition.next();
+        } else if (e.code === "ArrowLeft" || e.code === "ArrowUp") {
+          rendition.prev();
+        }
+      };
+
+      rendition.on("keydown", handleKeyDown);
+
+      globalThis.addEventListener("keydown", handleKeyDown);
+
+      rendition.display(currentCfi || undefined);
+
+      rendition.on("relocated", (location: Location) => {
+        const { cfi } = location.start;
+        setCurrentCfi(cfi);
+      });
 
       const handleResize = debounce(() => {
         rendition.resize();
@@ -60,6 +81,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       return () => {
         observer.disconnect();
+        globalThis.removeEventListener("keydown", handleKeyDown);
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,4 +91,4 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   return <div ref={setViewerRef} {...props} />;
 }
 
-export { ReaderContents };
+export default ReaderContents;

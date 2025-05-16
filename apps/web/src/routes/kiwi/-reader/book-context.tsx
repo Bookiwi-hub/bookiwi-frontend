@@ -10,26 +10,31 @@ import {
 
 import { Book } from "@bookiwi/epubjs";
 
-interface ReaderContextType {
+interface BookContextType {
   book: Book | null;
 }
 
-const ReaderContext = createContext<ReaderContextType | undefined>(undefined);
+const BookContext = createContext<BookContextType | undefined>(undefined);
 
-export const useReader = () => {
-  const context = useContext(ReaderContext);
+export const useBook = () => {
+  const context = useContext(BookContext);
   if (context === undefined) {
-    throw new Error("useReader must be used within a ReaderProvider");
+    throw new Error("useBook must be used within a BookProvider");
   }
   return context;
 };
 
-interface ReaderProviderProps {
+interface BookProviderProps {
   children: ReactNode;
   epubFile: string;
+  locations: string;
 }
 
-export function ReaderProvider({ children, epubFile }: ReaderProviderProps) {
+export function BookProvider({
+  children,
+  epubFile,
+  locations,
+}: BookProviderProps) {
   const [book, setBook] = useState<Book | null>(null);
   const navigate = useNavigate();
 
@@ -40,13 +45,15 @@ export function ReaderProvider({ children, epubFile }: ReaderProviderProps) {
     // "/Alice's Adventures in Wonderland.epub"
 
     // Wait for the book to be fully loaded before setting it
-    epubBook.ready
-      .then(() => {
+    const loadBook = async () => {
+      try {
+        await epubBook.ready;
+        epubBook.locations.load(locations);
+
         if (mounted) {
           setBook(epubBook);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         if (mounted) {
           // eslint-disable-next-line no-alert
           alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
@@ -54,14 +61,17 @@ export function ReaderProvider({ children, epubFile }: ReaderProviderProps) {
           console.error(error);
           navigate({ to: "/my-kiwis" });
         }
-      });
+      }
+    };
+
+    loadBook();
 
     return () => {
       mounted = false;
       epubBook.destroy();
       setBook(null);
     };
-  }, [navigate, epubFile]);
+  }, [navigate, epubFile, locations]);
 
   const value = useMemo(
     () => ({
@@ -70,7 +80,5 @@ export function ReaderProvider({ children, epubFile }: ReaderProviderProps) {
     [book],
   );
 
-  return (
-    <ReaderContext.Provider value={value}>{children}</ReaderContext.Provider>
-  );
+  return <BookContext.Provider value={value}>{children}</BookContext.Provider>;
 }
