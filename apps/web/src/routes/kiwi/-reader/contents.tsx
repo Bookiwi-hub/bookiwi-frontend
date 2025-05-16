@@ -13,7 +13,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useBook();
   const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
     useSettings();
-  const { currentCfi, setCurrentCfi } = useRecord();
+  const { currentCfi, setCurrentCfi, setCurrentSection } = useRecord();
   const prevSize = useRef(0);
   const resizeRef = useRef<(() => void) | null>(null);
 
@@ -59,6 +59,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
       rendition.on("relocated", (location: Location) => {
         const { cfi } = location.start;
         setCurrentCfi(cfi);
+        setCurrentSection(location.start.href);
       });
 
       const handleResize = debounce(() => {

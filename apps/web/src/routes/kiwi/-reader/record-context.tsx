@@ -13,6 +13,8 @@ import { Record } from "#/types/reader";
 
 interface RecordContextType extends Record {
   setCurrentCfi: (currentCfi: string) => void;
+  currentSection: string;
+  setCurrentSection: (currentSection: string) => void;
 }
 
 const RecordContext = createContext<RecordContextType | undefined>(undefined);
@@ -34,7 +36,7 @@ export function RecordProvider({ children, currentCfi }: RecordProviderProps) {
   const { book } = useBook();
   const [currentCfiState, setCurrentCfiState] = useState(currentCfi);
   const [percentageState, setPercentageState] = useState<number | null>(null);
-
+  const [currentSection, setCurrentSection] = useState<string>("");
   const key = book?.key();
 
   const setCurrentCfi = useCallback(
@@ -59,8 +61,16 @@ export function RecordProvider({ children, currentCfi }: RecordProviderProps) {
       currentCfi: currentCfiState,
       setCurrentCfi,
       percentage: percentageState,
+      currentSection,
+      setCurrentSection,
     }),
-    [currentCfiState, setCurrentCfi, percentageState],
+    [
+      currentCfiState,
+      setCurrentCfi,
+      percentageState,
+      currentSection,
+      setCurrentSection,
+    ],
   );
 
   return (

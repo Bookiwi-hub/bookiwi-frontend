@@ -1,10 +1,9 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
 import { useState, memo, useCallback } from "react";
 
-import Section from "@bookiwi/epubjs/types/section";
-
 import { cn } from "#/lib/utils";
 import { useBook } from "#/routes/kiwi/-reader";
+import { useRecord } from "#/routes/kiwi/-reader/record-context";
 
 interface NavItem {
   href: string;
@@ -99,7 +98,7 @@ const MemoizedTocItemComponent = memo(TocItemComponent);
 function TocPanel() {
   const { book } = useBook();
   const [toc, setToc] = useState<NavItem[]>([]);
-  const [currentSection, setCurrentSection] = useState<string>();
+  const { currentSection } = useRecord();
 
   const tocRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -107,12 +106,6 @@ function TocPanel() {
       book.loaded.navigation.then((navigation) => {
         setToc(navigation.toc);
       });
-
-      book.rendition.on("rendered", (section: Section) => {
-        setCurrentSection(section.href);
-      });
-
-      setCurrentSection(book.rendition.location.start.href);
     },
     [book],
   );
