@@ -111,6 +111,8 @@ function TocPanel() {
       book.rendition.on("rendered", (section: Section) => {
         setCurrentSection(section.href);
       });
+
+      setCurrentSection(book.rendition.location.start.href);
     },
     [book],
   );
