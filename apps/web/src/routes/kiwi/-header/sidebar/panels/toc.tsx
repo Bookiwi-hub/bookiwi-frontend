@@ -6,7 +6,6 @@ import Section from "@bookiwi/epubjs/types/section";
 import { cn } from "#/lib/utils";
 import { useBook } from "#/routes/kiwi/-reader";
 
-// EPUBJS의 Navigation 항목 타입 정의
 interface NavItem {
   href: string;
   id?: string;
@@ -18,12 +17,14 @@ interface TocItemComponentProps {
   handleNavClick: (href: string) => void;
   level?: number;
   currentSection?: string;
+  isActive?: boolean;
 }
 function TocItemComponent({
   item,
   handleNavClick,
   level = 0,
   currentSection,
+  isActive,
 }: TocItemComponentProps) {
   const [isOpen, setIsOpen] = useState(level === 0);
 
@@ -35,7 +36,7 @@ function TocItemComponent({
       <div
         className={cn(
           "group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100",
-          currentSection === item.href && "bg-gray-100",
+          isActive && "bg-gray-100",
         )}
         onClick={() => handleNavClick(item.href)}
         role="button"
@@ -70,15 +71,23 @@ function TocItemComponent({
       </div>
       {hasSubitems && isOpen && (
         <ul className="ml-2 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
-          {item.subitems!.map((subitem, i) => (
-            <TocItemComponent
-              key={`${subitem.id || i}`}
-              item={subitem}
-              handleNavClick={handleNavClick}
-              level={level + 1}
-              currentSection={currentSection}
-            />
-          ))}
+          {item.subitems!.map((subitem, i) => {
+            const isActiveSubitem = currentSection === subitem.href;
+            return (
+              <TocItemComponent
+                key={`${subitem.id || i}`}
+                item={subitem}
+                handleNavClick={handleNavClick}
+                level={level + 1}
+                isActive={isActiveSubitem}
+                currentSection={
+                  !isActiveSubitem && subitem.subitems?.length
+                    ? currentSection
+                    : undefined
+                }
+              />
+            );
+          })}
         </ul>
       )}
     </li>
@@ -106,25 +115,37 @@ function TocPanel() {
     [book],
   );
   // 목차 항목 클릭 시 해당 페이지로 이동
-  const handleNavClick = (href: string) => {
-    if (book && book.rendition) {
-      book.rendition.display(href);
-    }
-  };
+  const handleNavClick = useCallback(
+    (href: string) => {
+      if (book && book.rendition) {
+        book.rendition.display(href);
+      }
+    },
+    [book],
+  );
 
   return (
     <div ref={tocRef}>
       <h3 className="mb-4 text-lg font-medium">목차</h3>
       {toc.length > 0 ? (
         <ul className="space-y-2">
-          {toc.map((item, index) => (
-            <MemoizedTocItemComponent
-              key={item.id || index}
-              item={item}
-              handleNavClick={handleNavClick}
-              currentSection={currentSection}
-            />
-          ))}
+          {toc.map((item, index) => {
+            const isActive = currentSection === item.href;
+
+            return (
+              <MemoizedTocItemComponent
+                key={item.id || index}
+                item={item}
+                handleNavClick={handleNavClick}
+                isActive={isActive}
+                currentSection={
+                  !isActive && item.subitems?.length
+                    ? currentSection
+                    : undefined
+                }
+              />
+            );
+          })}
         </ul>
       ) : (
         <div className="flex flex-col items-center justify-center py-6 text-center">
