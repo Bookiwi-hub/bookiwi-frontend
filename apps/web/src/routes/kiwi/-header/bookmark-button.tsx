@@ -1,15 +1,17 @@
 import { Bookmark } from "lucide-react";
-import { useState } from "react";
 
 import { useRecord } from "../-reader/record-context";
 
 function BookmarkButton() {
-  const { currentCfi, setBookmark } = useRecord();
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { currentCfi, bookmarks, setBookmark, removeBookmark } = useRecord();
+  const isBookmarked = currentCfi ? bookmarks.includes(currentCfi) : false;
 
   const toggleBookmark = () => {
-    setIsBookmarked((prev) => !prev);
-    if (currentCfi) {
+    if (!currentCfi) return;
+
+    if (isBookmarked) {
+      removeBookmark(currentCfi);
+    } else {
       setBookmark(currentCfi);
     }
   };
