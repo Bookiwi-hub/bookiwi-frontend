@@ -10,7 +10,7 @@ import {
 
 import { useBook } from "./book-context";
 
-import { Record } from "#/types/reader";
+import { Record, BookmarkItem } from "#/types/reader";
 
 interface RecordContextType extends Record {
   setCurrentCfi: (currentCfi: string) => void;
@@ -40,12 +40,24 @@ export function RecordProvider({ children, record }: RecordProviderProps) {
   const [currentCfiState, setCurrentCfiState] = useState(record.currentCfi);
   const [percentageState, setPercentageState] = useState<number | null>(null);
   const [currentSection, setCurrentSection] = useState<string>("");
-  const [bookmarksState, setBookmarksState] = useState(record.bookmarks);
+
+  // Convert legacy string[] bookmarks to BookmarkItem[] if needed
+  const initialBookmarks = Array.isArray(record.bookmarks)
+    ? record.bookmarks.map(
+        (bookmark) =>
+          typeof bookmark === "string"
+            ? { cfi: bookmark, timestamp: Date.now() } // Convert string to BookmarkItem
+            : bookmark, // Already a BookmarkItem
+      )
+    : [];
+
+  const [bookmarksState, setBookmarksState] =
+    useState<BookmarkItem[]>(initialBookmarks);
   const key = `${book?.key()}-record`;
 
   // 현재 전체 레코드 상태를 참조로 유지
   const recordRef = useRef<Record>({
-    bookmarks: record.bookmarks,
+    bookmarks: initialBookmarks,
     currentCfi: record.currentCfi,
     percentage: null,
   });
@@ -69,9 +81,19 @@ export function RecordProvider({ children, record }: RecordProviderProps) {
   );
 
   const setBookmark = useCallback(
-    (newBookmark: string) => {
-      if (!bookmarksState.includes(newBookmark)) {
-        const newBookmarks = [...bookmarksState, newBookmark];
+    (newBookmarkCfi: string) => {
+      // Check if this bookmark CFI already exists
+      const exists = bookmarksState.some(
+        (bookmark) => bookmark.cfi === newBookmarkCfi,
+      );
+
+      if (!exists) {
+        const newBookmarkItem: BookmarkItem = {
+          cfi: newBookmarkCfi,
+          timestamp: Date.now(),
+        };
+
+        const newBookmarks = [...bookmarksState, newBookmarkItem];
         setBookmarksState(newBookmarks);
 
         recordRef.current = {
@@ -86,9 +108,9 @@ export function RecordProvider({ children, record }: RecordProviderProps) {
   );
 
   const removeBookmark = useCallback(
-    (bookmarkToRemove: string) => {
+    (bookmarkCfiToRemove: string) => {
       const newBookmarks = bookmarksState.filter(
-        (bookmark) => bookmark !== bookmarkToRemove,
+        (bookmark) => bookmark.cfi !== bookmarkCfiToRemove,
       );
       setBookmarksState(newBookmarks);
 

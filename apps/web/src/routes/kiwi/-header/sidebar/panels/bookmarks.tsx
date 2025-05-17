@@ -2,6 +2,7 @@ import { Bookmark, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import { useBook, useRecord } from "#/routes/kiwi/-reader";
+import { formatDate } from "#/utils/format-date";
 
 function BookmarksPanel() {
   const { book } = useBook();
@@ -11,6 +12,11 @@ function BookmarksPanel() {
   const handleBookmarkClick = (cfi: string) => {
     if (!book) return;
     book.rendition.display(cfi);
+  };
+
+  const formatTimestamp = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return formatDate(date.toISOString());
   };
 
   return (
@@ -26,34 +32,40 @@ function BookmarksPanel() {
         </div>
       ) : (
         <ul className="space-y-3">
-          {bookmarks.map((cfi, index) => {
-            const spineItem = book?.spine.get(cfi);
+          {bookmarks.map((bookmark, index) => {
+            const spineItem = book?.spine.get(bookmark.cfi);
             const navItem = book?.navigation.get(spineItem?.href || "");
 
             return (
-              <li key={cfi} className="relative">
-                <button
-                  type="button"
-                  className="flex w-full items-start gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent/50"
-                  onClick={() => handleBookmarkClick(cfi)}
-                  onMouseEnter={() => setHoveredBookmark(cfi)}
-                  onMouseLeave={() => setHoveredBookmark(null)}
-                >
-                  <Bookmark size={16} className="mt-1 text-primary" />
-                  <div>
-                    <p className="font-medium">책갈피 {index + 1}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {navItem?.label}
-                    </p>
-                  </div>
-                </button>
-                {hoveredBookmark === cfi && (
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+              <li
+                key={bookmark.cfi}
+                className="flex w-full items-start gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent/50"
+                onClick={() => handleBookmarkClick(bookmark.cfi)}
+                onMouseEnter={() => setHoveredBookmark(bookmark.cfi)}
+                onMouseLeave={() => setHoveredBookmark(null)}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+                role="button"
+              >
+                <Bookmark size={16} className="mt-1 text-primary" />
+                <div>
+                  <p className="font-medium">책갈피 {index + 1}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {navItem?.label}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {bookmark.timestamp
+                      ? formatTimestamp(bookmark.timestamp)
+                      : ""}
+                  </p>
+                </div>
+                {hoveredBookmark === bookmark.cfi && (
                   <button
                     type="button"
-                    className="absolute right-2 top-2 p-1 text-gray-500 hover:text-red-500"
+                    className=" text-gray-500 hover:text-red-500"
                     onClick={(e) => {
                       e.stopPropagation();
-                      removeBookmark(cfi);
+                      removeBookmark(bookmark.cfi);
                     }}
                     aria-label="Remove bookmark"
                   >

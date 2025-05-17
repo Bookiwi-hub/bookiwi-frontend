@@ -4,7 +4,9 @@ import { useRecord } from "../-reader";
 
 function BookmarkButton() {
   const { currentCfi, bookmarks, setBookmark, removeBookmark } = useRecord();
-  const isBookmarked = currentCfi ? bookmarks.includes(currentCfi) : false;
+  const isBookmarked = currentCfi
+    ? bookmarks.some((bookmark) => bookmark.cfi === currentCfi)
+    : false;
 
   const toggleBookmark = () => {
     if (!currentCfi) return;
