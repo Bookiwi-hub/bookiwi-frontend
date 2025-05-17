@@ -1,30 +1,16 @@
 import { Bookmark, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-import { useBook } from "../../../-reader/book-context";
-import { useRecord } from "../../../-reader/record-context";
+import { useBook, useRecord } from "#/routes/kiwi/-reader";
 
 function BookmarksPanel() {
   const { book } = useBook();
-  const { bookmarks, removeBookmark, setCurrentCfi } = useRecord();
+  const { bookmarks, removeBookmark } = useRecord();
   const [hoveredBookmark, setHoveredBookmark] = useState<string | null>(null);
 
-  // Navigate to the bookmark CFI
-  const navigateToBookmark = (cfi: string) => {
-    if (book && cfi) {
-      setCurrentCfi(cfi);
-      book.rendition.display(cfi);
-    }
-  };
-
-  // Get page number or percentage from CFI
-  const getLocationInfo = (cfi: string) => {
-    if (!book) return { pageNumber: "?", percentage: 0 };
-
-    const percentage = Math.floor(book.locations.percentageFromCfi(cfi) * 100);
-    const pageNumber = book.locations.pageFromCfi(cfi) || "?";
-
-    return { pageNumber, percentage };
+  const handleBookmarkClick = (cfi: string) => {
+    if (!book) return;
+    book.rendition.display(cfi);
   };
 
   return (
@@ -40,44 +26,38 @@ function BookmarksPanel() {
         </div>
       ) : (
         <ul className="space-y-3">
-          {bookmarks.map((bookmark, index) => {
-            const { pageNumber, percentage } = getLocationInfo(bookmark);
-            return (
-              <li
-                key={bookmark}
-                onMouseEnter={() => setHoveredBookmark(bookmark)}
+          {bookmarks.map((cfi, index) => (
+            <li key={cfi} className="relative">
+              <button
+                type="button"
+                className="flex w-full items-start gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent/50"
+                onClick={() => handleBookmarkClick(cfi)}
+                onMouseEnter={() => setHoveredBookmark(cfi)}
                 onMouseLeave={() => setHoveredBookmark(null)}
-                className="relative"
               >
+                <Bookmark size={16} className="mt-1 text-primary" />
+                <div>
+                  <p className="font-medium">책갈피 {index + 1}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {/* {pageNumber} 페이지 · {percentage}% */}
+                  </p>
+                </div>
+              </button>
+              {hoveredBookmark === cfi && (
                 <button
                   type="button"
-                  className="flex w-full items-start gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent/50"
-                  onClick={() => navigateToBookmark(bookmark)}
+                  className="absolute right-2 top-2 p-1 text-gray-500 hover:text-red-500"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeBookmark(cfi);
+                  }}
+                  aria-label="Remove bookmark"
                 >
-                  <Bookmark size={16} className="mt-1 text-primary" />
-                  <div>
-                    <p className="font-medium">책갈피 {index + 1}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {pageNumber} 페이지 · {percentage}%
-                    </p>
-                  </div>
+                  <Trash2 size={16} />
                 </button>
-                {hoveredBookmark === bookmark && (
-                  <button
-                    type="button"
-                    className="absolute right-2 top-2 p-1 text-gray-500 hover:text-red-500"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeBookmark(bookmark);
-                    }}
-                    aria-label="Remove bookmark"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                )}
-              </li>
-            );
-          })}
+              )}
+            </li>
+          ))}
         </ul>
       )}
     </div>
