@@ -1,6 +1,6 @@
 import { Bookmark } from "lucide-react";
 
-import { useRecord } from "../-reader/record-context";
+import { useRecord } from "../-reader";
 
 function BookmarkButton() {
   const { currentCfi, bookmarks, setBookmark, removeBookmark } = useRecord();

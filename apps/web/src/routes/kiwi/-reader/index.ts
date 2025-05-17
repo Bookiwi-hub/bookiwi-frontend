@@ -5,3 +5,4 @@ export * from "./page-progress";
 export { default as ReaderProvider } from "./provider";
 export * from "./settings-context";
 export * from "./styles";
+export * from "./record-context";
