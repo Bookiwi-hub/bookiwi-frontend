@@ -1,5 +1,4 @@
 import { Bookmark, Trash2 } from "lucide-react";
-import { useState } from "react";
 
 import { useBook, useRecord } from "#/routes/kiwi/-reader";
 import { formatDate } from "#/utils/format-date";
@@ -7,7 +6,6 @@ import { formatDate } from "#/utils/format-date";
 function BookmarksPanel() {
   const { book } = useBook();
   const { bookmarks, removeBookmark } = useRecord();
-  const [hoveredBookmark, setHoveredBookmark] = useState<string | null>(null);
 
   const handleBookmarkClick = (cfi: string) => {
     if (!book) return;
@@ -42,10 +40,8 @@ function BookmarksPanel() {
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events
               <li
                 key={bookmark.cfi}
-                className="relative flex w-full items-start gap-3 rounded-md border border-transparent p-3 text-left transition-all hover:border-border hover:bg-accent/40"
+                className="group relative flex w-full items-start gap-3 rounded-md border border-transparent p-3 text-left transition-all hover:border-border hover:bg-accent/40"
                 onClick={() => handleBookmarkClick(bookmark.cfi)}
-                onMouseEnter={() => setHoveredBookmark(bookmark.cfi)}
-                onMouseLeave={() => setHoveredBookmark(null)}
                 // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
                 role="button"
               >
@@ -65,11 +61,7 @@ function BookmarksPanel() {
                 </div>
                 <button
                   type="button"
-                  className={`absolute right-3 top-3 rounded-full p-1 transition-all ${
-                    hoveredBookmark === bookmark.cfi
-                      ? "opacity-100 hover:bg-destructive/10 hover:text-destructive"
-                      : "opacity-0"
-                  }`}
+                  className="absolute right-3 top-3 rounded-full p-1 opacity-0 transition-all hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
                   onClick={(e) => {
                     e.stopPropagation();
                     removeBookmark(bookmark.cfi);
