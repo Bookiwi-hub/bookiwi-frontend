@@ -21,6 +21,7 @@ const getBookRecord = (): Record => {
   let record: Record = {
     currentCfi: null,
     percentage: null,
+    bookmarks: [],
   };
 
   if (savedRecord) {

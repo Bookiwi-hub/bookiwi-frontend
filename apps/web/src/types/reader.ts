@@ -9,4 +9,5 @@ export interface Settings {
 export interface Record {
   currentCfi: string | null;
   percentage: number | null;
+  bookmarks: string[];
 }
