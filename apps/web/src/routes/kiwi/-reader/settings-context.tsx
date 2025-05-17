@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -51,33 +52,26 @@ export function SettingsProvider({
   const [lineHeight, setLineHeightState] = useState(initialSettings.lineHeight);
   const [fontWeight, setFontWeightState] = useState(initialSettings.fontWeight);
 
-  // Helper function to save settings to localStorage
-  const saveSettings = useCallback(
-    (newSettings: Partial<Settings>) => {
-      const currentSettings = {
-        isSinglePage,
-        fontFamily,
-        fontSize,
-        lineHeight,
-        fontWeight,
-      };
+  const settingsRef = useRef<Settings>({
+    isSinglePage: initialSettings.isSinglePage,
+    fontFamily: initialSettings.fontFamily,
+    fontSize: initialSettings.fontSize,
+    lineHeight: initialSettings.lineHeight,
+    fontWeight: initialSettings.fontWeight,
+  });
 
-      localStorage.setItem(
-        key,
-        JSON.stringify({ ...currentSettings, ...newSettings }),
-      );
-    },
-    [isSinglePage, fontFamily, fontSize, lineHeight, fontWeight, key],
-  );
-
-  // Custom setter functions that update both state and localStorage
   const setIsSinglePage = useCallback(
     (value: boolean) => {
       setIsSinglePageState(value);
-      saveSettings({ isSinglePage: value });
+
+      settingsRef.current = {
+        ...settingsRef.current,
+        isSinglePage: value,
+      };
+      localStorage.setItem(key, JSON.stringify(settingsRef.current));
       book?.rendition.spread(value ? "none" : "auto");
     },
-    [saveSettings, book],
+    [key, book],
   );
 
   const setFontFamily = useCallback(
@@ -85,15 +79,19 @@ export function SettingsProvider({
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
       setFontFamilyState(value);
-      saveSettings({ fontFamily: value });
+      settingsRef.current = {
+        ...settingsRef.current,
+        fontFamily: value,
+      };
+      localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
         fontFamily: value,
-        fontSize,
-        fontWeight,
-        lineHeight,
+        fontSize: settingsRef.current.fontSize,
+        fontWeight: settingsRef.current.fontWeight,
+        lineHeight: settingsRef.current.lineHeight,
       });
     },
-    [saveSettings, fontSize, fontWeight, lineHeight, book],
+    [key, book],
   );
 
   const setFontSize = useCallback(
@@ -101,31 +99,40 @@ export function SettingsProvider({
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
       setFontSizeState(value);
-      saveSettings({ fontSize: value });
+      settingsRef.current = {
+        ...settingsRef.current,
+        fontSize: value,
+      };
+      localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
         fontSize: value,
-        fontFamily,
-        fontWeight,
-        lineHeight,
+        fontFamily: settingsRef.current.fontFamily,
+        fontWeight: settingsRef.current.fontWeight,
+        lineHeight: settingsRef.current.lineHeight,
       });
     },
-    [saveSettings, fontFamily, fontWeight, lineHeight, book],
+    [key, book],
   );
 
   const setLineHeight = useCallback(
     async (value?: number) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
-      setLineHeightState(value);
-      saveSettings({ lineHeight: value });
+      const newValue = Number(Number(value).toFixed(1));
+      setLineHeightState(newValue);
+      settingsRef.current = {
+        ...settingsRef.current,
+        lineHeight: newValue,
+      };
+      localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
-        fontSize,
-        fontFamily,
-        fontWeight,
-        lineHeight: value,
+        fontSize: settingsRef.current.fontSize,
+        fontFamily: settingsRef.current.fontFamily,
+        fontWeight: settingsRef.current.fontWeight,
+        lineHeight: newValue,
       });
     },
-    [saveSettings, fontSize, fontFamily, fontWeight, book],
+    [key, book],
   );
 
   const setFontWeight = useCallback(
@@ -133,15 +140,19 @@ export function SettingsProvider({
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
       setFontWeightState(value);
-      saveSettings({ fontWeight: value });
-      await updateCustomStyle(contents, {
-        fontSize,
-        fontFamily,
+      settingsRef.current = {
+        ...settingsRef.current,
         fontWeight: value,
-        lineHeight,
+      };
+      localStorage.setItem(key, JSON.stringify(settingsRef.current));
+      await updateCustomStyle(contents, {
+        fontSize: settingsRef.current.fontSize,
+        fontFamily: settingsRef.current.fontFamily,
+        fontWeight: value,
+        lineHeight: settingsRef.current.lineHeight,
       });
     },
-    [saveSettings, fontSize, fontFamily, lineHeight, book],
+    [key, book],
   );
 
   const value = useMemo(
