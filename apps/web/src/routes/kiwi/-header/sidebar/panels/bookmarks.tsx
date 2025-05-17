@@ -26,38 +26,43 @@ function BookmarksPanel() {
         </div>
       ) : (
         <ul className="space-y-3">
-          {bookmarks.map((cfi, index) => (
-            <li key={cfi} className="relative">
-              <button
-                type="button"
-                className="flex w-full items-start gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent/50"
-                onClick={() => handleBookmarkClick(cfi)}
-                onMouseEnter={() => setHoveredBookmark(cfi)}
-                onMouseLeave={() => setHoveredBookmark(null)}
-              >
-                <Bookmark size={16} className="mt-1 text-primary" />
-                <div>
-                  <p className="font-medium">책갈피 {index + 1}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {/* {pageNumber} 페이지 · {percentage}% */}
-                  </p>
-                </div>
-              </button>
-              {hoveredBookmark === cfi && (
+          {bookmarks.map((cfi, index) => {
+            const spineItem = book?.spine.get(cfi);
+            const navItem = book?.navigation.get(spineItem?.href || "");
+
+            return (
+              <li key={cfi} className="relative">
                 <button
                   type="button"
-                  className="absolute right-2 top-2 p-1 text-gray-500 hover:text-red-500"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeBookmark(cfi);
-                  }}
-                  aria-label="Remove bookmark"
+                  className="flex w-full items-start gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent/50"
+                  onClick={() => handleBookmarkClick(cfi)}
+                  onMouseEnter={() => setHoveredBookmark(cfi)}
+                  onMouseLeave={() => setHoveredBookmark(null)}
                 >
-                  <Trash2 size={16} />
+                  <Bookmark size={16} className="mt-1 text-primary" />
+                  <div>
+                    <p className="font-medium">책갈피 {index + 1}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {navItem?.label}
+                    </p>
+                  </div>
                 </button>
-              )}
-            </li>
-          ))}
+                {hoveredBookmark === cfi && (
+                  <button
+                    type="button"
+                    className="absolute right-2 top-2 p-1 text-gray-500 hover:text-red-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeBookmark(cfi);
+                    }}
+                    aria-label="Remove bookmark"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
