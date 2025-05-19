@@ -5,6 +5,7 @@ import Section from "@bookiwi/epubjs/types/section";
 
 import { Input } from "#/components/ui/input";
 import { useBook } from "#/routes/kiwi/-reader";
+import { debounce } from "#/utils/debounce";
 
 interface SearchResult {
   cfi: string;
@@ -75,13 +76,16 @@ function SearchPanel() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) return;
+  // Create a debounced search function
+  const debouncedSearch = debounce(async (term: string) => {
+    if (!term.trim()) {
+      setMatchResults([]);
+      return;
+    }
 
     setIsSearching(true);
     try {
-      const results = await searchKeyword(searchTerm);
+      const results = await searchKeyword(term);
       setMatchResults(results);
     } catch (error) {
       // eslint-disable-next-line no-alert
@@ -89,26 +93,30 @@ function SearchPanel() {
     } finally {
       setIsSearching(false);
     }
+  }, 1000);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTerm = e.target.value;
+    setSearchTerm(newTerm);
+    debouncedSearch(newTerm);
   };
 
   return (
     <div>
       <h3 className="mb-4 text-lg font-medium">검색</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="relative">
-          <Search
-            size={18}
-            className="absolute left-2 top-2.5 text-muted-foreground"
-          />
-          <Input
-            type="text"
-            placeholder="책 내용 검색..."
-            className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </form>
+      <div className="relative">
+        <Search
+          size={18}
+          className="absolute left-2 top-2.5 text-muted-foreground"
+        />
+        <Input
+          type="text"
+          placeholder="책 내용 검색..."
+          className="pl-8"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </div>
 
       {isSearching && (
         <div className="mt-4 text-sm text-muted-foreground">검색 중...</div>
