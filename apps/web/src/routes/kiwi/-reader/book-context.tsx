@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import { Book } from "@bookiwi/epubjs";
+import Section from "@bookiwi/epubjs/types/section";
 
 interface BookContextType {
   book: Book | null;
@@ -49,6 +50,9 @@ export function BookProvider({
       try {
         await epubBook.ready;
         epubBook.locations.load(locations);
+        epubBook.spine.each((section: Section) =>
+          section.load(epubBook.load.bind(epubBook)),
+        );
 
         if (mounted) {
           setBook(epubBook);
