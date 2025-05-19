@@ -49,6 +49,8 @@ export function BookProvider({
     const loadBook = async () => {
       try {
         await epubBook.ready;
+
+        // 책 내용 검색 기능을 위한 코드
         epubBook.locations.load(locations);
         epubBook.spine.each((section: Section) =>
           section.load(epubBook.load.bind(epubBook)),
