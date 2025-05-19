@@ -18,8 +18,14 @@ interface MatchType {
   results: SearchResult[];
 }
 
-// Highlights search terms in the given text
-const highlightSearchTerm = (text: string, searchTerm: string) => {
+// Highlighted Text Component
+function HighlightedText({
+  text,
+  searchTerm,
+}: {
+  text: string;
+  searchTerm: string;
+}) {
   if (!searchTerm.trim()) return text;
 
   // Escape special regex characters in the search term
@@ -44,16 +50,153 @@ const highlightSearchTerm = (text: string, searchTerm: string) => {
     }
     return part;
   });
-};
+}
 
+// Search Input Component
+function SearchInput({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className="relative">
+      <Search
+        size={18}
+        className="absolute left-2 top-2.5 text-muted-foreground"
+      />
+      <Input
+        type="text"
+        placeholder="책 내용 검색..."
+        className="pl-8"
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+}
+
+// Individual Search Result Item
+function SearchResultItem({
+  result,
+  searchTerm,
+  onClick,
+}: {
+  result: SearchResult;
+  searchTerm: string;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" className="group relative" onClick={onClick}>
+      <div className="rounded-md border-2 border-primary/10 bg-card p-4 text-sm shadow-md transition-all hover:border-primary/30 hover:bg-card/90">
+        <p className="line-clamp-3 leading-relaxed">
+          <span className="italic text-foreground/80">
+            &ldquo;
+            <HighlightedText text={result.excerpt} searchTerm={searchTerm} />
+            &rdquo;
+          </span>
+        </p>
+      </div>
+    </button>
+  );
+}
+
+// Section of Search Results
+function SearchResultSection({
+  sectionResult,
+  searchTerm,
+  onResultClick,
+}: {
+  sectionResult: MatchType;
+  searchTerm: string;
+  onResultClick: (cfi: string) => void;
+}) {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  const toggleExpanded = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
+  return (
+    <div className="mb-3 rounded-md border p-2 shadow-sm">
+      <button
+        type="button"
+        className="flex w-full items-center justify-between text-left text-sm font-medium"
+        onClick={toggleExpanded}
+        aria-expanded={isExpanded}
+      >
+        <div className="flex items-center gap-1">
+          {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          {sectionResult.tocLabel}
+        </div>
+        <div className="text-xs text-muted-foreground">
+          {sectionResult.results.length}개 결과
+        </div>
+      </button>
+
+      {isExpanded && (
+        <div className="mt-4 space-y-3">
+          {sectionResult.results.map((result) => (
+            <SearchResultItem
+              key={result.cfi}
+              result={result}
+              searchTerm={searchTerm}
+              onClick={() => onResultClick(result.cfi)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// All Search Results
+function SearchResults({
+  results,
+  searchTerm,
+  onResultClick,
+  isSearching,
+}: {
+  results: MatchType[];
+  searchTerm: string;
+  onResultClick: (cfi: string) => void;
+  isSearching: boolean;
+}) {
+  if (isSearching) {
+    return <div className="mt-4 text-sm text-muted-foreground">검색 중...</div>;
+  }
+
+  if (results.length === 0) {
+    return (
+      <div className="mt-4 text-sm text-muted-foreground">
+        {searchTerm
+          ? "검색 결과가 없습니다."
+          : "검색 결과가 여기에 표시됩니다."}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-4">
+      {results.map((sectionResult) => (
+        <SearchResultSection
+          key={sectionResult.id}
+          sectionResult={sectionResult}
+          searchTerm={searchTerm}
+          onResultClick={onResultClick}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Main Search Panel
 function SearchPanel() {
   const { book } = useBook();
   const [searchTerm, setSearchTerm] = useState("");
   const [matchResults, setMatchResults] = useState<MatchType[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<
-    Record<string, boolean>
-  >({});
 
   const searchKeyword = useCallback(
     async (keyword: string): Promise<MatchType[]> => {
@@ -116,15 +259,7 @@ function SearchPanel() {
       try {
         const results = await searchKeyword(term);
         setMatchResults(results);
-
-        // Initialize expanded sections - by default, expand all sections
-        const newExpandedSections: Record<string, boolean> = {};
-        results.forEach((section) => {
-          newExpandedSections[section.id] = true;
-        });
-        setExpandedSections(newExpandedSections);
       } catch (error) {
-        // eslint-disable-next-line no-alert
         alert("검색 중 오류가 발생했습니다.");
       } finally {
         setIsSearching(false);
@@ -145,13 +280,6 @@ function SearchPanel() {
     debouncedSearch(newTerm);
   };
 
-  const toggleSection = (sectionId: string) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [sectionId]: !prev[sectionId],
-    }));
-  };
-
   const handleResultClick = (cfi: string) => {
     if (!book) return;
     book.rendition.display(cfi);
@@ -160,84 +288,13 @@ function SearchPanel() {
   return (
     <div>
       <h3 className="mb-4 text-lg font-medium">검색</h3>
-      <div className="relative">
-        <Search
-          size={18}
-          className="absolute left-2 top-2.5 text-muted-foreground"
-        />
-        <Input
-          type="text"
-          placeholder="책 내용 검색..."
-          className="pl-8"
-          value={searchTerm}
-          onChange={handleKeywordChange}
-        />
-      </div>
-
-      {isSearching && (
-        <div className="mt-4 text-sm text-muted-foreground">검색 중...</div>
-      )}
-
-      {!isSearching && matchResults.length > 0 ? (
-        <div className="mt-4">
-          {matchResults.map((sectionResult) => (
-            <div
-              key={sectionResult.id}
-              className="mb-3 rounded-md border p-2 shadow-sm"
-            >
-              <button
-                type="button"
-                className="flex w-full items-center justify-between text-left text-sm font-medium"
-                onClick={() => toggleSection(sectionResult.id)}
-                aria-expanded={expandedSections[sectionResult.id]}
-              >
-                <div className="flex items-center gap-1">
-                  {expandedSections[sectionResult.id] ? (
-                    <ChevronDown size={16} />
-                  ) : (
-                    <ChevronRight size={16} />
-                  )}
-                  {sectionResult.tocLabel}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {sectionResult.results.length}개 결과
-                </div>
-              </button>
-
-              {expandedSections[sectionResult.id] && (
-                <div className="mt-4 space-y-3">
-                  {sectionResult.results.map((result) => (
-                    <button
-                      type="button"
-                      key={result.cfi}
-                      className="group relative"
-                      onClick={() => handleResultClick(result.cfi)}
-                    >
-                      <div className="rounded-md border-2 border-primary/10 bg-card p-4 text-sm shadow-md transition-all hover:border-primary/30 hover:bg-card/90">
-                        <p className="line-clamp-3 leading-relaxed">
-                          <span className="italic text-foreground/80">
-                            &ldquo;
-                            {highlightSearchTerm(result.excerpt, searchTerm)}
-                            &rdquo;
-                          </span>
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
-        !isSearching && (
-          <div className="mt-4 text-sm text-muted-foreground">
-            {searchTerm
-              ? "검색 결과가 없습니다."
-              : "검색 결과가 여기에 표시됩니다."}
-          </div>
-        )
-      )}
+      <SearchInput value={searchTerm} onChange={handleKeywordChange} />
+      <SearchResults
+        results={matchResults}
+        searchTerm={searchTerm}
+        onResultClick={handleResultClick}
+        isSearching={isSearching}
+      />
     </div>
   );
 }
