@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
 import Section from "@bookiwi/epubjs/types/section";
 
@@ -76,6 +76,7 @@ function SearchInput({
     </div>
   );
 }
+const MemoizedSearchInput = memo(SearchInput);
 
 // Individual Search Result Item
 function SearchResultItem({
@@ -190,8 +191,8 @@ function SearchResults({
     </div>
   );
 }
+const MemoizedSearchResults = memo(SearchResults);
 
-// Main Search Panel
 function SearchPanel() {
   const { book } = useBook();
   const [searchTerm, setSearchTerm] = useState("");
@@ -260,6 +261,7 @@ function SearchPanel() {
         const results = await searchKeyword(term);
         setMatchResults(results);
       } catch (error) {
+        // eslint-disable-next-line no-alert
         alert("검색 중 오류가 발생했습니다.");
       } finally {
         setIsSearching(false);
@@ -274,22 +276,28 @@ function SearchPanel() {
     [handleSearch],
   );
 
-  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTerm = e.target.value;
-    setSearchTerm(newTerm);
-    debouncedSearch(newTerm);
-  };
+  const handleKeywordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newTerm = e.target.value;
+      setSearchTerm(newTerm);
+      debouncedSearch(newTerm);
+    },
+    [debouncedSearch],
+  );
 
-  const handleResultClick = (cfi: string) => {
-    if (!book) return;
-    book.rendition.display(cfi);
-  };
+  const handleResultClick = useCallback(
+    (cfi: string) => {
+      if (!book) return;
+      book.rendition.display(cfi);
+    },
+    [book],
+  );
 
   return (
     <div>
       <h3 className="mb-4 text-lg font-medium">검색</h3>
-      <SearchInput value={searchTerm} onChange={handleKeywordChange} />
-      <SearchResults
+      <MemoizedSearchInput value={searchTerm} onChange={handleKeywordChange} />
+      <MemoizedSearchResults
         results={matchResults}
         searchTerm={searchTerm}
         onResultClick={handleResultClick}
