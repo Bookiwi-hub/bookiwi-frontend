@@ -3,6 +3,7 @@ import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 import { Location } from "@bookiwi/epubjs";
 
 import { useBook } from "./book-context";
+import { useReading } from "./reading-context";
 import { useRecord } from "./record-context";
 import { useSettings } from "./settings-context";
 import { defaultStyle, updateCustomStyle } from "./styles";
@@ -13,7 +14,8 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useBook();
   const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
     useSettings();
-  const { currentCfi, setCurrentCfi, setCurrentSectionHref } = useRecord();
+  const { currentCfi, setCurrentCfi } = useRecord();
+  const { setCurrentSectionHref } = useReading();
   const prevSize = useRef(0);
   const resizeRef = useRef<(() => void) | null>(null);
 
