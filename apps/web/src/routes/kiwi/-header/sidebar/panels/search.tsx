@@ -6,6 +6,7 @@ import Section from "@bookiwi/epubjs/types/section";
 import { Input } from "#/components/ui/input";
 import { useBook } from "#/routes/kiwi/-reader";
 import { debounce } from "#/utils/debounce";
+import truncate from "#/utils/truncate";
 
 interface SearchResult {
   cfi: string;
@@ -129,7 +130,7 @@ function SearchResultSection({
       >
         <div className="flex items-center gap-1">
           {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-          {sectionResult.tocLabel}
+          {truncate(sectionResult.tocLabel, 30)}
         </div>
         <div className="text-xs text-muted-foreground">
           {sectionResult.results.length}개 결과
