@@ -60,7 +60,6 @@ function SettingsPanel() {
           min={1}
           max={5}
           step={0.1}
-          formatValue={(val) => Number(val).toFixed(1)}
         />
       </div>
     </div>

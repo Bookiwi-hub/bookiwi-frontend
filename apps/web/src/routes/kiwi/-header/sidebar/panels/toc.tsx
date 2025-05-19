@@ -2,8 +2,7 @@ import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
 import { useState, memo, useCallback } from "react";
 
 import { cn } from "#/lib/utils";
-import { useBook } from "#/routes/kiwi/-reader";
-import { useRecord } from "#/routes/kiwi/-reader/record-context";
+import { useBook, useRecord } from "#/routes/kiwi/-reader";
 
 interface NavItem {
   href: string;

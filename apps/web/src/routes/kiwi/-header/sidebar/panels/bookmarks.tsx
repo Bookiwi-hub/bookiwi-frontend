@@ -1,30 +1,113 @@
-import { Bookmark } from "lucide-react";
+import { Bookmark, Trash2 } from "lucide-react";
 
-import dummyBookmarks from "#/DB/bookmarks";
+import { useBook, useRecord } from "#/routes/kiwi/-reader";
+import { formatDate } from "#/utils/format-date";
+
+function EmptyBookmarksView() {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-lg bg-muted/30 py-12 text-center">
+      <Bookmark className="mb-3 size-12 text-muted-foreground/60" />
+      <p className="text-base font-medium text-muted-foreground">
+        책갈피가 없습니다.
+      </p>
+      <p className="mt-1 max-w-[220px] text-sm text-muted-foreground/70">
+        책을 읽으면서 중요한 부분을 책갈피로 저장하세요.
+      </p>
+    </div>
+  );
+}
+
+interface BookmarkItemProps {
+  bookmark: { cfi: string; timestamp?: number };
+  index: number;
+  navItemLabel?: string;
+  onClick: (cfi: string) => void;
+  onRemove: (cfi: string) => void;
+  formatTimestamp: (timestamp: number) => string;
+}
+
+function BookmarkItem({
+  bookmark,
+  index,
+  navItemLabel,
+  onClick,
+  onRemove,
+  formatTimestamp,
+}: BookmarkItemProps) {
+  return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+    <li
+      className="group relative flex w-full items-start gap-3 rounded-md border border-transparent p-3 text-left transition-all hover:border-border hover:bg-accent/40"
+      onClick={() => onClick(bookmark.cfi)}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+      role="button"
+    >
+      <Bookmark size={18} className="mt-0.5 text-primary" />
+      <div className="flex-1">
+        <p className="font-medium">책갈피 {index + 1}</p>
+        {navItemLabel && (
+          <p className="mt-0.5 text-sm text-muted-foreground">{navItemLabel}</p>
+        )}
+        {bookmark.timestamp && (
+          <p className="mt-1 text-xs font-medium text-muted-foreground/70">
+            {formatTimestamp(bookmark.timestamp)}
+          </p>
+        )}
+      </div>
+      <button
+        type="button"
+        className="absolute right-3 top-3 rounded-full p-1 opacity-0 transition-all hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove(bookmark.cfi);
+        }}
+        aria-label="Remove bookmark"
+      >
+        <Trash2 size={16} />
+      </button>
+    </li>
+  );
+}
 
 function BookmarksPanel() {
+  const { book } = useBook();
+  const { bookmarks, removeBookmark } = useRecord();
+
+  const handleBookmarkClick = (cfi: string) => {
+    if (!book) return;
+    book.rendition.display(cfi);
+  };
+
+  const formatTimestamp = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return formatDate(date.toISOString());
+  };
+
   return (
-    <div>
-      <h3 className="mb-4 text-lg font-medium">책갈피</h3>
-      <ul className="space-y-3">
-        {dummyBookmarks.map((bookmark) => (
-          <li key={bookmark.id}>
-            <button
-              type="button"
-              className="flex w-full items-start gap-2 rounded-md p-2 text-left transition-colors hover:bg-accent/50"
-              onClick={() => {}}
-            >
-              <Bookmark size={16} className="mt-1 text-primary" />
-              <div>
-                <p className="font-medium">{bookmark.title}</p>
-                <p className="text-sm text-muted-foreground">
-                  {bookmark.page} 페이지
-                </p>
-              </div>
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="px-1">
+      <h3 className="mb-5 text-lg font-semibold">책갈피</h3>
+      {bookmarks.length === 0 ? (
+        <EmptyBookmarksView />
+      ) : (
+        <ul className="space-y-2">
+          {bookmarks.map((bookmark, index) => {
+            const spineItem = book?.spine.get(bookmark.cfi);
+            const navItem = book?.navigation.get(spineItem?.href || "");
+
+            return (
+              <BookmarkItem
+                key={bookmark.cfi}
+                bookmark={bookmark}
+                index={index}
+                navItemLabel={navItem?.label}
+                onClick={handleBookmarkClick}
+                onRemove={removeBookmark}
+                formatTimestamp={formatTimestamp}
+              />
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }

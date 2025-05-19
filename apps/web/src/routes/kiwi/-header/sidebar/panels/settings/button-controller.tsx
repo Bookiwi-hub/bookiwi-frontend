@@ -11,7 +11,6 @@ interface ButtonControllerProps<T> {
   min: T;
   max: T;
   step: number;
-  formatValue?: (value: T) => string | number;
 }
 
 function ButtonController<T extends number>({
@@ -23,7 +22,6 @@ function ButtonController<T extends number>({
   min,
   max,
   step,
-  formatValue = (val) => val,
 }: ButtonControllerProps<T>) {
   const handleChange = async (action: "increase" | "decrease" | "reset") => {
     if (action === "reset") {
@@ -55,7 +53,7 @@ function ButtonController<T extends number>({
             <MinusIcon className="size-4" />
           </Button>
           <div className="min-w-14 px-2 text-center text-sm">
-            {value !== undefined ? formatValue(value) : defaultLabel}
+            {value !== undefined ? value : defaultLabel}
           </div>
           <Button
             variant="ghost"

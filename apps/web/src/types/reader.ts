@@ -6,7 +6,13 @@ export interface Settings {
   fontWeight?: number;
 }
 
+export interface BookmarkItem {
+  cfi: string;
+  timestamp: number;
+}
+
 export interface Record {
   currentCfi: string | null;
   percentage: number | null;
+  bookmarks: BookmarkItem[];
 }
