@@ -14,8 +14,8 @@ import { Record, BookmarkItem } from "#/types/reader";
 
 interface RecordContextType extends Record {
   setCurrentCfi: (currentCfi: string) => void;
-  currentSection: string;
-  setCurrentSection: (currentSection: string) => void;
+  currentSectionHref: string;
+  setCurrentSectionHref: (currentSectionHref: string) => void;
   setBookmark: (bookmark: string) => void;
   removeBookmark: (bookmark: string) => void;
 }
@@ -39,7 +39,7 @@ export function RecordProvider({ children, record }: RecordProviderProps) {
   const { book } = useBook();
   const [currentCfiState, setCurrentCfiState] = useState(record.currentCfi);
   const [percentageState, setPercentageState] = useState<number | null>(null);
-  const [currentSection, setCurrentSection] = useState<string>("");
+  const [currentSectionHref, setCurrentSectionHref] = useState<string>("");
 
   // Convert legacy string[] bookmarks to BookmarkItem[] if needed
   const initialBookmarks = Array.isArray(record.bookmarks)
@@ -129,8 +129,8 @@ export function RecordProvider({ children, record }: RecordProviderProps) {
       currentCfi: currentCfiState,
       setCurrentCfi,
       percentage: percentageState,
-      currentSection,
-      setCurrentSection,
+      currentSectionHref,
+      setCurrentSectionHref,
       bookmarks: bookmarksState,
       setBookmark,
       removeBookmark,
@@ -139,8 +139,8 @@ export function RecordProvider({ children, record }: RecordProviderProps) {
       currentCfiState,
       setCurrentCfi,
       percentageState,
-      currentSection,
-      setCurrentSection,
+      currentSectionHref,
+      setCurrentSectionHref,
       bookmarksState,
       setBookmark,
       removeBookmark,

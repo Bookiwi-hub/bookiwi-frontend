@@ -14,14 +14,14 @@ interface TocItemComponentProps {
   item: NavItem;
   handleNavClick: (href: string) => void;
   level?: number;
-  currentSection?: string;
+  currentSectionHref?: string;
   isActive?: boolean;
 }
 function TocItemComponent({
   item,
   handleNavClick,
   level = 0,
-  currentSection,
+  currentSectionHref,
   isActive,
 }: TocItemComponentProps) {
   const [isOpen, setIsOpen] = useState(level === 0);
@@ -70,7 +70,7 @@ function TocItemComponent({
       {hasSubitems && isOpen && (
         <ul className="ml-2 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
           {item.subitems!.map((subitem, i) => {
-            const isActiveSubitem = currentSection === subitem.href;
+            const isActiveSubitem = currentSectionHref === subitem.href;
             return (
               <TocItemComponent
                 key={`${subitem.id || i}`}
@@ -78,9 +78,9 @@ function TocItemComponent({
                 handleNavClick={handleNavClick}
                 level={level + 1}
                 isActive={isActiveSubitem}
-                currentSection={
+                currentSectionHref={
                   !isActiveSubitem && subitem.subitems?.length
-                    ? currentSection
+                    ? currentSectionHref
                     : undefined
                 }
               />
@@ -97,7 +97,7 @@ const MemoizedTocItemComponent = memo(TocItemComponent);
 function TocPanel() {
   const { book } = useBook();
   const [toc, setToc] = useState<NavItem[]>([]);
-  const { currentSection } = useRecord();
+  const { currentSectionHref } = useRecord();
 
   const tocRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -124,7 +124,7 @@ function TocPanel() {
       {toc.length > 0 ? (
         <ul className="space-y-2">
           {toc.map((item, index) => {
-            const isActive = currentSection === item.href;
+            const isActive = currentSectionHref === item.href;
 
             return (
               <MemoizedTocItemComponent
@@ -132,9 +132,9 @@ function TocPanel() {
                 item={item}
                 handleNavClick={handleNavClick}
                 isActive={isActive}
-                currentSection={
+                currentSectionHref={
                   !isActive && item.subitems?.length
-                    ? currentSection
+                    ? currentSectionHref
                     : undefined
                 }
               />

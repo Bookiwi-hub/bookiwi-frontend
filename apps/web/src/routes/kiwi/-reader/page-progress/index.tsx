@@ -12,7 +12,12 @@ import { throttle } from "#/utils/throttle";
 
 function ReaderPageProgress() {
   const { book } = useBook();
-  const { currentSection, page, total, callbackRef: pageRef } = usePage(book);
+  const {
+    currentSectionLabel,
+    page,
+    total,
+    callbackRef: pageRef,
+  } = usePage(book);
   const { isContentTouched, callbackRef: toggleRef } = useToggle(book);
   const { percentage } = useRecord();
 
@@ -48,7 +53,7 @@ function ReaderPageProgress() {
       >
         <div className="flex size-full justify-between text-sm text-black">
           <div>
-            <span>{currentSection || "이번 챕터"}</span>
+            <span>{currentSectionLabel || "이번 챕터"}</span>
             <span>{page && total ? ` ${page}/${total}` : ""}</span>
           </div>
           <span>{`${percentage}%`}</span>
