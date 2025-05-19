@@ -14,6 +14,10 @@ Bookiwi는 소셜 이북 리더기입니다. 여러 사용자가 하나의 EPUB 
 
 - [Not Found Errors on SPA Page Reload](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Not-Found-Errors-on-SPA-Page-Reload)
 
+### 🚀 Optimizing
+
+- [Optimizing a Slider with Throttling and Memoization](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Throttling-Memoization)
+
 ### 🛠 Technique
 
 - [Insert Separator between child components using React.Children and reduce method](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/children-reduce)
