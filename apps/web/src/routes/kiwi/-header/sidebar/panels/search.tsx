@@ -18,6 +18,34 @@ interface MatchType {
   results: SearchResult[];
 }
 
+// Highlights search terms in the given text
+const highlightSearchTerm = (text: string, searchTerm: string) => {
+  if (!searchTerm.trim()) return text;
+
+  // Escape special regex characters in the search term
+  const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`(${escapedSearchTerm})`, "gi");
+
+  // Split the text by the regex and map the parts
+  const parts = text.split(regex);
+
+  return parts.map((part, i) => {
+    // Check if this part matches the search term (case insensitive)
+    if (part.toLowerCase() === searchTerm.toLowerCase()) {
+      return (
+        <mark
+          // eslint-disable-next-line react/no-array-index-key
+          key={`${part}-${i}`}
+          className="rounded-sm bg-yellow-200 px-0.5 font-medium text-black"
+        >
+          {part}
+        </mark>
+      );
+    }
+    return part;
+  });
+};
+
 function SearchPanel() {
   const { book } = useBook();
   const [searchTerm, setSearchTerm] = useState("");
@@ -172,15 +200,18 @@ function SearchPanel() {
               </button>
 
               {expandedSections[sectionResult.id] && (
-                <div className="mt-2">
-                  {sectionResult.results.map((result, index) => (
-                    <div key={result.cfi} className="group">
-                      <div className="rounded-sm p-2 text-sm hover:bg-muted/50">
-                        {result.excerpt}
+                <div className="mt-4 space-y-3">
+                  {sectionResult.results.map((result) => (
+                    <div key={result.cfi} className="group relative">
+                      <div className="rounded-md border-2 border-primary/10 bg-card p-4 text-sm shadow-md transition-all hover:border-primary/30 hover:bg-card/90">
+                        <p className="line-clamp-3 leading-relaxed">
+                          <span className="italic text-foreground/80">
+                            &ldquo;
+                            {highlightSearchTerm(result.excerpt, searchTerm)}
+                            &rdquo;
+                          </span>
+                        </p>
                       </div>
-                      {index < sectionResult.results.length - 1 && (
-                        <div className="mx-1 h-px bg-border/50" />
-                      )}
                     </div>
                   ))}
                 </div>
