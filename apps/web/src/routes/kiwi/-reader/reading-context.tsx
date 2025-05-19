@@ -1,8 +1,13 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
+import { Location } from "@bookiwi/epubjs";
+import Section from "@bookiwi/epubjs/types/section";
+
 interface ReadingContextType {
-  currentSectionHref: string;
-  setCurrentSectionHref: (currentSectionHref: string) => void;
+  currentSection: Section | null;
+  currentLocation: Location | null;
+  setCurrentLocation: (currentLocation: Location) => void;
+  setCurrentSection: (currentSection: Section) => void;
 }
 
 const ReadingContext = createContext<ReadingContextType | undefined>(undefined);
@@ -20,14 +25,17 @@ interface ReadingProviderProps {
 }
 
 export function ReadingProvider({ children }: ReadingProviderProps) {
-  const [currentSectionHref, setCurrentSectionHref] = useState<string>("");
+  const [currentSection, setCurrentSection] = useState<Section | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
 
   const value = useMemo(
     () => ({
-      currentSectionHref,
-      setCurrentSectionHref,
+      currentSection,
+      setCurrentSection,
+      currentLocation,
+      setCurrentLocation,
     }),
-    [currentSectionHref, setCurrentSectionHref],
+    [currentSection, currentLocation],
   );
 
   return (

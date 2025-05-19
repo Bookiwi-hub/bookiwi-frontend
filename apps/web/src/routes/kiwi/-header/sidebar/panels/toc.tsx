@@ -97,7 +97,8 @@ const MemoizedTocItemComponent = memo(TocItemComponent);
 function TocPanel() {
   const { book } = useBook();
   const [toc, setToc] = useState<NavItem[]>([]);
-  const { currentSectionHref } = useReading();
+  const { currentSection } = useReading();
+  const currentSectionHref = currentSection?.href;
 
   const tocRef = useCallback(
     (node: HTMLDivElement | null) => {

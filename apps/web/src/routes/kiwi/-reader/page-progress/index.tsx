@@ -12,21 +12,15 @@ import { throttle } from "#/utils/throttle";
 
 function ReaderPageProgress() {
   const { book } = useBook();
-  const {
-    currentSectionLabel,
-    page,
-    total,
-    callbackRef: pageRef,
-  } = usePage(book);
+  const { currentSectionLabel, currentPage, totalPages } = usePage(book);
   const { isContentTouched, callbackRef: toggleRef } = useToggle(book);
   const { percentage } = useRecord();
 
   const callbackRef = useCallback(
     (node: HTMLDivElement | null) => {
-      pageRef(node);
       toggleRef(node);
     },
-    [pageRef, toggleRef],
+    [toggleRef],
   );
 
   const throttledDisplay = useMemo(() => {
@@ -54,7 +48,9 @@ function ReaderPageProgress() {
         <div className="flex size-full justify-between text-sm text-black">
           <div>
             <span>{currentSectionLabel || "이번 챕터"}</span>
-            <span>{page && total ? ` ${page}/${total}` : ""}</span>
+            <span>
+              {currentPage && totalPages ? ` ${currentPage}/${totalPages}` : ""}
+            </span>
           </div>
           <span>{`${percentage}%`}</span>
         </div>
