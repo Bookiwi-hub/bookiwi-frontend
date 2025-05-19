@@ -152,6 +152,11 @@ function SearchPanel() {
     }));
   };
 
+  const handleResultClick = (cfi: string) => {
+    if (!book) return;
+    book.rendition.display(cfi);
+  };
+
   return (
     <div>
       <h3 className="mb-4 text-lg font-medium">검색</h3>
@@ -202,7 +207,12 @@ function SearchPanel() {
               {expandedSections[sectionResult.id] && (
                 <div className="mt-4 space-y-3">
                   {sectionResult.results.map((result) => (
-                    <div key={result.cfi} className="group relative">
+                    <button
+                      type="button"
+                      key={result.cfi}
+                      className="group relative"
+                      onClick={() => handleResultClick(result.cfi)}
+                    >
                       <div className="rounded-md border-2 border-primary/10 bg-card p-4 text-sm shadow-md transition-all hover:border-primary/30 hover:bg-card/90">
                         <p className="line-clamp-3 leading-relaxed">
                           <span className="italic text-foreground/80">
@@ -212,7 +222,7 @@ function SearchPanel() {
                           </span>
                         </p>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}
