@@ -1,4 +1,12 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 import { Location } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
@@ -6,8 +14,10 @@ import Section from "@bookiwi/epubjs/types/section";
 interface ReadingContextType {
   currentSection: Section | null;
   currentLocation: Location | null;
-  setCurrentLocation: (currentLocation: Location) => void;
-  setCurrentSection: (currentSection: Section) => void;
+  isProgressBarOpen: boolean;
+  setCurrentLocation: Dispatch<SetStateAction<Location | null>>;
+  setCurrentSection: Dispatch<SetStateAction<Section | null>>;
+  setProgressBarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const ReadingContext = createContext<ReadingContextType | undefined>(undefined);
@@ -27,6 +37,7 @@ interface ReadingProviderProps {
 export function ReadingProvider({ children }: ReadingProviderProps) {
   const [currentSection, setCurrentSection] = useState<Section | null>(null);
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
+  const [isProgressBarOpen, setProgressBarOpen] = useState(false);
 
   const value = useMemo(
     () => ({
@@ -34,8 +45,10 @@ export function ReadingProvider({ children }: ReadingProviderProps) {
       setCurrentSection,
       currentLocation,
       setCurrentLocation,
+      isProgressBarOpen,
+      setProgressBarOpen,
     }),
-    [currentSection, currentLocation],
+    [currentSection, currentLocation, isProgressBarOpen],
   );
 
   return (
