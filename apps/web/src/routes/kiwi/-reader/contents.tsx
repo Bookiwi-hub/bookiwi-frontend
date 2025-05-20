@@ -13,7 +13,7 @@ import { defaultStyle } from "./styles";
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useBook();
   const render = useRender();
-  const getHandlerOnRendered = useRendered();
+  const handleRendered = useRendered();
   const handleRelocated = useRelocated();
   const handleKeyDown = useKeydown();
   const observer = useObserver();
@@ -34,7 +34,6 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
       rendition.on("relocated", handleRelocated);
 
       // 책 섹션 렌더링 완료 시 이벤트 등록(커스텀 스타일 적용 및 섹션 업데이트)
-      const handleRendered = getHandlerOnRendered(rendition);
       rendition.on("rendered", handleRendered);
 
       // 책 크기 변경 시 이벤트 등록(책 크기 재조정)
