@@ -1,47 +1,29 @@
-import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
-
-import { Location } from "@bookiwi/epubjs";
-import Section from "@bookiwi/epubjs/types/section";
+import { useCallback, ComponentPropsWithoutRef } from "react";
 
 import { useBook } from "./book-context";
-import { useReading } from "./reading-context";
-import { useRecord } from "./record-context";
-import { useSettings } from "./settings-context";
-import { defaultStyle, updateCustomStyle } from "./styles";
-
-import { debounce } from "#/utils/debounce";
+import {
+  useObserver,
+  useKeydown,
+  useRendered,
+  useRelocated,
+  useRender,
+} from "./hooks";
+import { defaultStyle } from "./styles";
 
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const { book } = useBook();
-  const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
-    useSettings();
-  const { currentCfi, setCurrentCfi } = useRecord();
-  const { setCurrentLocation, setCurrentSection } = useReading();
-  const prevSize = useRef(0);
-  const resizeRef = useRef<(() => void) | null>(null);
+  const render = useRender();
+  const getHandlerOnRendered = useRendered();
+  const handleRelocated = useRelocated();
+  const handleKeyDown = useKeydown();
+  const observer = useObserver();
 
   const setViewerRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node || !book) return () => {};
 
-      // rendition 객체 생성
-      const rendition = book.renderTo(node, {
-        width: "100%",
-        height: "100%",
-        allowScriptedContent: true, // 자바스크립트 실행 허용
-        spread: isSinglePage ? "none" : "auto",
-      });
-      // 책 렌더링
-      rendition.display(currentCfi || undefined);
+      const rendition = render(node, book);
 
-      // 키보드 이벤트 처리
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.code === "ArrowRight" || e.code === "ArrowDown") {
-          rendition.next();
-        } else if (e.code === "ArrowLeft" || e.code === "ArrowUp") {
-          rendition.prev();
-        }
-      };
       globalThis.addEventListener("keydown", handleKeyDown);
       rendition.on("keydown", handleKeyDown);
 
@@ -49,41 +31,13 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
       rendition.themes.default(defaultStyle);
 
       // 책 이동 시 이벤트 등록(현재 위치 업데이트)
-      rendition.on("relocated", (location: Location) => {
-        const { cfi } = location.start;
-        setCurrentCfi(cfi);
-        setCurrentLocation(location);
-      });
+      rendition.on("relocated", handleRelocated);
 
       // 책 섹션 렌더링 완료 시 이벤트 등록(커스텀 스타일 적용 및 섹션 업데이트)
-      rendition.on("rendered", async (section: Section) => {
-        setCurrentSection(section);
-        const contents = rendition.getContents()[0];
-        if (contents) {
-          await updateCustomStyle(contents, {
-            fontSize,
-            fontFamily,
-            fontWeight,
-            lineHeight,
-          });
-        }
-      });
+      const handleRendered = getHandlerOnRendered(rendition);
+      rendition.on("rendered", handleRendered);
 
       // 책 크기 변경 시 이벤트 등록(책 크기 재조정)
-      const handleResize = debounce(() => {
-        rendition.resize();
-      }, 200);
-      resizeRef.current = handleResize;
-
-      const observer = new ResizeObserver(([e]) => {
-        const size = e?.contentRect.width ?? 0;
-
-        if (size !== 0 && prevSize.current !== 0 && size !== prevSize.current) {
-          handleResize();
-        }
-
-        prevSize.current = size;
-      });
       observer.observe(node);
 
       return () => {

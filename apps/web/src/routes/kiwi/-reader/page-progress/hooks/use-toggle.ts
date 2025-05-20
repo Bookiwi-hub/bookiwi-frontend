@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 
-import { Book, Rendition } from "@bookiwi/epubjs";
+import { Book } from "@bookiwi/epubjs";
+import Section from "@bookiwi/epubjs/types/section";
 
 const useToggle = (book: Book | null) => {
   const [isContentTouched, setIsContentTouched] = useState(false);
@@ -40,8 +41,8 @@ const useToggle = (book: Book | null) => {
         isDragging = false;
       };
 
-      const handleRendered = (r: Rendition, i: Window) => {
-        const iframe = i.document;
+      const handleRendered = (section: Section) => {
+        const iframe = section.document;
         if (iframe) {
           iframe.addEventListener("click", handleTouchAndClick);
 
