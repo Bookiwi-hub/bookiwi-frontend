@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
 
-import { useBook } from "./book-context";
+import { useBook } from "./contexts";
 
 function ReaderPrevPageButton(props: ComponentProps<"button">) {
   const { book } = useBook();

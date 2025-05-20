@@ -8,8 +8,9 @@ import {
   useState,
 } from "react";
 
+import { updateCustomStyle } from "../styles";
+
 import { useBook } from "./book-context";
-import { updateCustomStyle } from "./styles";
 
 import { Settings } from "#/types/reader";
 
