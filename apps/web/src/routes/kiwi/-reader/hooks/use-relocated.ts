@@ -1,7 +1,6 @@
 import { Location } from "@bookiwi/epubjs";
 
-import { useReading } from "../reading-context";
-import { useRecord } from "../record-context";
+import { useRecord, useReading } from "../contexts";
 
 const useRelocated = () => {
   const { setCurrentCfi } = useRecord();

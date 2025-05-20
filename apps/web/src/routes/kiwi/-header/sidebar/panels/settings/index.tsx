@@ -3,7 +3,7 @@ import FontFamilySelector from "./font-family-selector";
 import SinglePageToggler from "./single-page-toggler";
 
 import { Separator } from "#/components/ui/separator";
-import { useSettings } from "#/routes/kiwi/-reader/settings-context";
+import { useSettings } from "#/routes/kiwi/-reader";
 
 function SettingsPanel() {
   const {

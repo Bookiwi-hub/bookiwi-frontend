@@ -2,9 +2,7 @@ import { useMemo } from "react";
 
 import { Book } from "@bookiwi/epubjs";
 
-import { useBook } from "./book-context";
-import { useReading } from "./reading-context";
-import { useRecord } from "./record-context";
+import { useBook, useReading, useRecord } from "./contexts";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";

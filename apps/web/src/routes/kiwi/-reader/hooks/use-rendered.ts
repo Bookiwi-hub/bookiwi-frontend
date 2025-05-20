@@ -1,8 +1,7 @@
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
 
-import { useReading } from "../reading-context";
-import { useSettings } from "../settings-context";
+import { useReading, useSettings } from "../contexts";
 import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {

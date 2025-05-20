@@ -1,7 +1,6 @@
 import { useLoaderData } from "@tanstack/react-router";
 
 import { ReaderProvider } from "../-reader";
-import { SettingsProvider } from "../-reader/settings-context";
 
 import MobileHeader from "./header";
 import MobileMenu from "./menu";
@@ -28,9 +27,7 @@ function MobileKiwi() {
       record={record}
       locations={locations}
     >
-      <SettingsProvider initialSettings={initialSettings}>
-        <MobileKiwiContent />
-      </SettingsProvider>
+      <MobileKiwiContent />
     </ReaderProvider>
   );
 }

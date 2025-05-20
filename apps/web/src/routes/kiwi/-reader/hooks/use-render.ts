@@ -1,7 +1,6 @@
 import { Book } from "@bookiwi/epubjs";
 
-import { useRecord } from "../record-context";
-import { useSettings } from "../settings-context";
+import { useRecord, useSettings } from "../contexts";
 
 const useRender = () => {
   const { isSinglePage } = useSettings();

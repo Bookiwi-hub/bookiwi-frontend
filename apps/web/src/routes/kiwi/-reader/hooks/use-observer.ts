@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import { useBook } from "../book-context";
+import { useBook } from "../contexts";
 
 import { debounce } from "#/utils/debounce";
 

@@ -1,9 +1,11 @@
 import { ReactNode } from "react";
 
-import { BookProvider } from "./book-context";
-import { ReadingProvider } from "./reading-context";
-import { RecordProvider } from "./record-context";
-import { SettingsProvider } from "./settings-context";
+import {
+  BookProvider,
+  SettingsProvider,
+  RecordProvider,
+  ReadingProvider,
+} from "./contexts";
 
 import { Settings, Record } from "#/types/reader";
 
