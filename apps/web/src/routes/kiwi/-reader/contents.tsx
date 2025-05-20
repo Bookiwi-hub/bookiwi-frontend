@@ -47,12 +47,15 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
       // 기본 스타일 적용
       rendition.themes.default(defaultStyle);
+
+      // 책 이동 시 이벤트 등록(현재 위치 업데이트)
       rendition.on("relocated", (location: Location) => {
         const { cfi } = location.start;
         setCurrentCfi(cfi);
         setCurrentLocation(location);
       });
 
+      // 책 섹션 렌더링 완료 시 이벤트 등록(커스텀 스타일 적용 및 섹션 업데이트)
       rendition.on("rendered", async (section: Section) => {
         setCurrentSection(section);
         const contents = rendition.getContents()[0];
@@ -66,10 +69,10 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
         }
       });
 
+      // 책 크기 변경 시 이벤트 등록(책 크기 재조정)
       const handleResize = debounce(() => {
         rendition.resize();
       }, 200);
-
       resizeRef.current = handleResize;
 
       const observer = new ResizeObserver(([e]) => {
@@ -81,7 +84,6 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
 
         prevSize.current = size;
       });
-
       observer.observe(node);
 
       return () => {
