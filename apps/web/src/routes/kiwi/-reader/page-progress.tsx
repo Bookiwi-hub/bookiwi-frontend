@@ -13,13 +13,17 @@ const MAX_SECTION_LENGTH = 25;
 
 const usePage = (book: Book | null) => {
   const { currentLocation, currentSection } = useReading();
-  const currentNavItem =
-    book?.navigation &&
-    currentSection?.href &&
-    book.navigation.get(currentSection.href);
-  const currentTocLabel =
-    currentNavItem && truncate(currentNavItem?.label || "", MAX_SECTION_LENGTH);
-  const { page: currentPage, total: totalPages } = currentLocation?.start
+
+  if (!book || !currentSection || !currentLocation)
+    return { currentTocLabel: null, currentPage: null, totalPages: null };
+
+  const currentNavItem = book.navigation.get(currentSection.href);
+
+  const currentTocLabel = truncate(
+    currentNavItem.label || "",
+    MAX_SECTION_LENGTH,
+  );
+  const { page: currentPage, total: totalPages } = currentLocation.start
     .displayed || { page: 0, total: 0 };
 
   return { currentTocLabel, currentPage, totalPages };
