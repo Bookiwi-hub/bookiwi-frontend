@@ -1,27 +1,37 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
-import { useBook } from "../book-context";
-import { useRecord } from "../record-context";
+import { Book } from "@bookiwi/epubjs";
 
-import usePage from "./hooks/use-page";
-import useToggle from "./hooks/use-toggle";
+import { useBook } from "./book-context";
+import { useReading } from "./reading-context";
+import { useRecord } from "./record-context";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
 import { throttle } from "#/utils/throttle";
+import truncate from "#/utils/truncate";
+
+const MAX_SECTION_LENGTH = 25;
+
+const usePage = (book: Book | null) => {
+  const { currentLocation, currentSection } = useReading();
+  const currentNavItem =
+    book?.navigation &&
+    currentSection?.href &&
+    book.navigation.get(currentSection.href);
+  const currentTocLabel =
+    currentNavItem && truncate(currentNavItem?.label || "", MAX_SECTION_LENGTH);
+  const { page: currentPage, total: totalPages } = currentLocation?.start
+    .displayed || { page: 0, total: 0 };
+
+  return { currentTocLabel, currentPage, totalPages };
+};
 
 function ReaderPageProgress() {
   const { book } = useBook();
-  const { currentSectionLabel, currentPage, totalPages } = usePage(book);
-  const { isContentTouched, callbackRef: toggleRef } = useToggle(book);
+  const { currentTocLabel, currentPage, totalPages } = usePage(book);
+  const { isProgressBarOpen, setProgressBarOpen } = useReading();
   const { percentage } = useRecord();
-
-  const callbackRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      toggleRef(node);
-    },
-    [toggleRef],
-  );
 
   const throttledDisplay = useMemo(() => {
     if (!book) return null;
@@ -38,16 +48,17 @@ function ReaderPageProgress() {
   };
 
   return (
-    <div className="size-full" ref={callbackRef}>
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div className="size-full" onClick={() => setProgressBarOpen(true)}>
       <div
         className={cn(
           "w-full space-y-2 px-3 pt-2 transition-opacity duration-200 bg-zinc-50",
-          isContentTouched ? "opacity-100" : "opacity-0",
+          isProgressBarOpen ? "opacity-100" : "opacity-0",
         )}
       >
         <div className="flex size-full justify-between text-sm text-black">
           <div>
-            <span>{currentSectionLabel || "이번 챕터"}</span>
+            <span>{currentTocLabel || "이번 챕터"}</span>
             <span>
               {currentPage && totalPages ? ` ${currentPage}/${totalPages}` : ""}
             </span>
@@ -66,4 +77,4 @@ function ReaderPageProgress() {
   );
 }
 
-export { ReaderPageProgress };
+export default ReaderPageProgress;
