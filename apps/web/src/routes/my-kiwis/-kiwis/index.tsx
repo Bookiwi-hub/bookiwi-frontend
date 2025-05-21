@@ -1,8 +1,9 @@
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
-import CreateKiwiCard from "./create-kiwi-card";
+import { CreateKiwiCard, CreateKiwiModal } from "./create-kiwi";
 import KiwiCard from "./kiwi-card";
-import LinkInput from "./link-input";
+import KiwiLinkForm from "./kiwi-link-form";
 
 import { Button } from "#/components/ui/button";
 import { Kiwi } from "#/types/kiwi";
@@ -24,32 +25,41 @@ const sampleKiwi: Kiwi = {
 };
 
 export default function Kiwis({ kiwis }: KiwisProps) {
+  const [openCreateKiwiModal, setOpenCreateKiwiModal] = useState(false);
+
   return (
-    <div className="w-full">
-      <div className="mb-8 space-y-6">
-        <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
-          <h2 className="text-2xl font-bold">내 키위</h2>
-          <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
-            <LinkInput />
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 mobile:hidden"
-            >
-              <Plus size={16} />새 키위 만들기
-            </Button>
+    <>
+      <div className="w-full">
+        <div className="mb-8 space-y-6">
+          <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
+            <h2 className="text-2xl font-bold">내 키위</h2>
+            <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
+              <KiwiLinkForm onSubmit={(e) => e.preventDefault()} />
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 mobile:hidden"
+                onClick={() => setOpenCreateKiwiModal(true)}
+              >
+                <Plus size={16} />새 키위 만들기
+              </Button>
+            </div>
           </div>
         </div>
+        <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          {kiwis.length === 0 ? (
+            <>
+              <CreateKiwiCard onClick={() => setOpenCreateKiwiModal(true)} />
+              <KiwiCard key={sampleKiwi.id} kiwi={sampleKiwi} />
+            </>
+          ) : (
+            kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
+          )}
+        </div>
       </div>
-      <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {kiwis.length === 0 ? (
-          <>
-            <CreateKiwiCard />
-            <KiwiCard key={sampleKiwi.id} kiwi={sampleKiwi} />
-          </>
-        ) : (
-          kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
-        )}
-      </div>
-    </div>
+      <CreateKiwiModal
+        open={openCreateKiwiModal}
+        setOpen={setOpenCreateKiwiModal}
+      />
+    </>
   );
 }
