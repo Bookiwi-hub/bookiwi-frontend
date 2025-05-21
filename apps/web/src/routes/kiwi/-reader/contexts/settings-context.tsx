@@ -189,10 +189,10 @@ export function SettingsProvider({
   );
 
   useEffect(() => {
-    const handleRendered = () => {
+    const handleRendered = async () => {
       const contents = book?.rendition.getContents()[0];
       if (!contents) return;
-      updateCustomStyle(contents, {
+      await updateCustomStyle(contents, {
         fontSize,
         fontFamily,
         fontWeight,
