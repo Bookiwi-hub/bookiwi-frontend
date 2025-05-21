@@ -39,6 +39,7 @@ function FontFamilySelector({
       await setFontFamily(value);
     }
   };
+
   return (
     <div className="flex flex-col gap-2">
       <span className="text-sm font-medium">글꼴</span>
@@ -46,7 +47,7 @@ function FontFamilySelector({
         value={fontFamily || "original"}
         onValueChange={handleFontFamilyChange}
       >
-        <SelectTrigger>
+        <SelectTrigger onKeyDown={(e) => e.preventDefault()}>
           <SelectValue placeholder="원본" />
         </SelectTrigger>
         <SelectContent className="max-h-[300px]">
