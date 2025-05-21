@@ -3,7 +3,6 @@ import {
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -187,25 +186,6 @@ export function SettingsProvider({
       setFontWeight,
     ],
   );
-
-  useEffect(() => {
-    const handleRendered = async () => {
-      const contents = book?.rendition.getContents()[0];
-      if (!contents) return;
-      await updateCustomStyle(contents, {
-        fontSize,
-        fontFamily,
-        fontWeight,
-        lineHeight,
-      });
-    };
-
-    book?.rendition?.on("rendered", handleRendered);
-
-    return () => {
-      book?.rendition?.off("rendered", handleRendered);
-    };
-  }, [fontSize, fontFamily, fontWeight, lineHeight, book]);
 
   return (
     <SettingsContext.Provider value={value}>

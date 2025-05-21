@@ -1,7 +1,10 @@
+import { useEffect } from "react";
+
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
 
-import { useReading } from "../contexts";
+import { useBook, useReading, useSettings } from "../contexts";
+import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {
   const { setProgressBarOpen } = useReading();
@@ -47,9 +50,35 @@ const useToggleProgressBar = () => {
   return addProgressBarToggleEvent;
 };
 
+const useUpdateCustomStyle = () => {
+  const { book } = useBook();
+  const { fontSize, fontFamily, fontWeight, lineHeight } = useSettings();
+
+  useEffect(() => {
+    const handleRendered = async () => {
+      const contents = book?.rendition.getContents()[0];
+      if (!contents) return;
+      await updateCustomStyle(contents, {
+        fontSize,
+        fontFamily,
+        fontWeight,
+        lineHeight,
+      });
+    };
+
+    book?.rendition?.on("rendered", handleRendered);
+
+    return () => {
+      book?.rendition?.off("rendered", handleRendered);
+    };
+  }, [fontSize, fontFamily, fontWeight, lineHeight, book]);
+};
+
 const useRendered = () => {
   const { setCurrentSection } = useReading();
   const addProgressBarToggleEvent = useToggleProgressBar();
+
+  useUpdateCustomStyle();
 
   const handleRendered = (section: Section, iframeView: IframeView) => {
     const { contents } = iframeView;
