@@ -27,6 +27,7 @@ function Sidebar() {
           side="left"
           className="flex flex-row gap-1 p-0 sm:max-w-md"
           onOpenAutoFocus={(e) => e.preventDefault()}
+          onMouseDown={(e) => e.preventDefault()}
         >
           <SidebarNav activeTab={activeTab} setActiveTab={setActiveTab} />
           <SidebarPanels activeTab={activeTab} />

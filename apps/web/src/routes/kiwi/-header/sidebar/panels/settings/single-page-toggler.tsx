@@ -16,6 +16,7 @@ function SinglePageToggler({
         id="theme-switch"
         checked={isSinglePage}
         onCheckedChange={handleCheckedChange}
+        onMouseDown={(e) => e.preventDefault()}
       />
     </div>
   );
