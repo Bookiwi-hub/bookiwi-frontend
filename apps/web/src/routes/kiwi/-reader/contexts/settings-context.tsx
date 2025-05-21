@@ -200,10 +200,10 @@ export function SettingsProvider({
       });
     };
 
-    book?.rendition.on("rendered", handleRendered);
+    book?.rendition?.on("rendered", handleRendered);
 
     return () => {
-      book?.rendition.off("rendered", handleRendered);
+      book?.rendition?.off("rendered", handleRendered);
     };
   }, [fontSize, fontFamily, fontWeight, lineHeight, book]);
 
