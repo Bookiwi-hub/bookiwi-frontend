@@ -3,8 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import Header from "./-header";
 import Kiwis from "./-kiwis";
 
-import kiwis from "#/DB/kiwis";
-
 export const Route = createFileRoute("/my-kiwis/")({
   head: () => ({
     meta: [
@@ -21,7 +19,7 @@ function MyKiwis() {
     <div className="flex size-full flex-col">
       <Header />
       <main className="size-full bg-white p-6 mobile:p-4">
-        <Kiwis kiwis={kiwis} />
+        <Kiwis kiwis={[]} />
       </main>
     </div>
   );
