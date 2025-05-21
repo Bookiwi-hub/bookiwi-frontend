@@ -4,7 +4,6 @@ import { ReaderProvider } from "../-reader";
 import { SettingsProvider } from "../-reader/settings-context";
 
 import MobileHeader from "./header";
-import MobileMenu from "./menu";
 import MobileViewer from "./viewer";
 
 function MobileKiwiContent() {
@@ -12,7 +11,6 @@ function MobileKiwiContent() {
     <div className="size-full">
       <MobileHeader />
       <MobileViewer />
-      <MobileMenu />
     </div>
   );
 }

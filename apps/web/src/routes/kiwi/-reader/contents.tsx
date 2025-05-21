@@ -1,6 +1,6 @@
 import { useCallback, ComponentPropsWithoutRef, useRef } from "react";
 
-import { Location } from "@bookiwi/epubjs";
+import { Location, Rendition } from "@bookiwi/epubjs";
 
 import { useBook } from "./book-context";
 import { useRecord } from "./record-context";
@@ -9,7 +9,12 @@ import { defaultStyle, updateCustomStyle } from "./styles";
 
 import { debounce } from "#/utils/debounce";
 
-function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
+type ReaderContentsProps = ComponentPropsWithoutRef<"div"> & {
+  onRenditionReady?: (rendition: Rendition) => void;
+};
+
+function ReaderContents(props: ReaderContentsProps) {
+  const { onRenditionReady } = props;
   const { book } = useBook();
   const { isSinglePage, fontSize, fontFamily, fontWeight, lineHeight } =
     useSettings();
@@ -24,11 +29,15 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
       const rendition = book.renderTo(node, {
         width: "100%",
         height: "100%",
-        allowScriptedContent: true, // 자바스크립트 실행 허용
+        allowScriptedContent: true,
         spread: isSinglePage ? "none" : "auto",
       });
 
       rendition.themes.default(defaultStyle);
+
+      if (onRenditionReady) {
+        onRenditionReady(rendition);
+      }
 
       rendition.on("rendered", () => {
         const contents = rendition.getContents()[0];
