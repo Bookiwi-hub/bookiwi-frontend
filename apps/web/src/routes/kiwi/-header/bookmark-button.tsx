@@ -24,6 +24,7 @@ function BookmarkButton() {
       className="flex items-center justify-center rounded-md p-2 hover:bg-gray-100"
       onClick={toggleBookmark}
       aria-label="Toggle bookmark"
+      onMouseDown={(e) => e.preventDefault()}
     >
       <Bookmark
         size={22}

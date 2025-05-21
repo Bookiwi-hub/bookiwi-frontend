@@ -20,7 +20,7 @@ const usePage = (book: Book | null) => {
   const currentNavItem = book.navigation.get(currentSection.href);
 
   const currentTocLabel = truncate(
-    currentNavItem.label || "",
+    currentNavItem?.label || "",
     MAX_SECTION_LENGTH,
   );
   const { page: currentPage, total: totalPages } = currentLocation.start

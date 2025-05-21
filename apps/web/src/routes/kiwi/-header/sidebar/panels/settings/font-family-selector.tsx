@@ -11,6 +11,23 @@ interface FontFamilySelectorProps {
   setFontFamily: (value?: string) => Promise<void> | void;
 }
 
+const fontOptions = [
+  { value: "original", label: "원본" },
+  { value: "sans-serif", label: "Sans-serif" },
+  { value: "serif", label: "Serif" },
+  { value: "monospace", label: "Monospace" },
+  { value: "arial", label: "Arial" },
+  { value: "helvetica", label: "Helvetica" },
+  { value: "verdana", label: "Verdana" },
+  { value: "tahoma", label: "Tahoma" },
+  { value: "trebuchet-ms", label: "Trebuchet MS" },
+  { value: "times-new-roman", label: "Times New Roman" },
+  { value: "georgia", label: "Georgia" },
+  { value: "courier-new", label: "Courier New" },
+  { value: "impact", label: "Impact" },
+  { value: "malgun-gothic", label: "맑은 고딕" },
+];
+
 function FontFamilySelector({
   fontFamily,
   setFontFamily,
@@ -22,6 +39,7 @@ function FontFamilySelector({
       await setFontFamily(value);
     }
   };
+
   return (
     <div className="flex flex-col gap-2">
       <span className="text-sm font-medium">글꼴</span>
@@ -29,24 +47,15 @@ function FontFamilySelector({
         value={fontFamily || "original"}
         onValueChange={handleFontFamilyChange}
       >
-        <SelectTrigger>
+        <SelectTrigger onKeyDown={(e) => e.preventDefault()}>
           <SelectValue placeholder="원본" />
         </SelectTrigger>
         <SelectContent className="max-h-[300px]">
-          <SelectItem value="original">원본</SelectItem>
-          <SelectItem value="sans-serif">Sans-serif</SelectItem>
-          <SelectItem value="serif">Serif</SelectItem>
-          <SelectItem value="monospace">Monospace</SelectItem>
-          <SelectItem value="arial">Arial</SelectItem>
-          <SelectItem value="helvetica">Helvetica</SelectItem>
-          <SelectItem value="verdana">Verdana</SelectItem>
-          <SelectItem value="tahoma">Tahoma</SelectItem>
-          <SelectItem value="trebuchet-ms">Trebuchet MS</SelectItem>
-          <SelectItem value="times-new-roman">Times New Roman</SelectItem>
-          <SelectItem value="georgia">Georgia</SelectItem>
-          <SelectItem value="courier-new">Courier New</SelectItem>
-          <SelectItem value="impact">Impact</SelectItem>
-          <SelectItem value="malgun-gothic">맑은 고딕</SelectItem>
+          {fontOptions.map((font) => (
+            <SelectItem key={font.value} value={font.value}>
+              {font.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>
