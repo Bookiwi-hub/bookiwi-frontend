@@ -1,13 +1,15 @@
 import { AlertCircle, Check, Copy } from "lucide-react";
 
-import { StateDispatchProps, ActionTypes } from "./reducer";
+import { useCreateKiwi } from "./context";
+import { ActionTypes } from "./reducer";
 
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { cn } from "#/lib/utils";
 
-function EpubUpload({ state, dispatch }: StateDispatchProps) {
+function EpubUpload() {
+  const { state, dispatch } = useCreateKiwi();
   const { fileError, selectedFile } = state;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,11 +1,13 @@
 import { Copy, Check } from "lucide-react";
 
-import { StateDispatchProps, ActionTypes } from "./reducer";
+import { useCreateKiwi } from "./context";
+import { ActionTypes } from "./reducer";
 
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
 
-function CreatedSuccess({ state, dispatch }: StateDispatchProps) {
+function CreatedSuccess() {
+  const { state, dispatch } = useCreateKiwi();
   const { kiwiName, shareCode, copied } = state;
 
   const handleCopyCode = () => {

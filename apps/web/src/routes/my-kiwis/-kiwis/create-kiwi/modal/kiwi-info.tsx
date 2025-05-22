@@ -1,13 +1,15 @@
 import { AlertCircle } from "lucide-react";
 
-import { StateDispatchProps, ActionTypes } from "./reducer";
+import { useCreateKiwi } from "./context";
+import { ActionTypes } from "./reducer";
 
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { Switch } from "#/components/ui/switch";
 import { cn } from "#/lib/utils";
 
-function KiwiInfo({ state, dispatch }: StateDispatchProps) {
+function KiwiInfo() {
+  const { state, dispatch } = useCreateKiwi();
   const {
     kiwiName,
     kiwiDescription,
