@@ -130,38 +130,12 @@ export default function CreateKiwiModal({
     ),
     2: <EpubUploadForm onFileChange={setSelectedFile} />,
     3: (
-      <div className="flex flex-col items-center space-y-4 py-8">
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
-          <Check className="size-6 text-primary" />
-        </div>
-        <h3 className="text-lg font-medium">
-          {kiwiName} 키위가 생성되었습니다!
-        </h3>
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          <div className="relative flex-1">
-            <Input
-              value={shareCode}
-              readOnly
-              className="pr-10 text-center font-mono"
-            />
-          </div>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={handleCopyCode}
-            className="flex size-10 shrink-0 items-center justify-center"
-          >
-            {copied ? (
-              <Check className="size-4" />
-            ) : (
-              <Copy className="size-4" />
-            )}
-          </Button>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          이 코드를 사용해 다른 사람들이 키위에 참여할 수 있습니다.
-        </p>
-      </div>
+      <KiwiCreatedSuccess
+        kiwiName={kiwiName}
+        shareCode={shareCode}
+        copied={copied}
+        onCopy={handleCopyCode}
+      />
     ),
   };
 
@@ -336,6 +310,49 @@ function EpubUploadForm({ onFileChange }: EpubUploadFormProps) {
           키위에서 사용할 EPUB 파일을 선택해주세요.
         </p>
       </div>
+    </div>
+  );
+}
+
+interface KiwiCreatedSuccessProps {
+  kiwiName: string;
+  shareCode: string;
+  copied: boolean;
+  onCopy: () => void;
+}
+
+function KiwiCreatedSuccess({
+  kiwiName,
+  shareCode,
+  copied,
+  onCopy,
+}: KiwiCreatedSuccessProps) {
+  return (
+    <div className="flex flex-col items-center space-y-4 py-8">
+      <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+        <Check className="size-6 text-primary" />
+      </div>
+      <h3 className="text-lg font-medium">{kiwiName} 키위가 생성되었습니다!</h3>
+      <div className="flex w-full max-w-sm items-center space-x-2">
+        <div className="relative flex-1">
+          <Input
+            value={shareCode}
+            readOnly
+            className="pr-10 text-center font-mono"
+          />
+        </div>
+        <Button
+          size="icon"
+          variant="outline"
+          onClick={onCopy}
+          className="flex size-10 shrink-0 items-center justify-center"
+        >
+          {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+        </Button>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        이 코드를 사용해 다른 사람들이 키위에 참여할 수 있습니다.
+      </p>
     </div>
   );
 }
