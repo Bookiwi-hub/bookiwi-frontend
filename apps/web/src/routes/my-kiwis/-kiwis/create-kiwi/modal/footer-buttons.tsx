@@ -61,15 +61,13 @@ export function Step2FooterButton() {
         }, 2000);
       });
 
-      if (state.step === Step.Processing) {
-        // 공유 코드 생성 (실제로는 API에서 받아와야 함)
-        const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-        dispatch({
-          type: ActionTypes.SET_SHARE_CODE,
-          payload: generatedShareCode,
-        });
-        dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
-      }
+      // 공유 코드 생성 (실제로는 API에서 받아와야 함)
+      const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      dispatch({
+        type: ActionTypes.SET_SHARE_CODE,
+        payload: generatedShareCode,
+      });
+      dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
 
       // 성공 단계로 이동
     } catch (error) {
