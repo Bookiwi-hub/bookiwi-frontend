@@ -1,4 +1,4 @@
-import { Copy, Check, Loader2 } from "lucide-react";
+import { Copy, Check, Loader2, AlertCircle } from "lucide-react";
 import { Dispatch, useReducer } from "react";
 
 import { Button } from "#/components/ui/button";
@@ -25,7 +25,10 @@ interface KiwiState {
   password: string;
   confirmPassword: string;
   passwordError: boolean;
+  nameError: boolean;
+  descriptionError: boolean;
   selectedFile: File | null;
+  fileError: boolean;
   isLoading: boolean;
   shareCode: string;
   copied: boolean;
@@ -40,10 +43,15 @@ type KiwiAction =
   | { type: "SET_PASSWORD"; payload: string }
   | { type: "SET_CONFIRM_PASSWORD"; payload: string }
   | { type: "SET_PASSWORD_ERROR"; payload: boolean }
+  | { type: "SET_NAME_ERROR"; payload: boolean }
+  | { type: "SET_DESCRIPTION_ERROR"; payload: boolean }
   | { type: "SET_SELECTED_FILE"; payload: File | null }
+  | { type: "SET_FILE_ERROR"; payload: boolean }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_SHARE_CODE"; payload: string }
   | { type: "SET_COPIED"; payload: boolean }
+  | { type: "VALIDATE_STEP_1" }
+  | { type: "VALIDATE_STEP_2" }
   | { type: "RESET" };
 
 // 초기 상태
@@ -55,7 +63,10 @@ const initialState: KiwiState = {
   password: "",
   confirmPassword: "",
   passwordError: false,
+  nameError: false,
+  descriptionError: false,
   selectedFile: null,
+  fileError: false,
   isLoading: false,
   shareCode: "",
   copied: false,
@@ -67,25 +78,56 @@ const kiwiReducer = (state: KiwiState, action: KiwiAction): KiwiState => {
     case "SET_STEP":
       return { ...state, step: action.payload };
     case "SET_KIWI_NAME":
-      return { ...state, kiwiName: action.payload };
+      return { ...state, kiwiName: action.payload, nameError: false };
     case "SET_KIWI_DESCRIPTION":
-      return { ...state, kiwiDescription: action.payload };
+      return {
+        ...state,
+        kiwiDescription: action.payload,
+        descriptionError: false,
+      };
     case "SET_PASSWORD_PROTECTED":
       return { ...state, passwordProtected: action.payload };
     case "SET_PASSWORD":
-      return { ...state, password: action.payload };
+      return { ...state, password: action.payload, passwordError: false };
     case "SET_CONFIRM_PASSWORD":
-      return { ...state, confirmPassword: action.payload };
+      return {
+        ...state,
+        confirmPassword: action.payload,
+        passwordError: false,
+      };
     case "SET_PASSWORD_ERROR":
       return { ...state, passwordError: action.payload };
+    case "SET_NAME_ERROR":
+      return { ...state, nameError: action.payload };
+    case "SET_DESCRIPTION_ERROR":
+      return { ...state, descriptionError: action.payload };
     case "SET_SELECTED_FILE":
-      return { ...state, selectedFile: action.payload };
+      return { ...state, selectedFile: action.payload, fileError: false };
+    case "SET_FILE_ERROR":
+      return { ...state, fileError: action.payload };
     case "SET_LOADING":
       return { ...state, isLoading: action.payload };
     case "SET_SHARE_CODE":
       return { ...state, shareCode: action.payload };
     case "SET_COPIED":
       return { ...state, copied: action.payload };
+    case "VALIDATE_STEP_1": {
+      const nameError = state.kiwiName.trim() === "";
+      const passwordError =
+        state.passwordProtected &&
+        (state.password === "" || state.password !== state.confirmPassword);
+
+      return {
+        ...state,
+        nameError,
+        descriptionError: false,
+        passwordError,
+      };
+    }
+    case "VALIDATE_STEP_2": {
+      const fileError = !state.selectedFile;
+      return { ...state, fileError };
+    }
     case "RESET":
       return initialState;
     default:
@@ -106,13 +148,27 @@ export default function CreateKiwiModal({
 
   const { step, selectedFile, isLoading } = state;
 
+  // 단계별 유효성 검증 함수
+  const validateStep1 = (): boolean => {
+    dispatch({ type: "VALIDATE_STEP_1" });
+
+    // 유효성 검증 후 state가 바로 업데이트되지 않으므로 직접 검증
+    const { kiwiName, passwordProtected, password, confirmPassword } = state;
+
+    const hasNameError = kiwiName.trim() === "";
+    const hasPasswordError =
+      passwordProtected && (password === "" || password !== confirmPassword);
+
+    return !(hasNameError || hasPasswordError);
+  };
+
+  const validateStep2 = (): boolean => {
+    dispatch({ type: "VALIDATE_STEP_2" });
+    return !!selectedFile;
+  };
+
   const handleNext = () => {
-    const { passwordProtected, password, confirmPassword } = state;
-    if (passwordProtected && password !== confirmPassword) {
-      dispatch({ type: "SET_PASSWORD_ERROR", payload: true });
-      return;
-    }
-    dispatch({ type: "SET_PASSWORD_ERROR", payload: false });
+    if (!validateStep1()) return;
     dispatch({ type: "SET_STEP", payload: 2 });
   };
 
@@ -131,6 +187,8 @@ export default function CreateKiwiModal({
   };
 
   const handleSubmit = async () => {
+    if (!validateStep2()) return;
+
     dispatch({ type: "SET_STEP", payload: 3 }); // 로딩 단계로 전환
     dispatch({ type: "SET_LOADING", payload: true });
 
@@ -173,7 +231,7 @@ export default function CreateKiwiModal({
 
   const Contents = {
     1: <KiwiInfoForm state={state} dispatch={dispatch} />,
-    2: <EpubUploadForm dispatch={dispatch} />,
+    2: <EpubUploadForm dispatch={dispatch} state={state} />,
     3: <LoadingScreen state={state} />,
     4: <KiwiCreatedSuccess state={state} dispatch={dispatch} />,
   };
@@ -237,12 +295,23 @@ function KiwiInfoForm({ state, dispatch }: StateDispatchProps) {
     password,
     confirmPassword,
     passwordError,
+    nameError,
   } = state;
 
   return (
     <div className="space-y-4 py-4">
       <div className="space-y-2">
-        <Label htmlFor="kiwi-name">키위 이름</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="kiwi-name" className="flex items-center gap-1">
+            키위 이름 <span className="text-xs text-destructive">*</span>
+          </Label>
+          {nameError && (
+            <span className="flex items-center gap-1 text-xs text-destructive">
+              <AlertCircle className="size-3" />
+              키위 이름을 입력해주세요
+            </span>
+          )}
+        </div>
         <Input
           id="kiwi-name"
           placeholder="키위 이름을 입력하세요"
@@ -250,11 +319,16 @@ function KiwiInfoForm({ state, dispatch }: StateDispatchProps) {
           onChange={(e) =>
             dispatch({ type: "SET_KIWI_NAME", payload: e.target.value })
           }
+          className={nameError ? "border-destructive" : ""}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="kiwi-description">키위 설명</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="kiwi-description" className="flex items-center gap-1">
+            키위 설명
+          </Label>
+        </div>
         <Input
           id="kiwi-description"
           placeholder="키위에 대한 설명을 입력하세요"
@@ -279,7 +353,11 @@ function KiwiInfoForm({ state, dispatch }: StateDispatchProps) {
       {passwordProtected && (
         <div className="space-y-2">
           <div className="space-y-2">
-            <Label htmlFor="password">암호</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password" className="flex items-center gap-1">
+                암호 <span className="text-xs text-destructive">*</span>
+              </Label>
+            </div>
             <Input
               id="password"
               type="password"
@@ -288,10 +366,24 @@ function KiwiInfoForm({ state, dispatch }: StateDispatchProps) {
               onChange={(e) =>
                 dispatch({ type: "SET_PASSWORD", payload: e.target.value })
               }
+              className={passwordError ? "border-destructive" : ""}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirm-password">암호 확인</Label>
+            <div className="flex items-center justify-between">
+              <Label
+                htmlFor="confirm-password"
+                className="flex items-center gap-1"
+              >
+                암호 확인
+              </Label>
+              {passwordError && (
+                <span className="flex items-center gap-1 text-xs text-destructive">
+                  <AlertCircle className="size-3" />
+                  암호가 일치하지 않습니다
+                </span>
+              )}
+            </div>
             <Input
               id="confirm-password"
               type="password"
@@ -303,20 +395,18 @@ function KiwiInfoForm({ state, dispatch }: StateDispatchProps) {
                   payload: e.target.value,
                 })
               }
+              className={passwordError ? "border-destructive" : ""}
             />
           </div>
-          {passwordError && (
-            <p className="text-sm text-destructive">
-              암호가 일치하지 않습니다.
-            </p>
-          )}
         </div>
       )}
     </div>
   );
 }
 
-function EpubUploadForm({ dispatch }: { dispatch: Dispatch<KiwiAction> }) {
+function EpubUploadForm({ dispatch, state }: StateDispatchProps) {
+  const { fileError } = state;
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       dispatch({ type: "SET_SELECTED_FILE", payload: e.target.files[0] });
@@ -326,13 +416,23 @@ function EpubUploadForm({ dispatch }: { dispatch: Dispatch<KiwiAction> }) {
   return (
     <div className="space-y-4 py-4">
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="epub-file">EPUB 파일</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="epub-file" className="flex items-center gap-1">
+            EPUB 파일 <span className="text-xs text-destructive">*</span>
+          </Label>
+          {fileError && (
+            <span className="flex items-center gap-1 text-xs text-destructive">
+              <AlertCircle className="size-3" />
+              파일을 선택해주세요
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-2">
           <Input
             id="epub-file"
             type="file"
             accept=".epub"
-            className="flex h-10"
+            className={`flex h-10 ${fileError ? "border-destructive" : ""}`}
             onChange={handleFileChange}
           />
         </div>
