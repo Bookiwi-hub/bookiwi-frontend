@@ -23,7 +23,7 @@ export default function CreateKiwiModal({
   open,
   setOpen,
 }: CreateKiwiModalProps) {
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [kiwiName, setKiwiName] = useState("");
   const [kiwiDescription, setKiwiDescription] = useState("");
   const [passwordProtected, setPasswordProtected] = useState(false);
@@ -45,7 +45,7 @@ export default function CreateKiwiModal({
   };
 
   const handleBack = () => {
-    if (step === 3) {
+    if (step === 4) {
       // 완료 단계에서는 첫 단계로 돌아감
       handleClose();
     } else if (step === 2) {
@@ -67,7 +67,7 @@ export default function CreateKiwiModal({
   };
 
   const handleSubmit = async () => {
-    // 로딩 시작
+    setStep(3); // 로딩 단계로 전환
     setIsLoading(true);
 
     try {
@@ -83,8 +83,8 @@ export default function CreateKiwiModal({
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       setShareCode(generatedShareCode);
 
-      // 3단계로 이동
-      setStep(3);
+      // 성공 단계로 이동
+      setStep(4);
     } catch (error) {
       console.error("키위 생성 중 오류 발생:", error);
       // 오류 처리 로직 추가 가능
@@ -103,13 +103,15 @@ export default function CreateKiwiModal({
   const Titles = {
     1: "새로운 키위 만들기",
     2: "새로운 키위 만들기",
-    3: "키위 생성 완료",
+    3: "키위 처리 중",
+    4: "키위 생성 완료",
   };
 
   const Descriptions = {
     1: "책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요.",
     2: "키위에서 사용할 EPUB 파일을 업로드하세요.",
-    3: "아래 공유 코드를 사용해 친구들을 초대하세요.",
+    3: "EPUB 파일을 처리하고 키위를 생성하는 중입니다...",
+    4: "아래 공유 코드를 사용해 친구들을 초대하세요.",
   };
 
   const Contents = {
@@ -129,7 +131,8 @@ export default function CreateKiwiModal({
       />
     ),
     2: <EpubUploadForm onFileChange={setSelectedFile} />,
-    3: (
+    3: <LoadingScreen kiwiName={kiwiName} />,
+    4: (
       <KiwiCreatedSuccess
         kiwiName={kiwiName}
         shareCode={shareCode}
@@ -155,18 +158,12 @@ export default function CreateKiwiModal({
           onClick={handleSubmit}
           disabled={!selectedFile || isLoading}
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 size-4 animate-spin" />
-              처리 중...
-            </>
-          ) : (
-            "만들기"
-          )}
+          만들기
         </Button>
       </>
     ),
-    3: (
+    3: null, // 로딩 화면에서는 footer 버튼 없음
+    4: (
       <Button onClick={handleClose} className="ml-auto">
         완료
       </Button>
@@ -353,6 +350,29 @@ function KiwiCreatedSuccess({
       <p className="text-sm text-muted-foreground">
         이 코드를 사용해 다른 사람들이 키위에 참여할 수 있습니다.
       </p>
+    </div>
+  );
+}
+
+interface LoadingScreenProps {
+  kiwiName: string;
+}
+
+function LoadingScreen({ kiwiName }: LoadingScreenProps) {
+  return (
+    <div className="flex flex-col items-center justify-center space-y-6 py-10">
+      <div className="flex size-16 items-center justify-center rounded-full bg-primary/10">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+
+      <div className="space-y-3 text-center">
+        <h3 className="text-lg font-medium">
+          {kiwiName} 키위를 만들고 있습니다
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          EPUB 파일을 처리하고 있습니다
+        </p>
+      </div>
     </div>
   );
 }
