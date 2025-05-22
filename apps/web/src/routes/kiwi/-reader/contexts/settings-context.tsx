@@ -8,8 +8,9 @@ import {
   useState,
 } from "react";
 
+import { updateCustomStyle } from "../styles";
+
 import { useBook } from "./book-context";
-import { updateCustomStyle } from "./styles";
 
 import { Settings } from "#/types/reader";
 
@@ -118,7 +119,11 @@ export function SettingsProvider({
     async (value?: number) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
-      const newValue = Number(Number(value).toFixed(1));
+
+      // Only try to format the number if value is defined
+      const newValue =
+        value !== undefined ? Number(Number(value).toFixed(1)) : undefined;
+
       setLineHeightState(newValue);
       settingsRef.current = {
         ...settingsRef.current,

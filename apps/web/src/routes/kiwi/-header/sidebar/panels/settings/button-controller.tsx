@@ -49,6 +49,7 @@ function ButtonController<T extends number>({
             size="icon"
             className="size-8 rounded-none"
             onClick={() => handleChange("decrease")}
+            onMouseDown={(e) => e.preventDefault()}
           >
             <MinusIcon className="size-4" />
           </Button>
@@ -60,6 +61,7 @@ function ButtonController<T extends number>({
             size="icon"
             className="size-8 rounded-none"
             onClick={() => handleChange("increase")}
+            onMouseDown={(e) => e.preventDefault()}
           >
             <PlusIcon className="size-4" />
           </Button>
@@ -68,7 +70,8 @@ function ButtonController<T extends number>({
             size="icon"
             className="size-8 rounded-none border-l"
             onClick={() => handleChange("reset")}
-            title={`${defaultLabel}으로`}
+            title={`${defaultLabel}으로 초기화`}
+            onMouseDown={(e) => e.preventDefault()}
           >
             <RotateCcwIcon className="size-4" />
           </Button>
