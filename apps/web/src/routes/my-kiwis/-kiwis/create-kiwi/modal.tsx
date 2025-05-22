@@ -1,5 +1,5 @@
 import { Copy, Check, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, useReducer } from "react";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -14,6 +14,85 @@ import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { Switch } from "#/components/ui/switch";
 
+// 상태 타입 정의
+type Step = 1 | 2 | 3 | 4;
+
+interface KiwiState {
+  step: Step;
+  kiwiName: string;
+  kiwiDescription: string;
+  passwordProtected: boolean;
+  password: string;
+  confirmPassword: string;
+  passwordError: boolean;
+  selectedFile: File | null;
+  isLoading: boolean;
+  shareCode: string;
+  copied: boolean;
+}
+
+// 액션 타입 정의
+type KiwiAction =
+  | { type: "SET_STEP"; payload: Step }
+  | { type: "SET_KIWI_NAME"; payload: string }
+  | { type: "SET_KIWI_DESCRIPTION"; payload: string }
+  | { type: "SET_PASSWORD_PROTECTED"; payload: boolean }
+  | { type: "SET_PASSWORD"; payload: string }
+  | { type: "SET_CONFIRM_PASSWORD"; payload: string }
+  | { type: "SET_PASSWORD_ERROR"; payload: boolean }
+  | { type: "SET_SELECTED_FILE"; payload: File | null }
+  | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_SHARE_CODE"; payload: string }
+  | { type: "SET_COPIED"; payload: boolean }
+  | { type: "RESET" };
+
+// 초기 상태
+const initialState: KiwiState = {
+  step: 1,
+  kiwiName: "",
+  kiwiDescription: "",
+  passwordProtected: false,
+  password: "",
+  confirmPassword: "",
+  passwordError: false,
+  selectedFile: null,
+  isLoading: false,
+  shareCode: "",
+  copied: false,
+};
+
+// 리듀서 함수
+const kiwiReducer = (state: KiwiState, action: KiwiAction): KiwiState => {
+  switch (action.type) {
+    case "SET_STEP":
+      return { ...state, step: action.payload };
+    case "SET_KIWI_NAME":
+      return { ...state, kiwiName: action.payload };
+    case "SET_KIWI_DESCRIPTION":
+      return { ...state, kiwiDescription: action.payload };
+    case "SET_PASSWORD_PROTECTED":
+      return { ...state, passwordProtected: action.payload };
+    case "SET_PASSWORD":
+      return { ...state, password: action.payload };
+    case "SET_CONFIRM_PASSWORD":
+      return { ...state, confirmPassword: action.payload };
+    case "SET_PASSWORD_ERROR":
+      return { ...state, passwordError: action.payload };
+    case "SET_SELECTED_FILE":
+      return { ...state, selectedFile: action.payload };
+    case "SET_LOADING":
+      return { ...state, isLoading: action.payload };
+    case "SET_SHARE_CODE":
+      return { ...state, shareCode: action.payload };
+    case "SET_COPIED":
+      return { ...state, copied: action.payload };
+    case "RESET":
+      return initialState;
+    default:
+      return state;
+  }
+};
+
 interface CreateKiwiModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -23,25 +102,18 @@ export default function CreateKiwiModal({
   open,
   setOpen,
 }: CreateKiwiModalProps) {
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [kiwiName, setKiwiName] = useState("");
-  const [kiwiDescription, setKiwiDescription] = useState("");
-  const [passwordProtected, setPasswordProtected] = useState(false);
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [shareCode, setShareCode] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [state, dispatch] = useReducer(kiwiReducer, initialState);
+
+  const { step, selectedFile, isLoading } = state;
 
   const handleNext = () => {
+    const { passwordProtected, password, confirmPassword } = state;
     if (passwordProtected && password !== confirmPassword) {
-      setPasswordError(true);
+      dispatch({ type: "SET_PASSWORD_ERROR", payload: true });
       return;
     }
-    setPasswordError(false);
-    setStep(2);
+    dispatch({ type: "SET_PASSWORD_ERROR", payload: false });
+    dispatch({ type: "SET_STEP", payload: 2 });
   };
 
   const handleBack = () => {
@@ -49,26 +121,18 @@ export default function CreateKiwiModal({
       // 완료 단계에서는 첫 단계로 돌아감
       handleClose();
     } else if (step === 2) {
-      setStep(1);
+      dispatch({ type: "SET_STEP", payload: 1 });
     }
   };
 
   const handleClose = () => {
-    setStep(1);
-    setKiwiName("");
-    setKiwiDescription("");
-    setPasswordProtected(false);
-    setPassword("");
-    setConfirmPassword("");
-    setSelectedFile(null);
-    setShareCode("");
-    setCopied(false);
+    dispatch({ type: "RESET" });
     setOpen(false);
   };
 
   const handleSubmit = async () => {
-    setStep(3); // 로딩 단계로 전환
-    setIsLoading(true);
+    dispatch({ type: "SET_STEP", payload: 3 }); // 로딩 단계로 전환
+    dispatch({ type: "SET_LOADING", payload: true });
 
     try {
       // 여기서 실제로 API 호출 등의 작업을 수행
@@ -81,23 +145,16 @@ export default function CreateKiwiModal({
 
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-      setShareCode(generatedShareCode);
+      dispatch({ type: "SET_SHARE_CODE", payload: generatedShareCode });
 
       // 성공 단계로 이동
-      setStep(4);
+      dispatch({ type: "SET_STEP", payload: 4 });
     } catch (error) {
       console.error("키위 생성 중 오류 발생:", error);
       // 오류 처리 로직 추가 가능
     } finally {
-      setIsLoading(false);
+      dispatch({ type: "SET_LOADING", payload: false });
     }
-  };
-
-  const handleCopyCode = () => {
-    navigator.clipboard.writeText(shareCode).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
   };
 
   const Titles = {
@@ -115,31 +172,10 @@ export default function CreateKiwiModal({
   };
 
   const Contents = {
-    1: (
-      <KiwiInfoForm
-        kiwiName={kiwiName}
-        setKiwiName={setKiwiName}
-        kiwiDescription={kiwiDescription}
-        setKiwiDescription={setKiwiDescription}
-        passwordProtected={passwordProtected}
-        setPasswordProtected={setPasswordProtected}
-        password={password}
-        setPassword={setPassword}
-        confirmPassword={confirmPassword}
-        setConfirmPassword={setConfirmPassword}
-        passwordError={passwordError}
-      />
-    ),
-    2: <EpubUploadForm onFileChange={setSelectedFile} />,
-    3: <LoadingScreen kiwiName={kiwiName} />,
-    4: (
-      <KiwiCreatedSuccess
-        kiwiName={kiwiName}
-        shareCode={shareCode}
-        copied={copied}
-        onCopy={handleCopyCode}
-      />
-    ),
+    1: <KiwiInfoForm state={state} dispatch={dispatch} />,
+    2: <EpubUploadForm dispatch={dispatch} />,
+    3: <LoadingScreen state={state} />,
+    4: <KiwiCreatedSuccess state={state} dispatch={dispatch} />,
   };
 
   const Footers = {
@@ -188,33 +224,21 @@ export default function CreateKiwiModal({
   );
 }
 
-interface KiwiInfoFormProps {
-  kiwiName: string;
-  setKiwiName: (value: string) => void;
-  kiwiDescription: string;
-  setKiwiDescription: (value: string) => void;
-  passwordProtected: boolean;
-  setPasswordProtected: (value: boolean) => void;
-  password: string;
-  setPassword: (value: string) => void;
-  confirmPassword: string;
-  setConfirmPassword: (value: string) => void;
-  passwordError: boolean;
+interface StateDispatchProps {
+  state: KiwiState;
+  dispatch: Dispatch<KiwiAction>;
 }
 
-function KiwiInfoForm({
-  kiwiName,
-  setKiwiName,
-  kiwiDescription,
-  setKiwiDescription,
-  passwordProtected,
-  setPasswordProtected,
-  password,
-  setPassword,
-  confirmPassword,
-  setConfirmPassword,
-  passwordError,
-}: KiwiInfoFormProps) {
+function KiwiInfoForm({ state, dispatch }: StateDispatchProps) {
+  const {
+    kiwiName,
+    kiwiDescription,
+    passwordProtected,
+    password,
+    confirmPassword,
+    passwordError,
+  } = state;
+
   return (
     <div className="space-y-4 py-4">
       <div className="space-y-2">
@@ -223,7 +247,9 @@ function KiwiInfoForm({
           id="kiwi-name"
           placeholder="키위 이름을 입력하세요"
           value={kiwiName}
-          onChange={(e) => setKiwiName(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "SET_KIWI_NAME", payload: e.target.value })
+          }
         />
       </div>
 
@@ -233,7 +259,9 @@ function KiwiInfoForm({
           id="kiwi-description"
           placeholder="키위에 대한 설명을 입력하세요"
           value={kiwiDescription}
-          onChange={(e) => setKiwiDescription(e.target.value)}
+          onChange={(e) =>
+            dispatch({ type: "SET_KIWI_DESCRIPTION", payload: e.target.value })
+          }
         />
       </div>
 
@@ -242,7 +270,9 @@ function KiwiInfoForm({
         <Switch
           id="password-protection"
           checked={passwordProtected}
-          onCheckedChange={setPasswordProtected}
+          onCheckedChange={(checked) =>
+            dispatch({ type: "SET_PASSWORD_PROTECTED", payload: checked })
+          }
         />
       </div>
 
@@ -255,7 +285,9 @@ function KiwiInfoForm({
               type="password"
               placeholder="암호를 입력하세요"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) =>
+                dispatch({ type: "SET_PASSWORD", payload: e.target.value })
+              }
             />
           </div>
           <div className="space-y-2">
@@ -265,7 +297,12 @@ function KiwiInfoForm({
               type="password"
               placeholder="암호를 다시 입력하세요"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) =>
+                dispatch({
+                  type: "SET_CONFIRM_PASSWORD",
+                  payload: e.target.value,
+                })
+              }
             />
           </div>
           {passwordError && (
@@ -279,14 +316,10 @@ function KiwiInfoForm({
   );
 }
 
-interface EpubUploadFormProps {
-  onFileChange?: (file: File) => void;
-}
-
-function EpubUploadForm({ onFileChange }: EpubUploadFormProps) {
+function EpubUploadForm({ dispatch }: { dispatch: Dispatch<KiwiAction> }) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0] && onFileChange) {
-      onFileChange(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      dispatch({ type: "SET_SELECTED_FILE", payload: e.target.files[0] });
     }
   };
 
@@ -311,19 +344,16 @@ function EpubUploadForm({ onFileChange }: EpubUploadFormProps) {
   );
 }
 
-interface KiwiCreatedSuccessProps {
-  kiwiName: string;
-  shareCode: string;
-  copied: boolean;
-  onCopy: () => void;
-}
+function KiwiCreatedSuccess({ state, dispatch }: StateDispatchProps) {
+  const { kiwiName, shareCode, copied } = state;
 
-function KiwiCreatedSuccess({
-  kiwiName,
-  shareCode,
-  copied,
-  onCopy,
-}: KiwiCreatedSuccessProps) {
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(shareCode).then(() => {
+      dispatch({ type: "SET_COPIED", payload: true });
+      setTimeout(() => dispatch({ type: "SET_COPIED", payload: false }), 2000);
+    });
+  };
+
   return (
     <div className="flex flex-col items-center space-y-4 py-8">
       <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
@@ -341,7 +371,7 @@ function KiwiCreatedSuccess({
         <Button
           size="icon"
           variant="outline"
-          onClick={onCopy}
+          onClick={handleCopyCode}
           className="flex size-10 shrink-0 items-center justify-center"
         >
           {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
@@ -354,11 +384,9 @@ function KiwiCreatedSuccess({
   );
 }
 
-interface LoadingScreenProps {
-  kiwiName: string;
-}
+function LoadingScreen({ state }: { state: KiwiState }) {
+  const { kiwiName } = state;
 
-function LoadingScreen({ kiwiName }: LoadingScreenProps) {
   return (
     <div className="flex flex-col items-center justify-center space-y-6 py-10">
       <div className="flex size-16 items-center justify-center rounded-full bg-primary/10">
