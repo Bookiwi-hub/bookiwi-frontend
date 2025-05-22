@@ -125,8 +125,8 @@ function CreateKiwiModal({ open, setOpen }: CreateKiwiModalProps) {
       // 성공 단계로 이동
       dispatch({ type: "SET_STEP", payload: 4 });
     } catch (error) {
-      console.error("키위 생성 중 오류 발생:", error);
-      // 오류 처리 로직 추가 가능
+      // eslint-disable-next-line no-alert
+      alert("키위 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -143,7 +143,7 @@ function CreateKiwiModal({ open, setOpen }: CreateKiwiModalProps) {
         <DialogFooter className="sm:justify-between">
           {createElement(FooterButtons[step], {
             onClick: getButtonClickHandler(step),
-            onClickSecondary: step === 4 ? handleBack : undefined,
+            onClickSecondary: step === 2 ? handleBack : undefined,
           })}
         </DialogFooter>
       </DialogContent>
