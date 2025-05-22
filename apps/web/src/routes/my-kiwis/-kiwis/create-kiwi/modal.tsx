@@ -1,5 +1,5 @@
 import { Copy, Check, Loader2, AlertCircle } from "lucide-react";
-import { Dispatch, useReducer } from "react";
+import { createElement, Dispatch, useReducer } from "react";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -29,7 +29,6 @@ interface KiwiState {
   descriptionError: boolean;
   selectedFile: File | null;
   fileError: boolean;
-  isLoading: boolean;
   shareCode: string;
   copied: boolean;
 }
@@ -47,7 +46,6 @@ type KiwiAction =
   | { type: "SET_DESCRIPTION_ERROR"; payload: boolean }
   | { type: "SET_SELECTED_FILE"; payload: File | null }
   | { type: "SET_FILE_ERROR"; payload: boolean }
-  | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_SHARE_CODE"; payload: string }
   | { type: "SET_COPIED"; payload: boolean }
   | { type: "VALIDATE_STEP_1" }
@@ -67,7 +65,6 @@ const initialState: KiwiState = {
   descriptionError: false,
   selectedFile: null,
   fileError: false,
-  isLoading: false,
   shareCode: "",
   copied: false,
 };
@@ -105,8 +102,6 @@ const kiwiReducer = (state: KiwiState, action: KiwiAction): KiwiState => {
       return { ...state, selectedFile: action.payload, fileError: false };
     case "SET_FILE_ERROR":
       return { ...state, fileError: action.payload };
-    case "SET_LOADING":
-      return { ...state, isLoading: action.payload };
     case "SET_SHARE_CODE":
       return { ...state, shareCode: action.payload };
     case "SET_COPIED":
@@ -135,6 +130,27 @@ const kiwiReducer = (state: KiwiState, action: KiwiAction): KiwiState => {
   }
 };
 
+const Titles: Record<Step, string> = {
+  1: "새로운 키위 만들기",
+  2: "새로운 키위 만들기",
+  3: "키위 처리 중",
+  4: "키위 생성 완료",
+};
+
+const Descriptions: Record<Step, string> = {
+  1: "책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요.",
+  2: "키위에서 사용할 EPUB 파일을 업로드하세요.",
+  3: "EPUB 파일을 처리하고 키위를 생성하는 중입니다...",
+  4: "아래 공유 코드를 사용해 친구들을 초대하세요.",
+};
+
+const Contents: Record<Step, React.ComponentType<StateDispatchProps>> = {
+  1: KiwiInfoForm,
+  2: EpubUploadForm,
+  3: LoadingScreen,
+  4: KiwiCreatedSuccess,
+};
+
 interface CreateKiwiModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -146,7 +162,7 @@ export default function CreateKiwiModal({
 }: CreateKiwiModalProps) {
   const [state, dispatch] = useReducer(kiwiReducer, initialState);
 
-  const { step, selectedFile, isLoading } = state;
+  const { step, selectedFile } = state;
 
   // 단계별 유효성 검증 함수
   const validateStep1 = (): boolean => {
@@ -190,7 +206,6 @@ export default function CreateKiwiModal({
     if (!validateStep2()) return;
 
     dispatch({ type: "SET_STEP", payload: 3 }); // 로딩 단계로 전환
-    dispatch({ type: "SET_LOADING", payload: true });
 
     try {
       // 여기서 실제로 API 호출 등의 작업을 수행
@@ -210,60 +225,8 @@ export default function CreateKiwiModal({
     } catch (error) {
       console.error("키위 생성 중 오류 발생:", error);
       // 오류 처리 로직 추가 가능
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
     }
   };
-
-  const Titles = {
-    1: "새로운 키위 만들기",
-    2: "새로운 키위 만들기",
-    3: "키위 처리 중",
-    4: "키위 생성 완료",
-  };
-
-  const Descriptions = {
-    1: "책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요.",
-    2: "키위에서 사용할 EPUB 파일을 업로드하세요.",
-    3: "EPUB 파일을 처리하고 키위를 생성하는 중입니다...",
-    4: "아래 공유 코드를 사용해 친구들을 초대하세요.",
-  };
-
-  const Contents = {
-    1: <KiwiInfoForm state={state} dispatch={dispatch} />,
-    2: <EpubUploadForm dispatch={dispatch} state={state} />,
-    3: <LoadingScreen state={state} />,
-    4: <KiwiCreatedSuccess state={state} dispatch={dispatch} />,
-  };
-
-  const Footers = {
-    1: (
-      <Button onClick={handleNext} className="ml-auto">
-        다음
-      </Button>
-    ),
-    2: (
-      <>
-        <Button variant="outline" onClick={handleBack}>
-          이전
-        </Button>
-        <Button
-          type="submit"
-          onClick={handleSubmit}
-          disabled={!selectedFile || isLoading}
-        >
-          만들기
-        </Button>
-      </>
-    ),
-    3: null, // 로딩 화면에서는 footer 버튼 없음
-    4: (
-      <Button onClick={handleClose} className="ml-auto">
-        완료
-      </Button>
-    ),
-  };
-
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="min-w-[450px] mobile:min-w-full">
@@ -272,14 +235,66 @@ export default function CreateKiwiModal({
           <DialogDescription>{Descriptions[step]}</DialogDescription>
         </DialogHeader>
 
-        {Contents[step]}
+        {createElement(Contents[step], { state, dispatch })}
 
         <DialogFooter className="sm:justify-between">
-          {Footers[step]}
+          <FooterButtons
+            step={step}
+            onNext={handleNext}
+            onBack={handleBack}
+            onSubmit={handleSubmit}
+            onClose={handleClose}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
+}
+
+interface FooterButtonsProps {
+  step: Step;
+  onNext: () => void;
+  onBack: () => void;
+  onSubmit: () => void;
+  onClose: () => void;
+}
+
+function FooterButtons({
+  step,
+  onNext,
+  onBack,
+  onSubmit,
+  onClose,
+}: FooterButtonsProps) {
+  switch (step) {
+    case 1:
+      return (
+        <Button onClick={onNext} className="ml-auto">
+          다음
+        </Button>
+      );
+    case 2:
+      return (
+        <>
+          <Button variant="outline" onClick={onBack}>
+            이전
+          </Button>
+          <Button type="submit" onClick={onSubmit}>
+            만들기
+          </Button>
+        </>
+      );
+    case 3:
+      return null; // 로딩 화면에서는 footer 버튼 없음
+    case 4:
+      return (
+        <Button onClick={onClose} className="ml-auto">
+          완료
+        </Button>
+      );
+    default:
+      return null;
+  }
 }
 
 interface StateDispatchProps {
@@ -404,7 +419,7 @@ function KiwiInfoForm({ state, dispatch }: StateDispatchProps) {
   );
 }
 
-function EpubUploadForm({ dispatch, state }: StateDispatchProps) {
+function EpubUploadForm({ state, dispatch }: StateDispatchProps) {
   const { fileError } = state;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -484,9 +499,7 @@ function KiwiCreatedSuccess({ state, dispatch }: StateDispatchProps) {
   );
 }
 
-function LoadingScreen({ state }: { state: KiwiState }) {
-  const { kiwiName } = state;
-
+function LoadingScreen() {
   return (
     <div className="flex flex-col items-center justify-center space-y-6 py-10">
       <div className="flex size-16 items-center justify-center rounded-full bg-primary/10">
@@ -494,9 +507,7 @@ function LoadingScreen({ state }: { state: KiwiState }) {
       </div>
 
       <div className="space-y-3 text-center">
-        <h3 className="text-lg font-medium">
-          {kiwiName} 키위를 만들고 있습니다
-        </h3>
+        <h3 className="text-lg font-medium">키위를 만들고 있습니다</h3>
         <p className="text-sm text-muted-foreground">
           EPUB 파일을 처리하고 있습니다
         </p>
