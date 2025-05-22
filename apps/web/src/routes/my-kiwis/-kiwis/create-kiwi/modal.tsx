@@ -44,6 +44,17 @@ export default function CreateKiwiModal({
     setStep(1);
   };
 
+  const handleClose = () => {
+    setStep(1);
+    setKiwiName("");
+    setKiwiDescription("");
+    setPasswordProtected(false);
+    setPassword("");
+    setConfirmPassword("");
+    setSelectedFile(null);
+    setOpen(false);
+  };
+
   const handleSubmit = () => {
     // Handle form submission
     console.log({
@@ -53,12 +64,11 @@ export default function CreateKiwiModal({
       password,
       selectedFile,
     });
-
-    setOpen(false);
+    handleClose();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="min-w-[450px] mobile:min-w-full">
         <DialogHeader>
           <DialogTitle>새로운 키위 만들기</DialogTitle>
