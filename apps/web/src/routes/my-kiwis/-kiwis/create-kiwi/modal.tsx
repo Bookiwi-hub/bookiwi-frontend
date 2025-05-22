@@ -1,3 +1,4 @@
+import { Copy, Check, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "#/components/ui/button";
@@ -22,7 +23,7 @@ export default function CreateKiwiModal({
   open,
   setOpen,
 }: CreateKiwiModalProps) {
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [kiwiName, setKiwiName] = useState("");
   const [kiwiDescription, setKiwiDescription] = useState("");
   const [passwordProtected, setPasswordProtected] = useState(false);
@@ -30,6 +31,9 @@ export default function CreateKiwiModal({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [shareCode, setShareCode] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const handleNext = () => {
     if (passwordProtected && password !== confirmPassword) {
@@ -41,7 +45,12 @@ export default function CreateKiwiModal({
   };
 
   const handleBack = () => {
-    setStep(1);
+    if (step === 3) {
+      // 완료 단계에서는 첫 단계로 돌아감
+      handleClose();
+    } else if (step === 2) {
+      setStep(1);
+    }
   };
 
   const handleClose = () => {
@@ -52,70 +61,171 @@ export default function CreateKiwiModal({
     setPassword("");
     setConfirmPassword("");
     setSelectedFile(null);
+    setShareCode("");
+    setCopied(false);
     setOpen(false);
   };
 
-  const handleSubmit = () => {
-    // Handle form submission
-    console.log({
-      kiwiName,
-      kiwiDescription,
-      passwordProtected,
-      password,
-      selectedFile,
+  const handleSubmit = async () => {
+    // 로딩 시작
+    setIsLoading(true);
+
+    try {
+      // 여기서 실제로 API 호출 등의 작업을 수행
+      // 예시로 setTimeout을 사용해 비동기 작업 시뮬레이션
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 2000);
+      });
+
+      // 공유 코드 생성 (실제로는 API에서 받아와야 함)
+      const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      setShareCode(generatedShareCode);
+
+      // 3단계로 이동
+      setStep(3);
+    } catch (error) {
+      console.error("키위 생성 중 오류 발생:", error);
+      // 오류 처리 로직 추가 가능
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(shareCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     });
-    handleClose();
+  };
+
+  // 각 단계별 타이틀 및 설명 텍스트
+  const getDialogTitle = () => {
+    if (step === 3) return "키위 생성 완료";
+    return "새로운 키위 만들기";
+  };
+
+  const getDialogDescription = () => {
+    if (step === 1)
+      return "책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요.";
+    if (step === 2) return "키위에서 사용할 EPUB 파일을 업로드하세요.";
+    return "아래 공유 코드를 사용해 친구들을 초대하세요.";
+  };
+
+  // 현재 단계에 맞는 컨텐츠 렌더링
+  const renderContent = () => {
+    if (step === 1) {
+      return (
+        <KiwiInfoForm
+          kiwiName={kiwiName}
+          setKiwiName={setKiwiName}
+          kiwiDescription={kiwiDescription}
+          setKiwiDescription={setKiwiDescription}
+          passwordProtected={passwordProtected}
+          setPasswordProtected={setPasswordProtected}
+          password={password}
+          setPassword={setPassword}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          passwordError={passwordError}
+        />
+      );
+    }
+
+    if (step === 2) {
+      return <EpubUploadForm onFileChange={setSelectedFile} />;
+    }
+
+    return (
+      <div className="flex flex-col items-center space-y-4 py-8">
+        <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+          <Check className="size-6 text-primary" />
+        </div>
+        <h3 className="text-lg font-medium">
+          {kiwiName} 키위가 생성되었습니다!
+        </h3>
+        <div className="flex w-full max-w-sm items-center space-x-2">
+          <div className="relative flex-1">
+            <Input
+              value={shareCode}
+              readOnly
+              className="pr-10 text-center font-mono"
+            />
+          </div>
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={handleCopyCode}
+            className="flex size-10 shrink-0 items-center justify-center"
+          >
+            {copied ? (
+              <Check className="size-4" />
+            ) : (
+              <Copy className="size-4" />
+            )}
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          이 코드를 사용해 다른 사람들이 키위에 참여할 수 있습니다.
+        </p>
+      </div>
+    );
+  };
+
+  // 각 단계별 푸터 버튼 렌더링
+  const renderFooterButtons = () => {
+    if (step === 1) {
+      return (
+        <Button onClick={handleNext} className="ml-auto">
+          다음
+        </Button>
+      );
+    }
+
+    if (step === 2) {
+      return (
+        <>
+          <Button variant="outline" onClick={handleBack}>
+            이전
+          </Button>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={!selectedFile || isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 size-4 animate-spin" />
+                처리 중...
+              </>
+            ) : (
+              "만들기"
+            )}
+          </Button>
+        </>
+      );
+    }
+
+    return (
+      <Button onClick={handleClose} className="ml-auto">
+        완료
+      </Button>
+    );
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="min-w-[450px] mobile:min-w-full">
         <DialogHeader>
-          <DialogTitle>새로운 키위 만들기</DialogTitle>
-          <DialogDescription>
-            {step === 1
-              ? "책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요."
-              : "키위에서 사용할 EPUB 파일을 업로드하세요."}
-          </DialogDescription>
+          <DialogTitle>{getDialogTitle()}</DialogTitle>
+          <DialogDescription>{getDialogDescription()}</DialogDescription>
         </DialogHeader>
 
-        {step === 1 ? (
-          <KiwiInfoForm
-            kiwiName={kiwiName}
-            setKiwiName={setKiwiName}
-            kiwiDescription={kiwiDescription}
-            setKiwiDescription={setKiwiDescription}
-            passwordProtected={passwordProtected}
-            setPasswordProtected={setPasswordProtected}
-            password={password}
-            setPassword={setPassword}
-            confirmPassword={confirmPassword}
-            setConfirmPassword={setConfirmPassword}
-            passwordError={passwordError}
-          />
-        ) : (
-          <EpubUploadForm onFileChange={setSelectedFile} />
-        )}
+        {renderContent()}
 
         <DialogFooter className="sm:justify-between">
-          {step === 1 ? (
-            <Button onClick={handleNext} className="ml-auto">
-              다음
-            </Button>
-          ) : (
-            <>
-              <Button variant="outline" onClick={handleBack}>
-                이전
-              </Button>
-              <Button
-                type="submit"
-                onClick={handleSubmit}
-                disabled={!selectedFile}
-              >
-                만들기
-              </Button>
-            </>
-          )}
+          {renderFooterButtons()}
         </DialogFooter>
       </DialogContent>
     </Dialog>
