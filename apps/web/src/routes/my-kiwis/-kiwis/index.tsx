@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 import { CreateKiwiButton, CreateKiwiCard, KiwiLinkForm } from "./create-kiwi";
+import CreateKiwiModal from "./create-kiwi/modal";
 import KiwiCard from "./kiwi-card";
 
 import { Kiwi } from "#/types/kiwi";
@@ -19,28 +22,35 @@ const sampleKiwi: Kiwi = {
   isPrivate: false,
 };
 
-export default function Kiwis({ kiwis }: KiwisProps) {
+function Kiwis({ kiwis }: KiwisProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <div className="w-full">
-      <div className="mb-8 space-y-6">
-        <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
-          <h2 className="text-2xl font-bold">내 키위</h2>
-          <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
-            <KiwiLinkForm />
-            <CreateKiwiButton />
+    <>
+      <div className="w-full">
+        <div className="mb-8 space-y-6">
+          <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
+            <h2 className="text-2xl font-bold">내 키위</h2>
+            <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
+              <KiwiLinkForm />
+              <CreateKiwiButton setIsModalOpen={setIsModalOpen} />
+            </div>
           </div>
         </div>
+        <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          {kiwis.length === 0 ? (
+            <>
+              <CreateKiwiCard setIsModalOpen={setIsModalOpen} />
+              <KiwiCard key={sampleKiwi.id} kiwi={sampleKiwi} />
+            </>
+          ) : (
+            kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
+          )}
+        </div>
       </div>
-      <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {kiwis.length === 0 ? (
-          <>
-            <CreateKiwiCard />
-            <KiwiCard key={sampleKiwi.id} kiwi={sampleKiwi} />
-          </>
-        ) : (
-          kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
-        )}
-      </div>
-    </div>
+      <CreateKiwiModal open={isModalOpen} setOpen={setIsModalOpen} />
+    </>
   );
 }
+
+export default Kiwis;
