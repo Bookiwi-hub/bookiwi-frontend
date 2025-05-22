@@ -100,44 +100,36 @@ export default function CreateKiwiModal({
     });
   };
 
-  // 각 단계별 타이틀 및 설명 텍스트
-  const getDialogTitle = () => {
-    if (step === 3) return "키위 생성 완료";
-    return "새로운 키위 만들기";
+  const Titles = {
+    1: "새로운 키위 만들기",
+    2: "새로운 키위 만들기",
+    3: "키위 생성 완료",
   };
 
-  const getDialogDescription = () => {
-    if (step === 1)
-      return "책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요.";
-    if (step === 2) return "키위에서 사용할 EPUB 파일을 업로드하세요.";
-    return "아래 공유 코드를 사용해 친구들을 초대하세요.";
+  const Descriptions = {
+    1: "책을 선택하고 함께 읽을 수 있는 새로운 키위를 만들어보세요.",
+    2: "키위에서 사용할 EPUB 파일을 업로드하세요.",
+    3: "아래 공유 코드를 사용해 친구들을 초대하세요.",
   };
 
-  // 현재 단계에 맞는 컨텐츠 렌더링
-  const renderContent = () => {
-    if (step === 1) {
-      return (
-        <KiwiInfoForm
-          kiwiName={kiwiName}
-          setKiwiName={setKiwiName}
-          kiwiDescription={kiwiDescription}
-          setKiwiDescription={setKiwiDescription}
-          passwordProtected={passwordProtected}
-          setPasswordProtected={setPasswordProtected}
-          password={password}
-          setPassword={setPassword}
-          confirmPassword={confirmPassword}
-          setConfirmPassword={setConfirmPassword}
-          passwordError={passwordError}
-        />
-      );
-    }
-
-    if (step === 2) {
-      return <EpubUploadForm onFileChange={setSelectedFile} />;
-    }
-
-    return (
+  const Contents = {
+    1: (
+      <KiwiInfoForm
+        kiwiName={kiwiName}
+        setKiwiName={setKiwiName}
+        kiwiDescription={kiwiDescription}
+        setKiwiDescription={setKiwiDescription}
+        passwordProtected={passwordProtected}
+        setPasswordProtected={setPasswordProtected}
+        password={password}
+        setPassword={setPassword}
+        confirmPassword={confirmPassword}
+        setConfirmPassword={setConfirmPassword}
+        passwordError={passwordError}
+      />
+    ),
+    2: <EpubUploadForm onFileChange={setSelectedFile} />,
+    3: (
       <div className="flex flex-col items-center space-y-4 py-8">
         <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
           <Check className="size-6 text-primary" />
@@ -170,62 +162,55 @@ export default function CreateKiwiModal({
           이 코드를 사용해 다른 사람들이 키위에 참여할 수 있습니다.
         </p>
       </div>
-    );
+    ),
   };
 
-  // 각 단계별 푸터 버튼 렌더링
-  const renderFooterButtons = () => {
-    if (step === 1) {
-      return (
-        <Button onClick={handleNext} className="ml-auto">
-          다음
+  const Footers = {
+    1: (
+      <Button onClick={handleNext} className="ml-auto">
+        다음
+      </Button>
+    ),
+    2: (
+      <>
+        <Button variant="outline" onClick={handleBack}>
+          이전
         </Button>
-      );
-    }
-
-    if (step === 2) {
-      return (
-        <>
-          <Button variant="outline" onClick={handleBack}>
-            이전
-          </Button>
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            disabled={!selectedFile || isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
-                처리 중...
-              </>
-            ) : (
-              "만들기"
-            )}
-          </Button>
-        </>
-      );
-    }
-
-    return (
+        <Button
+          type="submit"
+          onClick={handleSubmit}
+          disabled={!selectedFile || isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 size-4 animate-spin" />
+              처리 중...
+            </>
+          ) : (
+            "만들기"
+          )}
+        </Button>
+      </>
+    ),
+    3: (
       <Button onClick={handleClose} className="ml-auto">
         완료
       </Button>
-    );
+    ),
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="min-w-[450px] mobile:min-w-full">
         <DialogHeader>
-          <DialogTitle>{getDialogTitle()}</DialogTitle>
-          <DialogDescription>{getDialogDescription()}</DialogDescription>
+          <DialogTitle>{Titles[step]}</DialogTitle>
+          <DialogDescription>{Descriptions[step]}</DialogDescription>
         </DialogHeader>
 
-        {renderContent()}
+        {Contents[step]}
 
         <DialogFooter className="sm:justify-between">
-          {renderFooterButtons()}
+          {Footers[step]}
         </DialogFooter>
       </DialogContent>
     </Dialog>
