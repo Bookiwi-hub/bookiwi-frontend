@@ -1,6 +1,6 @@
 import { AlertCircle, Check, Copy } from "lucide-react";
 
-import { StateDispatchProps } from "./reducer";
+import { StateDispatchProps, ActionTypes } from "./reducer";
 
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
@@ -12,7 +12,10 @@ function EpubUpload({ state, dispatch }: StateDispatchProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      dispatch({ type: "SET_SELECTED_FILE", payload: e.target.files[0] });
+      dispatch({
+        type: ActionTypes.SET_SELECTED_FILE,
+        payload: e.target.files[0],
+      });
     }
   };
 
@@ -54,7 +57,10 @@ function EpubUpload({ state, dispatch }: StateDispatchProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() =>
-                  dispatch({ type: "SET_SELECTED_FILE", payload: null })
+                  dispatch({
+                    type: ActionTypes.SET_SELECTED_FILE,
+                    payload: null,
+                  })
                 }
               >
                 변경

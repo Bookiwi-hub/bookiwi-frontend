@@ -1,6 +1,6 @@
 import { AlertCircle } from "lucide-react";
 
-import { StateDispatchProps } from "./reducer";
+import { StateDispatchProps, ActionTypes } from "./reducer";
 
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
@@ -37,7 +37,10 @@ function KiwiInfo({ state, dispatch }: StateDispatchProps) {
           placeholder="키위 이름을 입력하세요"
           value={kiwiName}
           onChange={(e) =>
-            dispatch({ type: "SET_KIWI_NAME", payload: e.target.value })
+            dispatch({
+              type: ActionTypes.SET_KIWI_NAME,
+              payload: e.target.value,
+            })
           }
           className={cn(nameError && "border-destructive")}
         />
@@ -54,7 +57,10 @@ function KiwiInfo({ state, dispatch }: StateDispatchProps) {
           placeholder="키위에 대한 설명을 입력하세요"
           value={kiwiDescription}
           onChange={(e) =>
-            dispatch({ type: "SET_KIWI_DESCRIPTION", payload: e.target.value })
+            dispatch({
+              type: ActionTypes.SET_KIWI_DESCRIPTION,
+              payload: e.target.value,
+            })
           }
         />
       </div>
@@ -65,7 +71,10 @@ function KiwiInfo({ state, dispatch }: StateDispatchProps) {
           id="password-protection"
           checked={passwordProtected}
           onCheckedChange={(checked) =>
-            dispatch({ type: "SET_PASSWORD_PROTECTED", payload: checked })
+            dispatch({
+              type: ActionTypes.SET_PASSWORD_PROTECTED,
+              payload: checked,
+            })
           }
         />
       </div>
@@ -84,7 +93,10 @@ function KiwiInfo({ state, dispatch }: StateDispatchProps) {
               placeholder="암호를 입력하세요"
               value={password}
               onChange={(e) =>
-                dispatch({ type: "SET_PASSWORD", payload: e.target.value })
+                dispatch({
+                  type: ActionTypes.SET_PASSWORD,
+                  payload: e.target.value,
+                })
               }
               className={cn(passwordError && "border-destructive")}
             />
@@ -111,7 +123,7 @@ function KiwiInfo({ state, dispatch }: StateDispatchProps) {
               value={confirmPassword}
               onChange={(e) =>
                 dispatch({
-                  type: "SET_CONFIRM_PASSWORD",
+                  type: ActionTypes.SET_CONFIRM_PASSWORD,
                   payload: e.target.value,
                 })
               }

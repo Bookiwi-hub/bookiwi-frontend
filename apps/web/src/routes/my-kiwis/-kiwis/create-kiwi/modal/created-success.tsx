@@ -1,6 +1,6 @@
 import { Copy, Check } from "lucide-react";
 
-import { StateDispatchProps } from "./reducer";
+import { StateDispatchProps, ActionTypes } from "./reducer";
 
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
@@ -10,8 +10,11 @@ function CreatedSuccess({ state, dispatch }: StateDispatchProps) {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(shareCode).then(() => {
-      dispatch({ type: "SET_COPIED", payload: true });
-      setTimeout(() => dispatch({ type: "SET_COPIED", payload: false }), 2000);
+      dispatch({ type: ActionTypes.SET_COPIED, payload: true });
+      setTimeout(
+        () => dispatch({ type: ActionTypes.SET_COPIED, payload: false }),
+        2000,
+      );
     });
   };
 
