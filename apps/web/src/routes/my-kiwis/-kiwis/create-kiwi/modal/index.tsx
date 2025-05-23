@@ -44,12 +44,6 @@ const Contents: Record<Step, ComponentType> = {
   [Step.Complete]: CreatedSuccess,
 };
 
-const FooterButtons: Partial<Record<Step, ComponentType>> = {
-  [Step.BasicInfo]: Step1FooterButton,
-  [Step.FileUpload]: Step2FooterButton,
-  [Step.Processing]: Step3FooterButton,
-};
-
 interface ModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -65,6 +59,33 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
     setOpen(false);
   };
 
+  const handleSubmit = async () => {
+    dispatch({ type: ActionTypes.SET_STEP, payload: Step.Processing }); // 로딩 단계로 전환
+
+    try {
+      // 여기서 실제로 API 호출 등의 작업을 수행
+      // 예시로 setTimeout을 사용해 비동기 작업 시뮬레이션
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 2000);
+      });
+
+      // 공유 코드 생성 (실제로는 API에서 받아와야 함)
+      const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      dispatch({
+        type: ActionTypes.SET_SHARE_CODE,
+        payload: generatedShareCode,
+      });
+      dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
+
+      // 성공 단계로 이동
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert("키위 생성 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="min-w-[450px] mobile:min-w-full">
@@ -76,9 +97,11 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         {createElement(Contents[step])}
 
         <DialogFooter className="sm:justify-between">
-          {step !== Step.Complete &&
-            FooterButtons[step] &&
-            createElement(FooterButtons[step])}
+          {step === Step.BasicInfo && <Step1FooterButton />}
+          {step === Step.FileUpload && (
+            <Step2FooterButton onSubmit={handleSubmit} />
+          )}
+          {step === Step.Processing && <Step3FooterButton />}
           {step === Step.Complete && (
             <Step4FooterButton onClick={handleClose} />
           )}

@@ -1,4 +1,5 @@
 import { AlertCircle, Check, Copy } from "lucide-react";
+import { ChangeEvent } from "react";
 
 import { useCreateKiwi } from "./context";
 import { ActionTypes } from "./reducer";
@@ -12,7 +13,7 @@ function EpubUpload() {
   const { state, dispatch } = useCreateKiwi();
   const { fileError, selectedFile } = state;
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       dispatch({
         type: ActionTypes.SET_SELECTED_FILE,
