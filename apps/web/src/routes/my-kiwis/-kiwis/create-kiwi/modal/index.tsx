@@ -1,4 +1,4 @@
-import { ComponentType, createElement, useEffect, useRef } from "react";
+import { ComponentType, createElement, useRef } from "react";
 
 import { KiwiProvider, useCreateKiwi } from "./context";
 import CreatedSuccess from "./created-success";
@@ -53,13 +53,6 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
   const { state, dispatch } = useCreateKiwi();
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  useEffect(() => {
-    abortControllerRef.current = new AbortController();
-    return () => {
-      abortControllerRef.current?.abort();
-    };
-  }, []);
-
   const { step } = state;
 
   const handleClose = () => {
@@ -67,17 +60,23 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
     setOpen(false);
   };
   const handleAbort = () => {
-    dispatch({ type: ActionTypes.RESET });
-    dispatch({ type: ActionTypes.SET_STEP, payload: Step.BasicInfo });
     abortControllerRef.current?.abort();
+    dispatch({ type: ActionTypes.SET_STEP, payload: Step.BasicInfo });
   };
 
   const handleSubmit = async () => {
     dispatch({ type: ActionTypes.SET_STEP, payload: Step.Processing }); // 로딩 단계로 전환
-
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
     try {
       // 여기서 실제로 API 호출 등의 작업을 수행
       // 예시로 setTimeout을 사용해 비동기 작업 시뮬레이션
+
+      // const res = await fetch('/api/submit', {
+      //   method: 'POST',
+      //   body: JSON.stringify(data),
+      //   signal: controller.signal, // ✅ 여기가 중요
+      // });
       await new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
