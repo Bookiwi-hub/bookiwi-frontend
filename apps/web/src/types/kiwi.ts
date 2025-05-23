@@ -1,7 +1,7 @@
 export interface BookProps {
   title: string;
   author: string;
-  cover: string;
+  coverImage: string | null;
 }
 
 export interface DiscussionProps {
@@ -38,13 +38,12 @@ export interface Kiwi {
   id: string;
   name: string;
   description: string;
-  image: string;
   lastActivityAt: string;
   detailDescription?: string;
   isPrivate?: boolean;
   memberCount?: number;
   progress?: number;
-  book?: BookProps;
+  book: BookProps;
   discussions?: DiscussionProps[];
   events?: EventProps[];
   activities?: ActivityProps[];

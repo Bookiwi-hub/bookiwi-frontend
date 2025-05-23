@@ -21,6 +21,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
+import { useKiwis } from "#/routes/my-kiwis/-context";
+import { Kiwi } from "#/types/kiwi";
 import { addToIndexedDB } from "#/utils/epubjs";
 
 const Titles: Record<Step, string> = {
@@ -53,7 +55,7 @@ interface ModalProps {
 function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
   const { state, dispatch } = useCreateKiwi();
   const abortControllerRef = useRef<AbortController | null>(null);
-
+  const { setNewKiwi } = useKiwis();
   const { step } = state;
 
   const handleClose = () => {
@@ -80,7 +82,6 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       // const book = new Book(state.selectedFile);
 
       const res = await addToIndexedDB(state.selectedFile!);
-      console.log(res);
 
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -88,6 +89,25 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       if (abortControllerRef.current?.signal.aborted) {
         return;
       }
+      const newKiwi: Kiwi = {
+        id: res.id,
+        name: state.kiwiName,
+        description: state.kiwiDescription,
+        lastActivityAt: "1시간 전",
+        detailDescription: "",
+        isPrivate: state.passwordProtected,
+        memberCount: 1,
+        progress: 0,
+        book: {
+          title: res.metadata.title,
+          author: res.metadata.author,
+          coverImage: res.coverImage,
+        },
+        discussions: [],
+        createdAt: "",
+        admin: "",
+      };
+      setNewKiwi(newKiwi);
       dispatch({
         type: ActionTypes.SET_SHARE_CODE,
         payload: generatedShareCode,
