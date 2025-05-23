@@ -17,6 +17,7 @@ export interface CreateKiwiState {
   step: Step;
   kiwiName: string;
   kiwiDescription: string;
+  kiwiDetailDescription: string;
   passwordProtected: boolean;
   password: string;
   confirmPassword: string;
@@ -35,6 +36,7 @@ export const ActionTypes = {
   SET_STEP: "SET_STEP",
   SET_KIWI_NAME: "SET_KIWI_NAME",
   SET_KIWI_DESCRIPTION: "SET_KIWI_DESCRIPTION",
+  SET_KIWI_DETAIL_DESCRIPTION: "SET_KIWI_DETAIL_DESCRIPTION",
   SET_PASSWORD_PROTECTED: "SET_PASSWORD_PROTECTED",
   SET_PASSWORD: "SET_PASSWORD",
   SET_CONFIRM_PASSWORD: "SET_CONFIRM_PASSWORD",
@@ -57,6 +59,7 @@ export type NavigationActions =
 export type FormInputActions =
   | { type: typeof ActionTypes.SET_KIWI_NAME; payload: string }
   | { type: typeof ActionTypes.SET_KIWI_DESCRIPTION; payload: string }
+  | { type: typeof ActionTypes.SET_KIWI_DETAIL_DESCRIPTION; payload: string }
   | { type: typeof ActionTypes.SET_PASSWORD_PROTECTED; payload: boolean }
   | { type: typeof ActionTypes.SET_PASSWORD; payload: string }
   | { type: typeof ActionTypes.SET_CONFIRM_PASSWORD; payload: string }
@@ -84,6 +87,7 @@ export const initialState: CreateKiwiState = {
   step: Step.BasicInfo,
   kiwiName: "",
   kiwiDescription: "",
+  kiwiDetailDescription: "",
   passwordProtected: false,
   password: "",
   confirmPassword: "",
@@ -141,6 +145,12 @@ export const createKiwiReducer = (
       return {
         ...state,
         kiwiDescription: action.payload,
+      };
+
+    case ActionTypes.SET_KIWI_DETAIL_DESCRIPTION:
+      return {
+        ...state,
+        kiwiDetailDescription: action.payload,
       };
     case ActionTypes.SET_PASSWORD_PROTECTED:
       return { ...state, passwordProtected: action.payload };

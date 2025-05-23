@@ -7,6 +7,7 @@ import { ActionTypes } from "./reducer";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { Switch } from "#/components/ui/switch";
+import { Textarea } from "#/components/ui/textarea";
 import { cn } from "#/lib/utils";
 
 function KiwiInfo() {
@@ -14,6 +15,7 @@ function KiwiInfo() {
   const {
     kiwiName,
     kiwiDescription,
+    kiwiDetailDescription,
     passwordProtected,
     password,
     confirmPassword,
@@ -31,6 +33,15 @@ function KiwiInfo() {
   const handleKiwiDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: ActionTypes.SET_KIWI_DESCRIPTION,
+      payload: e.target.value,
+    });
+  };
+
+  const handleKiwiDetailDescriptionChange = (
+    e: ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    dispatch({
+      type: ActionTypes.SET_KIWI_DETAIL_DESCRIPTION,
       payload: e.target.value,
     });
   };
@@ -90,6 +101,24 @@ function KiwiInfo() {
           placeholder="키위에 대한 설명을 입력하세요"
           value={kiwiDescription}
           onChange={handleKiwiDescriptionChange}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <Label
+            htmlFor="kiwi-detail-description"
+            className="flex items-center gap-1"
+          >
+            키위 상세 설명
+          </Label>
+        </div>
+        <Textarea
+          id="kiwi-detail-description"
+          placeholder="키위에 대한 상세 설명을 입력하세요"
+          value={kiwiDetailDescription}
+          onChange={handleKiwiDetailDescriptionChange}
+          className="min-h-[100px] resize-y"
         />
       </div>
 

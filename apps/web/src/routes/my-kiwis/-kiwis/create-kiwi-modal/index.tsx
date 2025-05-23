@@ -94,7 +94,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         name: state.kiwiName,
         description: state.kiwiDescription,
         lastActivityAt: "1시간 전",
-        detailDescription: "",
+        detailDescription: state.kiwiDetailDescription,
         isPrivate: state.passwordProtected,
         memberCount: 1,
         progress: 0,
