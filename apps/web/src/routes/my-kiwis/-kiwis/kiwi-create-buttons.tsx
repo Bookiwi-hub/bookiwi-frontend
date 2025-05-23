@@ -1,15 +1,14 @@
-import { Plus, Link2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { memo } from "react";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardContent } from "#/components/ui/card";
-import { Input } from "#/components/ui/input";
 
 interface SetIsModalOpenProps {
   setIsModalOpen: (isModalOpen: boolean) => void;
 }
 
-function CreateKiwiCard({ setIsModalOpen }: SetIsModalOpenProps) {
+function CreateKiwiCardButton({ setIsModalOpen }: SetIsModalOpenProps) {
   return (
     <Card
       className="group min-h-[300px] w-full cursor-pointer border border-dashed bg-card/50 transition-all duration-300 hover:border-primary/70 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/20"
@@ -44,33 +43,10 @@ function CreateKiwiButton({ setIsModalOpen }: SetIsModalOpenProps) {
   );
 }
 
-function KiwiLinkForm() {
-  return (
-    <form
-      className="flex items-center gap-2 mobile:w-full"
-      onSubmit={(e) => e.preventDefault()}
-    >
-      <div className="flex items-center gap-2 rounded-md border bg-white px-2 mobile:w-full">
-        <Link2 size={16} className="text-muted-foreground" />
-        <Input
-          type="url"
-          placeholder="링크로 키위 참여하기"
-          className="w-[240px] border-0 bg-transparent p-2 focus-visible:ring-0 mobile:w-full"
-        />
-      </div>
-      <Button type="submit" variant="default" size="default">
-        참여
-      </Button>
-    </form>
-  );
-}
-
-const KiwiLinkFormMemo = memo(KiwiLinkForm);
-const CreateKiwiCardMemo = memo(CreateKiwiCard);
+const CreateKiwiCardButtonMemo = memo(CreateKiwiCardButton);
 const CreateKiwiButtonMemo = memo(CreateKiwiButton);
 
 export {
-  KiwiLinkFormMemo as KiwiLinkForm,
-  CreateKiwiCardMemo as CreateKiwiCard,
+  CreateKiwiCardButtonMemo as CreateKiwiCardButton,
   CreateKiwiButtonMemo as CreateKiwiButton,
 };

@@ -1,8 +1,9 @@
 import { useState } from "react";
 
-import { CreateKiwiButton, CreateKiwiCard, KiwiLinkForm } from "./create-kiwi";
-import CreateKiwiModal from "./create-kiwi/modal";
+import CreateKiwiModal from "./create-kiwi-modal";
 import KiwiCard from "./kiwi-card";
+import KiwiCodeForm from "./kiwi-code-form";
+import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
 
 import { Kiwi } from "#/types/kiwi";
 
@@ -35,7 +36,7 @@ const sampleKiwi: Kiwi = {
 };
 
 function Kiwis({ kiwis }: KiwisProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
 
   return (
     <>
@@ -44,15 +45,15 @@ function Kiwis({ kiwis }: KiwisProps) {
           <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
             <h2 className="text-2xl font-bold">내 키위</h2>
             <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
-              <KiwiLinkForm />
-              <CreateKiwiButton setIsModalOpen={setIsModalOpen} />
+              <KiwiCodeForm />
+              <CreateKiwiButton setIsModalOpen={setIsCreateKiwiModalOpen} />
             </div>
           </div>
         </div>
         <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {kiwis.length === 0 ? (
             <>
-              <CreateKiwiCard setIsModalOpen={setIsModalOpen} />
+              <CreateKiwiCardButton setIsModalOpen={setIsCreateKiwiModalOpen} />
               <KiwiCard key={sampleKiwi.id} kiwi={sampleKiwi} />
             </>
           ) : (
@@ -60,7 +61,12 @@ function Kiwis({ kiwis }: KiwisProps) {
           )}
         </div>
       </div>
-      <CreateKiwiModal open={isModalOpen} setOpen={setIsModalOpen} />
+      {isCreateKiwiModalOpen && (
+        <CreateKiwiModal
+          open={isCreateKiwiModalOpen}
+          setOpen={setIsCreateKiwiModalOpen}
+        />
+      )}
     </>
   );
 }
