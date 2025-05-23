@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
-import { fileToBook, generateLocations } from "#/utils/epubjs";
+import { addToIndexedDB } from "#/utils/epubjs";
 
 const Titles: Record<Step, string> = {
   [Step.BasicInfo]: "새로운 키위 만들기",
@@ -71,7 +71,6 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
     abortControllerRef.current = controller;
     try {
       // 여기서 실제로 API 호출 등의 작업을 수행
-      // 예시로 setTimeout을 사용해 비동기 작업 시뮬레이션
 
       // const res = await fetch('/api/submit', {
       //   method: 'POST',
@@ -80,29 +79,20 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       // });
       // const book = new Book(state.selectedFile);
 
-      const book = await fileToBook(state.selectedFile!);
-      await book.ready;
-      const locations = await generateLocations(book);
-      localStorage.setItem(`${book.key()}-locations`, locations);
+      const res = await addToIndexedDB(state.selectedFile!);
+      console.log(res);
 
-      await new Promise<void>((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 2000);
-      });
+      // 공유 코드 생성 (실제로는 API에서 받아와야 함)
+      const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
       if (abortControllerRef.current?.signal.aborted) {
         return;
       }
-      // 공유 코드 생성 (실제로는 API에서 받아와야 함)
-      const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       dispatch({
         type: ActionTypes.SET_SHARE_CODE,
         payload: generatedShareCode,
       });
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
-
-      // 성공 단계로 이동
     } catch (error) {
       // eslint-disable-next-line no-alert
       alert("키위 생성 중 오류가 발생했습니다.");
