@@ -1,4 +1,4 @@
-import { ComponentType, createElement } from "react";
+import { ComponentType, createElement, useEffect, useRef } from "react";
 
 import { KiwiProvider, useCreateKiwi } from "./context";
 import CreatedSuccess from "./created-success";
@@ -51,12 +51,25 @@ interface ModalProps {
 
 function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
   const { state, dispatch } = useCreateKiwi();
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    abortControllerRef.current = new AbortController();
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   const { step } = state;
 
   const handleClose = () => {
     dispatch({ type: ActionTypes.RESET });
     setOpen(false);
+  };
+  const handleAbort = () => {
+    dispatch({ type: ActionTypes.RESET });
+    dispatch({ type: ActionTypes.SET_STEP, payload: Step.BasicInfo });
+    abortControllerRef.current?.abort();
   };
 
   const handleSubmit = async () => {
@@ -71,6 +84,9 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         }, 2000);
       });
 
+      if (abortControllerRef.current?.signal.aborted) {
+        return;
+      }
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       dispatch({
@@ -101,7 +117,9 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
           {step === Step.FileUpload && (
             <Step2FooterButton onSubmit={handleSubmit} />
           )}
-          {step === Step.Processing && <Step3FooterButton />}
+          {step === Step.Processing && (
+            <Step3FooterButton onAbort={handleAbort} />
+          )}
           {step === Step.Complete && (
             <Step4FooterButton onClick={handleClose} />
           )}

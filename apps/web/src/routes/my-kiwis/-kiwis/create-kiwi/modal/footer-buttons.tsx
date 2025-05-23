@@ -67,16 +67,9 @@ export function Step2FooterButton({
   );
 }
 
-// Step3 doesn't have buttons (loading screen)
-
-export function Step3FooterButton() {
-  const { dispatch } = useCreateKiwi();
-  const handleClose = () => {
-    dispatch({ type: ActionTypes.RESET });
-    dispatch({ type: ActionTypes.SET_STEP, payload: Step.BasicInfo });
-  };
+export function Step3FooterButton({ onAbort }: { onAbort: () => void }) {
   return (
-    <Button onClick={handleClose} className="ml-auto">
+    <Button onClick={onAbort} className="ml-auto">
       취소
     </Button>
   );
