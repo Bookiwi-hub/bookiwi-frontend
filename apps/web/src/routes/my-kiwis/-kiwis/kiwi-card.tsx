@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Clock, Users } from "lucide-react";
 import { memo, useCallback, useState } from "react";
 
-import KiwiDetail from "./kiwi-detail";
+import KiwiDetailModal from "./kiwi-detail-modal";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
@@ -116,7 +116,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
 
       {/* 상세 정보 모달 */}
       {openDetail && (
-        <KiwiDetail
+        <KiwiDetailModal
           kiwi={kiwi}
           isOpen={openDetail}
           onClose={handleCloseModal}
