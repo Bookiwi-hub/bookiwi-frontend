@@ -13,7 +13,7 @@ export enum Step {
 /**
  * 키위 생성 상태 인터페이스
  */
-export interface KiwiState {
+export interface CreateKiwiState {
   step: Step;
   kiwiName: string;
   kiwiDescription: string;
@@ -73,14 +73,14 @@ export type ShareActions =
   | { type: typeof ActionTypes.SET_SHARE_CODE; payload: string }
   | { type: typeof ActionTypes.SET_COPIED; payload: boolean };
 
-export type KiwiAction =
+export type CreateKiwiAction =
   | NavigationActions
   | FormInputActions
   | ValidationActions
   | ShareActions;
 
 // 초기 상태
-export const initialState: KiwiState = {
+export const initialState: CreateKiwiState = {
   step: Step.BasicInfo,
   kiwiName: "",
   kiwiDescription: "",
@@ -96,14 +96,14 @@ export const initialState: KiwiState = {
 };
 
 export interface StateDispatchProps {
-  state: KiwiState;
-  dispatch: Dispatch<KiwiAction>;
+  state: CreateKiwiState;
+  dispatch: Dispatch<CreateKiwiAction>;
 }
 
 /**
  * 기본 정보 단계(Step 1)의 유효성을 검사하는 함수
  */
-const validateStep1 = (state: KiwiState): Partial<KiwiState> => {
+const validateStep1 = (state: CreateKiwiState): Partial<CreateKiwiState> => {
   const nameError = state.kiwiName.trim() === "";
   const passwordError =
     state.passwordProtected &&
@@ -118,15 +118,15 @@ const validateStep1 = (state: KiwiState): Partial<KiwiState> => {
 /**
  * 파일 업로드 단계(Step 2)의 유효성을 검사하는 함수
  */
-const validateStep2 = (state: KiwiState): Partial<KiwiState> => ({
+const validateStep2 = (state: CreateKiwiState): Partial<CreateKiwiState> => ({
   fileError: !state.selectedFile,
 });
 
 // 리듀서 함수
-export const kiwiReducer = (
-  state: KiwiState,
-  action: KiwiAction,
-): KiwiState => {
+export const createKiwiReducer = (
+  state: CreateKiwiState,
+  action: CreateKiwiAction,
+): CreateKiwiState => {
   const { type } = action;
 
   switch (type) {

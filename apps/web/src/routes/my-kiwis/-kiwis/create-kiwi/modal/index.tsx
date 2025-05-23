@@ -1,6 +1,6 @@
 import { ComponentType, createElement, useRef } from "react";
 
-import { KiwiProvider, useCreateKiwi } from "./context";
+import { CreateKiwiProvider, useCreateKiwi } from "./context";
 import CreatedSuccess from "./created-success";
 import EpubUpload from "./epub-upload";
 import {
@@ -128,9 +128,9 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
 
 function CreateKiwiModal({ open, setOpen }: ModalProps) {
   return (
-    <KiwiProvider>
+    <CreateKiwiProvider>
       <CreateKiwiModalDialog open={open} setOpen={setOpen} />
-    </KiwiProvider>
+    </CreateKiwiProvider>
   );
 }
 

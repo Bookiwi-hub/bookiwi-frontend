@@ -7,31 +7,42 @@ import {
   useReducer,
 } from "react";
 
-import { initialState, kiwiReducer, KiwiAction, KiwiState } from "./reducer";
+import {
+  initialState,
+  createKiwiReducer,
+  CreateKiwiAction,
+  CreateKiwiState,
+} from "./reducer";
 
-interface KiwiContextType {
-  state: KiwiState;
-  dispatch: Dispatch<KiwiAction>;
+interface CreateKiwiContextType {
+  state: CreateKiwiState;
+  dispatch: Dispatch<CreateKiwiAction>;
 }
 
-const KiwiContext = createContext<KiwiContextType | undefined>(undefined);
+const CreateKiwiContext = createContext<CreateKiwiContextType | undefined>(
+  undefined,
+);
 
 export const useCreateKiwi = () => {
-  const context = useContext(KiwiContext);
+  const context = useContext(CreateKiwiContext);
   if (context === undefined) {
-    throw new Error("useCreateKiwi must be used within a KiwiProvider");
+    throw new Error("useCreateKiwi must be used within a CreateKiwiProvider");
   }
   return context;
 };
 
-interface KiwiProviderProps {
+interface CreateKiwiProviderProps {
   children: ReactNode;
 }
 
-export function KiwiProvider({ children }: KiwiProviderProps) {
-  const [state, dispatch] = useReducer(kiwiReducer, initialState);
+export function CreateKiwiProvider({ children }: CreateKiwiProviderProps) {
+  const [state, dispatch] = useReducer(createKiwiReducer, initialState);
 
   const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
-  return <KiwiContext.Provider value={value}>{children}</KiwiContext.Provider>;
+  return (
+    <CreateKiwiContext.Provider value={value}>
+      {children}
+    </CreateKiwiContext.Provider>
+  );
 }
