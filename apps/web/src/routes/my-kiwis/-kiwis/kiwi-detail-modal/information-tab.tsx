@@ -1,5 +1,7 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
+import { NavItem } from "@bookiwi/epubjs/types/navigation";
+
 import { Kiwi } from "#/types/kiwi";
 
 interface InformationTabProps {
@@ -94,14 +96,11 @@ function InformationTab({ kiwi }: InformationTabProps) {
       </div>
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
-
-        {book.toc.map((item, index) => (
-          <div key={item.id}>
-            <span>{index + 1}.</span>
-            <span>{item.label}</span>
-            {/* <span>{item.subitems.length}</span> */}
-          </div>
-        ))}
+        <ul>
+          {book.toc.map((item, index) => (
+            <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
+          ))}
+        </ul>
       </div>
 
       {detailDescription && (
@@ -111,6 +110,36 @@ function InformationTab({ kiwi }: InformationTabProps) {
         </div>
       )}
     </div>
+  );
+}
+
+interface TocItemProps {
+  tocItem: NavItem;
+  numbering: string;
+}
+function TocItem({ tocItem, numbering }: TocItemProps) {
+  return (
+    <li className="py-1">
+      <div className="group flex items-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-muted">
+        <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
+          {numbering}
+        </span>
+        <span className="text-sm group-hover:text-primary">
+          {tocItem.label}
+        </span>
+      </div>
+      {tocItem.subitems && tocItem.subitems.length > 0 && (
+        <ul className="ml-7 mt-1 space-y-0.5 border-l border-muted pl-2">
+          {tocItem.subitems.map((subitem, index) => (
+            <TocItem
+              key={subitem.id}
+              tocItem={subitem}
+              numbering={`${numbering}.${index + 1}`}
+            />
+          ))}
+        </ul>
+      )}
+    </li>
   );
 }
 
