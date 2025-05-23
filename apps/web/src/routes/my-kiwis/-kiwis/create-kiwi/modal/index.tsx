@@ -21,6 +21,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
+import { fileToBook, generateLocations } from "#/utils/epubjs";
 
 const Titles: Record<Step, string> = {
   [Step.BasicInfo]: "새로운 키위 만들기",
@@ -77,6 +78,13 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       //   body: JSON.stringify(data),
       //   signal: controller.signal, // ✅ 여기가 중요
       // });
+      // const book = new Book(state.selectedFile);
+
+      const book = await fileToBook(state.selectedFile!);
+      await book.ready;
+      const locations = await generateLocations(book);
+      localStorage.setItem(`${book.key()}-locations`, locations);
+
       await new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
