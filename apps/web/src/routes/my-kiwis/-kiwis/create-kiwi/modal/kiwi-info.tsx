@@ -1,4 +1,5 @@
 import { AlertCircle } from "lucide-react";
+import { ChangeEvent } from "react";
 
 import { useCreateKiwi } from "./context";
 import { ActionTypes } from "./reducer";
@@ -20,6 +21,41 @@ function KiwiInfo() {
     nameError,
   } = state;
 
+  const handleKiwiNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: ActionTypes.SET_KIWI_NAME,
+      payload: e.target.value,
+    });
+  };
+
+  const handleKiwiDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: ActionTypes.SET_KIWI_DESCRIPTION,
+      payload: e.target.value,
+    });
+  };
+
+  const handlePasswordProtectedChange = (checked: boolean) => {
+    dispatch({
+      type: ActionTypes.SET_PASSWORD_PROTECTED,
+      payload: checked,
+    });
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: ActionTypes.SET_PASSWORD,
+      payload: e.target.value,
+    });
+  };
+
+  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: ActionTypes.SET_CONFIRM_PASSWORD,
+      payload: e.target.value,
+    });
+  };
+
   return (
     <div className="space-y-4 py-4">
       <div className="space-y-2">
@@ -38,12 +74,7 @@ function KiwiInfo() {
           id="kiwi-name"
           placeholder="키위 이름을 입력하세요"
           value={kiwiName}
-          onChange={(e) =>
-            dispatch({
-              type: ActionTypes.SET_KIWI_NAME,
-              payload: e.target.value,
-            })
-          }
+          onChange={handleKiwiNameChange}
           className={cn(nameError && "border-destructive")}
         />
       </div>
@@ -58,12 +89,7 @@ function KiwiInfo() {
           id="kiwi-description"
           placeholder="키위에 대한 설명을 입력하세요"
           value={kiwiDescription}
-          onChange={(e) =>
-            dispatch({
-              type: ActionTypes.SET_KIWI_DESCRIPTION,
-              payload: e.target.value,
-            })
-          }
+          onChange={handleKiwiDescriptionChange}
         />
       </div>
 
@@ -72,12 +98,7 @@ function KiwiInfo() {
         <Switch
           id="password-protection"
           checked={passwordProtected}
-          onCheckedChange={(checked) =>
-            dispatch({
-              type: ActionTypes.SET_PASSWORD_PROTECTED,
-              payload: checked,
-            })
-          }
+          onCheckedChange={handlePasswordProtectedChange}
         />
       </div>
 
@@ -94,12 +115,7 @@ function KiwiInfo() {
               type="password"
               placeholder="암호를 입력하세요"
               value={password}
-              onChange={(e) =>
-                dispatch({
-                  type: ActionTypes.SET_PASSWORD,
-                  payload: e.target.value,
-                })
-              }
+              onChange={handlePasswordChange}
               className={cn(passwordError && "border-destructive")}
             />
           </div>
@@ -123,12 +139,7 @@ function KiwiInfo() {
               type="password"
               placeholder="암호를 다시 입력하세요"
               value={confirmPassword}
-              onChange={(e) =>
-                dispatch({
-                  type: ActionTypes.SET_CONFIRM_PASSWORD,
-                  payload: e.target.value,
-                })
-              }
+              onChange={handleConfirmPasswordChange}
               className={cn(passwordError && "border-destructive")}
             />
           </div>
