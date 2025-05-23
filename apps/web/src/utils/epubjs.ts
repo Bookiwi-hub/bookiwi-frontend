@@ -1,9 +1,8 @@
 import ePub, { Book, NavItem } from "@bookiwi/epubjs";
 
-// import { urlToBlob } from "./file";
-import { urlToBase64 } from "./file";
+import { urlToObjectUrl } from "./file";
 
-import { StoreData } from "#/types/reader";
+import { BookData } from "#/types/book";
 
 /**
  * 파일을 EPUB 객체로 변환하는 함수
@@ -37,20 +36,16 @@ export const getToc = async (book: Book): Promise<NavItem[]> => {
   return navigation.toc;
 };
 
-export const addToIndexedDB = async (file: File): Promise<StoreData> => {
+export const fileToBookData = async (file: File): Promise<BookData> => {
   const book = await fileToBook(file);
   const metadata = await getMetadata(book);
   const coverUrl = await book.coverUrl();
   const toc = await getToc(book);
 
-  // indexDB 적용할 때 코드
-  // const coverBlob = coverUrl ? await urlToBlob(coverUrl) : null;
-
-  const coverImage = coverUrl ? await urlToBase64(coverUrl) : null;
+  const coverImage = coverUrl ? await urlToObjectUrl(coverUrl) : null;
   const locations = await generateLocations(book);
-  const key = await getBookKey(book);
-  const storeData = {
-    id: key,
+
+  const bookData = {
     file,
     coverImage,
     metadata: {
@@ -70,8 +65,5 @@ export const addToIndexedDB = async (file: File): Promise<StoreData> => {
     },
   };
 
-  // 후에 indexDB 적용 코드로 바꿔야 함.
-  localStorage.setItem(key, JSON.stringify(storeData));
-
-  return storeData;
+  return bookData;
 };

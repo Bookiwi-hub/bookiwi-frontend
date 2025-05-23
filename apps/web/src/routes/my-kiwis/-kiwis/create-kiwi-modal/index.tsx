@@ -23,7 +23,7 @@ import {
 } from "#/components/ui/dialog";
 import { useKiwis } from "#/routes/my-kiwis/-context";
 import { Kiwi } from "#/types/kiwi";
-import { addToIndexedDB } from "#/utils/epubjs";
+import { fileToBookData } from "#/utils/epubjs";
 
 const Titles: Record<Step, string> = {
   [Step.BasicInfo]: "새로운 키위 만들기",
@@ -81,7 +81,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       // });
       // const book = new Book(state.selectedFile);
 
-      const res = await addToIndexedDB(state.selectedFile!);
+      const bookData = await fileToBookData(state.selectedFile!);
 
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -90,7 +90,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         return;
       }
       const newKiwi: Kiwi = {
-        id: res.id,
+        id: generatedShareCode,
         name: state.kiwiName,
         description: state.kiwiDescription,
         lastActivityAt: "1시간 전",
@@ -99,10 +99,11 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         memberCount: 1,
         progress: 0,
         book: {
-          title: res.metadata.title,
-          author: res.metadata.author,
-          coverImage: res.coverImage,
-          toc: res.metadata.toc,
+          file: state.selectedFile!,
+          coverImage: bookData.coverImage,
+          metadata: bookData.metadata,
+          record: bookData.record,
+          settings: bookData.settings,
         },
         discussions: [],
         createdAt: "",

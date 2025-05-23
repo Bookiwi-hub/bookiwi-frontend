@@ -58,7 +58,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
               <li className="flex items-center gap-2">
                 <Book size={16} className="text-muted-foreground" />
                 <span>
-                  {book.title} - {book.author}
+                  {book.metadata.title} - {book.metadata.author}
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -91,7 +91,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
         <ul className="max-h-60 overflow-y-auto pr-1">
-          {book.toc.map((item, index) => (
+          {book.metadata.toc.map((item, index) => (
             <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
           ))}
         </ul>

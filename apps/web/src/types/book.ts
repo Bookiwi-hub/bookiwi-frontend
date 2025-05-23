@@ -27,8 +27,7 @@ export interface Metadata {
   locations: string;
 }
 
-export interface StoreData {
-  id: string;
+export interface BookData {
   file: File;
   coverImage: string | null;
   metadata: Metadata;

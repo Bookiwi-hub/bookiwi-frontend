@@ -1,11 +1,4 @@
-import { NavItem } from "@bookiwi/epubjs/types/navigation";
-
-export interface BookProps {
-  title: string;
-  author: string;
-  coverImage: string | null;
-  toc: NavItem[];
-}
+import { BookData } from "./book";
 
 export interface DiscussionProps {
   id: string;
@@ -46,7 +39,7 @@ export interface Kiwi {
   isEncrypted?: boolean;
   memberCount?: number;
   progress?: number;
-  book: BookProps;
+  book: BookData;
   discussions?: DiscussionProps[];
   events?: EventProps[];
   activities?: ActivityProps[];

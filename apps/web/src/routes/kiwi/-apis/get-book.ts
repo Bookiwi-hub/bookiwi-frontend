@@ -1,6 +1,6 @@
 import { Book } from "@bookiwi/epubjs";
 
-import { Settings, Record } from "#/types/reader";
+import { Settings, Record } from "#/types/book";
 
 type GetBookResponse = {
   record: Record;

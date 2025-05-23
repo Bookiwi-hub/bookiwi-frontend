@@ -7,7 +7,7 @@ import {
   ReadingProvider,
 } from "./contexts";
 
-import { Settings, Record } from "#/types/reader";
+import { Settings, Record } from "#/types/book";
 
 interface ReaderProviderProps {
   children: ReactNode;
