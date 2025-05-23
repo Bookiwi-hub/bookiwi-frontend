@@ -25,7 +25,7 @@ interface KiwiDetailModalProps {
 }
 
 function KiwiDetailModal({ kiwi, isOpen, onClose }: KiwiDetailModalProps) {
-  const { id, name, description, isPrivate } = kiwi;
+  const { id, name, description, isEncrypted } = kiwi;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -34,7 +34,7 @@ function KiwiDetailModal({ kiwi, isOpen, onClose }: KiwiDetailModalProps) {
           <div className="flex items-center gap-2">
             <DialogTitle className="text-xl">{name}</DialogTitle>
             <Badge variant="outline" className="text-xs font-normal">
-              {isPrivate ? "비공개 그룹" : "공개 그룹"}
+              {isEncrypted ? "비공개 키위" : "공개 키위"}
             </Badge>
           </div>
           <DialogDescription>{description}</DialogDescription>

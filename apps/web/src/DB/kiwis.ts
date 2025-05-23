@@ -8,7 +8,7 @@ const kiwis = [
     lastActivityAt: "1시간 전",
     detailDescription:
       "헤르만 헤세의 대표작 '데미안'을 함께 읽고 토론하는 모임입니다. 우리는 매주 일정 분량을 읽고 작품의 상징성, 캐릭터 분석, 그리고 현대적 해석에 대해 토론합니다. 책을 통해 자아 발견의 여정을 함께 나눕시다.",
-    isPrivate: false,
+    isEncrypted: false,
     memberCount: 12,
     progress: 75,
     book: {
@@ -86,7 +86,7 @@ const kiwis = [
     lastActivityAt: "30분 전",
     detailDescription:
       "J.K. 롤링의 해리포터 시리즈를 함께 읽고 마법 세계의 모험을 나누는 모임입니다. 호그와트의 기숙사 분류부터 주문 연습까지, 마법 세계의 모든 것을 탐험합니다. 머글이든 마법사든 모두 환영합니다!",
-    isPrivate: false,
+    isEncrypted: false,
     memberCount: 24,
     progress: 60,
     book: {
@@ -150,7 +150,7 @@ const kiwis = [
     lastActivityAt: "어제",
     detailDescription:
       "칼 세이건의 '코스모스'를 중심으로 우주와 과학에 대해 함께 공부하는 그룹입니다. 복잡한 우주 개념을 함께 이해하고, 과학적 사고를 넓히는 것이 목표입니다. 천문학, 물리학, 생물학 등 다양한 과학 분야에 관심 있는 분들을 환영합니다.",
-    isPrivate: true,
+    isEncrypted: true,
     memberCount: 8,
     progress: 40,
     book: {
@@ -208,7 +208,7 @@ const kiwis = [
     lastActivityAt: "2일 전",
     detailDescription:
       "소설 창작에 관심 있는 사람들의 모임입니다. 매주 각자의 작품을 공유하고 피드백을 주고받으며 함께 성장합니다. 단편소설, 장편소설, 시나리오 등 다양한 창작물을 환영합니다. 초보자부터 경험자까지 모두 참여할 수 있습니다.",
-    isPrivate: false,
+    isEncrypted: false,
     memberCount: 15,
     progress: 50,
     book: {
@@ -266,7 +266,7 @@ const kiwis = [
     lastActivityAt: "지난주",
     detailDescription:
       "시를 사랑하는 사람들이 모여 다양한 시를 읽고 감상을 나누는 모임입니다. 한국 현대시부터 세계 고전시까지, 시간과 공간을 초월한 아름다운 시의 세계를 함께 탐험합니다. 매주 새로운 시인의 작품을 선정하여 깊이 있게 탐구합니다.",
-    isPrivate: false,
+    isEncrypted: false,
     memberCount: 10,
     progress: 80,
     book: { title: "윤동주 전집", author: "윤동주", cover: "/images/yoon.jpg" },

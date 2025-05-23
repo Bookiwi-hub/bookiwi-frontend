@@ -40,12 +40,10 @@ function InformationTab({ kiwi }: InformationTabProps) {
           <div className="space-y-2">
             <h3 className="font-medium">그룹 정보</h3>
             <ul className="space-y-2 text-sm">
-              {admin && (
-                <li className="flex items-center gap-2">
-                  <User size={16} className="text-muted-foreground" />
-                  <span>관리자: {admin}</span>
-                </li>
-              )}
+              <li className="flex items-center gap-2">
+                <User size={16} className="text-muted-foreground" />
+                <span>관리자: {admin}</span>
+              </li>
               <li className="flex items-center gap-2">
                 <Users size={16} className="text-muted-foreground" />
                 <span className="flex items-center gap-1">
@@ -57,20 +55,16 @@ function InformationTab({ kiwi }: InformationTabProps) {
                   </span>
                 </span>
               </li>
-              {book && (
-                <li className="flex items-center gap-2">
-                  <Book size={16} className="text-muted-foreground" />
-                  <span>
-                    {book.title} - {book.author}
-                  </span>
-                </li>
-              )}
-              {createdAt && (
-                <li className="flex items-center gap-2">
-                  <Calendar size={16} className="text-muted-foreground" />
-                  <span>생성일: {createdAt}</span>
-                </li>
-              )}
+              <li className="flex items-center gap-2">
+                <Book size={16} className="text-muted-foreground" />
+                <span>
+                  {book.title} - {book.author}
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Calendar size={16} className="text-muted-foreground" />
+                <span>생성일: {createdAt}</span>
+              </li>
               <li className="flex items-center gap-2">
                 <Clock size={16} className="text-muted-foreground" />
                 <span>최근 활동: {lastActivityAt}</span>

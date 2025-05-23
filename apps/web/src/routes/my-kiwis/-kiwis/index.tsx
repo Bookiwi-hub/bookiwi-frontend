@@ -32,7 +32,7 @@ const sampleKiwi: Kiwi = {
   lastActivityAt: "오늘",
   progress: 0,
   memberCount: 3,
-  isPrivate: false,
+  isEncrypted: false,
 };
 
 function Kiwis({ kiwis }: KiwisProps) {

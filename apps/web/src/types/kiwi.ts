@@ -43,7 +43,7 @@ export interface Kiwi {
   description: string;
   lastActivityAt: string;
   detailDescription?: string;
-  isPrivate?: boolean;
+  isEncrypted?: boolean;
   memberCount?: number;
   progress?: number;
   book: BookProps;
