@@ -96,7 +96,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
       </div>
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
-        <ul>
+        <ul className="max-h-60 overflow-y-auto pr-1">
           {book.toc.map((item, index) => (
             <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
           ))}
