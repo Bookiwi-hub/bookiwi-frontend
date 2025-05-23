@@ -21,7 +21,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
     id,
     name,
     description,
-    image,
+    book,
     lastActivityAt,
     progress = 0,
     memberCount = 0,
@@ -49,7 +49,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
         {/* 이미지 영역 */}
         <div className="relative aspect-[3/4] overflow-hidden">
           <img
-            src={image || fallbackImageUrl}
+            src={book.coverImage || fallbackImageUrl}
             alt="Book cover"
             className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"

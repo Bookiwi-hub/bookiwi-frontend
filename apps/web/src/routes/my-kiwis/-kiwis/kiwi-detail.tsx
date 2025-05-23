@@ -35,7 +35,6 @@ function KiwiDetail({ kiwi, isOpen, onClose }: KiwiDetailProps) {
     id,
     name,
     description,
-    image,
     lastActivityAt,
     detailDescription,
     isPrivate,
@@ -95,7 +94,7 @@ function KiwiDetail({ kiwi, isOpen, onClose }: KiwiDetailProps) {
                 <div className="col-span-1">
                   <div className="aspect-[3/4] overflow-hidden rounded-md bg-gray-100">
                     <img
-                      src={image || fallbackImageUrl}
+                      src={book.coverImage || fallbackImageUrl}
                       alt="Book cover"
                       className="size-full object-cover"
                     />
@@ -165,44 +164,14 @@ function KiwiDetail({ kiwi, isOpen, onClose }: KiwiDetailProps) {
               </div>
               <div className="space-y-3">
                 <h3 className="font-medium">목차</h3>
-                <div className="space-y-2 rounded-lg border bg-muted/30 px-6 py-4 text-sm">
-                  <div className="flex justify-between">
-                    <span>서문</span>
-                    <span className="text-muted-foreground">7</span>
+
+                {book.toc.map((item, index) => (
+                  <div key={item.id}>
+                    <span>{index + 1}.</span>
+                    <span>{item.label}</span>
+                    {/* <span>{item.subitems.length}</span> */}
                   </div>
-                  <div className="flex justify-between">
-                    <span>1. 두 세계</span>
-                    <span className="text-muted-foreground">11</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>2. 카인</span>
-                    <span className="text-muted-foreground">39</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>3. 아벨라르트</span>
-                    <span className="text-muted-foreground">67</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>4. 베아트리체</span>
-                    <span className="text-muted-foreground">103</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>5. 새의 투쟁</span>
-                    <span className="text-muted-foreground">131</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>6. 야곱의 싸움</span>
-                    <span className="text-muted-foreground">159</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>7. 어머니 에바</span>
-                    <span className="text-muted-foreground">187</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>8. 종말의 시작</span>
-                    <span className="text-muted-foreground">215</span>
-                  </div>
-                </div>
+                ))}
               </div>
 
               {detailDescription && (

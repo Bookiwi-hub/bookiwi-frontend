@@ -15,7 +15,19 @@ const sampleKiwi: Kiwi = {
   id: "sample-kiwi",
   name: "예시 키위(모비딕)",
   description: "들어와 키위를 체험해보세요!",
-  image: "/images/moby-dick-cover.jpg",
+  book: {
+    title: "모비딕",
+    author: "허먼 멜빌",
+    coverImage: "/images/moby-dick-cover.jpg",
+    toc: [
+      {
+        id: "1",
+        href: "#",
+        label: "서문",
+        subitems: [],
+      },
+    ],
+  },
   lastActivityAt: "오늘",
   progress: 0,
   memberCount: 3,
