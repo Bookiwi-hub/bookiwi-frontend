@@ -100,7 +100,9 @@ function InformationTab({ kiwi }: InformationTabProps) {
       {detailDescription && (
         <div className="space-y-2">
           <h3 className="font-medium">그룹 소개</h3>
-          <p className="text-sm text-muted-foreground">{detailDescription}</p>
+          <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+            {detailDescription}
+          </p>
         </div>
       )}
     </div>
