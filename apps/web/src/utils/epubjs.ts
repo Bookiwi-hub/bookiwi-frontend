@@ -1,4 +1,4 @@
-import ePub, { Book } from "@bookiwi/epubjs";
+import ePub, { Book, NavItem } from "@bookiwi/epubjs";
 
 // import { urlToBlob } from "./file";
 import { urlToBase64 } from "./file";
@@ -31,10 +31,17 @@ export const getBookKey = async (book: Book) => {
   return book.key();
 };
 
+export const getToc = async (book: Book): Promise<NavItem[]> => {
+  await book.ready;
+  const navigation = await book.loaded.navigation;
+  return navigation.toc;
+};
+
 export const addToIndexedDB = async (file: File): Promise<StoreData> => {
   const book = await fileToBook(file);
   const metadata = await getMetadata(book);
   const coverUrl = await book.coverUrl();
+  const toc = await getToc(book);
 
   // indexDB 적용할 때 코드
   // const coverBlob = coverUrl ? await urlToBlob(coverUrl) : null;
@@ -50,6 +57,7 @@ export const addToIndexedDB = async (file: File): Promise<StoreData> => {
       title: metadata.title,
       author: metadata.creator,
       publisher: metadata.publisher,
+      toc,
       locations,
     },
     record: {

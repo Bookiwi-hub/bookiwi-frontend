@@ -1,7 +1,10 @@
+import { NavItem } from "@bookiwi/epubjs/types/navigation";
+
 export interface BookProps {
   title: string;
   author: string;
   coverImage: string | null;
+  toc: NavItem[];
 }
 
 export interface DiscussionProps {

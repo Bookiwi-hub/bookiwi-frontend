@@ -102,6 +102,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
           title: res.metadata.title,
           author: res.metadata.author,
           coverImage: res.coverImage,
+          toc: res.metadata.toc,
         },
         discussions: [],
         createdAt: "",
