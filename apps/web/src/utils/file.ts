@@ -7,3 +7,8 @@ export const urlToBlob = async (url: string): Promise<Blob> => {
   const response = await fetch(url);
   return response.blob();
 };
+
+export const urlToDataUrl = async (url: string): Promise<string> => {
+  const blob = await urlToBlob(url);
+  return URL.createObjectURL(blob);
+};
