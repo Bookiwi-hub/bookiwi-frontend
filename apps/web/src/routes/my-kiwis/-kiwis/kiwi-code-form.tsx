@@ -14,7 +14,7 @@ function KiwiCodeForm() {
         <BookDown size={16} className="text-muted-foreground" />
         <Input
           type="url"
-          placeholder="링크로 키위 참여하기"
+          placeholder="참여 코드 입력하기"
           className="w-[240px] border-0 bg-transparent p-2 focus-visible:ring-0 mobile:w-full"
         />
       </div>
