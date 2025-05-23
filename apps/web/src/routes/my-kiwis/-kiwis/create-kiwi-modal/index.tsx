@@ -24,6 +24,7 @@ import {
 import { useKiwis } from "#/routes/my-kiwis/-context";
 import { Kiwi } from "#/types/kiwi";
 import { fileToBookData } from "#/utils/epubjs";
+import { formatDateOnly } from "#/utils/format-date";
 
 const Titles: Record<Step, string> = {
   [Step.BasicInfo]: "새로운 키위 만들기",
@@ -106,8 +107,8 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
           settings: bookData.settings,
         },
         discussions: [],
-        createdAt: "",
-        admin: "",
+        createdAt: formatDateOnly(new Date()),
+        admin: "나",
       };
       setNewKiwi(newKiwi);
       dispatch({
