@@ -10,10 +10,11 @@ Bookiwi는 소셜 이북 리더기입니다. 여러 사용자가 하나의 EPUB 
 
 - [Resizable Split View](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/resizable)
 
-### ❓❗ Error
+### ❓❗ Error & 🐞Bug
 
 - [Not Found Errors on SPA Page Reload](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Not-Found-Errors-on-SPA-Page-Reload)
 - [Settings Reset Bug when moving to next section](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Setting-Reset-Bug)
+- [Fixing Success Screen Appearing After Cancel Using AbortController](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Fixing-Success-Screen-Appearing-After-Cancel-Using-AbortController)
 
 ### 🚀 Optimizing
 
