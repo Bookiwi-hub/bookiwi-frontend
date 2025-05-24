@@ -1,9 +1,9 @@
 import { Send } from "lucide-react";
 import { useState } from "react";
 
-import { ParticipantType } from "#/DB/participants";
 import { Button } from "#/components/ui/button";
 import { Textarea } from "#/components/ui/textarea";
+import { ParticipantType } from "#/types/kiwi";
 
 interface CommentFormProps {
   onSubmit: (commentText: string) => void;

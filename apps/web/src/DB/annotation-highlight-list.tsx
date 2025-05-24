@@ -1,4 +1,6 @@
-import { participants, ParticipantType } from "./participants";
+import { participants } from "./participants";
+
+import { ParticipantType } from "#/types/kiwi";
 
 export interface HighlightListType {
   id: number;

@@ -2,7 +2,7 @@ import CommentItem from "./comment-item";
 import EmptyComments from "./empty-comments";
 
 import { CommentType } from "#/DB/annotation-highlight";
-import { ParticipantType } from "#/DB/participants";
+import { ParticipantType } from "#/types/kiwi";
 
 interface CommentsListProps {
   comments: CommentType[];

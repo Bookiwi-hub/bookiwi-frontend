@@ -1,8 +1,8 @@
 import { memo } from "react";
 
-import { ParticipantType } from "#/DB/participants";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { cn } from "#/lib/utils";
+import { ParticipantType } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 
 interface CommentItemProps {

@@ -1,4 +1,6 @@
-import { ParticipantType, participants } from "./participants";
+import { participants } from "./participants";
+
+import { ParticipantType } from "#/types/kiwi";
 
 export interface CommentType {
   id: number;
