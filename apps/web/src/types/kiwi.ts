@@ -1,4 +1,4 @@
-import { BookData } from "./book";
+import { BookData, Settings, Record } from "./book";
 
 export interface DiscussionProps {
   id: string;
@@ -28,22 +28,37 @@ export interface Member {
   name: string;
   avatar: string;
   progress: number;
+  lastActivityAt: string;
+}
+
+export interface ParticipantType {
+  id: number;
+  name: string;
+  profileImage: string;
+  progress: number;
+  color: string;
+  lastActivityAt: string;
+  record: Record;
+  settings: Settings;
 }
 
 export interface Kiwi {
   id: string;
   name: string;
   description: string;
+  maxParticipants: number;
   lastActivityAt: string;
   detailDescription?: string;
-  isEncrypted?: boolean;
-  memberCount?: number;
-  progress?: number;
+  password: string | null;
+  shareCode: string;
   book: BookData;
   discussions?: DiscussionProps[];
   events?: EventProps[];
   activities?: ActivityProps[];
-  createdAt?: string;
-  admin?: string;
-  members?: Member[];
+  createdAt: string;
+  admin: {
+    id: number;
+    name: string;
+  };
+  participants: ParticipantType[];
 }

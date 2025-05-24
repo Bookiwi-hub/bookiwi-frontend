@@ -55,13 +55,29 @@ export const fileToBookData = async (file: File): Promise<BookData> => {
       toc,
       locations,
     },
-    record: {
-      currentCfi: null,
-      percentage: null,
-      bookmarks: [],
-    },
-    settings: {
-      isSinglePage: false,
+  };
+
+  return bookData;
+};
+
+export const urlToBook = async (url: string) => {
+  const book = new Book(url);
+  const metadata = await getMetadata(book);
+  const coverUrl = await book.coverUrl();
+  const toc = await getToc(book);
+
+  const coverImage = coverUrl ? await urlToObjectUrl(coverUrl) : null;
+  const locations = await generateLocations(book);
+
+  const bookData = {
+    file: null,
+    coverImage,
+    metadata: {
+      title: metadata.title,
+      author: metadata.creator,
+      publisher: metadata.publisher,
+      toc,
+      locations,
     },
   };
 

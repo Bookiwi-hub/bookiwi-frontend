@@ -1,14 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import { Separator } from "#/components/ui/separator";
-import { Kiwi, Member } from "#/types/kiwi";
+import { Kiwi, ParticipantType } from "#/types/kiwi";
 
 interface ActivitiesTabProps {
   kiwi: Kiwi;
 }
 
 function ActivitiesTab({ kiwi }: ActivitiesTabProps) {
-  const { activities = [], members = [] } = kiwi;
+  const { activities = [], participants = [] } = kiwi;
 
   return (
     <div className="space-y-6">
@@ -16,24 +16,24 @@ function ActivitiesTab({ kiwi }: ActivitiesTabProps) {
       <div className="space-y-3">
         <h3 className="font-medium">팀원 진도율</h3>
         <div className="space-y-3 rounded-lg border p-4">
-          {members.map((member: Member) => (
-            <div key={member.id} className="flex items-center gap-3">
+          {participants.map((participant: ParticipantType) => (
+            <div key={participant.id} className="flex items-center gap-3">
               <Avatar className="size-8">
-                <AvatarImage src={member.avatar} />
-                <AvatarFallback>{member.name[0]}</AvatarFallback>
+                <AvatarImage src={participant.profileImage} />
+                <AvatarFallback>{participant.name[0]}</AvatarFallback>
               </Avatar>
               <div className="flex flex-1 items-center gap-3">
-                <span className="min-w-20 text-sm">{member.name}</span>
+                <span className="min-w-20 text-sm">{participant.name}</span>
                 <div className="flex-1">
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full bg-primary transition-all"
-                      style={{ width: `${member.progress}%` }}
+                      style={{ width: `${participant.progress}%` }}
                     />
                   </div>
                 </div>
                 <span className="min-w-12 text-right text-sm tabular-nums text-muted-foreground">
-                  {member.progress}%
+                  {participant.progress}%
                 </span>
               </div>
             </div>

@@ -31,6 +31,4 @@ export interface BookData {
   file: File;
   coverImage: string | null;
   metadata: Metadata;
-  record: Record;
-  settings: Settings;
 }

@@ -13,6 +13,7 @@ import KiwiInfo from "./kiwi-info";
 import Loading from "./loading";
 import { ActionTypes, Step } from "./reducer";
 
+import { participants } from "#/DB/participants";
 import {
   Dialog,
   DialogContent,
@@ -92,24 +93,23 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       }
       const newKiwi: Kiwi = {
         id: generatedShareCode,
+        shareCode: generatedShareCode,
         name: state.kiwiName,
         description: state.kiwiDescription,
         lastActivityAt: "1시간 전",
         detailDescription: state.kiwiDetailDescription,
-        isEncrypted: state.passwordProtected,
-        memberCount: 1,
-        progress: 0,
-        book: {
-          file: state.selectedFile!,
-          coverImage: bookData.coverImage,
-          metadata: bookData.metadata,
-          record: bookData.record,
-          settings: bookData.settings,
-        },
+        password: state.passwordProtected ? state.password : null,
+        maxParticipants: 1,
+        book: bookData,
         discussions: [],
         createdAt: formatDateOnly(new Date()),
-        admin: "나",
+        admin: {
+          id: participants[0]!.id,
+          name: participants[0]!.name,
+        },
+        participants: [participants[0]!],
       };
+
       setNewKiwi(newKiwi);
       dispatch({
         type: ActionTypes.SET_SHARE_CODE,

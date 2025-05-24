@@ -17,15 +17,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
   const fallbackImageUrl =
     "https://placehold.co/300x400/e2e8f0/64748b?text=No+Cover";
 
-  const {
-    id,
-    name,
-    description,
-    book,
-    lastActivityAt,
-    progress = 0,
-    memberCount = 0,
-  } = kiwi;
+  const { id, name, description, book, lastActivityAt, participants } = kiwi;
 
   // useCallback을 사용하여 카드 클릭 핸들러 메모이제이션
   const handleCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -61,17 +53,17 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
           <div className="absolute inset-x-0 bottom-0 p-3 text-xs font-medium">
             <div className="flex items-center justify-between pb-2">
               <span className="text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
-                {progress}% 읽음
+                {participants[0]?.progress}% 읽음
               </span>
               <div className="flex items-center gap-1 text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
                 <Users size={12} />
-                <span>{memberCount}명 참여중</span>
+                <span>{participants.length}명 참여중</span>
               </div>
             </div>
             <div className="h-1 overflow-hidden rounded-full bg-white/20 backdrop-blur-sm">
               <div
                 className="h-full rounded-full bg-primary shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-                style={{ width: `${progress}%` }}
+                style={{ width: `${participants[0]?.progress}%` }}
               />
             </div>
           </div>

@@ -15,9 +15,8 @@ function InformationTab({ kiwi }: InformationTabProps) {
     createdAt,
     lastActivityAt,
     detailDescription,
-    progress = 0,
-    memberCount = 0,
-    members = [],
+    maxParticipants,
+    participants = [],
   } = kiwi;
 
   const fallbackImageUrl =
@@ -42,16 +41,16 @@ function InformationTab({ kiwi }: InformationTabProps) {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
                 <User size={16} className="text-muted-foreground" />
-                <span>관리자: {admin}</span>
+                <span>관리자: {admin.name}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Users size={16} className="text-muted-foreground" />
                 <span className="flex items-center gap-1">
                   <span className="font-medium text-primary">
-                    {members.length}명
+                    {participants.length}명
                   </span>
                   <span className="text-muted-foreground">
-                    / {memberCount}명
+                    / {maxParticipants}명
                   </span>
                 </span>
               </li>
@@ -76,12 +75,12 @@ function InformationTab({ kiwi }: InformationTabProps) {
             <h3 className="font-medium">진행 상황</h3>
             <div className="mt-2">
               <div className="flex justify-between text-xs">
-                <span>{progress}% 완료</span>
+                <span>{participants[0]?.progress}% 완료</span>
               </div>
               <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
                 <div
                   className="h-full rounded-full bg-primary"
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${participants[0]?.progress}%` }}
                 />
               </div>
             </div>

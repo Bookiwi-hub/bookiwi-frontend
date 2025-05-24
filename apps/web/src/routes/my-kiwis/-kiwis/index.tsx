@@ -5,35 +5,12 @@ import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
 
+import sampleKiwi from "#/DB/kiwis";
 import { Kiwi } from "#/types/kiwi";
 
 interface KiwisProps {
   kiwis: Kiwi[];
 }
-
-// 샘플 키위 데이터 - 예시 목적으로만 사용
-const sampleKiwi: Kiwi = {
-  id: "sample-kiwi",
-  name: "예시 키위(모비딕)",
-  description: "들어와 키위를 체험해보세요!",
-  book: {
-    title: "모비딕",
-    author: "허먼 멜빌",
-    coverImage: "/images/moby-dick-cover.jpg",
-    toc: [
-      {
-        id: "1",
-        href: "#",
-        label: "서문",
-        subitems: [],
-      },
-    ],
-  },
-  lastActivityAt: "오늘",
-  progress: 0,
-  memberCount: 3,
-  isEncrypted: false,
-};
 
 function Kiwis({ kiwis }: KiwisProps) {
   const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
