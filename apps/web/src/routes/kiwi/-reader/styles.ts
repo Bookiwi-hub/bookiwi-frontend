@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 
 import Contents from "@bookiwi/epubjs/types/contents";
 
-import { Settings } from "#/types/reader";
+import { Settings } from "#/types/book";
 import { getKeys } from "#/utils";
 
 // 활성화된 요소(예: 선택된 항목)에 적용할 CSS 클래스 이름입니다.

@@ -12,14 +12,14 @@ import { isDesktop } from "#/constants/device-type";
 export const Route = createFileRoute("/kiwi/$id")({
   loader: async ({ params }) => {
     // 실제로는 ID를 기반으로 책 정보를 API에서 가져오는 코드
-    const { epubFile, initialSettings, bookTitle, record, locations } =
+    const { epubFile, initialSettings, bookTitle, readingRecord, locations } =
       await getBook(params.id);
 
     return {
       epubFile,
       initialSettings,
       bookTitle,
-      record,
+      readingRecord,
       locations,
     };
   },
@@ -47,13 +47,13 @@ function KiwiContent({ bookTitle }: { bookTitle: string }) {
 }
 
 function Kiwi() {
-  const { epubFile, initialSettings, bookTitle, record, locations } =
+  const { epubFile, initialSettings, bookTitle, readingRecord, locations } =
     Route.useLoaderData();
   return (
     <ReaderProvider
       epubFile={epubFile}
       initialSettings={initialSettings}
-      record={record}
+      readingRecord={readingRecord}
       locations={locations}
     >
       <ViewerProvider>
