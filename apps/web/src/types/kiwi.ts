@@ -1,4 +1,4 @@
-import { BookData, Settings, Record } from "./book";
+import { BookData, Settings, ReadingRecord } from "./book";
 
 export interface DiscussionProps {
   id: string;
@@ -38,7 +38,7 @@ export interface ParticipantType {
   progress: number;
   color: string;
   lastActivityAt: string;
-  record: Record;
+  readingRecord: ReadingRecord;
   settings: Settings;
 }
 

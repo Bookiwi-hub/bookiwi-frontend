@@ -13,7 +13,7 @@ export interface BookmarkItem {
   timestamp: number;
 }
 
-export interface Record {
+export interface ReadingRecord {
   currentCfi: string | null;
   percentage: number | null;
   bookmarks: BookmarkItem[];

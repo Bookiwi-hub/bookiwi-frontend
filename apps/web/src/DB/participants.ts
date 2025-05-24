@@ -10,7 +10,7 @@ export const participants: ParticipantType[] = [
     color: color[0]!,
     lastActivityAt: "2025-05-23",
     progress: 0,
-    record: {
+    readingRecord: {
       currentCfi: null,
       percentage: null,
       bookmarks: [],
@@ -26,7 +26,7 @@ export const participants: ParticipantType[] = [
     color: color[1]!,
     lastActivityAt: "2025-05-23",
     progress: 0,
-    record: {
+    readingRecord: {
       currentCfi: null,
       percentage: null,
       bookmarks: [],
@@ -42,7 +42,7 @@ export const participants: ParticipantType[] = [
     color: color[2]!,
     lastActivityAt: "2025-05-23",
     progress: 0,
-    record: {
+    readingRecord: {
       currentCfi: null,
       percentage: null,
       bookmarks: [],
@@ -58,7 +58,7 @@ export const participants: ParticipantType[] = [
     color: color[3]!,
     lastActivityAt: "2025-05-23",
     progress: 0,
-    record: {
+    readingRecord: {
       currentCfi: null,
       percentage: null,
       bookmarks: [],
@@ -74,7 +74,7 @@ export const participants: ParticipantType[] = [
     color: color[4]!,
     lastActivityAt: "2025-05-23",
     progress: 0,
-    record: {
+    readingRecord: {
       currentCfi: null,
       percentage: null,
       bookmarks: [],
@@ -90,7 +90,7 @@ export const participants: ParticipantType[] = [
     color: color[5]!,
     lastActivityAt: "2025-05-23",
     progress: 0,
-    record: {
+    readingRecord: {
       currentCfi: null,
       percentage: null,
       bookmarks: [],

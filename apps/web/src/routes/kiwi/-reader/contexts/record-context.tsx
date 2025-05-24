@@ -10,9 +10,9 @@ import {
 
 import { useBook } from "./book-context";
 
-import { Record, BookmarkItem } from "#/types/book";
+import { ReadingRecord, BookmarkItem } from "#/types/book";
 
-interface RecordContextType extends Record {
+interface RecordContextType extends ReadingRecord {
   setCurrentCfi: (currentCfi: string) => void;
   setBookmark: (bookmark: string) => void;
   removeBookmark: (bookmark: string) => void;
@@ -30,17 +30,22 @@ export const useRecord = () => {
 
 interface RecordProviderProps {
   children: ReactNode;
-  record: Record;
+  readingRecord: ReadingRecord;
 }
 
-export function RecordProvider({ children, record }: RecordProviderProps) {
+export function RecordProvider({
+  children,
+  readingRecord,
+}: RecordProviderProps) {
   const { book } = useBook();
-  const [currentCfiState, setCurrentCfiState] = useState(record.currentCfi);
+  const [currentCfiState, setCurrentCfiState] = useState(
+    readingRecord.currentCfi,
+  );
   const [percentageState, setPercentageState] = useState<number | null>(null);
 
   // Convert legacy string[] bookmarks to BookmarkItem[] if needed
-  const initialBookmarks = Array.isArray(record.bookmarks)
-    ? record.bookmarks.map(
+  const initialBookmarks = Array.isArray(readingRecord.bookmarks)
+    ? readingRecord.bookmarks.map(
         (bookmark) =>
           typeof bookmark === "string"
             ? { cfi: bookmark, timestamp: Date.now() } // Convert string to BookmarkItem
@@ -50,12 +55,12 @@ export function RecordProvider({ children, record }: RecordProviderProps) {
 
   const [bookmarksState, setBookmarksState] =
     useState<BookmarkItem[]>(initialBookmarks);
-  const key = `${book?.key()}-record`;
+  const key = `${book?.key()}-readingRecord`;
 
   // 현재 전체 레코드 상태를 참조로 유지
-  const recordRef = useRef<Record>({
+  const recordRef = useRef<ReadingRecord>({
     bookmarks: initialBookmarks,
-    currentCfi: record.currentCfi,
+    currentCfi: readingRecord.currentCfi,
     percentage: null,
   });
 

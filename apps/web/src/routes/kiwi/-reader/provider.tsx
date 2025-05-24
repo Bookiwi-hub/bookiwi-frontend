@@ -7,14 +7,14 @@ import {
   ReadingProvider,
 } from "./contexts";
 
-import { Settings, Record } from "#/types/book";
+import { Settings, ReadingRecord } from "#/types/book";
 
 interface ReaderProviderProps {
   children: ReactNode;
   epubFile: string;
   locations: string;
   initialSettings: Settings;
-  record: Record;
+  readingRecord: ReadingRecord;
 }
 
 function ReaderProvider({
@@ -22,12 +22,12 @@ function ReaderProvider({
   epubFile,
   locations,
   initialSettings,
-  record,
+  readingRecord,
 }: ReaderProviderProps) {
   return (
     <BookProvider epubFile={epubFile} locations={locations}>
       <SettingsProvider initialSettings={initialSettings}>
-        <RecordProvider record={record}>
+        <RecordProvider readingRecord={readingRecord}>
           <ReadingProvider>{children}</ReadingProvider>
         </RecordProvider>
       </SettingsProvider>

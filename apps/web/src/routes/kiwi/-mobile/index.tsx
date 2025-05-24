@@ -17,14 +17,16 @@ function MobileKiwiContent() {
 }
 
 function MobileKiwi() {
-  const { epubFile, initialSettings, record, locations } = useLoaderData({
-    from: "/kiwi/$id",
-  });
+  const { epubFile, initialSettings, readingRecord, locations } = useLoaderData(
+    {
+      from: "/kiwi/$id",
+    },
+  );
   return (
     <ReaderProvider
       epubFile={epubFile}
       initialSettings={initialSettings}
-      record={record}
+      readingRecord={readingRecord}
       locations={locations}
     >
       <MobileKiwiContent />

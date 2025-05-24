@@ -1,9 +1,9 @@
 import { Book } from "@bookiwi/epubjs";
 
-import { Settings, Record } from "#/types/book";
+import { Settings, ReadingRecord } from "#/types/book";
 
 type GetBookResponse = {
-  record: Record;
+  readingRecord: ReadingRecord;
   initialSettings: Settings;
   locations: string;
   epubFile: string;
@@ -14,26 +14,26 @@ const LOCAL_STORAGE_KEY_PREFIX =
   "epubjs:0.3:code.google.com.epub-samples.moby-dick-basic";
 
 // Utility function to manage book record
-const getBookRecord = (): Record => {
+const getReadingRecord = (): ReadingRecord => {
   const savedRecord = localStorage.getItem(
-    `${LOCAL_STORAGE_KEY_PREFIX}-record`,
+    `${LOCAL_STORAGE_KEY_PREFIX}-readingRecord`,
   );
-  let record: Record = {
+  let readingRecord: ReadingRecord = {
     currentCfi: null,
     percentage: null,
     bookmarks: [],
   };
 
   if (savedRecord) {
-    record = JSON.parse(savedRecord);
+    readingRecord = JSON.parse(savedRecord);
   } else {
     localStorage.setItem(
-      `${LOCAL_STORAGE_KEY_PREFIX}-record`,
-      JSON.stringify(record),
+      `${LOCAL_STORAGE_KEY_PREFIX}-readingRecord`,
+      JSON.stringify(readingRecord),
     );
   }
 
-  return record;
+  return readingRecord;
 };
 
 // Utility function to manage book locations
@@ -92,11 +92,11 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
   try {
     const { epubFile, bookTitle } = getBookInfo();
 
-    const record = getBookRecord();
+    const readingRecord = getReadingRecord();
     const initialSettings = getBookSettings();
     const locations = await getBookLocations(epubFile);
 
-    return { record, initialSettings, locations, epubFile, bookTitle };
+    return { readingRecord, initialSettings, locations, epubFile, bookTitle };
   } catch (error) {
     throw new Error("Failed to fetch book");
   }
