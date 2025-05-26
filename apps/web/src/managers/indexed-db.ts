@@ -1,10 +1,67 @@
 import { IndexDBError } from "#/errors";
 
-export class IndexedDBManager {
-  private db: IDBDatabase;
+interface DBConfig {
+  name: string;
+  version: number;
+  stores: StoreConfig[];
+}
 
-  constructor(indexedDB: IDBDatabase) {
-    this.db = indexedDB;
+interface StoreConfig {
+  name: string;
+  keyPath: string;
+  indices?: IndexConfig[];
+  autoIncrement?: boolean;
+}
+
+interface IndexConfig {
+  name: string;
+  keyPath: string;
+  options?: IDBIndexParameters;
+}
+
+class IndexedDBManager {
+  private db: IDBDatabase | null = null;
+
+  constructor(config: DBConfig) {
+    if (!indexedDB) {
+      throw new IndexDBError("IndexedDB is not supported");
+    }
+    const request = indexedDB.open(config.name, config.version);
+
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+
+      // Create object stores and indices
+      config.stores.forEach((storeConfig) => {
+        if (!db.objectStoreNames.contains(storeConfig.name)) {
+          const store = db.createObjectStore(storeConfig.name, {
+            keyPath: storeConfig.keyPath,
+            autoIncrement: storeConfig.autoIncrement || false,
+          });
+
+          // Create indices if specified
+          if (storeConfig.indices) {
+            storeConfig.indices.forEach((indexConfig) => {
+              store.createIndex(
+                indexConfig.name,
+                indexConfig.keyPath,
+                indexConfig.options,
+              );
+            });
+          }
+        }
+      });
+    };
+
+    request.onsuccess = (event) => {
+      this.db = (event.target as IDBOpenDBRequest).result;
+    };
+
+    request.onerror = (event) => {
+      throw new IndexDBError(
+        `Failed to open database: ${(event.target as IDBOpenDBRequest).error?.message || "Unknown error"}`,
+      );
+    };
   }
 
   /**
@@ -55,6 +112,9 @@ export class IndexedDBManager {
     callback: (store: IDBObjectStore) => IDBRequest<T>,
   ): Promise<T> {
     try {
+      if (!this.db) {
+        throw new IndexDBError("Database is not initialized");
+      }
       const tx = this.db.transaction(storeName, mode);
       const store = tx.objectStore(storeName);
       const request = callback(store);
@@ -279,6 +339,9 @@ export class IndexedDBManager {
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
+        if (!this.db) {
+          throw new IndexDBError("Database is not initialized");
+        }
         const tx = this.db.transaction(storeName, "readonly");
         const store = tx.objectStore(storeName);
         const request = store.openCursor(query, direction);
@@ -361,6 +424,9 @@ export class IndexedDBManager {
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
+        if (!this.db) {
+          throw new IndexDBError("Database is not initialized");
+        }
         const tx = this.db.transaction(storeName, "readonly");
         const store = tx.objectStore(storeName);
         const request = store.openCursor(query, direction);
@@ -424,3 +490,33 @@ export class IndexedDBManager {
     return IDBKeyRange.only(value);
   }
 }
+
+const config: DBConfig = {
+  name: "test",
+  version: 1,
+  stores: [
+    {
+      name: "book",
+      keyPath: "id",
+      autoIncrement: true,
+      indices: [
+        {
+          name: "file",
+          keyPath: "file",
+        },
+        {
+          name: "coverImage",
+          keyPath: "coverImage",
+        },
+        {
+          name: "metadata",
+          keyPath: "metadata",
+        },
+      ],
+    },
+  ],
+};
+
+const idb = new IndexedDBManager(config);
+
+export default idb;
