@@ -343,121 +343,24 @@ export class IndexedDBManager {
     });
   }
 
-  /**
-   * 키 범위 유틸리티
-   */
-  static keyRange = {
-    /**
-     * 상한 범위 생성
-     * @param upper 상한값
-     * @param open 상한값 제외 여부
-     * @returns 키 범위
-     * @example
-     * ```ts
-     * // id가 'user500'보다 작은 모든 사용자
-     * const range = IndexedDBManager.keyRange.upperBound('user500');
-     * const users = await dbManager.getByIndex('users', 'idIndex', range);
-     *
-     * // id가 'user500'보다 작거나 같은(포함) 모든 사용자
-     * const inclusiveRange = IndexedDBManager.keyRange.upperBound('user500', false);
-     *
-     * // id가 'user500'보다 작은(제외) 모든 사용자
-     * const exclusiveRange = IndexedDBManager.keyRange.upperBound('user500', true);
-     * ```
-     */
-    upperBound: (upper: any, open?: boolean) =>
-      IDBKeyRange.upperBound(upper, open),
+  static getBoundRange(
+    lower: any,
+    upper: any,
+    lowerOpen?: boolean,
+    upperOpen?: boolean,
+  ) {
+    return IDBKeyRange.bound(lower, upper, lowerOpen, upperOpen);
+  }
 
-    /**
-     * 하한 범위 생성
-     * @param lower 하한값
-     * @param open 하한값 제외 여부
-     * @returns 키 범위
-     * @example
-     * ```ts
-     * // id가 'user500'보다 큰 모든 사용자
-     * const range = IndexedDBManager.keyRange.lowerBound('user500');
-     * const users = await dbManager.getByIndex('users', 'idIndex', range);
-     *
-     * // id가 'user500'보다 크거나 같은(포함) 모든 사용자
-     * const inclusiveRange = IndexedDBManager.keyRange.lowerBound('user500', false);
-     *
-     * // id가 'user500'보다 큰(제외) 모든 사용자
-     * const exclusiveRange = IndexedDBManager.keyRange.lowerBound('user500', true);
-     * ```
-     */
-    lowerBound: (lower: any, open?: boolean) =>
-      IDBKeyRange.lowerBound(lower, open),
+  static getUpperBoundRange(upper: any, open?: boolean) {
+    return IDBKeyRange.upperBound(upper, open);
+  }
 
-    /**
-     * 범위 생성
-     * @param lower 하한값
-     * @param upper 상한값
-     * @param lowerOpen 하한값 제외 여부
-     * @param upperOpen 상한값 제외 여부
-     * @returns 키 범위
-     * @example
-     * ```ts
-     * // id가 'user100'에서 'user200' 사이인 모든 사용자 (양 끝 포함)
-     * const range = IndexedDBManager.keyRange.bound('user100', 'user200');
-     * const users = await dbManager.getByIndex('users', 'idIndex', range);
-     *
-     * // id가 'user100'에서 'user200' 사이인 모든 사용자 (user100 제외, user200 포함)
-     * const range1 = IndexedDBManager.keyRange.bound('user100', 'user200', true, false);
-     *
-     * // id가 'user100'에서 'user200' 사이인 모든 사용자 (user100 포함, user200 제외)
-     * const range2 = IndexedDBManager.keyRange.bound('user100', 'user200', false, true);
-     *
-     * // id가 'user100'에서 'user200' 사이인 모든 사용자 (양 끝 제외)
-     * const range3 = IndexedDBManager.keyRange.bound('user100', 'user200', true, true);
-     * ```
-     */
-    bound: (lower: any, upper: any, lowerOpen?: boolean, upperOpen?: boolean) =>
-      IDBKeyRange.bound(lower, upper, lowerOpen, upperOpen),
+  static getLowerBoundRange(lower: any, open?: boolean) {
+    return IDBKeyRange.lowerBound(lower, open);
+  }
 
-    /**
-     * 단일 값 범위 생성
-     * @param value 정확한 값
-     * @returns 키 범위
-     * @example
-     * ```ts
-     * // 정확히 'admin' 역할을 가진 사용자만 검색
-     * const range = IndexedDBManager.keyRange.only('admin');
-     * const adminUsers = await dbManager.getByIndex('users', 'roleIndex', range);
-     *
-     * // 정확히 id가 'user123'인 사용자만 검색
-     * const userRange = IndexedDBManager.keyRange.only('user123');
-     * const specificUser = await dbManager.getByIndex('users', 'idIndex', userRange);
-     * ```
-     */
-    only: (value: any) => IDBKeyRange.only(value),
-  };
-}
-
-/**
- * 데이터베이스 구성 인터페이스
- */
-export interface DBConfig {
-  name: string;
-  version: number;
-  stores: StoreConfig[];
-}
-
-/**
- * 객체 저장소 구성 인터페이스
- */
-export interface StoreConfig {
-  name: string;
-  keyPath: string;
-  indices?: IndexConfig[];
-  autoIncrement?: boolean;
-}
-
-/**
- * 인덱스 구성 인터페이스
- */
-export interface IndexConfig {
-  name: string;
-  keyPath: string;
-  options?: IDBIndexParameters;
+  static getOnlyRange(value: any) {
+    return IDBKeyRange.only(value);
+  }
 }
