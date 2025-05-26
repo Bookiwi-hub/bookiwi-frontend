@@ -22,6 +22,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
+import idb from "#/managers/indexed-db";
 import { useKiwis } from "#/routes/my-kiwis/-context";
 import { Kiwi } from "#/types/kiwi";
 import { fileToBookData } from "#/utils/epubjs";
@@ -91,6 +92,13 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       if (abortControllerRef.current?.signal.aborted) {
         return;
       }
+
+      await idb.add("book", {
+        file: state.selectedFile,
+        coverImage: bookData.coverImage || null,
+        metadata: bookData.metadata,
+      });
+
       const newKiwi: Kiwi = {
         id: generatedShareCode,
         shareCode: generatedShareCode,
@@ -117,8 +125,10 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       });
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
     } catch (error) {
+      console.error("Error creating kiwi:", error);
       // eslint-disable-next-line no-alert
       alert("키위 생성 중 오류가 발생했습니다.");
+      dispatch({ type: ActionTypes.SET_STEP, payload: Step.FileUpload });
     }
   };
 
