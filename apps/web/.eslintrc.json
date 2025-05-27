@@ -6,6 +6,7 @@
   ],
   "rules": {
     "@typescript-eslint/no-use-before-define": "off",
-    "react/require-default-props": "off"
+    "react/require-default-props": "off",
+    "no-alert": "off"
   }
 }

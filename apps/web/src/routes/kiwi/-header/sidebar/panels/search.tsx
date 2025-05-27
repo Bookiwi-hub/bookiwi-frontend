@@ -262,7 +262,6 @@ function SearchPanel() {
         const results = await searchKeyword(term);
         setMatchResults(results);
       } catch (error) {
-        // eslint-disable-next-line no-alert
         alert("검색 중 오류가 발생했습니다.");
       } finally {
         setIsSearching(false);

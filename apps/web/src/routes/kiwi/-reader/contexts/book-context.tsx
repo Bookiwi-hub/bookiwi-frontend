@@ -61,7 +61,6 @@ export function BookProvider({
         }
       } catch (error) {
         if (mounted) {
-          // eslint-disable-next-line no-alert
           alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
           // eslint-disable-next-line no-console
           console.error(error);
