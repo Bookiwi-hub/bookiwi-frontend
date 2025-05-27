@@ -7,7 +7,7 @@ import {
   ReadingProvider,
 } from "./contexts";
 
-import { Settings, ReadingRecord } from "#/types/book";
+import { Settings, ReadingRecord } from "#/types/kiwi";
 
 interface ReaderProviderProps {
   children: ReactNode;

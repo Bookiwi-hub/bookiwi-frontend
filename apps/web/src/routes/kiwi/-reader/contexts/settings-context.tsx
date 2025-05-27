@@ -12,7 +12,7 @@ import { updateCustomStyle } from "../styles";
 
 import { useBook } from "./book-context";
 
-import { Settings } from "#/types/book";
+import { Settings } from "#/types/kiwi";
 
 interface SettingsContextType extends Settings {
   setIsSinglePage: (isSinglePage: boolean) => void;

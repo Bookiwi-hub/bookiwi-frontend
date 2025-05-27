@@ -1,6 +1,6 @@
 import { Book } from "@bookiwi/epubjs";
 
-import { Settings, ReadingRecord } from "#/types/book";
+import { Settings, ReadingRecord } from "#/types/kiwi";
 
 type GetBookResponse = {
   readingRecord: ReadingRecord;

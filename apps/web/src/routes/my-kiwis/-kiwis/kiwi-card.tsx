@@ -17,7 +17,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
   const fallbackImageUrl =
     "https://placehold.co/300x400/e2e8f0/64748b?text=No+Cover";
 
-  const { id, name, description, book, lastActivityAt, participants } = kiwi;
+  const { id, name, description, book, participants } = kiwi;
 
   // useCallback을 사용하여 카드 클릭 핸들러 메모이제이션
   const handleCardClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -84,7 +84,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <Clock size={12} />
-              <span>마지막 활동: {lastActivityAt}</span>
+              <span>마지막 활동: {participants[0]?.lastActivityAt}</span>
             </div>
           </div>
         </div>

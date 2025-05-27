@@ -24,8 +24,8 @@ import {
 } from "#/components/ui/dialog";
 import idb from "#/managers/indexed-db";
 import { useKiwis } from "#/routes/my-kiwis/-context";
-import { Kiwi } from "#/types/kiwi";
-import { fileToBookData } from "#/utils/epubjs";
+import { Kiwi, KiwiDB } from "#/types/kiwi";
+import { fileToBookDataDB } from "#/utils/epubjs";
 import { blobToObjectUrl } from "#/utils/file";
 import { formatDateOnly } from "#/utils/format-date";
 
@@ -85,7 +85,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       // });
       // const book = new Book(state.selectedFile);
 
-      const bookData = await fileToBookData(state.selectedFile!);
+      const bookDataDB = await fileToBookDataDB(state.selectedFile!);
 
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -99,11 +99,11 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       }
 
       const coverImageObjectUrl =
-        bookData.coverImage && typeof bookData.coverImage === "object"
-          ? await blobToObjectUrl(bookData.coverImage)
+        bookDataDB.coverImage && typeof bookDataDB.coverImage === "object"
+          ? await blobToObjectUrl(bookDataDB.coverImage)
           : null;
 
-      await idb.add("kiwi", {
+      const kiwiDB: KiwiDB = {
         id: generatedKiwiId,
         name: state.kiwiName,
         description: state.kiwiDescription,
@@ -113,9 +113,11 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         shareCode: generatedShareCode,
         createdAt: formatDateOnly(new Date()),
         adminId: 0,
-        book: bookData,
+        book: bookDataDB,
         participants: [participants[0]!],
-      });
+      };
+
+      await idb.add("kiwi", kiwiDB);
 
       const newKiwi: Kiwi = {
         id: generatedKiwiId,
@@ -126,7 +128,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         password: state.passwordProtected ? state.password : null,
         maxParticipants: 1,
         book: {
-          ...bookData,
+          ...bookDataDB,
           coverImage: coverImageObjectUrl,
         },
         discussions: [],

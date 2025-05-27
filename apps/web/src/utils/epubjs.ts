@@ -2,7 +2,7 @@ import ePub, { Book, NavItem } from "@bookiwi/epubjs";
 
 import { urlToBlob } from "./file";
 
-import { BookData } from "#/types/book";
+import { BookDataDB } from "#/types/kiwi";
 
 /**
  * 파일을 EPUB 객체로 변환하는 함수
@@ -36,7 +36,7 @@ export const getToc = async (book: Book): Promise<NavItem[]> => {
   return navigation.toc;
 };
 
-export const fileToBookData = async (file: File): Promise<BookData> => {
+export const fileToBookDataDB = async (file: File): Promise<BookDataDB> => {
   const book = await fileToBook(file);
   const metadata = await getMetadata(book);
   const coverUrl = await book.coverUrl();
@@ -45,7 +45,7 @@ export const fileToBookData = async (file: File): Promise<BookData> => {
   const coverImage = coverUrl ? await urlToBlob(coverUrl) : null;
   const locations = await generateLocations(book);
 
-  const bookData = {
+  const bookDataDB = {
     file,
     coverImage,
     metadata: {
@@ -57,29 +57,5 @@ export const fileToBookData = async (file: File): Promise<BookData> => {
     },
   };
 
-  return bookData;
-};
-
-export const urlToBook = async (url: string) => {
-  const book = new Book(url);
-  const metadata = await getMetadata(book);
-  const coverUrl = await book.coverUrl();
-  const toc = await getToc(book);
-
-  const coverImage = coverUrl ? await urlToBlob(coverUrl) : null;
-  const locations = await generateLocations(book);
-
-  const bookData = {
-    file: null,
-    coverImage,
-    metadata: {
-      title: metadata.title,
-      author: metadata.creator,
-      publisher: metadata.publisher,
-      toc,
-      locations,
-    },
-  };
-
-  return bookData;
+  return bookDataDB;
 };
