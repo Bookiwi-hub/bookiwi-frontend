@@ -22,46 +22,62 @@ interface IndexConfig {
 class IndexedDBManager {
   private db: IDBDatabase | null = null;
 
+  private initPromise: Promise<void>;
+
   constructor(config: DBConfig) {
     if (!indexedDB) {
       throw new IndexDBError("IndexedDB is not supported");
     }
-    const request = indexedDB.open(config.name, config.version);
 
-    request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
+    this.initPromise = new Promise((resolve, reject) => {
+      const request = indexedDB.open(config.name, config.version);
 
-      // Create object stores and indices
-      config.stores.forEach((storeConfig) => {
-        if (!db.objectStoreNames.contains(storeConfig.name)) {
-          const store = db.createObjectStore(storeConfig.name, {
-            keyPath: storeConfig.keyPath,
-            autoIncrement: storeConfig.autoIncrement || false,
-          });
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
 
-          // Create indices if specified
-          if (storeConfig.indices) {
-            storeConfig.indices.forEach((indexConfig) => {
-              store.createIndex(
-                indexConfig.name,
-                indexConfig.keyPath,
-                indexConfig.options,
-              );
+        // Create object stores and indices
+        config.stores.forEach((storeConfig) => {
+          if (!db.objectStoreNames.contains(storeConfig.name)) {
+            const store = db.createObjectStore(storeConfig.name, {
+              keyPath: storeConfig.keyPath,
+              autoIncrement: storeConfig.autoIncrement || false,
             });
+
+            // Create indices if specified
+            if (storeConfig.indices) {
+              storeConfig.indices.forEach((indexConfig) => {
+                store.createIndex(
+                  indexConfig.name,
+                  indexConfig.keyPath,
+                  indexConfig.options,
+                );
+              });
+            }
           }
-        }
-      });
-    };
+        });
+      };
 
-    request.onsuccess = (event) => {
-      this.db = (event.target as IDBOpenDBRequest).result;
-    };
+      request.onsuccess = (event) => {
+        this.db = (event.target as IDBOpenDBRequest).result;
+        resolve();
+      };
 
-    request.onerror = (event) => {
-      throw new IndexDBError(
-        `Failed to open database: ${(event.target as IDBOpenDBRequest).error?.message || "Unknown error"}`,
-      );
-    };
+      request.onerror = (event) => {
+        reject(
+          new IndexDBError(
+            `Failed to open database: ${(event.target as IDBOpenDBRequest).error?.message || "Unknown error"}`,
+          ),
+        );
+      };
+    });
+  }
+
+  /**
+   * 데이터베이스 초기화 완료까지 대기
+   * @returns 초기화 완료 시 resolve되는 Promise
+   */
+  async waitForInit(): Promise<void> {
+    return this.initPromise;
   }
 
   /**
@@ -112,6 +128,9 @@ class IndexedDBManager {
     callback: (store: IDBObjectStore) => IDBRequest<T>,
   ): Promise<T> {
     try {
+      // 데이터베이스 초기화 완료까지 대기
+      await this.waitForInit();
+
       if (!this.db) {
         throw new IndexDBError("Database is not initialized");
       }
@@ -496,7 +515,7 @@ const config: DBConfig = {
   version: 1,
   stores: [
     {
-      name: "kiwi",
+      name: "kiwis",
       keyPath: "id",
       autoIncrement: false,
       indices: [
