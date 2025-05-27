@@ -104,17 +104,13 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         shareCode: generatedShareCode,
         name: state.kiwiName,
         description: state.kiwiDescription,
-        lastActivityAt: "1시간 전",
         detailDescription: state.kiwiDetailDescription,
         password: state.passwordProtected ? state.password : null,
         maxParticipants: 1,
         book: bookData,
         discussions: [],
         createdAt: formatDateOnly(new Date()),
-        admin: {
-          id: participants[0]!.id,
-          name: participants[0]!.name,
-        },
+        admin: participants[0]!,
         participants: [participants[0]!],
       };
 

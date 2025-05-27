@@ -47,7 +47,6 @@ export interface Kiwi {
   name: string;
   description: string;
   maxParticipants: number;
-  lastActivityAt: string;
   detailDescription?: string;
   password: string | null;
   shareCode: string;
@@ -56,9 +55,6 @@ export interface Kiwi {
   events?: EventProps[];
   activities?: ActivityProps[];
   createdAt: string;
-  admin: {
-    id: number;
-    name: string;
-  };
+  admin: ParticipantType;
   participants: ParticipantType[];
 }

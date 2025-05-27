@@ -13,7 +13,6 @@ function InformationTab({ kiwi }: InformationTabProps) {
     admin,
     book,
     createdAt,
-    lastActivityAt,
     detailDescription,
     maxParticipants,
     participants = [],
@@ -66,7 +65,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
               </li>
               <li className="flex items-center gap-2">
                 <Clock size={16} className="text-muted-foreground" />
-                <span>최근 활동: {lastActivityAt}</span>
+                <span>최근 활동: {participants[0]?.lastActivityAt}</span>
               </li>
             </ul>
           </div>
