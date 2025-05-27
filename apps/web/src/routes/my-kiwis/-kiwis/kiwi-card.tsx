@@ -76,7 +76,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
               {name}
             </CardTitle>
             <CardDescription className="mb-3 line-clamp-3 text-sm text-muted-foreground mobile:text-xs">
-              {description}
+              {description === "" ? "-" : description}
             </CardDescription>
           </div>
 
