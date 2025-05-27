@@ -511,7 +511,7 @@ class IndexedDBManager {
 }
 
 const config: DBConfig = {
-  name: "dev",
+  name: "develop",
   version: 1,
   stores: [
     {
@@ -553,12 +553,32 @@ const config: DBConfig = {
           keyPath: "admin.id",
         },
         {
-          name: "book",
-          keyPath: "book",
+          name: "bookMetadata",
+          keyPath: "bookMetadata",
         },
         {
           name: "participants",
           keyPath: "participants",
+        },
+      ],
+    },
+    {
+      name: "bookData",
+      keyPath: "id",
+      autoIncrement: true,
+      indices: [
+        {
+          name: "file",
+          keyPath: "file",
+        },
+        {
+          name: "locations",
+          keyPath: "locations",
+        },
+        {
+          name: "kiwiId",
+          keyPath: "kiwiId",
+          options: { unique: true },
         },
       ],
     },

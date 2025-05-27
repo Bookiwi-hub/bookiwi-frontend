@@ -1,8 +1,6 @@
 import ePub, { Book, NavItem } from "@bookiwi/epubjs";
 
-import { urlToBlob } from "./file";
-
-import { BookDataDB } from "#/types/kiwi";
+import { blobToObjectUrl, urlToBlob } from "#/utils/file";
 
 /**
  * 파일을 EPUB 객체로 변환하는 함수
@@ -36,26 +34,26 @@ export const getToc = async (book: Book): Promise<NavItem[]> => {
   return navigation.toc;
 };
 
-export const fileToBookDataDB = async (file: File): Promise<BookDataDB> => {
+export const fileToBookInfo = async (file: File) => {
   const book = await fileToBook(file);
   const metadata = await getMetadata(book);
-  const coverUrl = await book.coverUrl();
   const toc = await getToc(book);
-
-  const coverImage = coverUrl ? await urlToBlob(coverUrl) : null;
   const locations = await generateLocations(book);
 
-  const bookDataDB = {
-    file,
-    coverImage,
-    metadata: {
-      title: metadata.title,
-      author: metadata.creator,
-      publisher: metadata.publisher,
-      toc,
-      locations,
-    },
-  };
+  const coverUrl = await book.coverUrl();
+  const coverImageBlob = coverUrl ? await urlToBlob(coverUrl) : null;
+  const coverImageObjectUrl = coverImageBlob
+    ? await blobToObjectUrl(coverImageBlob)
+    : null;
 
-  return bookDataDB;
+  return {
+    file,
+    coverImageBlob,
+    coverImageObjectUrl,
+    locations,
+    toc,
+    title: metadata.title,
+    author: metadata.creator,
+    publisher: metadata.publisher,
+  };
 };

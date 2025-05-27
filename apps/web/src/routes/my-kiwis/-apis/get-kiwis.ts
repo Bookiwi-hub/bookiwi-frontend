@@ -13,17 +13,14 @@ export const getKiwisFromIndexedDB = async (): Promise<Kiwi[]> => {
 
     const kiwis = await Promise.all(
       (kiwiDB as KiwiDB[]).map(async (kiwiItem) => {
-        const { coverImage } = kiwiItem.book;
+        const { coverImage } = kiwiItem;
         const coverImageObjectUrl = coverImage
           ? await blobToObjectUrl(coverImage)
           : null;
 
         return {
           ...kiwiItem,
-          book: {
-            ...kiwiItem.book,
-            coverImage: coverImageObjectUrl,
-          },
+          coverImage: coverImageObjectUrl,
         };
       }),
     );

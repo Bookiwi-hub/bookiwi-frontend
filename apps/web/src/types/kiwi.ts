@@ -21,23 +21,17 @@ export interface ReadingRecord {
   bookmarks: BookmarkItem[];
 }
 
-export interface Metadata {
+export interface BookMetadata {
   title: string;
   author: string;
   publisher: string;
   toc: NavItem[];
-  locations: string;
 }
 
 export interface BookData {
+  kiwiId: string;
   file: File;
-  coverImage: string | null;
-  metadata: Metadata;
-}
-export interface BookDataDB {
-  file: File;
-  coverImage: Blob | null;
-  metadata: Metadata;
+  locations: string;
 }
 
 export interface ParticipantType {
@@ -59,7 +53,8 @@ export interface Kiwi {
   detailDescription?: string;
   password: string | null;
   shareCode: string;
-  book: BookData;
+  bookMetadata: BookMetadata;
+  coverImage: string | null;
   createdAt: string;
   admin: User;
   activities?: ActivityProps[];
@@ -68,8 +63,8 @@ export interface Kiwi {
   events?: EventProps[];
 }
 
-export interface KiwiDB extends Omit<Kiwi, "book"> {
-  book: BookDataDB;
+export interface KiwiDB extends Omit<Kiwi, "coverImage"> {
+  coverImage: Blob | null;
 }
 
 export interface DiscussionProps {

@@ -24,9 +24,8 @@ import {
 } from "#/components/ui/dialog";
 import idb from "#/managers/indexed-db";
 import { useKiwis } from "#/routes/my-kiwis/-context";
-import { Kiwi, KiwiDB } from "#/types/kiwi";
-import { fileToBookDataDB } from "#/utils/epubjs";
-import { blobToObjectUrl } from "#/utils/file";
+import { fileToBookInfo } from "#/routes/my-kiwis/-utils/epubjs";
+import { BookData, BookMetadata, Kiwi, KiwiDB } from "#/types/kiwi";
 import { formatDateOnly } from "#/utils/format-date";
 
 const Titles: Record<Step, string> = {
@@ -85,7 +84,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       // });
       // const book = new Book(state.selectedFile);
 
-      const bookDataDB = await fileToBookDataDB(state.selectedFile!);
+      const bookInfo = await fileToBookInfo(state.selectedFile!);
 
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -98,16 +97,18 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         return;
       }
 
-      const coverImageObjectUrl =
-        bookDataDB.coverImage && typeof bookDataDB.coverImage === "object"
-          ? await blobToObjectUrl(bookDataDB.coverImage)
-          : null;
-
       const currentUser = {
         id: "kiwi",
         name: "키위",
         email: "kiwi@kiwi.com",
         profileImage: "https://github.com/shadcn.png",
+      };
+
+      const bookMetadata: BookMetadata = {
+        title: bookInfo.title,
+        author: bookInfo.author,
+        publisher: bookInfo.publisher,
+        toc: bookInfo.toc,
       };
 
       const kiwiDB: KiwiDB = {
@@ -120,28 +121,23 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         shareCode: generatedShareCode,
         createdAt: formatDateOnly(new Date()),
         admin: currentUser,
-        book: bookDataDB,
+        bookMetadata,
         participants: [participants[0]!],
+        coverImage: bookInfo.coverImageBlob,
+      };
+
+      const bookData: BookData = {
+        kiwiId: generatedKiwiId,
+        file: bookInfo.file,
+        locations: bookInfo.locations,
       };
 
       await idb.add("kiwis", kiwiDB);
+      await idb.add("bookData", bookData);
 
       const newKiwi: Kiwi = {
-        id: generatedKiwiId,
-        shareCode: generatedShareCode,
-        name: state.kiwiName,
-        description: state.kiwiDescription,
-        detailDescription: state.kiwiDetailDescription,
-        password: state.passwordProtected ? state.password : null,
-        maxParticipants: 1,
-        book: {
-          ...bookDataDB,
-          coverImage: coverImageObjectUrl,
-        },
-        discussions: [],
-        createdAt: formatDateOnly(new Date()),
-        admin: currentUser,
-        participants: [participants[0]!],
+        ...kiwiDB,
+        coverImage: bookInfo.coverImageObjectUrl,
       };
 
       setNewKiwi(newKiwi);
