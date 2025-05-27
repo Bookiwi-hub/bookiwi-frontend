@@ -88,19 +88,31 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
 
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      const generatedKiwiId = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
 
       if (abortControllerRef.current?.signal.aborted) {
         return;
       }
 
-      await idb.add("book", {
-        file: state.selectedFile,
-        coverImage: bookData.coverImage || null,
-        metadata: bookData.metadata,
+      await idb.add("kiwi", {
+        id: generatedKiwiId,
+        name: state.kiwiName,
+        description: state.kiwiDescription,
+        maxParticipants: 1,
+        detailDescription: state.kiwiDetailDescription,
+        password: state.passwordProtected ? state.password : null,
+        shareCode: generatedShareCode,
+        createdAt: formatDateOnly(new Date()),
+        adminId: 0,
+        book: bookData,
+        participants: [participants[0]!],
       });
 
       const newKiwi: Kiwi = {
-        id: generatedShareCode,
+        id: generatedKiwiId,
         shareCode: generatedShareCode,
         name: state.kiwiName,
         description: state.kiwiDescription,
@@ -110,7 +122,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         book: bookData,
         discussions: [],
         createdAt: formatDateOnly(new Date()),
-        admin: participants[0]!,
+        adminId: 0,
         participants: [participants[0]!],
       };
 

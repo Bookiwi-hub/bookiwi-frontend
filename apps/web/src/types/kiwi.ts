@@ -51,10 +51,10 @@ export interface Kiwi {
   password: string | null;
   shareCode: string;
   book: BookData;
+  createdAt: string;
+  adminId: number;
+  activities?: ActivityProps[];
+  participants: ParticipantType[];
   discussions?: DiscussionProps[];
   events?: EventProps[];
-  activities?: ActivityProps[];
-  createdAt: string;
-  admin: ParticipantType;
-  participants: ParticipantType[];
 }

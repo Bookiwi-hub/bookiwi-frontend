@@ -492,25 +492,54 @@ class IndexedDBManager {
 }
 
 const config: DBConfig = {
-  name: "test",
+  name: "testing",
   version: 1,
   stores: [
     {
-      name: "book",
+      name: "kiwi",
       keyPath: "id",
-      autoIncrement: true,
+      autoIncrement: false,
       indices: [
         {
-          name: "file",
-          keyPath: "file",
+          name: "name",
+          keyPath: "name",
         },
         {
-          name: "coverImage",
-          keyPath: "coverImage",
+          name: "description",
+          keyPath: "description",
         },
         {
-          name: "metadata",
-          keyPath: "metadata",
+          name: "maxParticipants",
+          keyPath: "maxParticipants",
+        },
+        {
+          name: "detailDescription",
+          keyPath: "detailDescription",
+        },
+        {
+          name: "password",
+          keyPath: "password",
+        },
+        {
+          name: "shareCode",
+          keyPath: "shareCode",
+          options: { unique: true },
+        },
+        {
+          name: "createdAt",
+          keyPath: "createdAt",
+        },
+        {
+          name: "adminId",
+          keyPath: "adminId",
+        },
+        {
+          name: "book",
+          keyPath: "book",
+        },
+        {
+          name: "participants",
+          keyPath: "participants",
         },
       ],
     },
