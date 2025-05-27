@@ -36,7 +36,7 @@ export function KiwisProvider({ children, kiwis }: KiwisProviderProps) {
 
   const setNewKiwi = useCallback(
     (kiwi: Kiwi) => {
-      setKiwisState([...kiwisState, kiwi]);
+      setKiwisState([kiwi, ...kiwisState]);
     },
     [kiwisState],
   );
