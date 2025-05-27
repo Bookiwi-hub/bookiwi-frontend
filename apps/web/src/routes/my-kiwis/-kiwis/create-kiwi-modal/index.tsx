@@ -26,6 +26,7 @@ import idb from "#/managers/indexed-db";
 import { useKiwis } from "#/routes/my-kiwis/-context";
 import { Kiwi } from "#/types/kiwi";
 import { fileToBookData } from "#/utils/epubjs";
+import { blobToObjectUrl } from "#/utils/file";
 import { formatDateOnly } from "#/utils/format-date";
 
 const Titles: Record<Step, string> = {
@@ -97,6 +98,11 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         return;
       }
 
+      const coverImageObjectUrl =
+        bookData.coverImage && typeof bookData.coverImage === "object"
+          ? await blobToObjectUrl(bookData.coverImage)
+          : null;
+
       await idb.add("kiwi", {
         id: generatedKiwiId,
         name: state.kiwiName,
@@ -119,7 +125,10 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         detailDescription: state.kiwiDetailDescription,
         password: state.passwordProtected ? state.password : null,
         maxParticipants: 1,
-        book: bookData,
+        book: {
+          ...bookData,
+          coverImage: coverImageObjectUrl,
+        },
         discussions: [],
         createdAt: formatDateOnly(new Date()),
         adminId: 0,
@@ -133,7 +142,6 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       });
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
     } catch (error) {
-      console.error("Error creating kiwi:", error);
       // eslint-disable-next-line no-alert
       alert("키위 생성 중 오류가 발생했습니다.");
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.FileUpload });

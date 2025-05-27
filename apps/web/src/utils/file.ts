@@ -92,3 +92,6 @@ export const urlToBase64 = async (url: string): Promise<string> => {
     reader.readAsDataURL(blob);
   });
 };
+
+export const blobToObjectUrl = async (blob: Blob): Promise<string> =>
+  URL.createObjectURL(blob);

@@ -29,6 +29,6 @@ export interface Metadata {
 
 export interface BookData {
   file: File;
-  coverImage: string | null;
+  coverImage: Blob | string | null;
   metadata: Metadata;
 }

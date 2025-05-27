@@ -1,6 +1,6 @@
 import ePub, { Book, NavItem } from "@bookiwi/epubjs";
 
-import { urlToObjectUrl } from "./file";
+import { urlToBlob } from "./file";
 
 import { BookData } from "#/types/book";
 
@@ -42,7 +42,7 @@ export const fileToBookData = async (file: File): Promise<BookData> => {
   const coverUrl = await book.coverUrl();
   const toc = await getToc(book);
 
-  const coverImage = coverUrl ? await urlToObjectUrl(coverUrl) : null;
+  const coverImage = coverUrl ? await urlToBlob(coverUrl) : null;
   const locations = await generateLocations(book);
 
   const bookData = {
@@ -66,7 +66,7 @@ export const urlToBook = async (url: string) => {
   const coverUrl = await book.coverUrl();
   const toc = await getToc(book);
 
-  const coverImage = coverUrl ? await urlToObjectUrl(coverUrl) : null;
+  const coverImage = coverUrl ? await urlToBlob(coverUrl) : null;
   const locations = await generateLocations(book);
 
   const bookData = {
