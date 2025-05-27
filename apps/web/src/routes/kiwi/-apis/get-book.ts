@@ -15,8 +15,8 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
   }
 
   try {
-    const bookData = (await idb.get("bookData", id)) as BookData;
-    const kiwiDB = (await idb.get("kiwis", bookData.kiwiId)) as KiwiDB;
+    const kiwiDB = (await idb.get("kiwis", id)) as KiwiDB;
+    const bookData = (await idb.get("bookData", kiwiDB.bookDataId)) as BookData;
 
     return {
       locations: bookData.locations,

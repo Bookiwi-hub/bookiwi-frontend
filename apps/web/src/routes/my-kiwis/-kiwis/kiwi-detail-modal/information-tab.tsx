@@ -11,10 +11,11 @@ interface InformationTabProps {
 function InformationTab({ kiwi }: InformationTabProps) {
   const {
     admin,
-    book,
+    bookMetadata,
     createdAt,
     detailDescription,
     maxParticipants,
+    coverImage,
     participants = [],
   } = kiwi;
 
@@ -27,7 +28,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
         <div className="col-span-1">
           <div className="aspect-[3/4] overflow-hidden rounded-md bg-gray-100">
             <img
-              src={book.coverImage || fallbackImageUrl}
+              src={coverImage || fallbackImageUrl}
               alt="Book cover"
               className="size-full object-cover"
             />
@@ -56,7 +57,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
               <li className="flex items-center gap-2">
                 <Book size={16} className="text-muted-foreground" />
                 <span>
-                  {book.metadata.title} - {book.metadata.author}
+                  {bookMetadata.title} - {bookMetadata.author}
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -89,7 +90,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
         <ul className="max-h-60 overflow-y-auto pr-1">
-          {book.metadata.toc.map((item, index) => (
+          {bookMetadata.toc.map((item, index) => (
             <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
           ))}
         </ul>

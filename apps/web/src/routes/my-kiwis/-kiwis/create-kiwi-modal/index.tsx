@@ -14,6 +14,7 @@ import Loading from "./loading";
 import { ActionTypes, Step } from "./reducer";
 
 import { participants } from "#/DB/participants";
+import tempUser from "#/DB/users";
 import {
   Dialog,
   DialogContent,
@@ -101,13 +102,6 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         return;
       }
 
-      const currentUser = {
-        id: "kiwi",
-        name: "키위",
-        email: "kiwi@kiwi.com",
-        profileImage: "https://github.com/shadcn.png",
-      };
-
       const bookMetadata: BookMetadata = {
         title: bookInfo.title,
         author: bookInfo.author,
@@ -124,7 +118,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         password: state.passwordProtected ? state.password : null,
         shareCode: generatedShareCode,
         createdAt: formatDateOnly(new Date()),
-        admin: currentUser,
+        admin: tempUser,
         bookMetadata,
         bookDataId: generatedBookDataId,
         participants: [participants[0]!],
