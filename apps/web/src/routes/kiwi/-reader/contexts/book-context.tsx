@@ -43,7 +43,6 @@ export function BookProvider({
     let mounted = true;
     // Create a new Book instance
     const epubBook = new Book(epubFile);
-    // "/Alice's Adventures in Wonderland.epub"
 
     // Wait for the book to be fully loaded before setting it
     const loadBook = async () => {

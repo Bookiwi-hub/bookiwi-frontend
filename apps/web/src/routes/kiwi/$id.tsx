@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import getBook from "./-apis/get-book";
+import getSample from "./-apis/get-sample";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
 import { ReaderProvider } from "./-reader";
@@ -11,17 +12,13 @@ import { isDesktop } from "#/constants/device-type";
 
 export const Route = createFileRoute("/kiwi/$id")({
   loader: async ({ params }) => {
-    // 실제로는 ID를 기반으로 책 정보를 API에서 가져오는 코드
-    const { epubFile, initialSettings, bookTitle, readingRecord, locations } =
-      await getBook(params.id);
+    if (params.id === "sample-kiwi") {
+      const result = await getSample();
+      return result;
+    }
 
-    return {
-      epubFile,
-      initialSettings,
-      bookTitle,
-      readingRecord,
-      locations,
-    };
+    const result = await getBook(params.id);
+    return result;
   },
   head: ({ loaderData }) => ({
     meta: [
