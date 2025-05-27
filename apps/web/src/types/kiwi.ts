@@ -29,6 +29,7 @@ export interface BookMetadata {
 }
 
 export interface BookData {
+  id: string;
   kiwiId: string;
   file: File;
   locations: string;
@@ -54,6 +55,7 @@ export interface Kiwi {
   password: string | null;
   shareCode: string;
   bookMetadata: BookMetadata;
+  bookDataId: string;
   coverImage: string | null;
   createdAt: string;
   admin: User;

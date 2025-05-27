@@ -92,6 +92,10 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         .toString(36)
         .substring(2, 8)
         .toUpperCase();
+      const generatedBookDataId = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
 
       if (abortControllerRef.current?.signal.aborted) {
         return;
@@ -122,11 +126,13 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         createdAt: formatDateOnly(new Date()),
         admin: currentUser,
         bookMetadata,
+        bookDataId: generatedBookDataId,
         participants: [participants[0]!],
         coverImage: bookInfo.coverImageBlob,
       };
 
       const bookData: BookData = {
+        id: generatedBookDataId,
         kiwiId: generatedKiwiId,
         file: bookInfo.file,
         locations: bookInfo.locations,

@@ -565,7 +565,7 @@ const config: DBConfig = {
     {
       name: "bookData",
       keyPath: "id",
-      autoIncrement: true,
+      autoIncrement: false,
       indices: [
         {
           name: "file",
