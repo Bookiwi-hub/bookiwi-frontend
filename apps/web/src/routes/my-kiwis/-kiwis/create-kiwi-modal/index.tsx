@@ -103,6 +103,13 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
           ? await blobToObjectUrl(bookDataDB.coverImage)
           : null;
 
+      const currentUser = {
+        id: "kiwi",
+        name: "키위",
+        email: "kiwi@kiwi.com",
+        profileImage: "https://github.com/shadcn.png",
+      };
+
       const kiwiDB: KiwiDB = {
         id: generatedKiwiId,
         name: state.kiwiName,
@@ -112,7 +119,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         password: state.passwordProtected ? state.password : null,
         shareCode: generatedShareCode,
         createdAt: formatDateOnly(new Date()),
-        adminId: 0,
+        admin: currentUser,
         book: bookDataDB,
         participants: [participants[0]!],
       };
@@ -133,7 +140,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         },
         discussions: [],
         createdAt: formatDateOnly(new Date()),
-        adminId: 0,
+        admin: currentUser,
         participants: [participants[0]!],
       };
 

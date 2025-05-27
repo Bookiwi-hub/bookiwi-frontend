@@ -492,7 +492,7 @@ class IndexedDBManager {
 }
 
 const config: DBConfig = {
-  name: "testing",
+  name: "dev",
   version: 1,
   stores: [
     {
@@ -530,8 +530,8 @@ const config: DBConfig = {
           keyPath: "createdAt",
         },
         {
-          name: "adminId",
-          keyPath: "adminId",
+          name: "admin",
+          keyPath: "admin.id",
         },
         {
           name: "book",

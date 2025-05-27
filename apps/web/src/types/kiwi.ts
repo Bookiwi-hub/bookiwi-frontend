@@ -1,5 +1,7 @@
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
+import { User } from "./user";
+
 export interface Settings {
   isSinglePage: boolean;
   fontFamily?: string;
@@ -59,7 +61,7 @@ export interface Kiwi {
   shareCode: string;
   book: BookData;
   createdAt: string;
-  adminId: number;
+  admin: User;
   activities?: ActivityProps[];
   participants: ParticipantType[];
   discussions?: DiscussionProps[];
