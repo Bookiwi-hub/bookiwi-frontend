@@ -5,7 +5,7 @@ import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
 
-import sampleKiwi from "#/DB/kiwis";
+import { sampleKiwi } from "#/constants/sample-kiwi";
 import { Kiwi } from "#/types/kiwi";
 
 interface KiwisProps {
