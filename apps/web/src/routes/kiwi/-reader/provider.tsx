@@ -11,7 +11,7 @@ import { Settings, ReadingRecord } from "#/types/kiwi";
 
 interface ReaderProviderProps {
   children: ReactNode;
-  epubFile: string;
+  epubFile: File;
   locations: string;
   initialSettings: Settings;
   readingRecord: ReadingRecord;

@@ -27,7 +27,7 @@ export const useBook = () => {
 
 interface BookProviderProps {
   children: ReactNode;
-  epubFile: string;
+  epubFile: File;
   locations: string;
 }
 
