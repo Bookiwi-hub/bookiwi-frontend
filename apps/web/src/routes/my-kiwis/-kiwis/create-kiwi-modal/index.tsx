@@ -124,7 +124,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         participants: [participants[0]!],
       };
 
-      await idb.add("kiwi", kiwiDB);
+      await idb.add("kiwis", kiwiDB);
 
       const newKiwi: Kiwi = {
         id: generatedKiwiId,
@@ -151,7 +151,6 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       });
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
     } catch (error) {
-      // eslint-disable-next-line no-alert
       alert("키위 생성 중 오류가 발생했습니다.");
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.FileUpload });
     }

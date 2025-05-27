@@ -1,10 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { getKiwisFromIndexedDB } from "./-apis/get-kiwis";
 import { KiwisProvider, useKiwis } from "./-context";
 import Header from "./-header";
 import Kiwis from "./-kiwis";
 
 export const Route = createFileRoute("/my-kiwis/")({
+  loader: async () => {
+    const kiwi = await getKiwisFromIndexedDB();
+    return kiwi;
+  },
   head: () => ({
     meta: [
       {
@@ -28,8 +33,9 @@ function MyKiwis() {
 }
 
 function MyKiwisPage() {
+  const kiwis = Route.useLoaderData();
   return (
-    <KiwisProvider>
+    <KiwisProvider kiwis={kiwis}>
       <MyKiwis />
     </KiwisProvider>
   );
