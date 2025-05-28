@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import getSampleKiwi from "../-apis/get-sample";
 
 import KiwiCard from "./kiwi-card";
+import KiwiDetailModal from "./kiwi-detail-modal";
 
 import { Card } from "#/components/ui/card";
 import Spinner from "#/components/ui/spinner";
@@ -26,6 +27,7 @@ function KiwiSampleCardLoading() {
 
 function KiwiSampleCard() {
   const [kiwi, setKiwi] = useState<Kiwi | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   useEffect(() => {
     const fetchSampleKiwi = async () => {
       const sampleKiwi = await getSampleKiwi();
@@ -35,7 +37,20 @@ function KiwiSampleCard() {
     };
     fetchSampleKiwi();
   }, []);
-  return kiwi ? <KiwiCard kiwi={kiwi} /> : <KiwiSampleCardLoading />;
+  return kiwi ? (
+    <>
+      <KiwiCard kiwi={kiwi} onClick={() => setIsDetailModalOpen(true)} />
+      {isDetailModalOpen && (
+        <KiwiDetailModal
+          kiwi={kiwi}
+          isOpen={isDetailModalOpen}
+          onClose={() => setIsDetailModalOpen(false)}
+        />
+      )}
+    </>
+  ) : (
+    <KiwiSampleCardLoading />
+  );
 }
 
 export default KiwiSampleCard;

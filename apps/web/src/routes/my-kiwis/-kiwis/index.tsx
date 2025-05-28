@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import CreateKiwiModal from "./create-kiwi-modal";
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
+import KiwiDetailModal from "./kiwi-detail-modal";
 import KiwiSampleCard from "./kiwi-sample-card";
 
 import { Kiwi } from "#/types/kiwi";
@@ -14,6 +15,16 @@ interface KiwisProps {
 
 function Kiwis({ kiwis }: KiwisProps) {
   const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
+  const [isKiwiDetailModalOpen, setIsKiwiDetailModalOpen] = useState(false);
+  const [selectedKiwi, setSelectedKiwi] = useState<Kiwi | null>(null);
+  const handleKiwiCardClick = useCallback(
+    (id: string) => {
+      const selectedKiwiData = kiwis.find((kiwi) => kiwi.id === id);
+      setSelectedKiwi(selectedKiwiData || null);
+      setIsKiwiDetailModalOpen(true);
+    },
+    [kiwis],
+  );
 
   return (
     <>
@@ -34,7 +45,13 @@ function Kiwis({ kiwis }: KiwisProps) {
               <KiwiSampleCard />
             </>
           ) : (
-            kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
+            kiwis.map((kiwi) => (
+              <KiwiCard
+                key={kiwi.id}
+                kiwi={kiwi}
+                onClick={handleKiwiCardClick}
+              />
+            ))
           )}
         </div>
       </div>
@@ -42,6 +59,13 @@ function Kiwis({ kiwis }: KiwisProps) {
         <CreateKiwiModal
           open={isCreateKiwiModalOpen}
           setOpen={setIsCreateKiwiModalOpen}
+        />
+      )}
+      {isKiwiDetailModalOpen && selectedKiwi && (
+        <KiwiDetailModal
+          kiwi={selectedKiwi}
+          isOpen={isKiwiDetailModalOpen}
+          onClose={() => setIsKiwiDetailModalOpen(false)}
         />
       )}
     </>
