@@ -7,6 +7,7 @@ import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
 import KiwiDetailModal from "./kiwi-detail-modal";
 import KiwiSampleCard from "./kiwi-sample-card";
 
+import tempUser from "#/DB/users";
 import { Kiwi } from "#/types/kiwi";
 
 interface KiwisProps {
@@ -17,7 +18,7 @@ function Kiwis({ kiwis }: KiwisProps) {
   const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
   const [isKiwiDetailModalOpen, setIsKiwiDetailModalOpen] = useState(false);
   const [selectedKiwi, setSelectedKiwi] = useState<Kiwi | null>(null);
-  const handleKiwiCardClick = useCallback(
+  const handleSetSelectedKiwi = useCallback(
     (id: string) => {
       const selectedKiwiData = kiwis.find((kiwi) => kiwi.id === id);
       setSelectedKiwi(selectedKiwiData || null);
@@ -45,13 +46,28 @@ function Kiwis({ kiwis }: KiwisProps) {
               <KiwiSampleCard />
             </>
           ) : (
-            kiwis.map((kiwi) => (
-              <KiwiCard
-                key={kiwi.id}
-                kiwi={kiwi}
-                onClick={handleKiwiCardClick}
-              />
-            ))
+            kiwis.map((kiwi) => {
+              const { name, description, coverImage, participants, id } = kiwi;
+              const participantsCount = participants.length;
+              const currentParticipant = participants.find(
+                (participant) => participant.userId === tempUser.id,
+              );
+              const progress = currentParticipant?.progress || 0;
+              const lastActivityAt = currentParticipant?.lastActivityAt || "";
+              return (
+                <KiwiCard
+                  key={id}
+                  id={id}
+                  name={name}
+                  description={description}
+                  coverImage={coverImage || ""}
+                  progress={progress}
+                  participantsCount={participantsCount}
+                  lastActivityAt={lastActivityAt}
+                  handleSetSelectedKiwi={handleSetSelectedKiwi}
+                />
+              );
+            })
           )}
         </div>
       </div>

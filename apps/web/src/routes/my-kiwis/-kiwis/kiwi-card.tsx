@@ -5,17 +5,30 @@ import { memo } from "react";
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
-import { Kiwi } from "#/types/kiwi";
 
 interface KiwiCardProps {
-  kiwi: Kiwi;
-  onClick: (id: string) => void;
+  name: string;
+  description: string;
+  coverImage: string;
+  progress: number;
+  participantsCount: number;
+  lastActivityAt: string;
+  id: string;
+  handleSetSelectedKiwi: (id: string) => void;
 }
 
-function KiwiCard({ kiwi, onClick }: KiwiCardProps) {
-  const { name, description, coverImage, participants, id } = kiwi;
+function KiwiCard({
+  name,
+  description,
+  coverImage,
+  progress,
+  participantsCount,
+  lastActivityAt,
+  id,
+  handleSetSelectedKiwi,
+}: KiwiCardProps) {
   const handleCardClick = () => {
-    onClick(id);
+    handleSetSelectedKiwi(id);
   };
 
   return (
@@ -38,17 +51,17 @@ function KiwiCard({ kiwi, onClick }: KiwiCardProps) {
         <div className="absolute inset-x-0 bottom-0 p-3 text-xs font-medium">
           <div className="flex items-center justify-between pb-2">
             <span className="text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
-              {participants[0]?.progress}% 읽음
+              {progress}% 읽음
             </span>
             <div className="flex items-center gap-1 text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
               <Users size={12} />
-              <span>{participants.length}명 참여중</span>
+              <span>{participantsCount}명 참여중</span>
             </div>
           </div>
           <div className="h-1 overflow-hidden rounded-full bg-white/20 backdrop-blur-sm">
             <div
               className="h-full rounded-full bg-primary shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-              style={{ width: `${participants[0]?.progress}%` }}
+              style={{ width: `${progress}%` }}
             />
           </div>
         </div>
@@ -69,7 +82,7 @@ function KiwiCard({ kiwi, onClick }: KiwiCardProps) {
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Clock size={12} />
-            <span>마지막 활동: {participants[0]?.lastActivityAt}</span>
+            <span>마지막 활동: {lastActivityAt}</span>
           </div>
         </div>
       </div>

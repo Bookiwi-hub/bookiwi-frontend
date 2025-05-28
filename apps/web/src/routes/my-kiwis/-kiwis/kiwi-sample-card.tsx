@@ -39,7 +39,16 @@ function KiwiSampleCard() {
   }, []);
   return kiwi ? (
     <>
-      <KiwiCard kiwi={kiwi} onClick={() => setIsDetailModalOpen(true)} />
+      <KiwiCard
+        id={kiwi.id}
+        name={kiwi.name}
+        description={kiwi.description}
+        coverImage={kiwi.coverImage || ""}
+        progress={kiwi.participants[0]?.progress || 0}
+        participantsCount={kiwi.participants.length}
+        lastActivityAt={kiwi.participants[0]?.lastActivityAt || ""}
+        handleSetSelectedKiwi={() => setIsDetailModalOpen(true)}
+      />
       {isDetailModalOpen && (
         <KiwiDetailModal
           kiwi={kiwi}
