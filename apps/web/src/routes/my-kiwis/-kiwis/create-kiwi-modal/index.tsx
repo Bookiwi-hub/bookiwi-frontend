@@ -1,3 +1,4 @@
+import { useRouter } from "@tanstack/react-router";
 import { ComponentType, createElement, useRef } from "react";
 
 import { CreateKiwiProvider, useCreateKiwi } from "./context";
@@ -62,6 +63,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
   const abortControllerRef = useRef<AbortController | null>(null);
   const { setNewKiwi } = useKiwis();
   const { step } = state;
+  const router = useRouter();
 
   const handleClose = () => {
     dispatch({ type: ActionTypes.RESET });
@@ -152,7 +154,9 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         coverImage: bookInfo.coverImageObjectUrl,
       };
 
+      await router.invalidate();
       setNewKiwi(newKiwi);
+
       dispatch({
         type: ActionTypes.SET_SHARE_CODE,
         payload: generatedShareCode,
