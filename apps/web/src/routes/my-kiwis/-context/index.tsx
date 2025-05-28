@@ -3,7 +3,6 @@ import {
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -40,8 +39,6 @@ export function KiwisProvider({ children, kiwis }: KiwisProviderProps) {
     },
     [kiwisState],
   );
-
-  useEffect(() => {}, []);
 
   const value = useMemo(
     () => ({

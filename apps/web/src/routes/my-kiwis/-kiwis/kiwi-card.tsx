@@ -6,6 +6,7 @@ import KiwiDetailModal from "./kiwi-detail-modal";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
+import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import { Kiwi } from "#/types/kiwi";
 
 interface KiwiCardProps {
@@ -14,8 +15,6 @@ interface KiwiCardProps {
 
 function KiwiCard({ kiwi }: KiwiCardProps) {
   const [openDetail, setOpenDetail] = useState(false);
-  const fallbackImageUrl =
-    "https://placehold.co/300x400/e2e8f0/64748b?text=No+Cover";
 
   const { name, description, coverImage, participants, id } = kiwi;
 
@@ -41,12 +40,12 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
         {/* 이미지 영역 */}
         <div className="relative aspect-[3/4] overflow-hidden">
           <img
-            src={coverImage || fallbackImageUrl}
+            src={coverImage || FALLBACK_IMAGE_URL}
             alt="Book cover"
             className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
             onError={(e) => {
-              e.currentTarget.src = fallbackImageUrl;
+              e.currentTarget.src = FALLBACK_IMAGE_URL;
             }}
           />
           {/* 진행률 표시 - 미니멀 디자인 */}

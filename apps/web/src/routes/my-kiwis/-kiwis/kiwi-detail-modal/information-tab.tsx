@@ -2,6 +2,7 @@ import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
+import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import { Kiwi } from "#/types/kiwi";
 
 interface InformationTabProps {
@@ -19,16 +20,13 @@ function InformationTab({ kiwi }: InformationTabProps) {
     participants = [],
   } = kiwi;
 
-  const fallbackImageUrl =
-    "https://placehold.co/300x400/e2e8f0/64748b?text=No+Cover";
-
   return (
     <div className="mb-10 space-y-6">
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-1">
           <div className="aspect-[3/4] overflow-hidden rounded-md bg-gray-100">
             <img
-              src={coverImage || fallbackImageUrl}
+              src={coverImage || FALLBACK_IMAGE_URL}
               alt="Book cover"
               className="size-full object-cover"
             />
