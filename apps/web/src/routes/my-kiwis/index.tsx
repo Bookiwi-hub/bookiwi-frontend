@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getKiwisFromIndexedDB } from "./-apis/get-kiwis";
+import getKiwisFromIndexedDB from "./-apis/get-kiwis";
 import { KiwisProvider, useKiwis } from "./-context";
 import Header from "./-header";
 import Kiwis from "./-kiwis";

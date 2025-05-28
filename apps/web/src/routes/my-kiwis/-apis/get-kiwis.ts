@@ -1,8 +1,9 @@
+import { SAMPLE_KIWI_ID } from "#/constants/kiwi";
 import idb from "#/managers/indexed-db";
 import { Kiwi, KiwiDB } from "#/types/kiwi";
 import { blobToObjectUrl } from "#/utils/file";
 
-export const getKiwisFromIndexedDB = async (): Promise<Kiwi[]> => {
+const getKiwisFromIndexedDB = async (): Promise<Kiwi[]> => {
   try {
     const kiwiDB = await idb.getAll("kiwis");
 
@@ -11,8 +12,13 @@ export const getKiwisFromIndexedDB = async (): Promise<Kiwi[]> => {
       return [];
     }
 
+    // SAMPLE_KIWI_ID에 해당하는 kiwi 제외
+    const filteredKiwiDB = (kiwiDB as KiwiDB[]).filter(
+      (kiwiItem) => kiwiItem.id !== SAMPLE_KIWI_ID,
+    );
+
     const kiwis = await Promise.all(
-      (kiwiDB as KiwiDB[]).map(async (kiwiItem) => {
+      filteredKiwiDB.map(async (kiwiItem) => {
         const { coverImage } = kiwiItem;
         const coverImageObjectUrl = coverImage
           ? await blobToObjectUrl(coverImage)
@@ -31,3 +37,5 @@ export const getKiwisFromIndexedDB = async (): Promise<Kiwi[]> => {
     return [];
   }
 };
+
+export default getKiwisFromIndexedDB;
