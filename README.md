@@ -9,6 +9,7 @@ Bookiwi는 소셜 이북 리더기입니다. 여러 사용자가 하나의 EPUB 
 ### ✨Feat
 
 - [Resizable Split View](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/resizable)
+- [IndexedDB with a Singleton Manager Class](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/IndexedDB-Singleton-Manager-Class)
 
 ### ❓❗ Error & 🐞Bug
 
