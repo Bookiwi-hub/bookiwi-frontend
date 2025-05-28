@@ -11,12 +11,12 @@ import { ScrollArea } from "#/components/ui/scroll-area";
 
 function HighlightList() {
   const [highlights] = useState<HighlightListType[]>(highlightList);
-  const [selectedCreators, setSelectedCreators] = useState<number[]>([]);
+  const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
 
   const filteredHighlights = useMemo(() => {
     if (selectedCreators.length === 0) return highlights;
     return highlights.filter((highlight) =>
-      selectedCreators.includes(highlight.creator.id),
+      selectedCreators.includes(highlight.creator.userId),
     );
   }, [highlights, selectedCreators]);
 
