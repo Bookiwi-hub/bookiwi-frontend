@@ -34,25 +34,45 @@ class IndexedDBManager {
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
+        const transaction = (event.target as IDBOpenDBRequest).transaction!;
 
         // Create object stores and indices
         config.stores.forEach((storeConfig) => {
+          let store: IDBObjectStore;
+
           if (!db.objectStoreNames.contains(storeConfig.name)) {
-            const store = db.createObjectStore(storeConfig.name, {
+            // Create new store
+            store = db.createObjectStore(storeConfig.name, {
               keyPath: storeConfig.keyPath,
               autoIncrement: storeConfig.autoIncrement || false,
             });
+          } else {
+            // Get existing store from transaction
+            store = transaction.objectStore(storeConfig.name);
+          }
 
-            // Create indices if specified
-            if (storeConfig.indices) {
-              storeConfig.indices.forEach((indexConfig) => {
+          // Remove indices that are not in config
+          const configIndexNames = new Set(
+            storeConfig.indices?.map((idx) => idx.name) || [],
+          );
+
+          Array.from(store.indexNames).forEach((existingIndexName) => {
+            if (!configIndexNames.has(existingIndexName)) {
+              store.deleteIndex(existingIndexName);
+            }
+          });
+
+          // Create indices if specified
+          if (storeConfig.indices) {
+            storeConfig.indices.forEach((indexConfig) => {
+              if (!store.indexNames.contains(indexConfig.name)) {
                 store.createIndex(
                   indexConfig.name,
                   indexConfig.keyPath,
                   indexConfig.options,
                 );
-              });
-            }
+              }
+            });
           }
         });
       };
@@ -356,6 +376,9 @@ class IndexedDBManager {
     query?: IDBValidKey | IDBKeyRange,
     direction?: IDBCursorDirection,
   ): Promise<void> {
+    // 데이터베이스 초기화 완료까지 대기
+    await this.waitForInit();
+
     return new Promise<void>((resolve, reject) => {
       try {
         if (!this.db) {
@@ -441,6 +464,9 @@ class IndexedDBManager {
     query?: IDBValidKey | IDBKeyRange,
     direction?: IDBCursorDirection,
   ): Promise<void> {
+    // 데이터베이스 초기화 완료까지 대기
+    await this.waitForInit();
+
     return new Promise<void>((resolve, reject) => {
       try {
         if (!this.db) {
@@ -520,45 +546,13 @@ const config: DBConfig = {
       autoIncrement: false,
       indices: [
         {
-          name: "name",
-          keyPath: "name",
-        },
-        {
-          name: "description",
-          keyPath: "description",
-        },
-        {
-          name: "maxParticipants",
-          keyPath: "maxParticipants",
-        },
-        {
-          name: "detailDescription",
-          keyPath: "detailDescription",
-        },
-        {
-          name: "password",
-          keyPath: "password",
-        },
-        {
           name: "shareCode",
           keyPath: "shareCode",
           options: { unique: true },
         },
         {
-          name: "createdAt",
-          keyPath: "createdAt",
-        },
-        {
-          name: "admin",
+          name: "adminId",
           keyPath: "admin.id",
-        },
-        {
-          name: "bookMetadata",
-          keyPath: "bookMetadata",
-        },
-        {
-          name: "participants",
-          keyPath: "participants",
         },
       ],
     },
@@ -567,14 +561,6 @@ const config: DBConfig = {
       keyPath: "id",
       autoIncrement: false,
       indices: [
-        {
-          name: "file",
-          keyPath: "file",
-        },
-        {
-          name: "locations",
-          keyPath: "locations",
-        },
         {
           name: "kiwiId",
           keyPath: "kiwiId",
