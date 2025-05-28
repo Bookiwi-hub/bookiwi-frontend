@@ -4,8 +4,8 @@ import CreateKiwiModal from "./create-kiwi-modal";
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
+import KiwiSampleCard from "./kiwi-sample-card";
 
-import { sampleKiwi } from "#/constants/sample-kiwi";
 import { Kiwi } from "#/types/kiwi";
 
 interface KiwisProps {
@@ -31,7 +31,7 @@ function Kiwis({ kiwis }: KiwisProps) {
           {kiwis.length === 0 ? (
             <>
               <CreateKiwiCardButton setIsModalOpen={setIsCreateKiwiModalOpen} />
-              <KiwiCard key={sampleKiwi.id} kiwi={sampleKiwi} />
+              <KiwiSampleCard />
             </>
           ) : (
             kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
