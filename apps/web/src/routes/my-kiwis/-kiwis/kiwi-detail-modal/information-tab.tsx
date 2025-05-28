@@ -98,7 +98,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
 
       {detailDescription && (
         <div className="space-y-2">
-          <h3 className="font-medium">그룹 소개</h3>
+          <h3 className="font-medium">상세 설명</h3>
           <p className="whitespace-pre-wrap text-sm text-muted-foreground">
             {detailDescription}
           </p>
