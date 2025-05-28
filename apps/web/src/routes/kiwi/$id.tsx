@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import getBook from "./-apis/get-book";
-import getSample from "./-apis/get-sample";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
 import { ReaderProvider } from "./-reader";
@@ -12,11 +11,6 @@ import { isDesktop } from "#/constants/device-type";
 
 export const Route = createFileRoute("/kiwi/$id")({
   loader: async ({ params }) => {
-    if (params.id === "sample-kiwi") {
-      const result = await getSample();
-      return result;
-    }
-
     const result = await getBook(params.id);
     return result;
   },
