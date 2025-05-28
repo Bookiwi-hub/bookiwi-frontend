@@ -35,7 +35,7 @@ function CreateKiwiButton({ setIsModalOpen }: SetIsModalOpenProps) {
   return (
     <Button
       variant="outline"
-      className="flex items-center gap-2 mobile:hidden"
+      className="flex items-center gap-2 mobile:w-full"
       onClick={() => setIsModalOpen(true)}
     >
       <Plus size={16} />새 키위 만들기
