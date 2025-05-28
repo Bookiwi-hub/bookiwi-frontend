@@ -36,7 +36,7 @@ export interface BookData {
 }
 
 export interface ParticipantType {
-  id: number;
+  userId: string;
   name: string;
   profileImage: string;
   progress: number;
