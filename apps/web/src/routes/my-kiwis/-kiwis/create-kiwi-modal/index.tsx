@@ -13,7 +13,7 @@ import KiwiInfo from "./kiwi-info";
 import Loading from "./loading";
 import { ActionTypes, Step } from "./reducer";
 
-import { participants } from "#/DB/participants";
+import color from "#/DB/color";
 import tempUser from "#/DB/users";
 import {
   Dialog,
@@ -23,10 +23,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
+import { initialSettings, initialReadingRecord } from "#/constants/kiwi";
 import idb from "#/managers/indexed-db";
 import { useKiwis } from "#/routes/my-kiwis/-context";
-import { fileToBookInfo } from "#/routes/my-kiwis/-utils/epubjs";
 import { BookData, BookMetadata, Kiwi, KiwiDB } from "#/types/kiwi";
+import { fileToBookInfo } from "#/utils/epubjs";
 import { formatDateOnly } from "#/utils/format-date";
 
 const Titles: Record<Step, string> = {
@@ -121,7 +122,18 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         admin: tempUser,
         bookMetadata,
         bookDataId: generatedBookDataId,
-        participants: [participants[0]!],
+        participants: [
+          {
+            userId: tempUser.id,
+            name: tempUser.name,
+            profileImage: tempUser.profileImage,
+            progress: 0,
+            color: color[0]!,
+            lastActivityAt: "2025-05-23",
+            readingRecord: initialReadingRecord,
+            settings: initialSettings,
+          },
+        ],
         coverImage: bookInfo.coverImageBlob,
       };
 
