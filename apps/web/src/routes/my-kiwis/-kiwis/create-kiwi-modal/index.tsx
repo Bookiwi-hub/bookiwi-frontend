@@ -1,3 +1,4 @@
+import { useRouter } from "@tanstack/react-router";
 import { ComponentType, createElement, useRef } from "react";
 
 import { CreateKiwiProvider, useCreateKiwi } from "./context";
@@ -13,7 +14,8 @@ import KiwiInfo from "./kiwi-info";
 import Loading from "./loading";
 import { ActionTypes, Step } from "./reducer";
 
-import { participants } from "#/DB/participants";
+import color from "#/DB/color";
+import tempUser from "#/DB/users";
 import {
   Dialog,
   DialogContent,
@@ -22,10 +24,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
+import { initialSettings, initialReadingRecord } from "#/constants/kiwi";
 import idb from "#/managers/indexed-db";
 import { useKiwis } from "#/routes/my-kiwis/-context";
-import { Kiwi } from "#/types/kiwi";
-import { fileToBookData } from "#/utils/epubjs";
+import { BookData, BookMetadata, Kiwi, KiwiDB } from "#/types/kiwi";
+import { fileToBookInfo } from "#/utils/epubjs";
 import { formatDateOnly } from "#/utils/format-date";
 
 const Titles: Record<Step, string> = {
@@ -60,6 +63,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
   const abortControllerRef = useRef<AbortController | null>(null);
   const { setNewKiwi } = useKiwis();
   const { step } = state;
+  const router = useRouter();
 
   const handleClose = () => {
     dispatch({ type: ActionTypes.RESET });
@@ -84,49 +88,81 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
       // });
       // const book = new Book(state.selectedFile);
 
-      const bookData = await fileToBookData(state.selectedFile!);
+      const bookInfo = await fileToBookInfo(state.selectedFile!);
 
       // 공유 코드 생성 (실제로는 API에서 받아와야 함)
       const generatedShareCode = `KIWI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      const generatedKiwiId = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
+      const generatedBookDataId = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
 
       if (abortControllerRef.current?.signal.aborted) {
         return;
       }
 
-      await idb.add("book", {
-        file: state.selectedFile,
-        coverImage: bookData.coverImage || null,
-        metadata: bookData.metadata,
-      });
-
-      const newKiwi: Kiwi = {
-        id: generatedShareCode,
-        shareCode: generatedShareCode,
-        name: state.kiwiName,
-        description: state.kiwiDescription,
-        lastActivityAt: "1시간 전",
-        detailDescription: state.kiwiDetailDescription,
-        password: state.passwordProtected ? state.password : null,
-        maxParticipants: 1,
-        book: bookData,
-        discussions: [],
-        createdAt: formatDateOnly(new Date()),
-        admin: {
-          id: participants[0]!.id,
-          name: participants[0]!.name,
-        },
-        participants: [participants[0]!],
+      const bookMetadata: BookMetadata = {
+        title: bookInfo.title,
+        author: bookInfo.author,
+        publisher: bookInfo.publisher,
+        toc: bookInfo.toc,
       };
 
+      const kiwiDB: KiwiDB = {
+        id: generatedKiwiId,
+        name: state.kiwiName,
+        description: state.kiwiDescription,
+        maxParticipants: 1,
+        detailDescription: state.kiwiDetailDescription,
+        password: state.passwordProtected ? state.password : null,
+        shareCode: generatedShareCode,
+        createdAt: formatDateOnly(new Date()),
+        admin: tempUser,
+        bookMetadata,
+        bookDataId: generatedBookDataId,
+        participants: [
+          {
+            userId: tempUser.id,
+            name: tempUser.name,
+            profileImage: tempUser.profileImage,
+            progress: 0,
+            color: color[0]!,
+            lastActivityAt: "2025-05-23",
+            readingRecord: initialReadingRecord,
+            settings: initialSettings,
+          },
+        ],
+        coverImage: bookInfo.coverImageBlob,
+      };
+
+      const bookData: BookData = {
+        id: generatedBookDataId,
+        kiwiId: generatedKiwiId,
+        file: bookInfo.file,
+        locations: bookInfo.locations,
+      };
+
+      await idb.add("kiwis", kiwiDB);
+      await idb.add("bookData", bookData);
+
+      const newKiwi: Kiwi = {
+        ...kiwiDB,
+        coverImage: bookInfo.coverImageObjectUrl,
+      };
+
+      await router.invalidate();
       setNewKiwi(newKiwi);
+
       dispatch({
         type: ActionTypes.SET_SHARE_CODE,
         payload: generatedShareCode,
       });
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.Complete });
     } catch (error) {
-      console.error("Error creating kiwi:", error);
-      // eslint-disable-next-line no-alert
       alert("키위 생성 중 오류가 발생했습니다.");
       dispatch({ type: ActionTypes.SET_STEP, payload: Step.FileUpload });
     }

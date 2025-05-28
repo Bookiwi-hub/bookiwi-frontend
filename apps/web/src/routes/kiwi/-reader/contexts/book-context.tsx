@@ -27,7 +27,7 @@ export const useBook = () => {
 
 interface BookProviderProps {
   children: ReactNode;
-  epubFile: string;
+  epubFile: File;
   locations: string;
 }
 
@@ -43,7 +43,6 @@ export function BookProvider({
     let mounted = true;
     // Create a new Book instance
     const epubBook = new Book(epubFile);
-    // "/Alice's Adventures in Wonderland.epub"
 
     // Wait for the book to be fully loaded before setting it
     const loadBook = async () => {
@@ -61,7 +60,6 @@ export function BookProvider({
         }
       } catch (error) {
         if (mounted) {
-          // eslint-disable-next-line no-alert
           alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
           // eslint-disable-next-line no-console
           console.error(error);

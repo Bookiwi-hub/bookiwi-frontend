@@ -10,7 +10,7 @@ import {
 
 import { useBook } from "./book-context";
 
-import { ReadingRecord, BookmarkItem } from "#/types/book";
+import { ReadingRecord, BookmarkItem } from "#/types/kiwi";
 
 interface RecordContextType extends ReadingRecord {
   setCurrentCfi: (currentCfi: string) => void;

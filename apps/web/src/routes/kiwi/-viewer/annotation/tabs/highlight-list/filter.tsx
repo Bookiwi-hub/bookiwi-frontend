@@ -11,8 +11,8 @@ import {
 import { cn } from "#/lib/utils";
 
 interface CreatorFilterProps {
-  selectedCreators: number[];
-  onCreatorsChange: (creatorIds: number[]) => void;
+  selectedCreators: string[];
+  onCreatorsChange: (creatorIds: string[]) => void;
 }
 
 function CreatorFilter({
@@ -21,7 +21,7 @@ function CreatorFilter({
 }: CreatorFilterProps) {
   const [open, setOpen] = useState(false);
 
-  const handleToggleCreator = (creatorId: number) => {
+  const handleToggleCreator = (creatorId: string) => {
     const newSelection = selectedCreators.includes(creatorId)
       ? selectedCreators.filter((id) => id !== creatorId)
       : [...selectedCreators, creatorId];
@@ -30,7 +30,7 @@ function CreatorFilter({
   };
 
   const selectAll = () => {
-    onCreatorsChange(participants.map((p) => p.id));
+    onCreatorsChange(participants.map((p) => p.userId));
   };
 
   const clearAll = () => {
@@ -85,13 +85,13 @@ function CreatorFilter({
         <div className="max-h-60 overflow-y-auto">
           {participants.map((participant) => (
             <Button
-              key={participant.id}
+              key={participant.userId}
               variant="ghost"
               className={cn(
                 "flex w-full items-center justify-start px-3 py-2",
-                selectedCreators.includes(participant.id) && "bg-accent/50",
+                selectedCreators.includes(participant.userId) && "bg-accent/50",
               )}
-              onClick={() => handleToggleCreator(participant.id)}
+              onClick={() => handleToggleCreator(participant.userId)}
               onMouseDown={(e) => e.preventDefault()}
               tabIndex={-1}
             >
@@ -100,7 +100,7 @@ function CreatorFilter({
                 style={{ backgroundColor: participant.color }}
               />
               <span>{participant.name}</span>
-              {selectedCreators.includes(participant.id) && (
+              {selectedCreators.includes(participant.userId) && (
                 <Check className="ml-auto size-4" />
               )}
             </Button>

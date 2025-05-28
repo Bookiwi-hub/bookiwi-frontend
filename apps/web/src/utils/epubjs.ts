@@ -1,8 +1,6 @@
 import ePub, { Book, NavItem } from "@bookiwi/epubjs";
 
-import { urlToObjectUrl } from "./file";
-
-import { BookData } from "#/types/book";
+import { blobToObjectUrl, urlToBlob } from "#/utils/file";
 
 /**
  * 파일을 EPUB 객체로 변환하는 함수
@@ -36,50 +34,26 @@ export const getToc = async (book: Book): Promise<NavItem[]> => {
   return navigation.toc;
 };
 
-export const fileToBookData = async (file: File): Promise<BookData> => {
+export const fileToBookInfo = async (file: File) => {
   const book = await fileToBook(file);
   const metadata = await getMetadata(book);
-  const coverUrl = await book.coverUrl();
   const toc = await getToc(book);
-
-  const coverImage = coverUrl ? await urlToObjectUrl(coverUrl) : null;
   const locations = await generateLocations(book);
 
-  const bookData = {
+  const coverUrl = await book.coverUrl();
+  const coverImageBlob = coverUrl ? await urlToBlob(coverUrl) : null;
+  const coverImageObjectUrl = coverImageBlob
+    ? await blobToObjectUrl(coverImageBlob)
+    : null;
+
+  return {
     file,
-    coverImage,
-    metadata: {
-      title: metadata.title,
-      author: metadata.creator,
-      publisher: metadata.publisher,
-      toc,
-      locations,
-    },
+    coverImageBlob,
+    coverImageObjectUrl,
+    locations,
+    toc,
+    title: metadata.title,
+    author: metadata.creator,
+    publisher: metadata.publisher,
   };
-
-  return bookData;
-};
-
-export const urlToBook = async (url: string) => {
-  const book = new Book(url);
-  const metadata = await getMetadata(book);
-  const coverUrl = await book.coverUrl();
-  const toc = await getToc(book);
-
-  const coverImage = coverUrl ? await urlToObjectUrl(coverUrl) : null;
-  const locations = await generateLocations(book);
-
-  const bookData = {
-    file: null,
-    coverImage,
-    metadata: {
-      title: metadata.title,
-      author: metadata.creator,
-      publisher: metadata.publisher,
-      toc,
-      locations,
-    },
-  };
-
-  return bookData;
 };

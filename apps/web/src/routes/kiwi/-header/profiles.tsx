@@ -44,7 +44,7 @@ function Profiles({ profileImage, color }: ProfilesProps) {
         <div className="max-h-80 overflow-y-auto">
           {participants.map((participant) => (
             <div
-              key={participant.id}
+              key={participant.userId}
               className="flex items-center gap-3 p-3 hover:bg-gray-50"
             >
               <div className="relative">

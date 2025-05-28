@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import CreateKiwiModal from "./create-kiwi-modal";
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
+import KiwiDetailModal from "./kiwi-detail-modal";
+import KiwiSampleCard from "./kiwi-sample-card";
 
-import sampleKiwi from "#/DB/kiwis";
+import tempUser from "#/DB/users";
 import { Kiwi } from "#/types/kiwi";
 
 interface KiwisProps {
@@ -14,6 +16,16 @@ interface KiwisProps {
 
 function Kiwis({ kiwis }: KiwisProps) {
   const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
+  const [isKiwiDetailModalOpen, setIsKiwiDetailModalOpen] = useState(false);
+  const [selectedKiwi, setSelectedKiwi] = useState<Kiwi | null>(null);
+  const handleSetSelectedKiwi = useCallback(
+    (id: string) => {
+      const selectedKiwiData = kiwis.find((kiwi) => kiwi.id === id);
+      setSelectedKiwi(selectedKiwiData || null);
+      setIsKiwiDetailModalOpen(true);
+    },
+    [kiwis],
+  );
 
   return (
     <>
@@ -31,10 +43,31 @@ function Kiwis({ kiwis }: KiwisProps) {
           {kiwis.length === 0 ? (
             <>
               <CreateKiwiCardButton setIsModalOpen={setIsCreateKiwiModalOpen} />
-              <KiwiCard key={sampleKiwi.id} kiwi={sampleKiwi} />
+              <KiwiSampleCard />
             </>
           ) : (
-            kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
+            kiwis.map((kiwi) => {
+              const { name, description, coverImage, participants, id } = kiwi;
+              const participantsCount = participants.length;
+              const currentParticipant = participants.find(
+                (participant) => participant.userId === tempUser.id,
+              );
+              const progress = currentParticipant?.progress || 0;
+              const lastActivityAt = currentParticipant?.lastActivityAt || "";
+              return (
+                <KiwiCard
+                  key={id}
+                  id={id}
+                  name={name}
+                  description={description}
+                  coverImage={coverImage || ""}
+                  progress={progress}
+                  participantsCount={participantsCount}
+                  lastActivityAt={lastActivityAt}
+                  handleSetSelectedKiwi={handleSetSelectedKiwi}
+                />
+              );
+            })
           )}
         </div>
       </div>
@@ -42,6 +75,13 @@ function Kiwis({ kiwis }: KiwisProps) {
         <CreateKiwiModal
           open={isCreateKiwiModalOpen}
           setOpen={setIsCreateKiwiModalOpen}
+        />
+      )}
+      {isKiwiDetailModalOpen && selectedKiwi && (
+        <KiwiDetailModal
+          kiwi={selectedKiwi}
+          isOpen={isKiwiDetailModalOpen}
+          onClose={() => setIsKiwiDetailModalOpen(false)}
         />
       )}
     </>

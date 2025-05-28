@@ -17,7 +17,7 @@ function ActivitiesTab({ kiwi }: ActivitiesTabProps) {
         <h3 className="font-medium">팀원 진도율</h3>
         <div className="space-y-3 rounded-lg border p-4">
           {participants.map((participant: ParticipantType) => (
-            <div key={participant.id} className="flex items-center gap-3">
+            <div key={participant.userId} className="flex items-center gap-3">
               <Avatar className="size-8">
                 <AvatarImage src={participant.profileImage} />
                 <AvatarFallback>{participant.name[0]}</AvatarFallback>

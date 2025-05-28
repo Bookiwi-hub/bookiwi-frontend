@@ -4,7 +4,7 @@ import { ParticipantType } from "#/types/kiwi";
 
 export const participants: ParticipantType[] = [
   {
-    id: 0,
+    userId: "sample-participant-0",
     name: "KIWI",
     profileImage: "https://github.com/shadcn.png",
     color: color[0]!,
@@ -20,7 +20,7 @@ export const participants: ParticipantType[] = [
     },
   },
   {
-    id: 1,
+    userId: "sample-participant-1",
     name: "조현지",
     profileImage: "",
     color: color[1]!,
@@ -36,7 +36,7 @@ export const participants: ParticipantType[] = [
     },
   },
   {
-    id: 2,
+    userId: "sample-participant-2",
     name: "임진조",
     profileImage: "",
     color: color[2]!,
@@ -52,7 +52,7 @@ export const participants: ParticipantType[] = [
     },
   },
   {
-    id: 3,
+    userId: "sample-participant-3",
     name: "홍서하",
     profileImage: "",
     color: color[3]!,
@@ -68,7 +68,7 @@ export const participants: ParticipantType[] = [
     },
   },
   {
-    id: 4,
+    userId: "sample-participant-4",
     name: "한상우",
     profileImage: "",
     color: color[4]!,
@@ -84,7 +84,7 @@ export const participants: ParticipantType[] = [
     },
   },
   {
-    id: 5,
+    userId: "sample-participant-5",
     name: "채종민",
     profileImage: "",
     color: color[5]!,

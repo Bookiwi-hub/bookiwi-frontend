@@ -2,6 +2,7 @@ import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
+import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import { Kiwi } from "#/types/kiwi";
 
 interface InformationTabProps {
@@ -11,16 +12,13 @@ interface InformationTabProps {
 function InformationTab({ kiwi }: InformationTabProps) {
   const {
     admin,
-    book,
+    bookMetadata,
     createdAt,
-    lastActivityAt,
     detailDescription,
     maxParticipants,
+    coverImage,
     participants = [],
   } = kiwi;
-
-  const fallbackImageUrl =
-    "https://placehold.co/300x400/e2e8f0/64748b?text=No+Cover";
 
   return (
     <div className="mb-10 space-y-6">
@@ -28,7 +26,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
         <div className="col-span-1">
           <div className="aspect-[3/4] overflow-hidden rounded-md bg-gray-100">
             <img
-              src={book.coverImage || fallbackImageUrl}
+              src={coverImage || FALLBACK_IMAGE_URL}
               alt="Book cover"
               className="size-full object-cover"
             />
@@ -57,7 +55,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
               <li className="flex items-center gap-2">
                 <Book size={16} className="text-muted-foreground" />
                 <span>
-                  {book.metadata.title} - {book.metadata.author}
+                  {bookMetadata.title} - {bookMetadata.author}
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -66,7 +64,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
               </li>
               <li className="flex items-center gap-2">
                 <Clock size={16} className="text-muted-foreground" />
-                <span>최근 활동: {lastActivityAt}</span>
+                <span>최근 활동: {participants[0]?.lastActivityAt}</span>
               </li>
             </ul>
           </div>
@@ -90,7 +88,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
         <ul className="max-h-60 overflow-y-auto pr-1">
-          {book.metadata.toc.map((item, index) => (
+          {bookMetadata.toc.map((item, index) => (
             <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
           ))}
         </ul>
@@ -98,7 +96,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
 
       {detailDescription && (
         <div className="space-y-2">
-          <h3 className="font-medium">그룹 소개</h3>
+          <h3 className="font-medium">상세 설명</h3>
           <p className="whitespace-pre-wrap text-sm text-muted-foreground">
             {detailDescription}
           </p>

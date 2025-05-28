@@ -1,4 +1,73 @@
-import { BookData, Settings, ReadingRecord } from "./book";
+import { NavItem } from "@bookiwi/epubjs/types/navigation";
+
+import { User } from "./user";
+
+export interface Settings {
+  isSinglePage: boolean;
+  fontFamily?: string;
+  fontSize?: number;
+  lineHeight?: number;
+  fontWeight?: number;
+}
+
+export interface BookmarkItem {
+  cfi: string;
+  timestamp: number;
+}
+
+export interface ReadingRecord {
+  currentCfi: string | null;
+  percentage: number | null;
+  bookmarks: BookmarkItem[];
+}
+
+export interface BookMetadata {
+  title: string;
+  author: string;
+  publisher: string;
+  toc: NavItem[];
+}
+
+export interface BookData {
+  id: string;
+  kiwiId: string;
+  file: File;
+  locations: string;
+}
+
+export interface ParticipantType {
+  userId: string;
+  name: string;
+  profileImage: string;
+  progress: number;
+  color: string;
+  lastActivityAt: string;
+  readingRecord: ReadingRecord;
+  settings: Settings;
+}
+
+export interface Kiwi {
+  id: string;
+  name: string;
+  description: string;
+  maxParticipants: number;
+  detailDescription?: string;
+  password: string | null;
+  shareCode: string;
+  bookMetadata: BookMetadata;
+  bookDataId: string;
+  coverImage: string | null;
+  createdAt: string;
+  admin: User;
+  activities?: ActivityProps[];
+  participants: ParticipantType[];
+  discussions?: DiscussionProps[];
+  events?: EventProps[];
+}
+
+export interface KiwiDB extends Omit<Kiwi, "coverImage"> {
+  coverImage: Blob | null;
+}
 
 export interface DiscussionProps {
   id: string;
@@ -21,44 +90,4 @@ export interface ActivityProps {
   action: string;
   content: string;
   time: string;
-}
-
-export interface Member {
-  id: number;
-  name: string;
-  avatar: string;
-  progress: number;
-  lastActivityAt: string;
-}
-
-export interface ParticipantType {
-  id: number;
-  name: string;
-  profileImage: string;
-  progress: number;
-  color: string;
-  lastActivityAt: string;
-  readingRecord: ReadingRecord;
-  settings: Settings;
-}
-
-export interface Kiwi {
-  id: string;
-  name: string;
-  description: string;
-  maxParticipants: number;
-  lastActivityAt: string;
-  detailDescription?: string;
-  password: string | null;
-  shareCode: string;
-  book: BookData;
-  discussions?: DiscussionProps[];
-  events?: EventProps[];
-  activities?: ActivityProps[];
-  createdAt: string;
-  admin: {
-    id: number;
-    name: string;
-  };
-  participants: ParticipantType[];
 }

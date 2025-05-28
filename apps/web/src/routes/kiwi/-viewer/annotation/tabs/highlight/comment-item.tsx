@@ -13,7 +13,7 @@ interface CommentItemProps {
 }
 
 function CommentItem({ creator, text, date, currentUser }: CommentItemProps) {
-  const isCurrentUser = creator.id === currentUser.id;
+  const isCurrentUser = creator.userId === currentUser.userId;
   const formattedDate = formatDate(date);
 
   return (

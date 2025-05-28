@@ -3,7 +3,6 @@ import {
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -28,27 +27,26 @@ export const useKiwis = () => {
 
 interface KiwisProviderProps {
   children: ReactNode;
+  kiwis: Kiwi[];
 }
 
-export function KiwisProvider({ children }: KiwisProviderProps) {
-  const [kiwis, setKiwis] = useState<Kiwi[]>([]);
+export function KiwisProvider({ children, kiwis }: KiwisProviderProps) {
+  const [kiwisState, setKiwisState] = useState<Kiwi[]>(kiwis);
 
   const setNewKiwi = useCallback(
     (kiwi: Kiwi) => {
-      setKiwis([...kiwis, kiwi]);
+      setKiwisState([kiwi, ...kiwisState]);
     },
-    [kiwis],
+    [kiwisState],
   );
-
-  useEffect(() => {}, []);
 
   const value = useMemo(
     () => ({
-      kiwis,
-      setKiwis,
+      kiwis: kiwisState,
+      setKiwis: setKiwisState,
       setNewKiwi,
     }),
-    [kiwis, setNewKiwi],
+    [kiwisState, setNewKiwi],
   );
 
   return (
