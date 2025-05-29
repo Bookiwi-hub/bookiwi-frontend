@@ -1,24 +1,5 @@
 import { IndexDBError } from "#/errors";
 
-interface DBConfig {
-  name: string;
-  version: number;
-  stores: StoreConfig[];
-}
-
-interface StoreConfig {
-  name: string;
-  keyPath: string;
-  indices?: IndexConfig[];
-  autoIncrement?: boolean;
-}
-
-interface IndexConfig {
-  name: string;
-  keyPath: string;
-  options?: IDBIndexParameters;
-}
-
 class IndexedDBManager {
   private db: IDBDatabase | null = null;
 
@@ -536,12 +517,31 @@ class IndexedDBManager {
   }
 }
 
+interface DBConfig {
+  name: string;
+  version: number;
+  stores: StoreConfig[];
+}
+
+interface StoreConfig {
+  name: string;
+  keyPath: string;
+  indices?: IndexConfig[];
+  autoIncrement?: boolean;
+}
+
+interface IndexConfig {
+  name: string;
+  keyPath: string;
+  options?: IDBIndexParameters;
+}
+
 const config: DBConfig = {
-  name: "develop",
+  name: "bookiwi",
   version: 1,
   stores: [
     {
-      name: "kiwis",
+      name: "kiwi",
       keyPath: "id",
       autoIncrement: false,
       indices: [
@@ -557,7 +557,7 @@ const config: DBConfig = {
       ],
     },
     {
-      name: "bookData",
+      name: "epub",
       keyPath: "id",
       autoIncrement: false,
       indices: [
@@ -565,6 +565,25 @@ const config: DBConfig = {
           name: "kiwiId",
           keyPath: "kiwiId",
           options: { unique: true },
+        },
+        {
+          name: "bookMetadata",
+          keyPath: "id",
+        },
+        {
+          name: "coverImage",
+          keyPath: "id",
+        },
+      ],
+    },
+    {
+      name: "participant",
+      keyPath: "id",
+      autoIncrement: false,
+      indices: [
+        {
+          name: "kiwiId",
+          keyPath: "kiwiId",
         },
       ],
     },

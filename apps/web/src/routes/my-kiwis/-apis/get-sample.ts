@@ -10,7 +10,7 @@ import {
   SAMPLE_KIWI_ID,
   SAMPLE_KIWI_URL,
 } from "#/constants/kiwi";
-import idb from "#/managers/indexed-db";
+import idb from "#/managers/idb";
 import { BookData, BookMetadata, Kiwi, KiwiDB } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";
 import { blobToObjectUrl } from "#/utils/file";

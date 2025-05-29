@@ -1,4 +1,4 @@
-import idb from "#/managers/indexed-db";
+import idb from "#/managers/idb";
 import { Settings, ReadingRecord, BookData, KiwiDB } from "#/types/kiwi";
 
 type GetBookResponse = {

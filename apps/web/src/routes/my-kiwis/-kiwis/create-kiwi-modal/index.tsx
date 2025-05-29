@@ -25,7 +25,7 @@ import {
   DialogFooter,
 } from "#/components/ui/dialog";
 import { initialSettings, initialReadingRecord } from "#/constants/kiwi";
-import idb from "#/managers/indexed-db";
+import idb from "#/managers/idb";
 import { useKiwis } from "#/routes/my-kiwis/-context";
 import { BookData, BookMetadata, Kiwi, KiwiDB } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";

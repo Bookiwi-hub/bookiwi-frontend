@@ -1,5 +1,5 @@
 import { SAMPLE_KIWI_ID } from "#/constants/kiwi";
-import idb from "#/managers/indexed-db";
+import idb from "#/managers/idb";
 import { Kiwi, KiwiDB } from "#/types/kiwi";
 import { blobToObjectUrl } from "#/utils/file";
 
