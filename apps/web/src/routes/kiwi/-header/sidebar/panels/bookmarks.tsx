@@ -80,7 +80,7 @@ function BookmarksPanel() {
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
-    return formatDate(date.toISOString());
+    return formatDate(date);
   };
 
   return (
