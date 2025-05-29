@@ -1,3 +1,4 @@
+import { IDBStore } from "#/constants/idb";
 import { IndexDBError } from "#/errors";
 
 class IndexedDBManager {
@@ -541,7 +542,7 @@ const config: DBConfig = {
   version: 1,
   stores: [
     {
-      name: "kiwi",
+      name: IDBStore.KiwiStore,
       keyPath: "id",
       autoIncrement: false,
       indices: [
@@ -552,12 +553,12 @@ const config: DBConfig = {
         },
         {
           name: "adminId",
-          keyPath: "admin.id",
+          keyPath: "adminId",
         },
       ],
     },
     {
-      name: "epub",
+      name: IDBStore.EpubStore,
       keyPath: "id",
       autoIncrement: false,
       indices: [
@@ -566,24 +567,38 @@ const config: DBConfig = {
           keyPath: "kiwiId",
           options: { unique: true },
         },
-        {
-          name: "bookMetadata",
-          keyPath: "id",
-        },
-        {
-          name: "coverImage",
-          keyPath: "id",
-        },
       ],
     },
     {
-      name: "participant",
+      name: IDBStore.ParticipantStore,
       keyPath: "id",
       autoIncrement: false,
       indices: [
         {
           name: "kiwiId",
           keyPath: "kiwiId",
+          options: { unique: false },
+        },
+        {
+          name: "userId",
+          keyPath: "userId",
+        },
+        {
+          name: "recordId",
+          keyPath: "recordId",
+          options: { unique: true },
+        },
+      ],
+    },
+    {
+      name: IDBStore.RecordStore,
+      keyPath: "id",
+      autoIncrement: false,
+      indices: [
+        {
+          name: "participantId",
+          keyPath: "participantId",
+          options: { unique: true },
         },
       ],
     },

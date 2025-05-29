@@ -1,41 +1,32 @@
-import { SAMPLE_KIWI_ID } from "#/constants/kiwi";
+import { IDBStore, SAMPLE_KIWI_DATA_ID } from "#/constants/idb";
 import idb from "#/managers/idb";
-import { Kiwi, KiwiDB } from "#/types/kiwi";
-import { blobToObjectUrl } from "#/utils/file";
+import { KiwiIDBData } from "#/types/idb";
+import { Kiwi } from "#/types/kiwi";
+import { kiwIDBDataToKiwi } from "#/utils/idb";
 
-const getKiwisFromIndexedDB = async (): Promise<Kiwi[]> => {
+/**
+ * IndexedDB에서 키위 목록을 가져오는 함수
+ */
+const getKiwisFromIDB = async (): Promise<Kiwi[]> => {
   try {
-    const kiwiDB = await idb.getAll("kiwis");
+    const kiwiStoreData = await idb.getAll<KiwiIDBData>(IDBStore.KiwiStore);
 
     // 데이터가 없으면 빈 배열 반환
-    if (!kiwiDB || kiwiDB.length === 0) {
+    if (!kiwiStoreData || kiwiStoreData.length === 0) {
       return [];
     }
 
-    // SAMPLE_KIWI_ID에 해당하는 kiwi 제외
-    const filteredKiwiDB = (kiwiDB as KiwiDB[]).filter(
-      (kiwiItem) => kiwiItem.id !== SAMPLE_KIWI_ID,
+    // 유효한 키위 데이터만 필터링
+    const validKiwiData = kiwiStoreData.filter(
+      (kiwiItem) => kiwiItem.id !== SAMPLE_KIWI_DATA_ID,
     );
+    const kiwis = await Promise.all(validKiwiData.map(kiwIDBDataToKiwi));
 
-    const kiwis = await Promise.all(
-      filteredKiwiDB.map(async (kiwiItem) => {
-        const { coverImage } = kiwiItem;
-        const coverImageObjectUrl = coverImage
-          ? await blobToObjectUrl(coverImage)
-          : null;
-
-        return {
-          ...kiwiItem,
-          coverImage: coverImageObjectUrl,
-        };
-      }),
-    );
-
-    return kiwis as Kiwi[];
+    return kiwis;
   } catch (error) {
     alert("데이터를 불러오는 데 실패했습니다");
     return [];
   }
 };
 
-export default getKiwisFromIndexedDB;
+export default getKiwisFromIDB;

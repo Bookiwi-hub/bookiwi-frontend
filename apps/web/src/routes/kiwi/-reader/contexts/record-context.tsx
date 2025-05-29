@@ -10,7 +10,7 @@ import {
 
 import { useBook } from "./book-context";
 
-import { ReadingRecord, BookmarkItem } from "#/types/kiwi";
+import { ReadingRecord, Bookmark } from "#/types/kiwi";
 
 interface RecordContextType extends ReadingRecord {
   setCurrentCfi: (currentCfi: string) => void;
@@ -43,25 +43,26 @@ export function RecordProvider({
   );
   const [percentageState, setPercentageState] = useState<number | null>(null);
 
-  // Convert legacy string[] bookmarks to BookmarkItem[] if needed
-  const initialBookmarks = Array.isArray(readingRecord.bookmarks)
-    ? readingRecord.bookmarks.map(
-        (bookmark) =>
-          typeof bookmark === "string"
-            ? { cfi: bookmark, timestamp: Date.now() } // Convert string to BookmarkItem
-            : bookmark, // Already a BookmarkItem
-      )
-    : [];
+  // // Convert legacy string[] bookmarks to BookmarkItem[] if needed
+  // const initialBookmarks = Array.isArray(readingRecord.bookmarks)
+  //   ? readingRecord.bookmarks.map(
+  //       (bookmark) =>
+  //         typeof bookmark === "string"
+  //           ? { cfi: bookmark, createdAt:  } // Convert string to BookmarkItem
+  //           : bookmark, // Already a BookmarkItem
+  //     )
+  //   : [];
 
-  const [bookmarksState, setBookmarksState] =
-    useState<BookmarkItem[]>(initialBookmarks);
+  const [bookmarksState, setBookmarksState] = useState<Bookmark[]>(
+    readingRecord.bookmarks,
+  );
   const key = `${book?.key()}-readingRecord`;
 
   // 현재 전체 레코드 상태를 참조로 유지
   const recordRef = useRef<ReadingRecord>({
-    bookmarks: initialBookmarks,
+    bookmarks: readingRecord.bookmarks,
     currentCfi: readingRecord.currentCfi,
-    percentage: null,
+    percentage: readingRecord.percentage,
   });
 
   const setCurrentCfi = useCallback(
@@ -90,9 +91,9 @@ export function RecordProvider({
       );
 
       if (!exists) {
-        const newBookmarkItem: BookmarkItem = {
+        const newBookmarkItem: Bookmark = {
           cfi: newBookmarkCfi,
-          timestamp: Date.now(),
+          createdAt: new Date().toISOString(),
         };
 
         const newBookmarks = [...bookmarksState, newBookmarkItem];

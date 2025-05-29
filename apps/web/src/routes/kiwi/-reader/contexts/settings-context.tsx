@@ -79,14 +79,14 @@ export function SettingsProvider({
     async (value?: string) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
-      setFontFamilyState(value);
+      setFontFamilyState(value ?? null);
       settingsRef.current = {
         ...settingsRef.current,
-        fontFamily: value,
+        fontFamily: value ?? null,
       };
       localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
-        fontFamily: value,
+        fontFamily: value ?? null,
         fontSize: settingsRef.current.fontSize,
         fontWeight: settingsRef.current.fontWeight,
         lineHeight: settingsRef.current.lineHeight,
@@ -99,14 +99,14 @@ export function SettingsProvider({
     async (value?: number) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
-      setFontSizeState(value);
+      setFontSizeState(value ?? null);
       settingsRef.current = {
         ...settingsRef.current,
-        fontSize: value,
+        fontSize: value ?? null,
       };
       localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
-        fontSize: value,
+        fontSize: value ?? null,
         fontFamily: settingsRef.current.fontFamily,
         fontWeight: settingsRef.current.fontWeight,
         lineHeight: settingsRef.current.lineHeight,
@@ -124,17 +124,17 @@ export function SettingsProvider({
       const newValue =
         value !== undefined ? Number(Number(value).toFixed(1)) : undefined;
 
-      setLineHeightState(newValue);
+      setLineHeightState(newValue ?? null);
       settingsRef.current = {
         ...settingsRef.current,
-        lineHeight: newValue,
+        lineHeight: newValue ?? null,
       };
       localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
         fontSize: settingsRef.current.fontSize,
         fontFamily: settingsRef.current.fontFamily,
         fontWeight: settingsRef.current.fontWeight,
-        lineHeight: newValue,
+        lineHeight: newValue ?? null,
       });
     },
     [key, book],
@@ -144,16 +144,16 @@ export function SettingsProvider({
     async (value?: number) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
-      setFontWeightState(value);
+      setFontWeightState(value ?? null);
       settingsRef.current = {
         ...settingsRef.current,
-        fontWeight: value,
+        fontWeight: value ?? null,
       };
       localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
         fontSize: settingsRef.current.fontSize,
         fontFamily: settingsRef.current.fontFamily,
-        fontWeight: value,
+        fontWeight: value ?? null,
         lineHeight: settingsRef.current.lineHeight,
       });
     },

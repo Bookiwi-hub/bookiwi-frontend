@@ -1,49 +1,13 @@
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
-import { User } from "./user";
-
-export interface Settings {
-  isSinglePage: boolean;
-  fontFamily?: string;
-  fontSize?: number;
-  lineHeight?: number;
-  fontWeight?: number;
-}
-
-export interface BookmarkItem {
-  cfi: string;
-  timestamp: number;
-}
-
-export interface ReadingRecord {
-  currentCfi: string | null;
-  percentage: number | null;
-  bookmarks: BookmarkItem[];
-}
-
-export interface BookMetadata {
-  title: string;
-  author: string;
-  publisher: string;
-  toc: NavItem[];
-}
-
-export interface BookData {
+export interface Participant {
   id: string;
-  kiwiId: string;
-  file: File;
-  locations: string;
-}
-
-export interface ParticipantType {
   userId: string;
   name: string;
   profileImage: string;
   progress: number;
   color: string;
-  lastActivityAt: string;
-  readingRecord: ReadingRecord;
-  settings: Settings;
+  lastActivityAt: Date;
 }
 
 export interface Kiwi {
@@ -51,43 +15,38 @@ export interface Kiwi {
   name: string;
   description: string;
   maxParticipants: number;
-  detailDescription?: string;
+  detailDescription: string;
   password: string | null;
   shareCode: string;
   bookMetadata: BookMetadata;
-  bookDataId: string;
   coverImage: string | null;
+  createdAt: Date;
+  adminId: string;
+  participants: Participant[];
+}
+
+export interface Settings {
+  isSinglePage: boolean;
+  fontFamily: string | null;
+  fontSize: number | null;
+  lineHeight: number | null;
+  fontWeight: number | null;
+}
+
+export interface Bookmark {
+  cfi: string;
   createdAt: string;
-  admin: User;
-  activities?: ActivityProps[];
-  participants: ParticipantType[];
-  discussions?: DiscussionProps[];
-  events?: EventProps[];
 }
 
-export interface KiwiDB extends Omit<Kiwi, "coverImage"> {
-  coverImage: Blob | null;
+export interface ReadingRecord {
+  currentCfi: string | null;
+  percentage: number | null;
+  bookmarks: Bookmark[];
 }
 
-export interface DiscussionProps {
-  id: string;
+export interface BookMetadata {
   title: string;
-  comments: number;
-  lastActive: string;
-}
-
-export interface EventProps {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  participants: number;
-}
-
-export interface ActivityProps {
-  id: string;
-  user: string;
-  action: string;
-  content: string;
-  time: string;
+  author: string;
+  publisher: string;
+  toc: NavItem[];
 }

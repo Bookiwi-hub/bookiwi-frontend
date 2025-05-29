@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 
+import { useKiwis } from "../-context";
+
 import CreateKiwiModal from "./create-kiwi-modal";
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
@@ -9,12 +11,10 @@ import KiwiSampleCard from "./kiwi-sample-card";
 
 import tempUser from "#/DB/users";
 import { Kiwi } from "#/types/kiwi";
+import { formatDate } from "#/utils/format-date";
 
-interface KiwisProps {
-  kiwis: Kiwi[];
-}
-
-function Kiwis({ kiwis }: KiwisProps) {
+function Kiwis() {
+  const { kiwis } = useKiwis();
   const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
   const [isKiwiDetailModalOpen, setIsKiwiDetailModalOpen] = useState(false);
   const [selectedKiwi, setSelectedKiwi] = useState<Kiwi | null>(null);
@@ -53,7 +53,9 @@ function Kiwis({ kiwis }: KiwisProps) {
                 (participant) => participant.userId === tempUser.id,
               );
               const progress = currentParticipant?.progress || 0;
-              const lastActivityAt = currentParticipant?.lastActivityAt || "";
+              const lastActivityAt = currentParticipant?.lastActivityAt
+                ? formatDate(currentParticipant.lastActivityAt)
+                : "";
               return (
                 <KiwiCard
                   key={id}

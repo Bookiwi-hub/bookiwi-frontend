@@ -48,8 +48,7 @@ export const formatDateTime = (date: Date): string => {
  * // 결과: "2023-01-15 오후 2:30"
  * formatDate("2023-01-15T14:30:00.000Z");
  */
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
+export const formatDate = (date: Date): string => {
   const now = new Date();
 
   const diffMs = now.getTime() - date.getTime();

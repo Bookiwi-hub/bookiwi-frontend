@@ -4,6 +4,7 @@ import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import { Kiwi } from "#/types/kiwi";
+import { formatDate, formatDateOnly } from "#/utils/format-date";
 
 interface InformationTabProps {
   kiwi: Kiwi;
@@ -11,14 +12,18 @@ interface InformationTabProps {
 
 function InformationTab({ kiwi }: InformationTabProps) {
   const {
-    admin,
+    adminId,
     bookMetadata,
     createdAt,
     detailDescription,
     maxParticipants,
     coverImage,
-    participants = [],
+    participants,
   } = kiwi;
+
+  const admin = participants.find(
+    (participant) => participant.userId === adminId,
+  );
 
   return (
     <div className="mb-10 space-y-6">
@@ -39,7 +44,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
                 <User size={16} className="text-muted-foreground" />
-                <span>관리자: {admin.name}</span>
+                <span>관리자: {admin?.name}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Users size={16} className="text-muted-foreground" />
@@ -60,11 +65,16 @@ function InformationTab({ kiwi }: InformationTabProps) {
               </li>
               <li className="flex items-center gap-2">
                 <Calendar size={16} className="text-muted-foreground" />
-                <span>생성일: {createdAt}</span>
+                <span>생성일: {formatDateOnly(createdAt)}</span>
               </li>
               <li className="flex items-center gap-2">
                 <Clock size={16} className="text-muted-foreground" />
-                <span>최근 활동: {participants[0]?.lastActivityAt}</span>
+                <span>
+                  최근 활동:{" "}
+                  {participants[0]?.lastActivityAt
+                    ? formatDate(participants[0].lastActivityAt)
+                    : ""}
+                </span>
               </li>
             </ul>
           </div>

@@ -67,7 +67,7 @@ function HighlightItem({
       </div>
       <div className="flex items-center justify-between text-xs text-gray-500">
         <div>페이지 {page}</div>
-        <div>{formatDate(date)}</div>
+        <div>{formatDate(new Date(date))}</div>
       </div>
       <div className="mt-2 text-xs text-gray-500">
         {totalComments > 0 ? `댓글 ${totalComments}개` : ""}

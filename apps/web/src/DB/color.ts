@@ -5,6 +5,6 @@ const color = [
   "rgba(253, 224, 71)",
   "rgba(216, 180, 254)",
   "rgba(251, 146, 60)",
-];
+] as const;
 
 export default color;

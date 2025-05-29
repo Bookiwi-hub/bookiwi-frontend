@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import addSampleKiwi from "../-apis/add-sample";
 import getSampleKiwi from "../-apis/get-sample";
 
 import KiwiCard from "./kiwi-card";
@@ -8,6 +9,7 @@ import KiwiDetailModal from "./kiwi-detail-modal";
 import { Card } from "#/components/ui/card";
 import Spinner from "#/components/ui/spinner";
 import { Kiwi } from "#/types/kiwi";
+import { formatDate } from "#/utils/format-date";
 
 function KiwiSampleCardLoading() {
   return (
@@ -30,9 +32,12 @@ function KiwiSampleCard() {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   useEffect(() => {
     const fetchSampleKiwi = async () => {
-      const sampleKiwi = await getSampleKiwi();
-      if (sampleKiwi) {
-        setKiwi(sampleKiwi);
+      const StoredSampleKiwi = await getSampleKiwi();
+      if (!StoredSampleKiwi) {
+        const newSampleKiwi = await addSampleKiwi();
+        setKiwi(newSampleKiwi);
+      } else {
+        setKiwi(StoredSampleKiwi);
       }
     };
     fetchSampleKiwi();
@@ -46,7 +51,11 @@ function KiwiSampleCard() {
         coverImage={kiwi.coverImage || ""}
         progress={kiwi.participants[0]?.progress || 0}
         participantsCount={kiwi.participants.length}
-        lastActivityAt={kiwi.participants[0]?.lastActivityAt || ""}
+        lastActivityAt={
+          kiwi.participants[0]?.lastActivityAt
+            ? formatDate(kiwi.participants[0].lastActivityAt)
+            : ""
+        }
         handleSetSelectedKiwi={() => setIsDetailModalOpen(true)}
       />
       {isDetailModalOpen && (

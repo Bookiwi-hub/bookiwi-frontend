@@ -24,12 +24,18 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
-import { initialSettings, initialReadingRecord } from "#/constants/kiwi";
+import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
 import { useKiwis } from "#/routes/my-kiwis/-context";
-import { BookData, BookMetadata, Kiwi, KiwiDB } from "#/types/kiwi";
+import {
+  KiwiIDBData,
+  EpubIDBData,
+  ParticipantIDBData,
+  RecordIDBData,
+} from "#/types/idb";
+import { BookMetadata, Kiwi } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";
-import { formatDateOnly } from "#/utils/format-date";
+import { kiwIDBDataToKiwi } from "#/utils/idb";
 
 const Titles: Record<Step, string> = {
   [Step.BasicInfo]: "새로운 키위 만들기",
@@ -96,7 +102,17 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         .toString(36)
         .substring(2, 8)
         .toUpperCase();
-      const generatedBookDataId = Math.random()
+      const generatedEpubId = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
+
+      const generatedParticipantId = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
+
+      const generatedReadingId = Math.random()
         .toString(36)
         .substring(2, 8)
         .toUpperCase();
@@ -112,7 +128,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         toc: bookInfo.toc,
       };
 
-      const kiwiDB: KiwiDB = {
+      const kiwiIDBData: KiwiIDBData = {
         id: generatedKiwiId,
         name: state.kiwiName,
         description: state.kiwiDescription,
@@ -120,39 +136,51 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         detailDescription: state.kiwiDetailDescription,
         password: state.passwordProtected ? state.password : null,
         shareCode: generatedShareCode,
-        createdAt: formatDateOnly(new Date()),
-        admin: tempUser,
-        bookMetadata,
-        bookDataId: generatedBookDataId,
-        participants: [
-          {
-            userId: tempUser.id,
-            name: tempUser.name,
-            profileImage: tempUser.profileImage,
-            progress: 0,
-            color: color[0]!,
-            lastActivityAt: "2025-05-23",
-            readingRecord: initialReadingRecord,
-            settings: initialSettings,
-          },
-        ],
+        createdAt: new Date().toISOString(),
         coverImage: bookInfo.coverImageBlob,
+        bookMetadata,
+        epubId: generatedEpubId,
+        adminId: tempUser.id,
+        participantIds: [generatedParticipantId],
       };
 
-      const bookData: BookData = {
-        id: generatedBookDataId,
+      const participantIDBData: ParticipantIDBData = {
+        id: generatedParticipantId,
+        kiwiId: generatedKiwiId,
+        userId: tempUser.id,
+        name: tempUser.name,
+        profileImage: tempUser.profileImage,
+        color: color[0],
+        recordId: generatedReadingId,
+      };
+
+      const epubIDBData: EpubIDBData = {
+        id: generatedEpubId,
         kiwiId: generatedKiwiId,
         file: bookInfo.file,
         locations: bookInfo.locations,
       };
 
-      await idb.add("kiwis", kiwiDB);
-      await idb.add("bookData", bookData);
-
-      const newKiwi: Kiwi = {
-        ...kiwiDB,
-        coverImage: bookInfo.coverImageObjectUrl,
+      const recordIDBData: RecordIDBData = {
+        id: generatedReadingId,
+        participantId: generatedParticipantId,
+        lastActivityAt: new Date().toISOString(),
+        currentCfi: null,
+        percentage: null,
+        isSinglePage: false,
+        fontFamily: null,
+        fontSize: null,
+        lineHeight: null,
+        fontWeight: null,
+        bookmarks: [],
       };
+
+      await idb.add(IDBStore.KiwiStore, kiwiIDBData);
+      await idb.add(IDBStore.EpubStore, epubIDBData);
+      await idb.add(IDBStore.ParticipantStore, participantIDBData);
+      await idb.add(IDBStore.RecordStore, recordIDBData);
+
+      const newKiwi: Kiwi = await kiwIDBDataToKiwi(kiwiIDBData);
 
       await router.invalidate();
       setNewKiwi(newKiwi);

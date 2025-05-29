@@ -24,7 +24,7 @@ function HighlightedText({
       text,
       maxLength: 100,
     });
-  const formattedDate = formatDate(date);
+  const formattedDate = formatDate(new Date(date));
 
   return (
     <div

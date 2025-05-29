@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import getKiwisFromIndexedDB from "./-apis/get-kiwis";
-import { KiwisProvider, useKiwis } from "./-context";
+import { KiwisProvider } from "./-context";
 import Header from "./-header";
 import Kiwis from "./-kiwis";
 
@@ -21,12 +21,11 @@ export const Route = createFileRoute("/my-kiwis/")({
 });
 
 function MyKiwis() {
-  const { kiwis } = useKiwis();
   return (
     <div className="flex size-full flex-col">
       <Header />
       <main className="size-full bg-white p-6 mobile:p-4">
-        <Kiwis kiwis={kiwis} />
+        <Kiwis />
       </main>
     </div>
   );

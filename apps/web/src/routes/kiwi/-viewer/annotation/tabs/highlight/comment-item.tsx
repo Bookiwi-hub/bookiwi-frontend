@@ -2,19 +2,19 @@ import { memo } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { cn } from "#/lib/utils";
-import { ParticipantType } from "#/types/kiwi";
+import { Participant } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 
 interface CommentItemProps {
-  creator: ParticipantType;
+  creator: Participant;
   text: string;
   date: string;
-  currentUser: ParticipantType;
+  currentUser: Participant;
 }
 
 function CommentItem({ creator, text, date, currentUser }: CommentItemProps) {
   const isCurrentUser = creator.userId === currentUser.userId;
-  const formattedDate = formatDate(date);
+  const formattedDate = formatDate(new Date(date));
 
   return (
     <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
