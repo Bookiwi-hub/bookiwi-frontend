@@ -19,10 +19,20 @@ export function Step1FooterButton() {
     const passwordError =
       state.passwordProtected &&
       (state.password === "" || state.password !== state.confirmPassword);
+    const maxParticipantsError =
+      state.maxParticipantsEnabled &&
+      (state.maxParticipants === "" ||
+        Number.isNaN(Number(state.maxParticipants)) ||
+        Number(state.maxParticipants) <= 0);
+
     dispatch({ type: ActionTypes.SET_NAME_ERROR, payload: nameError });
     dispatch({ type: ActionTypes.SET_PASSWORD_ERROR, payload: passwordError });
+    dispatch({
+      type: ActionTypes.SET_MAX_PARTICIPANTS_ERROR,
+      payload: maxParticipantsError,
+    });
 
-    return !nameError && !passwordError;
+    return !nameError && !passwordError && !maxParticipantsError;
   };
 
   const handleNext = () => {
