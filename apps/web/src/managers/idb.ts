@@ -637,7 +637,7 @@ interface IndexConfig {
 }
 
 const config: DBConfig = {
-  name: "bookiwi",
+  name: "bookiwi-idb",
   version: 1,
   stores: [
     {
@@ -681,23 +681,6 @@ const config: DBConfig = {
         {
           name: "userId",
           keyPath: "userId",
-        },
-        {
-          name: "recordId",
-          keyPath: "recordId",
-          options: { unique: true },
-        },
-      ],
-    },
-    {
-      name: IDBStore.RecordStore,
-      keyPath: "id",
-      autoIncrement: false,
-      indices: [
-        {
-          name: "participantId",
-          keyPath: "participantId",
-          options: { unique: true },
         },
       ],
     },

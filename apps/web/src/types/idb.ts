@@ -35,19 +35,17 @@ export interface ParticipantIDBData {
   name: string;
   profileImage: string;
   color: string;
-  recordId: string;
-}
-
-export interface RecordIDBData {
-  id: string;
-  participantId: string;
+  settings: {
+    isSinglePage: boolean;
+    fontFamily: string | null;
+    fontSize: number | null;
+    lineHeight: number | null;
+    fontWeight: number | null;
+  };
+  record: {
+    currentCfi: string | null;
+    percentage: number | null;
+    bookmarks: { cfi: string; createdAt: string }[];
+  };
   lastActivityAt: string;
-  currentCfi: string | null;
-  percentage: number | null;
-  isSinglePage: boolean;
-  fontFamily: string | null;
-  fontSize: number | null;
-  lineHeight: number | null;
-  fontWeight: number | null;
-  bookmarks: { cfi: string; createdAt: string }[];
 }

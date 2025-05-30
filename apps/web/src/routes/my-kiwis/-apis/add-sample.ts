@@ -6,20 +6,12 @@ import {
   SAMPLE_EPUB_URL,
   SAMPLE_KIWI_DATA_ID,
   SAMPLE_PARTICIPANT_IDS,
-  SAMPLE_RECORD_DATA_IDS,
   sampleIDBParticipants,
-  sampleIDBRecords,
 } from "#/constants/idb";
 import idb from "#/managers/idb";
-import {
-  EpubIDBData,
-  KiwiIDBData,
-  ParticipantIDBData,
-  RecordIDBData,
-} from "#/types/idb";
+import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 import { Kiwi } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";
-import { formatDateOnly } from "#/utils/format-date";
 import { kiwIDBDataToKiwi } from "#/utils/idb";
 
 const addSampleKiwi = async (): Promise<Kiwi> => {
@@ -47,7 +39,7 @@ const addSampleKiwi = async (): Promise<Kiwi> => {
       detailDescription: "키위를 체험해보세요",
       password: null,
       shareCode: "예시 키위는 공유할 수 없습니다.",
-      createdAt: formatDateOnly(new Date()),
+      createdAt: new Date().toISOString(),
       coverImage: bookInfo.coverImageBlob,
       bookMetadata: {
         title: bookInfo.title,
@@ -74,21 +66,19 @@ const addSampleKiwi = async (): Promise<Kiwi> => {
       name: tempUser.name,
       profileImage: tempUser.profileImage,
       color: color[0]!,
-      recordId: SAMPLE_RECORD_DATA_IDS[0],
-    };
-
-    const sampleRecordIDBData: RecordIDBData = {
-      id: SAMPLE_RECORD_DATA_IDS[0],
-      participantId: SAMPLE_PARTICIPANT_IDS[0],
+      record: {
+        currentCfi: null,
+        percentage: null,
+        bookmarks: [],
+      },
+      settings: {
+        isSinglePage: false,
+        fontFamily: null,
+        fontSize: null,
+        lineHeight: null,
+        fontWeight: null,
+      },
       lastActivityAt: new Date().toISOString(),
-      currentCfi: null,
-      percentage: null,
-      isSinglePage: false,
-      fontFamily: null,
-      fontSize: null,
-      lineHeight: null,
-      fontWeight: null,
-      bookmarks: [],
     };
 
     await idb.add(IDBStore.KiwiStore, sampleKiwiIDBData);
@@ -96,11 +86,6 @@ const addSampleKiwi = async (): Promise<Kiwi> => {
     await idb.add(IDBStore.ParticipantStore, sampleParticipantIDBData);
     sampleIDBParticipants.forEach(async (participant) => {
       await idb.add(IDBStore.ParticipantStore, participant);
-    });
-
-    await idb.add(IDBStore.RecordStore, sampleRecordIDBData);
-    sampleIDBRecords.forEach(async (record) => {
-      await idb.add(IDBStore.RecordStore, record);
     });
     const sampleKiwi = await kiwIDBDataToKiwi(sampleKiwiIDBData);
 

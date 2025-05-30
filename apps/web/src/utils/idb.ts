@@ -1,7 +1,7 @@
 import { blobToObjectUrl } from "./file";
 
 import idb from "#/managers/idb";
-import { KiwiIDBData, ParticipantIDBData, RecordIDBData } from "#/types/idb";
+import { KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 import { Kiwi, Participant } from "#/types/kiwi";
 
 export const kiwIDBDataToKiwi = async (
@@ -35,28 +35,15 @@ const convertCoverImage = async (
  */
 const convertParticipantData = async (
   participant: ParticipantIDBData,
-): Promise<Participant> => {
-  const recordData = await idb.get<RecordIDBData>(
-    "recordStore",
-    participant.recordId,
-  );
-
-  if (!recordData) {
-    throw new Error(
-      `Record data not found for recordId: ${participant.recordId}`,
-    );
-  }
-
-  return {
-    id: participant.id,
-    userId: participant.userId,
-    name: participant.name,
-    profileImage: participant.profileImage,
-    color: participant.color,
-    lastActivityAt: new Date(recordData.lastActivityAt),
-    progress: recordData.percentage ?? 0,
-  };
-};
+): Promise<Participant> => ({
+  id: participant.id,
+  userId: participant.userId,
+  name: participant.name,
+  profileImage: participant.profileImage,
+  color: participant.color,
+  lastActivityAt: participant.lastActivityAt,
+  progress: participant.record.percentage ?? 0,
+});
 
 /**
  * 키위 데이터에 참가자 정보를 추가
@@ -64,14 +51,14 @@ const convertParticipantData = async (
 const enrichKiwiWithParticipants = async (
   item: Omit<KiwiIDBData, "coverImage"> & { coverImage: string | null },
 ): Promise<Kiwi> => {
-  const participantData = await idb.getByIndex<ParticipantIDBData>(
+  const storedParticipants = await idb.getByIndex<ParticipantIDBData>(
     "participantStore",
     "kiwiId",
     item.id,
   );
 
   const participants = await Promise.all(
-    participantData.map(convertParticipantData),
+    storedParticipants.map(convertParticipantData),
   );
 
   return {
@@ -84,7 +71,7 @@ const enrichKiwiWithParticipants = async (
     shareCode: item.shareCode,
     bookMetadata: item.bookMetadata,
     coverImage: item.coverImage,
-    createdAt: new Date(item.createdAt),
+    createdAt: item.createdAt,
     adminId: item.adminId,
     participants,
   };

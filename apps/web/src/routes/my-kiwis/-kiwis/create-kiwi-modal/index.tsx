@@ -27,12 +27,7 @@ import {
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
 import { useKiwis } from "#/routes/my-kiwis/-context";
-import {
-  KiwiIDBData,
-  EpubIDBData,
-  ParticipantIDBData,
-  RecordIDBData,
-} from "#/types/idb";
+import { KiwiIDBData, EpubIDBData, ParticipantIDBData } from "#/types/idb";
 import { BookMetadata, Kiwi } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";
 import { kiwIDBDataToKiwi } from "#/utils/idb";
@@ -112,11 +107,6 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         .substring(2, 8)
         .toUpperCase();
 
-      const generatedReadingId = Math.random()
-        .toString(36)
-        .substring(2, 8)
-        .toUpperCase();
-
       if (abortControllerRef.current?.signal.aborted) {
         return;
       }
@@ -151,7 +141,19 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         name: tempUser.name,
         profileImage: tempUser.profileImage,
         color: color[0],
-        recordId: generatedReadingId,
+        record: {
+          currentCfi: null,
+          percentage: null,
+          bookmarks: [],
+        },
+        settings: {
+          isSinglePage: false,
+          fontFamily: null,
+          fontSize: null,
+          lineHeight: null,
+          fontWeight: null,
+        },
+        lastActivityAt: new Date().toISOString(),
       };
 
       const epubIDBData: EpubIDBData = {
@@ -161,24 +163,9 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         locations: bookInfo.locations,
       };
 
-      const recordIDBData: RecordIDBData = {
-        id: generatedReadingId,
-        participantId: generatedParticipantId,
-        lastActivityAt: new Date().toISOString(),
-        currentCfi: null,
-        percentage: null,
-        isSinglePage: false,
-        fontFamily: null,
-        fontSize: null,
-        lineHeight: null,
-        fontWeight: null,
-        bookmarks: [],
-      };
-
       await idb.add(IDBStore.KiwiStore, kiwiIDBData);
       await idb.add(IDBStore.EpubStore, epubIDBData);
       await idb.add(IDBStore.ParticipantStore, participantIDBData);
-      await idb.add(IDBStore.RecordStore, recordIDBData);
 
       const newKiwi: Kiwi = await kiwIDBDataToKiwi(kiwiIDBData);
 
