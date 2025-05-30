@@ -1,12 +1,7 @@
 import tempUser from "#/DB/users";
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
-import {
-  EpubIDBData,
-  KiwiIDBData,
-  ParticipantIDBData,
-  RecordIDBData,
-} from "#/types/idb";
+import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 import { ReadingRecord, Settings } from "#/types/kiwi";
 
 type GetBookResponse = {
@@ -15,6 +10,7 @@ type GetBookResponse = {
   locations: string;
   epubFile: File;
   kiwiTitle: string;
+  participantId: string;
 };
 
 const getBook = async (id: string): Promise<GetBookResponse> => {
@@ -51,31 +47,13 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
       throw new Error("Current participant not found");
     }
 
-    const recordData = await idb.get<RecordIDBData>(
-      IDBStore.RecordStore,
-      currentParticipant.recordId,
-    );
-
-    if (!recordData) {
-      throw new Error("Record data not found");
-    }
-
     return {
       locations: epubData.locations,
       epubFile: epubData.file,
-      readingRecord: {
-        currentCfi: recordData.currentCfi,
-        percentage: recordData.percentage,
-        bookmarks: recordData.bookmarks,
-      },
-      initialSettings: {
-        isSinglePage: recordData.isSinglePage,
-        fontFamily: recordData.fontFamily,
-        fontSize: recordData.fontSize,
-        lineHeight: recordData.lineHeight,
-        fontWeight: recordData.fontWeight,
-      },
+      readingRecord: currentParticipant.record,
+      initialSettings: currentParticipant.settings,
       kiwiTitle: kiwiData.name,
+      participantId: currentParticipant.id,
     };
   } catch (error) {
     throw new Error("Failed to fetch book");

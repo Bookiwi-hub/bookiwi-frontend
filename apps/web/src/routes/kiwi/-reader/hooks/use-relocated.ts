@@ -6,9 +6,9 @@ const useRelocated = () => {
   const { setCurrentCfi } = useRecord();
   const { setCurrentLocation } = useReading();
 
-  const handleRelocated = (location: Location) => {
+  const handleRelocated = async (location: Location) => {
     const { cfi } = location.start;
-    setCurrentCfi(cfi);
+    await setCurrentCfi(cfi);
     setCurrentLocation(location);
   };
 

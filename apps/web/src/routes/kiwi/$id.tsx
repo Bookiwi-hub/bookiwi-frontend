@@ -25,14 +25,21 @@ export const Route = createFileRoute("/kiwi/$id")({
 });
 
 function Kiwi() {
-  const { epubFile, initialSettings, kiwiTitle, readingRecord, locations } =
-    Route.useLoaderData();
+  const {
+    epubFile,
+    initialSettings,
+    kiwiTitle,
+    readingRecord,
+    locations,
+    participantId,
+  } = Route.useLoaderData();
   return (
     <ReaderProvider
       epubFile={epubFile}
       initialSettings={initialSettings}
       readingRecord={readingRecord}
       locations={locations}
+      participantId={participantId}
     >
       <ViewerProvider>
         <KiwiContent kiwiTitle={kiwiTitle} />

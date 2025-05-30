@@ -15,6 +15,7 @@ interface ReaderProviderProps {
   locations: string;
   initialSettings: Settings;
   readingRecord: ReadingRecord;
+  participantId: string;
 }
 
 function ReaderProvider({
@@ -23,11 +24,18 @@ function ReaderProvider({
   locations,
   initialSettings,
   readingRecord,
+  participantId,
 }: ReaderProviderProps) {
   return (
     <BookProvider epubFile={epubFile} locations={locations}>
-      <SettingsProvider initialSettings={initialSettings}>
-        <RecordProvider readingRecord={readingRecord}>
+      <SettingsProvider
+        initialSettings={initialSettings}
+        participantId={participantId}
+      >
+        <RecordProvider
+          readingRecord={readingRecord}
+          participantId={participantId}
+        >
           <ReadingProvider>{children}</ReadingProvider>
         </RecordProvider>
       </SettingsProvider>
