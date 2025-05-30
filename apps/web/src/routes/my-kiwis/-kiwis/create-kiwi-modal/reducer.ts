@@ -23,6 +23,9 @@ export interface CreateKiwiState {
   confirmPassword: string;
   passwordError: boolean;
   nameError: boolean;
+  maxParticipantsEnabled: boolean;
+  maxParticipants: string;
+  maxParticipantsError: boolean;
   selectedFile: File | null;
   fileError: boolean;
   shareCode: string;
@@ -42,6 +45,9 @@ export const ActionTypes = {
   SET_CONFIRM_PASSWORD: "SET_CONFIRM_PASSWORD",
   SET_PASSWORD_ERROR: "SET_PASSWORD_ERROR",
   SET_NAME_ERROR: "SET_NAME_ERROR",
+  SET_MAX_PARTICIPANTS_ENABLED: "SET_MAX_PARTICIPANTS_ENABLED",
+  SET_MAX_PARTICIPANTS: "SET_MAX_PARTICIPANTS",
+  SET_MAX_PARTICIPANTS_ERROR: "SET_MAX_PARTICIPANTS_ERROR",
   SET_SELECTED_FILE: "SET_SELECTED_FILE",
   SET_FILE_ERROR: "SET_FILE_ERROR",
   VALIDATE_STEP_1: "VALIDATE_STEP_1",
@@ -63,11 +69,14 @@ export type FormInputActions =
   | { type: typeof ActionTypes.SET_PASSWORD_PROTECTED; payload: boolean }
   | { type: typeof ActionTypes.SET_PASSWORD; payload: string }
   | { type: typeof ActionTypes.SET_CONFIRM_PASSWORD; payload: string }
+  | { type: typeof ActionTypes.SET_MAX_PARTICIPANTS_ENABLED; payload: boolean }
+  | { type: typeof ActionTypes.SET_MAX_PARTICIPANTS; payload: string }
   | { type: typeof ActionTypes.SET_SELECTED_FILE; payload: File | null };
 
 export type ValidationActions =
   | { type: typeof ActionTypes.SET_PASSWORD_ERROR; payload: boolean }
   | { type: typeof ActionTypes.SET_NAME_ERROR; payload: boolean }
+  | { type: typeof ActionTypes.SET_MAX_PARTICIPANTS_ERROR; payload: boolean }
   | { type: typeof ActionTypes.SET_FILE_ERROR; payload: boolean }
   | { type: typeof ActionTypes.VALIDATE_STEP_1 }
   | { type: typeof ActionTypes.VALIDATE_STEP_2 };
@@ -93,6 +102,9 @@ export const initialState: CreateKiwiState = {
   confirmPassword: "",
   passwordError: false,
   nameError: false,
+  maxParticipantsEnabled: false,
+  maxParticipants: "",
+  maxParticipantsError: false,
   selectedFile: null,
   fileError: false,
   shareCode: "",
@@ -112,10 +124,16 @@ const validateStep1 = (state: CreateKiwiState): Partial<CreateKiwiState> => {
   const passwordError =
     state.passwordProtected &&
     (state.password === "" || state.password !== state.confirmPassword);
+  const maxParticipantsError =
+    state.maxParticipantsEnabled &&
+    (state.maxParticipants === "" ||
+      Number.isNaN(Number(state.maxParticipants)) ||
+      Number(state.maxParticipants) <= 0);
 
   return {
     nameError,
     passwordError,
+    maxParticipantsError,
   };
 };
 
@@ -164,6 +182,16 @@ export const createKiwiReducer = (
         confirmPassword: action.payload,
         passwordError: false,
       };
+    case ActionTypes.SET_MAX_PARTICIPANTS_ENABLED:
+      return { ...state, maxParticipantsEnabled: action.payload };
+
+    case ActionTypes.SET_MAX_PARTICIPANTS:
+      return {
+        ...state,
+        maxParticipants: action.payload,
+        maxParticipantsError: false,
+      };
+
     case ActionTypes.SET_SELECTED_FILE:
       return { ...state, selectedFile: action.payload, fileError: false };
 
@@ -173,6 +201,9 @@ export const createKiwiReducer = (
 
     case ActionTypes.SET_NAME_ERROR:
       return { ...state, nameError: action.payload };
+
+    case ActionTypes.SET_MAX_PARTICIPANTS_ERROR:
+      return { ...state, maxParticipantsError: action.payload };
 
     case ActionTypes.SET_FILE_ERROR:
       return { ...state, fileError: action.payload };
