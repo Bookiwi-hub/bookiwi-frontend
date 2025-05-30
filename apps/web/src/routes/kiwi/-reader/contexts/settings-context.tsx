@@ -67,6 +67,7 @@ export function SettingsProvider({
     async (settings: Settings) => {
       await idb.update(IDBStore.ParticipantStore, participantId, {
         settings,
+        lastActivityAt: new Date().toISOString(),
       });
     },
     [participantId],

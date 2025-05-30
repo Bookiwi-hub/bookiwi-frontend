@@ -62,6 +62,7 @@ export function RecordProvider({
     async (record: ReadingRecord) => {
       await idb.update(IDBStore.ParticipantStore, participantId, {
         record,
+        lastActivityAt: new Date().toISOString(),
       });
     },
     [participantId],
