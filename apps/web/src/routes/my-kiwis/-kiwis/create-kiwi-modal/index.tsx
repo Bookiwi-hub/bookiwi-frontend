@@ -122,7 +122,9 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         id: generatedKiwiId,
         name: state.kiwiName,
         description: state.kiwiDescription,
-        maxParticipants: 1,
+        maxParticipants: state.maxParticipantsEnabled
+          ? Number(state.maxParticipants)
+          : null,
         detailDescription: state.kiwiDetailDescription,
         password: state.passwordProtected ? state.password : null,
         shareCode: generatedShareCode,

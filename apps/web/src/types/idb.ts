@@ -4,7 +4,7 @@ export interface KiwiIDBData {
   id: string;
   name: string;
   description: string;
-  maxParticipants: number;
+  maxParticipants: number | null;
   detailDescription: string;
   password: string | null;
   shareCode: string;
