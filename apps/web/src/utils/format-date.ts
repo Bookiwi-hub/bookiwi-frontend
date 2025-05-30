@@ -48,16 +48,17 @@ export const formatDateTime = (date: Date): string => {
  * // 결과: "2023-01-15 오후 2:30"
  * formatDate("2023-01-15T14:30:00.000Z");
  */
-export const formatDate = (date: Date): string => {
+export const formatDate = (date: string): string => {
+  const dateObj = new Date(date);
   const now = new Date();
 
-  const diffMs = now.getTime() - date.getTime();
+  const diffMs = now.getTime() - dateObj.getTime();
   const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
   const isToday =
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear();
+    dateObj.getDate() === now.getDate() &&
+    dateObj.getMonth() === now.getMonth() &&
+    dateObj.getFullYear() === now.getFullYear();
 
   if (diffMinutes < 1) {
     return "방금 전";
@@ -68,15 +69,15 @@ export const formatDate = (date: Date): string => {
   }
 
   if (isToday) {
-    const hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const hours = dateObj.getHours();
+    const minutes = String(dateObj.getMinutes()).padStart(2, "0");
     const period = hours < 12 ? "오전" : "오후";
     const displayHours = hours % 12 || 12; // Convert 0 to 12 for display
 
     return `${period} ${displayHours}:${minutes}`;
   }
 
-  return formatDateTime(date);
+  return formatDateTime(dateObj);
 };
 
 /**
@@ -87,12 +88,13 @@ export const formatDate = (date: Date): string => {
  *
  * @example
  * // 결과: "2023-05-15"
- * formatDateOnly(new Date(2023, 4, 15));
+ * formatDateOnly(new Date(2023, 4, 15).toISOString());
  */
-export const formatDateOnly = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+export const formatDateOnly = (date: string): string => {
+  const dateObj = new Date(date);
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const day = String(dateObj.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
 };

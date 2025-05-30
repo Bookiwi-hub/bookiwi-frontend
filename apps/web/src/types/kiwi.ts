@@ -7,7 +7,7 @@ export interface Participant {
   profileImage: string;
   progress: number;
   color: string;
-  lastActivityAt: Date;
+  lastActivityAt: string;
 }
 
 export interface Kiwi {
@@ -20,7 +20,7 @@ export interface Kiwi {
   shareCode: string;
   bookMetadata: BookMetadata;
   coverImage: string | null;
-  createdAt: Date;
+  createdAt: string;
   adminId: string;
   participants: Participant[];
 }

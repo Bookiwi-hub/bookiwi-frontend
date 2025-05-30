@@ -2,6 +2,7 @@ import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
+import tempUser from "#/DB/users";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import { Kiwi } from "#/types/kiwi";
 import { formatDate, formatDateOnly } from "#/utils/format-date";
@@ -23,6 +24,10 @@ function InformationTab({ kiwi }: InformationTabProps) {
 
   const admin = participants.find(
     (participant) => participant.userId === adminId,
+  );
+
+  const currentParticipant = participants.find(
+    (participant) => participant.userId === tempUser.id,
   );
 
   return (
@@ -71,8 +76,8 @@ function InformationTab({ kiwi }: InformationTabProps) {
                 <Clock size={16} className="text-muted-foreground" />
                 <span>
                   최근 활동:{" "}
-                  {participants[0]?.lastActivityAt
-                    ? formatDate(participants[0].lastActivityAt)
+                  {currentParticipant?.lastActivityAt
+                    ? formatDate(currentParticipant.lastActivityAt)
                     : ""}
                 </span>
               </li>

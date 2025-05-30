@@ -9,7 +9,7 @@ export const participants: Participant[] = [
     name: "KIWI",
     profileImage: "https://github.com/shadcn.png",
     color: color[0]!,
-    lastActivityAt: new Date("2025-05-23"),
+    lastActivityAt: new Date("2025-05-23").toISOString(),
     progress: 0,
   },
   {
@@ -18,7 +18,7 @@ export const participants: Participant[] = [
     name: "조현지",
     profileImage: "",
     color: color[1]!,
-    lastActivityAt: new Date("2025-05-23"),
+    lastActivityAt: new Date("2025-05-23").toISOString(),
     progress: 0,
   },
   {
@@ -27,7 +27,7 @@ export const participants: Participant[] = [
     name: "임진조",
     profileImage: "",
     color: color[2]!,
-    lastActivityAt: new Date("2025-05-23"),
+    lastActivityAt: new Date("2025-05-23").toISOString(),
     progress: 0,
   },
   {
@@ -36,7 +36,7 @@ export const participants: Participant[] = [
     name: "홍서하",
     profileImage: "",
     color: color[3]!,
-    lastActivityAt: new Date("2025-05-23"),
+    lastActivityAt: new Date("2025-05-23").toISOString(),
     progress: 0,
   },
   {
@@ -45,7 +45,7 @@ export const participants: Participant[] = [
     name: "한상우",
     profileImage: "",
     color: color[4]!,
-    lastActivityAt: new Date("2025-05-23"),
+    lastActivityAt: new Date("2025-05-23").toISOString(),
     progress: 0,
   },
   {
@@ -54,7 +54,7 @@ export const participants: Participant[] = [
     name: "채종민",
     profileImage: "",
     color: color[5]!,
-    lastActivityAt: new Date("2025-05-23"),
+    lastActivityAt: new Date("2025-05-23").toISOString(),
     progress: 0,
   },
 ];
