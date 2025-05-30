@@ -4,8 +4,8 @@ import { Button } from "#/components/ui/button";
 
 interface ButtonControllerProps<T> {
   label: string;
-  value: T | undefined;
-  setValue: (value: T | undefined) => Promise<void> | void;
+  value: T | null;
+  setValue: (value: T | null) => Promise<void> | void;
   defaultLabel: string;
   initialValue: T;
   min: T;
@@ -25,7 +25,7 @@ function ButtonController<T extends number>({
 }: ButtonControllerProps<T>) {
   const handleChange = async (action: "increase" | "decrease" | "reset") => {
     if (action === "reset") {
-      await setValue(undefined);
+      await setValue(null);
       return;
     }
 
@@ -54,7 +54,7 @@ function ButtonController<T extends number>({
             <MinusIcon className="size-4" />
           </Button>
           <div className="min-w-14 px-2 text-center text-sm">
-            {value !== undefined ? value : defaultLabel}
+            {value !== null ? value : defaultLabel}
           </div>
           <Button
             variant="ghost"

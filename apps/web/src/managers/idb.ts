@@ -1,23 +1,5 @@
+import { IDBStore } from "#/constants/idb";
 import { IndexDBError } from "#/errors";
-
-interface DBConfig {
-  name: string;
-  version: number;
-  stores: StoreConfig[];
-}
-
-interface StoreConfig {
-  name: string;
-  keyPath: string;
-  indices?: IndexConfig[];
-  autoIncrement?: boolean;
-}
-
-interface IndexConfig {
-  name: string;
-  keyPath: string;
-  options?: IDBIndexParameters;
-}
 
 class IndexedDBManager {
   private db: IDBDatabase | null = null;
@@ -34,25 +16,45 @@ class IndexedDBManager {
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
+        const transaction = (event.target as IDBOpenDBRequest).transaction!;
 
         // Create object stores and indices
         config.stores.forEach((storeConfig) => {
+          let store: IDBObjectStore;
+
           if (!db.objectStoreNames.contains(storeConfig.name)) {
-            const store = db.createObjectStore(storeConfig.name, {
+            // Create new store
+            store = db.createObjectStore(storeConfig.name, {
               keyPath: storeConfig.keyPath,
               autoIncrement: storeConfig.autoIncrement || false,
             });
+          } else {
+            // Get existing store from transaction
+            store = transaction.objectStore(storeConfig.name);
+          }
 
-            // Create indices if specified
-            if (storeConfig.indices) {
-              storeConfig.indices.forEach((indexConfig) => {
+          // Remove indices that are not in config
+          const configIndexNames = new Set(
+            storeConfig.indices?.map((idx) => idx.name) || [],
+          );
+
+          Array.from(store.indexNames).forEach((existingIndexName) => {
+            if (!configIndexNames.has(existingIndexName)) {
+              store.deleteIndex(existingIndexName);
+            }
+          });
+
+          // Create indices if specified
+          if (storeConfig.indices) {
+            storeConfig.indices.forEach((indexConfig) => {
+              if (!store.indexNames.contains(indexConfig.name)) {
                 store.createIndex(
                   indexConfig.name,
                   indexConfig.keyPath,
                   indexConfig.options,
                 );
-              });
-            }
+              }
+            });
           }
         });
       };
@@ -180,6 +182,105 @@ class IndexedDBManager {
     return this.transaction<IDBValidKey>(storeName, "readwrite", (store) =>
       store.put(item),
     );
+  }
+
+  /**
+   * 기존 항목의 특정 필드만 업데이트
+   * @param storeName 객체 저장소 이름
+   * @param key 업데이트할 항목의 키
+   * @param updates 업데이트할 필드들 (부분 객체)
+   * @returns 업데이트된 항목 또는 undefined (항목이 존재하지 않는 경우)
+   * @example
+   * ```ts
+   * // 사용자의 이름만 업데이트
+   * const updatedUser = await dbManager.update('users', 'user123', {
+   *   name: 'John Updated'
+   * });
+   * if (updatedUser) {
+   *   console.log("Updated user:", updatedUser);
+   * } else {
+   *   console.log("User not found");
+   * }
+   *
+   * // 여러 필드 동시 업데이트
+   * const user = await dbManager.update('users', 'user123', {
+   *   name: 'John Smith',
+   *   email: 'john.smith@example.com',
+   *   lastLogin: new Date()
+   * });
+   * ```
+   */
+  async update<T>(
+    storeName: string,
+    key: IDBValidKey,
+    updates: Partial<T>,
+  ): Promise<T | undefined> {
+    // 데이터베이스 초기화 완료까지 대기
+    await this.waitForInit();
+
+    if (!this.db) {
+      throw new IndexDBError("Database is not initialized");
+    }
+
+    return new Promise<T | undefined>((resolve, reject) => {
+      try {
+        const tx = this.db!.transaction(storeName, "readwrite");
+        const store = tx.objectStore(storeName);
+
+        // 기존 항목 가져오기
+        const getRequest = store.get(key);
+
+        getRequest.onsuccess = () => {
+          const existingItem = getRequest.result as T;
+
+          if (!existingItem) {
+            // 항목이 존재하지 않으면 undefined 반환
+            resolve(undefined);
+            return;
+          }
+
+          // 기존 항목과 업데이트 데이터 병합
+          const updatedItem = { ...existingItem, ...updates } as T;
+
+          // 업데이트된 항목 저장
+          const putRequest = store.put(updatedItem);
+
+          putRequest.onsuccess = () => {
+            resolve(updatedItem);
+          };
+
+          putRequest.onerror = () => {
+            reject(
+              new IndexDBError(
+                `Update failed: ${putRequest.error?.message || "Unknown error"}`,
+              ),
+            );
+          };
+        };
+
+        getRequest.onerror = () => {
+          reject(
+            new IndexDBError(
+              `Failed to get existing item: ${getRequest.error?.message || "Unknown error"}`,
+            ),
+          );
+        };
+
+        tx.onerror = () => {
+          reject(
+            new IndexDBError(
+              `Transaction error: ${tx.error?.message || "Unknown error"}`,
+            ),
+          );
+        };
+      } catch (error) {
+        reject(
+          new IndexDBError(
+            `Update operation error: ${(error as Error).message}`,
+          ),
+        );
+      }
+    });
   }
 
   /**
@@ -356,6 +457,9 @@ class IndexedDBManager {
     query?: IDBValidKey | IDBKeyRange,
     direction?: IDBCursorDirection,
   ): Promise<void> {
+    // 데이터베이스 초기화 완료까지 대기
+    await this.waitForInit();
+
     return new Promise<void>((resolve, reject) => {
       try {
         if (!this.db) {
@@ -441,6 +545,9 @@ class IndexedDBManager {
     query?: IDBValidKey | IDBKeyRange,
     direction?: IDBCursorDirection,
   ): Promise<void> {
+    // 데이터베이스 초기화 완료까지 대기
+    await this.waitForInit();
+
     return new Promise<void>((resolve, reject) => {
       try {
         if (!this.db) {
@@ -510,75 +617,70 @@ class IndexedDBManager {
   }
 }
 
+interface DBConfig {
+  name: string;
+  version: number;
+  stores: StoreConfig[];
+}
+
+interface StoreConfig {
+  name: string;
+  keyPath: string;
+  indices?: IndexConfig[];
+  autoIncrement?: boolean;
+}
+
+interface IndexConfig {
+  name: string;
+  keyPath: string;
+  options?: IDBIndexParameters;
+}
+
 const config: DBConfig = {
-  name: "develop",
+  name: "bookiwi-idb",
   version: 1,
   stores: [
     {
-      name: "kiwis",
+      name: IDBStore.KiwiStore,
       keyPath: "id",
       autoIncrement: false,
       indices: [
-        {
-          name: "name",
-          keyPath: "name",
-        },
-        {
-          name: "description",
-          keyPath: "description",
-        },
-        {
-          name: "maxParticipants",
-          keyPath: "maxParticipants",
-        },
-        {
-          name: "detailDescription",
-          keyPath: "detailDescription",
-        },
-        {
-          name: "password",
-          keyPath: "password",
-        },
         {
           name: "shareCode",
           keyPath: "shareCode",
           options: { unique: true },
         },
         {
-          name: "createdAt",
-          keyPath: "createdAt",
-        },
-        {
-          name: "admin",
-          keyPath: "admin.id",
-        },
-        {
-          name: "bookMetadata",
-          keyPath: "bookMetadata",
-        },
-        {
-          name: "participants",
-          keyPath: "participants",
+          name: "adminId",
+          keyPath: "adminId",
         },
       ],
     },
     {
-      name: "bookData",
+      name: IDBStore.EpubStore,
       keyPath: "id",
       autoIncrement: false,
       indices: [
         {
-          name: "file",
-          keyPath: "file",
-        },
-        {
-          name: "locations",
-          keyPath: "locations",
-        },
-        {
           name: "kiwiId",
           keyPath: "kiwiId",
           options: { unique: true },
+        },
+      ],
+    },
+    {
+      name: IDBStore.ParticipantStore,
+      keyPath: "id",
+      autoIncrement: false,
+      indices: [
+        {
+          name: "kiwiId",
+          keyPath: "kiwiId",
+          options: { unique: false },
+        },
+        {
+          name: "userId",
+          keyPath: "userId",
         },
       ],
     },

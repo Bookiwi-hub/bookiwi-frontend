@@ -3,11 +3,11 @@ import { useState } from "react";
 
 import { Button } from "#/components/ui/button";
 import { Textarea } from "#/components/ui/textarea";
-import { ParticipantType } from "#/types/kiwi";
+import { Participant } from "#/types/kiwi";
 
 interface CommentFormProps {
   onSubmit: (commentText: string) => void;
-  currentUser: ParticipantType;
+  currentUser: Participant;
 }
 
 function CommentForm({ onSubmit, currentUser }: CommentFormProps) {

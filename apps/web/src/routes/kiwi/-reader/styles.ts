@@ -75,8 +75,14 @@ export const updateCustomStyle = async (
   settings: Omit<Settings, "isSinglePage">,
 ) => {
   if (!contents) return Promise.resolve(false);
+  const newSettings = {
+    fontFamily: settings.fontFamily ?? undefined,
+    fontSize: settings.fontSize ?? undefined,
+    lineHeight: settings.lineHeight ?? undefined,
+    fontWeight: settings.fontWeight ?? undefined,
+  };
   const css = `a, article, cite, div, li, p, pre, span, table, body {
-    ${mapToCss(settings)}
+    ${mapToCss(newSettings)}
   }`;
 
   return contents.addStylesheetCss(css, Style.Custom);

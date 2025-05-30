@@ -7,8 +7,8 @@ import {
 } from "#/components/ui/select";
 
 interface FontFamilySelectorProps {
-  fontFamily: string | undefined;
-  setFontFamily: (value?: string) => Promise<void> | void;
+  fontFamily: string | null;
+  setFontFamily: (value: string | null) => Promise<void> | void;
 }
 
 const fontOptions = [
@@ -34,7 +34,7 @@ function FontFamilySelector({
 }: FontFamilySelectorProps) {
   const handleFontFamilyChange = async (value: string) => {
     if (value === "original") {
-      await setFontFamily(undefined);
+      await setFontFamily(null);
     } else {
       await setFontFamily(value);
     }

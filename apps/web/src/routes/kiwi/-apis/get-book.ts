@@ -1,12 +1,16 @@
-import idb from "#/managers/indexed-db";
-import { Settings, ReadingRecord, BookData, KiwiDB } from "#/types/kiwi";
+import tempUser from "#/DB/users";
+import { IDBStore } from "#/constants/idb";
+import idb from "#/managers/idb";
+import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
+import { ReadingRecord, Settings } from "#/types/kiwi";
 
 type GetBookResponse = {
   readingRecord: ReadingRecord;
   initialSettings: Settings;
   locations: string;
   epubFile: File;
-  bookTitle: string;
+  kiwiTitle: string;
+  participantId: string;
 };
 
 const getBook = async (id: string): Promise<GetBookResponse> => {
@@ -15,21 +19,41 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
   }
 
   try {
-    const kiwiDB = (await idb.get("kiwis", id)) as KiwiDB;
-    const bookData = (await idb.get("bookData", kiwiDB.bookDataId)) as BookData;
+    const kiwiData = await idb.get<KiwiIDBData>(IDBStore.KiwiStore, id);
+
+    if (!kiwiData) {
+      throw new Error("Kiwi data not found");
+    }
+    const epubData = await idb.get<EpubIDBData>(
+      IDBStore.EpubStore,
+      kiwiData.epubId,
+    );
+
+    if (!epubData) {
+      throw new Error("Epub data not found");
+    }
+
+    const participants = await idb.getByIndex<ParticipantIDBData>(
+      IDBStore.ParticipantStore,
+      "kiwiId",
+      epubData.kiwiId,
+    );
+
+    const currentParticipant = participants.find(
+      (participant) => participant.userId === tempUser.id,
+    );
+
+    if (!currentParticipant) {
+      throw new Error("Current participant not found");
+    }
 
     return {
-      locations: bookData.locations,
-      epubFile: bookData.file,
-      readingRecord: kiwiDB.participants[0]?.readingRecord ?? {
-        currentCfi: null,
-        percentage: null,
-        bookmarks: [],
-      },
-      initialSettings: kiwiDB.participants[0]?.settings ?? {
-        isSinglePage: false,
-      },
-      bookTitle: kiwiDB.bookMetadata.title,
+      locations: epubData.locations,
+      epubFile: epubData.file,
+      readingRecord: currentParticipant.record,
+      initialSettings: currentParticipant.settings,
+      kiwiTitle: kiwiData.name,
+      participantId: currentParticipant.id,
     };
   } catch (error) {
     throw new Error("Failed to fetch book");

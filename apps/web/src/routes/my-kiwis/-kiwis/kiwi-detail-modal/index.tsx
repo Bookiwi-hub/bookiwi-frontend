@@ -69,7 +69,7 @@ function KiwiDetailModal({ kiwi, isOpen, onClose }: KiwiDetailModalProps) {
               value="discussions"
               className="data-[state=inactive]:hidden"
             >
-              <DiscussionsTab kiwi={kiwi} />
+              <DiscussionsTab />
             </TabsContent>
           </div>
         </Tabs>

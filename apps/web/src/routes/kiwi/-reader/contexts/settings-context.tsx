@@ -12,14 +12,16 @@ import { updateCustomStyle } from "../styles";
 
 import { useBook } from "./book-context";
 
+import { IDBStore } from "#/constants/idb";
+import idb from "#/managers/idb";
 import { Settings } from "#/types/kiwi";
 
 interface SettingsContextType extends Settings {
   setIsSinglePage: (isSinglePage: boolean) => void;
-  setFontFamily: (fontFamily?: string) => Promise<void>;
-  setFontSize: (fontSize?: number) => Promise<void>;
-  setLineHeight: (lineHeight?: number) => Promise<void>;
-  setFontWeight: (fontWeight?: number) => Promise<void>;
+  setFontFamily: (fontFamily: string | null) => Promise<void>;
+  setFontSize: (fontSize: number | null) => Promise<void>;
+  setLineHeight: (lineHeight: number | null) => Promise<void>;
+  setFontWeight: (fontWeight: number | null) => Promise<void>;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -36,14 +38,14 @@ export const useSettings = () => {
 interface SettingsProviderProps {
   children: ReactNode;
   initialSettings: Settings;
+  participantId: string;
 }
 export function SettingsProvider({
   children,
   initialSettings,
+  participantId,
 }: SettingsProviderProps) {
   const { book } = useBook();
-
-  const key = `${book?.key()}-settings`;
 
   const [isSinglePage, setIsSinglePageState] = useState(
     initialSettings.isSinglePage,
@@ -61,22 +63,31 @@ export function SettingsProvider({
     fontWeight: initialSettings.fontWeight,
   });
 
+  const updateIDBSettings = useCallback(
+    async (settings: Settings) => {
+      await idb.update(IDBStore.ParticipantStore, participantId, {
+        settings,
+        lastActivityAt: new Date().toISOString(),
+      });
+    },
+    [participantId],
+  );
   const setIsSinglePage = useCallback(
-    (value: boolean) => {
+    async (value: boolean) => {
       setIsSinglePageState(value);
 
       settingsRef.current = {
         ...settingsRef.current,
         isSinglePage: value,
       };
-      localStorage.setItem(key, JSON.stringify(settingsRef.current));
       book?.rendition.spread(value ? "none" : "auto");
+      await updateIDBSettings(settingsRef.current);
     },
-    [key, book],
+    [book, updateIDBSettings],
   );
 
   const setFontFamily = useCallback(
-    async (value?: string) => {
+    async (value: string | null) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
       setFontFamilyState(value);
@@ -84,19 +95,20 @@ export function SettingsProvider({
         ...settingsRef.current,
         fontFamily: value,
       };
-      localStorage.setItem(key, JSON.stringify(settingsRef.current));
+
       await updateCustomStyle(contents, {
         fontFamily: value,
         fontSize: settingsRef.current.fontSize,
         fontWeight: settingsRef.current.fontWeight,
         lineHeight: settingsRef.current.lineHeight,
       });
+      await updateIDBSettings(settingsRef.current);
     },
-    [key, book],
+    [book, updateIDBSettings],
   );
 
   const setFontSize = useCallback(
-    async (value?: number) => {
+    async (value: number | null) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
       setFontSizeState(value);
@@ -104,44 +116,44 @@ export function SettingsProvider({
         ...settingsRef.current,
         fontSize: value,
       };
-      localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
         fontSize: value,
         fontFamily: settingsRef.current.fontFamily,
         fontWeight: settingsRef.current.fontWeight,
         lineHeight: settingsRef.current.lineHeight,
       });
+      await updateIDBSettings(settingsRef.current);
     },
-    [key, book],
+    [book, updateIDBSettings],
   );
 
   const setLineHeight = useCallback(
-    async (value?: number) => {
+    async (value: number | null) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
 
       // Only try to format the number if value is defined
-      const newValue =
-        value !== undefined ? Number(Number(value).toFixed(1)) : undefined;
+      const newValue = value !== null ? Number(Number(value).toFixed(1)) : null;
 
-      setLineHeightState(newValue);
+      setLineHeightState(newValue ?? null);
       settingsRef.current = {
         ...settingsRef.current,
-        lineHeight: newValue,
+        lineHeight: newValue ?? null,
       };
-      localStorage.setItem(key, JSON.stringify(settingsRef.current));
+
       await updateCustomStyle(contents, {
         fontSize: settingsRef.current.fontSize,
         fontFamily: settingsRef.current.fontFamily,
         fontWeight: settingsRef.current.fontWeight,
-        lineHeight: newValue,
+        lineHeight: newValue ?? null,
       });
+      await updateIDBSettings(settingsRef.current);
     },
-    [key, book],
+    [book, updateIDBSettings],
   );
 
   const setFontWeight = useCallback(
-    async (value?: number) => {
+    async (value: number | null) => {
       const contents = book?.rendition?.getContents()[0];
       if (!contents) return;
       setFontWeightState(value);
@@ -149,15 +161,15 @@ export function SettingsProvider({
         ...settingsRef.current,
         fontWeight: value,
       };
-      localStorage.setItem(key, JSON.stringify(settingsRef.current));
       await updateCustomStyle(contents, {
         fontSize: settingsRef.current.fontSize,
         fontFamily: settingsRef.current.fontFamily,
         fontWeight: value,
         lineHeight: settingsRef.current.lineHeight,
       });
+      await updateIDBSettings(settingsRef.current);
     },
-    [key, book],
+    [book, updateIDBSettings],
   );
 
   const value = useMemo(

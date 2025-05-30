@@ -1,12 +1,13 @@
-import { Bookmark, Trash2 } from "lucide-react";
+import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 
 import { useBook, useRecord } from "#/routes/kiwi/-reader";
+import { Bookmark } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 
 function EmptyBookmarksView() {
   return (
     <div className="flex flex-col items-center justify-center rounded-lg bg-muted/30 py-12 text-center">
-      <Bookmark className="mb-3 size-12 text-muted-foreground/60" />
+      <BookmarkIcon className="mb-3 size-12 text-muted-foreground/60" />
       <p className="text-base font-medium text-muted-foreground">
         책갈피가 없습니다.
       </p>
@@ -18,12 +19,11 @@ function EmptyBookmarksView() {
 }
 
 interface BookmarkItemProps {
-  bookmark: { cfi: string; timestamp?: number };
+  bookmark: Bookmark;
   index: number;
-  navItemLabel?: string;
+  navItemLabel: string;
   onClick: (cfi: string) => void;
   onRemove: (cfi: string) => void;
-  formatTimestamp: (timestamp: number) => string;
 }
 
 function BookmarkItem({
@@ -32,7 +32,6 @@ function BookmarkItem({
   navItemLabel,
   onClick,
   onRemove,
-  formatTimestamp,
 }: BookmarkItemProps) {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
@@ -42,17 +41,16 @@ function BookmarkItem({
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
       role="button"
     >
-      <Bookmark size={18} className="mt-0.5 text-primary" />
+      <BookmarkIcon size={18} className="mt-0.5 text-primary" />
       <div className="flex-1">
         <p className="font-medium">책갈피 {index + 1}</p>
         {navItemLabel && (
           <p className="mt-0.5 text-sm text-muted-foreground">{navItemLabel}</p>
         )}
-        {bookmark.timestamp && (
-          <p className="mt-1 text-xs font-medium text-muted-foreground/70">
-            {formatTimestamp(bookmark.timestamp)}
-          </p>
-        )}
+
+        <p className="mt-1 text-xs font-medium text-muted-foreground/70">
+          {formatDate(bookmark.createdAt)}
+        </p>
       </div>
       <button
         type="button"
@@ -78,11 +76,6 @@ function BookmarksPanel() {
     book.rendition.display(cfi);
   };
 
-  const formatTimestamp = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return formatDate(date.toISOString());
-  };
-
   return (
     <div className="px-1">
       <h3 className="mb-5 text-lg font-semibold">책갈피</h3>
@@ -99,10 +92,9 @@ function BookmarksPanel() {
                 key={bookmark.cfi}
                 bookmark={bookmark}
                 index={index}
-                navItemLabel={navItem?.label}
+                navItemLabel={navItem?.label || ""}
                 onClick={handleBookmarkClick}
                 onRemove={removeBookmark}
-                formatTimestamp={formatTimestamp}
               />
             );
           })}

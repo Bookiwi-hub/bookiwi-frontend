@@ -1,13 +1,13 @@
 import { participants } from "./participants";
 
-import { ParticipantType } from "#/types/kiwi";
+import { Participant } from "#/types/kiwi";
 
 export interface HighlightListType {
   id: number;
   text: string;
   page: number;
   date: string;
-  creator: ParticipantType;
+  creator: Participant;
   totalComments: number;
 }
 export const highlightList: HighlightListType[] = [

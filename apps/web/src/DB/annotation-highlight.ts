@@ -1,12 +1,12 @@
 import { participants } from "./participants";
 
-import { ParticipantType } from "#/types/kiwi";
+import { Participant } from "#/types/kiwi";
 
 export interface CommentType {
   id: number;
   text: string;
   date: string; // ISO format date string (e.g., "2023-08-15T14:30:00.000Z")
-  creator: ParticipantType;
+  creator: Participant;
 }
 
 export interface HighlightType {
@@ -14,7 +14,7 @@ export interface HighlightType {
   text: string;
   page: number;
   date: string; // ISO format date string (e.g., "2023-08-15T14:30:00.000Z")
-  creator: ParticipantType;
+  creator: Participant;
   comments: CommentType[];
 }
 

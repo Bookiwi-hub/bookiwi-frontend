@@ -17,39 +17,46 @@ export const Route = createFileRoute("/kiwi/$id")({
   head: ({ loaderData }) => ({
     meta: [
       {
-        title: `Book Room | ${loaderData.bookTitle}`,
+        title: `Kiwi | ${loaderData.kiwiTitle}`,
       },
     ],
   }),
   component: isDesktop ? Kiwi : MobileKiwi,
 });
 
-function KiwiContent({ bookTitle }: { bookTitle: string }) {
-  return (
-    <main className="flex size-full flex-col overflow-hidden">
-      <Header
-        title={bookTitle}
-        profileImage="https://github.com/shadcn.png"
-        color="rgba(186, 230, 55, 1)"
-      />
-      <Viewer />
-    </main>
-  );
-}
-
 function Kiwi() {
-  const { epubFile, initialSettings, bookTitle, readingRecord, locations } =
-    Route.useLoaderData();
+  const {
+    epubFile,
+    initialSettings,
+    kiwiTitle,
+    readingRecord,
+    locations,
+    participantId,
+  } = Route.useLoaderData();
   return (
     <ReaderProvider
       epubFile={epubFile}
       initialSettings={initialSettings}
       readingRecord={readingRecord}
       locations={locations}
+      participantId={participantId}
     >
       <ViewerProvider>
-        <KiwiContent bookTitle={bookTitle} />
+        <KiwiContent kiwiTitle={kiwiTitle} />
       </ViewerProvider>
     </ReaderProvider>
+  );
+}
+
+function KiwiContent({ kiwiTitle }: { kiwiTitle: string }) {
+  return (
+    <main className="flex size-full flex-col overflow-hidden">
+      <Header
+        title={kiwiTitle}
+        profileImage="https://github.com/shadcn.png"
+        color="rgba(186, 230, 55, 1)"
+      />
+      <Viewer />
+    </main>
   );
 }

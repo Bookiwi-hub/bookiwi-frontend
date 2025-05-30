@@ -10,12 +10,14 @@ import {
 
 import { useBook } from "./book-context";
 
-import { ReadingRecord, BookmarkItem } from "#/types/kiwi";
+import { IDBStore } from "#/constants/idb";
+import idb from "#/managers/idb";
+import { ReadingRecord, Bookmark } from "#/types/kiwi";
 
 interface RecordContextType extends ReadingRecord {
-  setCurrentCfi: (currentCfi: string) => void;
-  setBookmark: (bookmark: string) => void;
-  removeBookmark: (bookmark: string) => void;
+  setCurrentCfi: (currentCfi: string) => Promise<void>;
+  setBookmark: (bookmark: string) => Promise<void>;
+  removeBookmark: (bookmark: string) => Promise<void>;
 }
 
 const RecordContext = createContext<RecordContextType | undefined>(undefined);
@@ -31,11 +33,13 @@ export const useRecord = () => {
 interface RecordProviderProps {
   children: ReactNode;
   readingRecord: ReadingRecord;
+  participantId: string;
 }
 
 export function RecordProvider({
   children,
   readingRecord,
+  participantId,
 }: RecordProviderProps) {
   const { book } = useBook();
   const [currentCfiState, setCurrentCfiState] = useState(
@@ -43,29 +47,29 @@ export function RecordProvider({
   );
   const [percentageState, setPercentageState] = useState<number | null>(null);
 
-  // Convert legacy string[] bookmarks to BookmarkItem[] if needed
-  const initialBookmarks = Array.isArray(readingRecord.bookmarks)
-    ? readingRecord.bookmarks.map(
-        (bookmark) =>
-          typeof bookmark === "string"
-            ? { cfi: bookmark, timestamp: Date.now() } // Convert string to BookmarkItem
-            : bookmark, // Already a BookmarkItem
-      )
-    : [];
-
-  const [bookmarksState, setBookmarksState] =
-    useState<BookmarkItem[]>(initialBookmarks);
-  const key = `${book?.key()}-readingRecord`;
+  const [bookmarksState, setBookmarksState] = useState<Bookmark[]>(
+    readingRecord.bookmarks,
+  );
 
   // 현재 전체 레코드 상태를 참조로 유지
   const recordRef = useRef<ReadingRecord>({
-    bookmarks: initialBookmarks,
+    bookmarks: readingRecord.bookmarks,
     currentCfi: readingRecord.currentCfi,
-    percentage: null,
+    percentage: readingRecord.percentage,
   });
 
+  const updateIDBRecord = useCallback(
+    async (record: ReadingRecord) => {
+      await idb.update(IDBStore.ParticipantStore, participantId, {
+        record,
+        lastActivityAt: new Date().toISOString(),
+      });
+    },
+    [participantId],
+  );
+
   const setCurrentCfi = useCallback(
-    (cfi: string) => {
+    async (cfi: string) => {
       if (!book) return;
       setCurrentCfiState(cfi);
       const percent = Math.floor(book.locations.percentageFromCfi(cfi) * 100);
@@ -77,22 +81,22 @@ export function RecordProvider({
         percentage: percent,
       };
 
-      localStorage.setItem(key, JSON.stringify(recordRef.current));
+      await updateIDBRecord(recordRef.current);
     },
-    [key, book],
+    [book, updateIDBRecord],
   );
 
   const setBookmark = useCallback(
-    (newBookmarkCfi: string) => {
+    async (newBookmarkCfi: string) => {
       // Check if this bookmark CFI already exists
       const exists = bookmarksState.some(
         (bookmark) => bookmark.cfi === newBookmarkCfi,
       );
 
       if (!exists) {
-        const newBookmarkItem: BookmarkItem = {
+        const newBookmarkItem: Bookmark = {
           cfi: newBookmarkCfi,
-          timestamp: Date.now(),
+          createdAt: new Date().toISOString(),
         };
 
         const newBookmarks = [...bookmarksState, newBookmarkItem];
@@ -103,14 +107,14 @@ export function RecordProvider({
           bookmarks: newBookmarks,
         };
 
-        localStorage.setItem(key, JSON.stringify(recordRef.current));
+        await updateIDBRecord(recordRef.current);
       }
     },
-    [bookmarksState, key],
+    [bookmarksState, updateIDBRecord],
   );
 
   const removeBookmark = useCallback(
-    (bookmarkCfiToRemove: string) => {
+    async (bookmarkCfiToRemove: string) => {
       const newBookmarks = bookmarksState.filter(
         (bookmark) => bookmark.cfi !== bookmarkCfiToRemove,
       );
@@ -121,9 +125,9 @@ export function RecordProvider({
         bookmarks: newBookmarks,
       };
 
-      localStorage.setItem(key, JSON.stringify(recordRef.current));
+      await updateIDBRecord(recordRef.current);
     },
-    [key, bookmarksState],
+    [bookmarksState, updateIDBRecord],
   );
 
   const value = useMemo(
