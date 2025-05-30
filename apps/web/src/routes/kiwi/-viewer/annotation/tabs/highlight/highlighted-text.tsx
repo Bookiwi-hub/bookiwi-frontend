@@ -24,7 +24,6 @@ function HighlightedText({
       text,
       maxLength: 100,
     });
-  const formattedDate = formatDate(new Date(date));
 
   return (
     <div
@@ -50,7 +49,7 @@ function HighlightedText({
           <span className="text-xs text-gray-700">{page} 페이지</span>
           <span className="ml-2 text-xs text-gray-600">by {creatorName}</span>
         </div>
-        <span className="text-xs text-gray-700">{formattedDate}</span>
+        <span className="text-xs text-gray-700">{formatDate(date)}</span>
       </div>
     </div>
   );

@@ -14,7 +14,6 @@ interface CommentItemProps {
 
 function CommentItem({ creator, text, date, currentUser }: CommentItemProps) {
   const isCurrentUser = creator.userId === currentUser.userId;
-  const formattedDate = formatDate(new Date(date));
 
   return (
     <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}>
@@ -49,7 +48,7 @@ function CommentItem({ creator, text, date, currentUser }: CommentItemProps) {
               {text}
             </p>
             <span className="mt-1 block text-right text-xs text-muted-foreground">
-              {formattedDate}
+              {formatDate(date)}
             </span>
           </div>
         </div>
