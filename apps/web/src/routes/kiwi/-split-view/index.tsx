@@ -16,7 +16,7 @@ import SplitViewSeparator from "./separator";
 
 import Overlay from "#/components/ui/overlay";
 
-function Viewer() {
+function SplitView() {
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
   const closeAnnotationPane = useSetAtom(closeAnnotationPaneAtom);
@@ -91,4 +91,4 @@ function Viewer() {
   );
 }
 
-export default Viewer;
+export default SplitView;

@@ -4,7 +4,7 @@ import getBook from "./-apis/get-book";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
 import { ReaderProvider } from "./-reader";
-import Viewer from "./-viewer";
+import SplitView from "./-split-view";
 
 import { isDesktop } from "#/constants/device-type";
 
@@ -53,7 +53,7 @@ function KiwiContent({ kiwiTitle }: { kiwiTitle: string }) {
         profileImage="https://github.com/shadcn.png"
         color="rgba(186, 230, 55, 1)"
       />
-      <Viewer />
+      <SplitView />
     </main>
   );
 }

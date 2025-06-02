@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-import AnnotationTrigger from "../-viewer/annotation/trigger";
+import AnnotationPaneTrigger from "../-split-view/annotation/trigger";
 
 import BookmarkButton from "./bookmark-button";
 import Profiles from "./profiles";
@@ -33,7 +33,7 @@ function Header({ title, profileImage, color }: HeaderProps) {
         </h1>
         <div className="flex items-center gap-4 pr-3">
           <BookmarkButton />
-          <AnnotationTrigger />
+          <AnnotationPaneTrigger />
           <Profiles profileImage={profileImage} color={color} />
         </div>
       </div>

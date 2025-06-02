@@ -6,7 +6,7 @@ import { isAnnotationOpenAtom, toggleAnnotationPaneAtom } from "../atoms";
 
 import { cn } from "#/lib/utils";
 
-function AnnotationTrigger() {
+function AnnotationPaneTrigger() {
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const toggleAnnotationPane = useSetAtom(toggleAnnotationPaneAtom);
 
@@ -28,4 +28,4 @@ function AnnotationTrigger() {
   );
 }
 
-export default AnnotationTrigger;
+export default AnnotationPaneTrigger;
