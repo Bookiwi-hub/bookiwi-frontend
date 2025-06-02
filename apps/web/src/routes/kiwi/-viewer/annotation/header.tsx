@@ -7,10 +7,13 @@ import {
   unpinAnnotationPaneAtom,
   pinAnnotationPaneAtom,
   closeAnnotationPaneAtom,
-} from "../split-view/atoms";
+} from "../atoms";
 
-import { setTabToHighlightListAtom, setTabToHighlightAtom } from "./atom";
-import { TabType } from "./tabs/context";
+import {
+  setTabToHighlightListAtom,
+  setTabToHighlightAtom,
+  TabType,
+} from "./atom";
 
 import { TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { cn } from "#/lib/utils";

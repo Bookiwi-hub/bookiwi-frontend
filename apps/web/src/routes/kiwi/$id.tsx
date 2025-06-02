@@ -5,7 +5,6 @@ import Header from "./-header";
 import MobileKiwi from "./-mobile";
 import { ReaderProvider } from "./-reader";
 import Viewer from "./-viewer";
-import ViewerProvider from "./-viewer/provider";
 
 import { isDesktop } from "#/constants/device-type";
 
@@ -41,9 +40,7 @@ function Kiwi() {
       locations={locations}
       participantId={participantId}
     >
-      <ViewerProvider>
-        <KiwiContent kiwiTitle={kiwiTitle} />
-      </ViewerProvider>
+      <KiwiContent kiwiTitle={kiwiTitle} />
     </ReaderProvider>
   );
 }

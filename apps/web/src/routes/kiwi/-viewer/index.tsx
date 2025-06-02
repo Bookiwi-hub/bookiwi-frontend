@@ -3,8 +3,6 @@ import { useCallback } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import Annotation from "./annotation";
-import Book from "./book";
-import { SplitViewSeparator } from "./split-view";
 import {
   bookPaneSizeAtom,
   annotationPaneSizeAtom,
@@ -12,7 +10,9 @@ import {
   isAnnotationOpenAtom,
   isAnnotationPinnedAtom,
   closeAnnotationPaneAtom,
-} from "./split-view/atoms";
+} from "./atoms";
+import Book from "./book";
+import SplitViewSeparator from "./separator";
 
 import Overlay from "#/components/ui/overlay";
 
