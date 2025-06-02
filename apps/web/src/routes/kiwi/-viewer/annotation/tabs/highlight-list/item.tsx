@@ -1,4 +1,6 @@
-import { TabType, useAnnotationTab } from "../context";
+import { useSetAtom } from "@bookiwi/jotai";
+
+import { highlightIdAtom, setTabToHighlightAtom } from "../../atom";
 import { useTruncatedText } from "../hooks/use-truncated-text";
 
 import { formatDate } from "#/utils/format-date";
@@ -28,10 +30,11 @@ function HighlightItem({
       maxLength: 100,
     });
 
-  const { setTabState, setHighlightId } = useAnnotationTab();
+  const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
+  const setHighlightId = useSetAtom(highlightIdAtom);
 
   const handleClick = () => {
-    setTabState(TabType.HIGHLIGHT);
+    setTabToHighlight();
     setHighlightId(id);
   };
 

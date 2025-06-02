@@ -2,7 +2,6 @@ import { Pin, X } from "lucide-react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { Pane, usePane, useSplitViewContext } from "../split-view";
 import {
   isAnnotationPinnedAtom,
   unpinAnnotationPaneAtom,
@@ -10,7 +9,8 @@ import {
   closeAnnotationPaneAtom,
 } from "../split-view/atoms";
 
-import { useAnnotationTab, TabType } from "./tabs/context";
+import { setTabToHighlightListAtom, setTabToHighlightAtom } from "./atom";
+import { TabType } from "./tabs/context";
 
 import { TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { cn } from "#/lib/utils";
@@ -21,33 +21,15 @@ function AnnotationHeader() {
   const unpinAnnotationPane = useSetAtom(unpinAnnotationPaneAtom);
   const closeAnnotationPane = useSetAtom(closeAnnotationPaneAtom);
 
-  const { setTabState } = useAnnotationTab();
-  const bookPane = usePane(Pane.BOOK);
-  const annotationPane = usePane(Pane.ANNOTATION);
-  const { splitViewWidth } = useSplitViewContext();
+  const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
+  const setTabToHighlightList = useSetAtom(setTabToHighlightListAtom);
 
   const handlePin = () => {
     if (isAnnotationPinned) {
       unpinAnnotationPane();
-      bookPane.setSize(splitViewWidth);
     } else {
       pinAnnotationPane();
-      bookPane.setSize(() => {
-        if (splitViewWidth && annotationPane.size) {
-          return splitViewWidth - annotationPane.size;
-        }
-        return splitViewWidth;
-      });
     }
-  };
-
-  const handleClose = () => {
-    closeAnnotationPane();
-    bookPane.setSize(undefined);
-  };
-
-  const handleTabChange = (value: TabType) => {
-    setTabState(value);
   };
 
   return (
@@ -56,7 +38,7 @@ function AnnotationHeader() {
         <TabsTrigger
           className="w-full"
           value={TabType.HIGHLIGHT}
-          onClick={() => handleTabChange(TabType.HIGHLIGHT)}
+          onClick={setTabToHighlight}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
@@ -65,7 +47,7 @@ function AnnotationHeader() {
         <TabsTrigger
           className="w-full"
           value={TabType.HIGHLIGHT_LIST}
-          onClick={() => handleTabChange(TabType.HIGHLIGHT_LIST)}
+          onClick={setTabToHighlightList}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
@@ -90,7 +72,7 @@ function AnnotationHeader() {
         </button>
         <button
           type="button"
-          onClick={handleClose}
+          onClick={closeAnnotationPane}
           className="rounded-md p-2 hover:bg-gray-100"
           aria-label="Close panel"
         >
