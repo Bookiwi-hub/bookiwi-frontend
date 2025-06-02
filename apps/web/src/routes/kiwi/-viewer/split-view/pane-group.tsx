@@ -1,10 +1,14 @@
 import { ComponentProps, useCallback } from "react";
 
+import { useSetAtom, useAtomValue } from "@bookiwi/jotai";
+
 import { useAnnotationPane } from "../annotation/context";
 
-import { Pane } from "./constants/type";
-import { useSplitViewContext } from "./context";
-import usePane from "./hooks/use-pane";
+import {
+  annotationPaneSizeAtom,
+  bookPaneSizeAtom,
+  splitViewWidthAtom,
+} from "./atoms";
 
 import { cn } from "#/lib/utils";
 
@@ -15,9 +19,10 @@ function SplitViewPaneGroup({
   className,
   ...props
 }: SplitViewGroupProps) {
-  const { setSplitViewWidth } = useSplitViewContext();
-  const bookPane = usePane(Pane.BOOK);
-  const annotationPane = usePane(Pane.ANNOTATION);
+  const setSplitViewWidth = useSetAtom(splitViewWidthAtom);
+  const setBookPaneSize = useSetAtom(bookPaneSizeAtom);
+  const annotationPaneSize = useAtomValue(annotationPaneSizeAtom);
+
   const { isPinned } = useAnnotationPane();
   const callbackRef = useCallback(
     (el: HTMLDivElement | null) => {
@@ -27,8 +32,10 @@ function SplitViewPaneGroup({
         if (!entry) return;
 
         setSplitViewWidth(entry.contentRect.width ?? undefined);
-        if (isPinned && annotationPane.size) {
-          bookPane.setSize(entry.contentRect.width - annotationPane.size);
+        if (isPinned) {
+          setBookPaneSize(entry.contentRect.width - annotationPaneSize);
+        } else {
+          setBookPaneSize(entry.contentRect.width);
         }
       });
 
@@ -37,7 +44,7 @@ function SplitViewPaneGroup({
         observer.disconnect();
       };
     },
-    [setSplitViewWidth, bookPane, annotationPane.size, isPinned],
+    [setSplitViewWidth, setBookPaneSize, annotationPaneSize, isPinned],
   );
 
   return (

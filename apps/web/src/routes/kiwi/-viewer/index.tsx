@@ -1,26 +1,58 @@
+import { useCallback } from "react";
+
+import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
+
 import Annotation from "./annotation";
 import { useAnnotationPane } from "./annotation/context";
 import Book from "./book";
+import { SplitViewSeparator } from "./split-view";
 import {
-  Pane,
-  SplitViewPane,
-  SplitViewPaneGroup,
-  SplitViewSeparator,
-} from "./split-view";
+  bookPaneSizeAtom,
+  annotationPaneSizeAtom,
+  splitViewWidthAtom,
+} from "./split-view/atoms";
 
 import Overlay from "#/components/ui/overlay";
 
 function Viewer() {
   const { isOpen, isPinned, close } = useAnnotationPane();
+  const [bookPaneSize, setBookPaneSize] = useAtom(bookPaneSizeAtom);
+  const annotationPaneSize = useAtomValue(annotationPaneSizeAtom);
+  const setSplitViewWidth = useSetAtom(splitViewWidthAtom);
+
+  const callbackRef = useCallback(
+    (el: HTMLDivElement | null) => {
+      if (!el) return () => {};
+
+      const observer = new ResizeObserver(([entry]) => {
+        if (!entry) return;
+
+        setSplitViewWidth(entry.contentRect.width ?? undefined);
+        if (isPinned) {
+          setBookPaneSize(entry.contentRect.width - annotationPaneSize);
+        } else {
+          setBookPaneSize(entry.contentRect.width);
+        }
+      });
+
+      observer.observe(el);
+      return () => {
+        observer.disconnect();
+      };
+    },
+    [setSplitViewWidth, setBookPaneSize, annotationPaneSize, isPinned],
+  );
 
   return (
-    <SplitViewPaneGroup className="relative min-h-0 flex-1 justify-end">
-      <SplitViewPane
-        pane={Pane.BOOK}
+    <div ref={callbackRef} className="relative flex min-h-0 flex-1 justify-end">
+      <div
         className="absolute inset-0 z-0 transition-all duration-200"
+        style={{
+          width: bookPaneSize,
+        }}
       >
         <Book />
-      </SplitViewPane>
+      </div>
 
       {isOpen && (
         <SplitViewSeparator
@@ -33,14 +65,16 @@ function Viewer() {
       )}
 
       {isOpen && (
-        <SplitViewPane
-          pane={Pane.ANNOTATION}
+        <div
           className="z-20 animate-slide-in-right bg-white shadow-2xl"
+          style={{
+            width: annotationPaneSize,
+          }}
         >
           <Annotation />
-        </SplitViewPane>
+        </div>
       )}
-    </SplitViewPaneGroup>
+    </div>
   );
 }
 
