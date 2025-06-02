@@ -21,6 +21,9 @@ function KiwiInfo() {
     confirmPassword,
     passwordError,
     nameError,
+    maxParticipantsEnabled,
+    maxParticipants,
+    maxParticipantsError,
   } = state;
 
   const handleKiwiNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +66,20 @@ function KiwiInfo() {
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: ActionTypes.SET_CONFIRM_PASSWORD,
+      payload: e.target.value,
+    });
+  };
+
+  const handleMaxParticipantsEnabledChange = (checked: boolean) => {
+    dispatch({
+      type: ActionTypes.SET_MAX_PARTICIPANTS_ENABLED,
+      payload: checked,
+    });
+  };
+
+  const handleMaxParticipantsChange = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: ActionTypes.SET_MAX_PARTICIPANTS,
       payload: e.target.value,
     });
   };
@@ -121,6 +138,43 @@ function KiwiInfo() {
           className="min-h-[100px] resize-y"
         />
       </div>
+
+      <div className="flex items-center gap-2 space-y-0">
+        <Label htmlFor="max-participants-setting">최대인원 제한</Label>
+        <Switch
+          id="max-participants-setting"
+          checked={maxParticipantsEnabled}
+          onCheckedChange={handleMaxParticipantsEnabledChange}
+        />
+      </div>
+
+      {maxParticipantsEnabled && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label
+              htmlFor="max-participants"
+              className="flex items-center gap-1"
+            >
+              최대인원 <span className="text-xs text-destructive">*</span>
+            </Label>
+            {maxParticipantsError && (
+              <span className="flex items-center gap-1 text-xs text-destructive">
+                <AlertCircle className="size-3" />
+                올바른 인원수를 입력해주세요
+              </span>
+            )}
+          </div>
+          <Input
+            id="max-participants"
+            type="number"
+            placeholder="최대 참여 인원수를 입력하세요"
+            value={maxParticipants}
+            onChange={handleMaxParticipantsChange}
+            className={cn(maxParticipantsError && "border-destructive")}
+            min="1"
+          />
+        </div>
+      )}
 
       <div className="flex items-center gap-2 space-y-0">
         <Label htmlFor="password-protection">암호 설정</Label>

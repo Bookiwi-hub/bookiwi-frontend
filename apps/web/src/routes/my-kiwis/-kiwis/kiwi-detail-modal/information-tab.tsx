@@ -58,7 +58,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
                     {participants.length}명
                   </span>
                   <span className="text-muted-foreground">
-                    / {maxParticipants}명
+                    {maxParticipants ? `/ ${maxParticipants}명` : ""}
                   </span>
                 </span>
               </li>
