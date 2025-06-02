@@ -1,21 +1,27 @@
 import { MessageSquareQuote } from "lucide-react";
 
-import { usePane } from "../split-view";
-import { Pane } from "../split-view/constants/type";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { useAnnotationPane } from "./context";
+import { usePane } from "../split-view";
+import {
+  isAnnotationOpenAtom,
+  toggleAnnotationPaneAtom,
+} from "../split-view/atoms";
+import { Pane } from "../split-view/constants/type";
 
 import { cn } from "#/lib/utils";
 
 function AnnotationTrigger() {
-  const { isOpen, toggle } = useAnnotationPane();
+  const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
+  const toggleAnnotationPane = useSetAtom(toggleAnnotationPaneAtom);
+
   const bookPane = usePane(Pane.BOOK);
 
   const handleClick = () => {
-    if (isOpen) {
+    if (isAnnotationOpen) {
       bookPane.setSize(window.innerWidth);
     }
-    toggle();
+    toggleAnnotationPane();
   };
 
   return (
@@ -23,7 +29,7 @@ function AnnotationTrigger() {
       type="button"
       className={cn(
         "relative flex items-center justify-center rounded-md p-2",
-        isOpen ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
+        isAnnotationOpen ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
       )}
       onClick={handleClick}
       onMouseDown={(e) => e.preventDefault()}

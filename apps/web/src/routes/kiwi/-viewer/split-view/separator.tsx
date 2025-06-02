@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useState } from "react";
 
-import { useSetAtom } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { useAnnotationPane } from "../annotation/context";
-
-import { resizeAnnotationPaneAtom, resizeBookPaneAtom } from "./atoms";
+import {
+  isAnnotationPinnedAtom,
+  resizeAnnotationPaneAtom,
+  resizeBookPaneAtom,
+} from "./atoms";
 
 import Overlay from "#/components/ui/overlay";
 import { Separator } from "#/components/ui/separator";
@@ -25,7 +27,7 @@ function SplitViewSeparator({
 
   const resizeBookPane = useSetAtom(resizeBookPaneAtom);
   const resizeAnnotationPane = useSetAtom(resizeAnnotationPaneAtom);
-  const { isPinned } = useAnnotationPane();
+  const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
 
   const handleMouseDown = () => {
     setActive(true);
@@ -33,7 +35,7 @@ function SplitViewSeparator({
     const handleMouseMove = (e: MouseEvent) => {
       const delta = e.movementX;
 
-      if (isPinned) resizeBookPane(delta);
+      if (isAnnotationPinned) resizeBookPane(delta);
       resizeAnnotationPane(-delta);
     };
 

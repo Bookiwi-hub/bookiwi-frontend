@@ -3,19 +3,24 @@ import { useCallback } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import Annotation from "./annotation";
-import { useAnnotationPane } from "./annotation/context";
 import Book from "./book";
 import { SplitViewSeparator } from "./split-view";
 import {
   bookPaneSizeAtom,
   annotationPaneSizeAtom,
   splitViewWidthAtom,
+  isAnnotationOpenAtom,
+  isAnnotationPinnedAtom,
+  closeAnnotationPaneAtom,
 } from "./split-view/atoms";
 
 import Overlay from "#/components/ui/overlay";
 
 function Viewer() {
-  const { isOpen, isPinned, close } = useAnnotationPane();
+  const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
+  const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
+  const closeAnnotationPane = useSetAtom(closeAnnotationPaneAtom);
+
   const [bookPaneSize, setBookPaneSize] = useAtom(bookPaneSizeAtom);
   const annotationPaneSize = useAtomValue(annotationPaneSizeAtom);
   const setSplitViewWidth = useSetAtom(splitViewWidthAtom);
@@ -28,7 +33,7 @@ function Viewer() {
         if (!entry) return;
 
         setSplitViewWidth(entry.contentRect.width ?? undefined);
-        if (isPinned) {
+        if (isAnnotationPinned) {
           setBookPaneSize(entry.contentRect.width - annotationPaneSize);
         } else {
           setBookPaneSize(entry.contentRect.width);
@@ -40,7 +45,12 @@ function Viewer() {
         observer.disconnect();
       };
     },
-    [setSplitViewWidth, setBookPaneSize, annotationPaneSize, isPinned],
+    [
+      setSplitViewWidth,
+      setBookPaneSize,
+      annotationPaneSize,
+      isAnnotationPinned,
+    ],
   );
 
   return (
@@ -54,17 +64,20 @@ function Viewer() {
         <Book />
       </div>
 
-      {isOpen && (
+      {isAnnotationOpen && (
         <SplitViewSeparator
-          separatorThickness={isPinned ? 4 : 2}
+          separatorThickness={isAnnotationPinned ? 4 : 2}
           className="animate-slide-in-right"
         />
       )}
-      {isOpen && !isPinned && (
-        <Overlay className="absolute z-10 bg-transparent " onClick={close} />
+      {isAnnotationOpen && !isAnnotationPinned && (
+        <Overlay
+          className="absolute z-10 bg-transparent "
+          onClick={closeAnnotationPane}
+        />
       )}
 
-      {isOpen && (
+      {isAnnotationOpen && (
         <div
           className="z-20 animate-slide-in-right bg-white shadow-2xl"
           style={{
