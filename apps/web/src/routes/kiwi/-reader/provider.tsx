@@ -6,11 +6,10 @@ import Section from "@bookiwi/epubjs/types/section";
 import {
   bookAtom,
   participantIdAtom,
+  recordAtom,
   settingsAtom,
   useSetAtom,
 } from "@bookiwi/jotai";
-
-import { RecordProvider } from "./contexts";
 
 import { Settings, ReadingRecord } from "#/types/kiwi";
 
@@ -32,6 +31,7 @@ function ReaderProvider({
   participantId,
 }: ReaderProviderProps) {
   const setSettings = useSetAtom(settingsAtom);
+  const setRecordAtom = useSetAtom(recordAtom);
   const navigate = useNavigate();
   const setBookAtom = useSetAtom(bookAtom);
   const setParticipantIdAtom = useSetAtom(participantIdAtom);
@@ -76,12 +76,16 @@ function ReaderProvider({
   useEffect(() => {
     setParticipantIdAtom(participantId);
     setSettings(initialSettings);
-  }, [initialSettings, setSettings, setParticipantIdAtom, participantId]);
-  return (
-    <RecordProvider readingRecord={readingRecord} participantId={participantId}>
-      {children}
-    </RecordProvider>
-  );
+    setRecordAtom(readingRecord);
+  }, [
+    initialSettings,
+    setSettings,
+    setParticipantIdAtom,
+    participantId,
+    readingRecord,
+    setRecordAtom,
+  ]);
+  return children;
 }
 
 export default ReaderProvider;

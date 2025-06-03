@@ -1,8 +1,13 @@
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 
-import { useAtomValue, bookAtom } from "@bookiwi/jotai";
+import {
+  useAtomValue,
+  bookAtom,
+  useSetAtom,
+  bookmarksAtom,
+} from "@bookiwi/jotai";
 
-import { useRecord } from "#/routes/kiwi/-reader";
+import { removeBookmarkAtom } from "#/routes/kiwi/-reader/atoms/record";
 import { Bookmark } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 
@@ -71,7 +76,8 @@ function BookmarkItem({
 
 function BookmarksPanel() {
   const book = useAtomValue(bookAtom);
-  const { bookmarks, removeBookmark } = useRecord();
+  const bookmarks = useAtomValue(bookmarksAtom);
+  const removeBookmark = useSetAtom(removeBookmarkAtom);
 
   const handleBookmarkClick = (cfi: string) => {
     if (!book) return;

@@ -6,11 +6,10 @@ import {
   currentLocationAtom,
   currentSectionAtom,
   isCenterTouchedAtom,
+  percentageAtom,
   useAtom,
   useAtomValue,
 } from "@bookiwi/jotai";
-
-import { useRecord } from "./contexts";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
@@ -42,7 +41,7 @@ function ReaderPageProgress() {
   const book = useAtomValue(bookAtom);
   const { currentTocLabel, currentPage, totalPages } = usePage(book);
   const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
-  const { percentage } = useRecord();
+  const percentage = useAtomValue(percentageAtom);
 
   const throttledDisplay = useMemo(() => {
     if (!book) return null;

@@ -66,3 +66,36 @@ export const settingsAtom = atom<Settings, [Settings], void>(
     set(fontWeightAtom, newSettings.fontWeight);
   },
 );
+
+export interface Bookmark {
+  cfi: string;
+  createdAt: string;
+}
+interface ReadingRecord {
+  currentCfi: string | null;
+  percentage: number | null;
+  bookmarks: Bookmark[];
+}
+export const currentCfiAtom = atom<string | null>(null);
+export const percentageAtom = atom<number | null>((get) => {
+  const book = get(bookAtom);
+  const currentCfi = get(currentCfiAtom);
+  if (!book || !currentCfi) return null;
+  const percent = Math.floor(
+    book.locations.percentageFromCfi(currentCfi) * 100,
+  );
+  return percent;
+});
+export const bookmarksAtom = atom<Bookmark[]>([]);
+
+export const recordAtom = atom<ReadingRecord, [ReadingRecord], void>(
+  (get) => ({
+    currentCfi: get(currentCfiAtom),
+    percentage: get(percentageAtom),
+    bookmarks: get(bookmarksAtom),
+  }),
+  (get, set, newRecord: ReadingRecord) => {
+    set(currentCfiAtom, newRecord.currentCfi);
+    set(bookmarksAtom, newRecord.bookmarks);
+  },
+);
