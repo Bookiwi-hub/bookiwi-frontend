@@ -3,8 +3,6 @@ import { atom } from "jotai";
 import { Book, Location } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
 
-export const participantIdAtom = atom<string>();
-
 export const bookAtom = atom<Book>();
 
 export const currentSectionAtom = atom<Section>();
