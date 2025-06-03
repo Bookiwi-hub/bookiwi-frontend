@@ -1,13 +1,13 @@
 import { Bookmark } from "lucide-react";
 
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+
 import {
   bookmarksAtom,
   currentCfiAtom,
-  useAtomValue,
-  useSetAtom,
-} from "@bookiwi/jotai";
-
-import { removeBookmarkAtom, setBookmarkAtom } from "../-reader/atoms/record";
+  removeBookmarkAtom,
+  setBookmarkAtom,
+} from "../-reader/atoms/record";
 
 function BookmarkButton() {
   const currentCfi = useAtomValue(currentCfiAtom);

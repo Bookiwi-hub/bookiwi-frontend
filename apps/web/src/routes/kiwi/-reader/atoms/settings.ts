@@ -1,17 +1,51 @@
-import {
-  atom,
-  isSinglePageAtom,
-  fontFamilyAtom,
-  fontSizeAtom,
-  lineHeightAtom,
-  fontWeightAtom,
-  settingsAtom,
-  participantIdAtom,
-  bookAtom,
-} from "@bookiwi/jotai";
+import { atom, participantIdAtom } from "@bookiwi/jotai";
 
 import { updateCustomStyle } from "../styles";
 import { updateIDBSettings } from "../utils/idb";
+
+import { bookAtom } from "./book";
+
+import { Settings } from "#/types/kiwi";
+
+export const isSinglePageAtom = atom<boolean>(false);
+export const fontFamilyAtom = atom<string | null>(null);
+export const fontSizeAtom = atom<number | null>(null);
+export const lineHeightAtom = atom<number | null>(null);
+export const fontWeightAtom = atom<number | null>(null);
+
+type Typography = Omit<Settings, "isSinglePage">;
+
+export const typographyAtom = atom<Typography, [Typography], void>(
+  (get) => ({
+    fontFamily: get(fontFamilyAtom),
+    fontSize: get(fontSizeAtom),
+    lineHeight: get(lineHeightAtom),
+    fontWeight: get(fontWeightAtom),
+  }),
+  (get, set, newSettings: Typography) => {
+    set(fontFamilyAtom, newSettings.fontFamily);
+    set(fontSizeAtom, newSettings.fontSize);
+    set(lineHeightAtom, newSettings.lineHeight);
+    set(fontWeightAtom, newSettings.fontWeight);
+  },
+);
+
+export const settingsAtom = atom<Settings, [Settings], void>(
+  (get) => ({
+    isSinglePage: get(isSinglePageAtom),
+    fontFamily: get(fontFamilyAtom),
+    fontSize: get(fontSizeAtom),
+    lineHeight: get(lineHeightAtom),
+    fontWeight: get(fontWeightAtom),
+  }),
+  (get, set, newSettings: Settings) => {
+    set(isSinglePageAtom, newSettings.isSinglePage);
+    set(fontFamilyAtom, newSettings.fontFamily);
+    set(fontSizeAtom, newSettings.fontSize);
+    set(lineHeightAtom, newSettings.lineHeight);
+    set(fontWeightAtom, newSettings.fontWeight);
+  },
+);
 
 export const setIsSinglePageAtom = atom(
   null,

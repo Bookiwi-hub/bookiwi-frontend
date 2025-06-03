@@ -2,9 +2,10 @@ import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { memo, useCallback, useMemo, useState } from "react";
 
 import Section from "@bookiwi/epubjs/types/section";
-import { bookAtom, useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
 
 import { Input } from "#/components/ui/input";
+import { bookAtom } from "#/routes/kiwi/-reader/atoms";
 import { debounce } from "#/utils/debounce";
 import truncate from "#/utils/truncate";
 

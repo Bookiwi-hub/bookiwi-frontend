@@ -3,13 +3,9 @@ import { ReactNode, useEffect } from "react";
 
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
-import {
-  bookAtom,
-  participantIdAtom,
-  recordAtom,
-  settingsAtom,
-  useSetAtom,
-} from "@bookiwi/jotai";
+import { participantIdAtom, useSetAtom } from "@bookiwi/jotai";
+
+import { recordAtom, settingsAtom, bookAtom } from "./atoms";
 
 import { Settings, ReadingRecord } from "#/types/kiwi";
 
@@ -30,9 +26,9 @@ function ReaderProvider({
   readingRecord,
   participantId,
 }: ReaderProviderProps) {
+  const navigate = useNavigate();
   const setSettings = useSetAtom(settingsAtom);
   const setRecordAtom = useSetAtom(recordAtom);
-  const navigate = useNavigate();
   const setBookAtom = useSetAtom(bookAtom);
   const setParticipantIdAtom = useSetAtom(participantIdAtom);
 

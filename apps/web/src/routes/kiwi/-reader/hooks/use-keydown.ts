@@ -1,4 +1,6 @@
-import { useAtomValue, bookAtom } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
+
+import { bookAtom } from "../atoms";
 
 const useKeydown = () => {
   const book = useAtomValue(bookAtom);

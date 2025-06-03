@@ -1,12 +1,4 @@
-import {
-  fontFamilyAtom,
-  fontSizeAtom,
-  fontWeightAtom,
-  isSinglePageAtom,
-  lineHeightAtom,
-  useAtomValue,
-  useSetAtom,
-} from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import ButtonController from "./button-controller";
 import FontFamilySelector from "./font-family-selector";
@@ -19,7 +11,12 @@ import {
   setIsSinglePageAtom,
   setLineHeightAtom,
   setFontSizeAtom,
-} from "#/routes/kiwi/-reader/atoms/settings";
+  fontWeightAtom,
+  lineHeightAtom,
+  fontSizeAtom,
+  fontFamilyAtom,
+  isSinglePageAtom,
+} from "#/routes/kiwi/-reader/atoms";
 
 function SettingsPanel() {
   const isSinglePage = useAtomValue(isSinglePageAtom);

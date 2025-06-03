@@ -1,7 +1,8 @@
 import { useCallback, ComponentPropsWithoutRef } from "react";
 
-import { bookAtom, useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
 
+import { bookAtom } from "./atoms";
 import {
   useObserver,
   useKeydown,

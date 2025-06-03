@@ -1,9 +1,10 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
 import { useState, memo, useCallback } from "react";
 
-import { bookAtom, currentSectionAtom, useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
 
 import { cn } from "#/lib/utils";
+import { bookAtom, currentSectionAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface NavItem {
   href: string;

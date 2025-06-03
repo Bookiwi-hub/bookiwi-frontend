@@ -1,6 +1,8 @@
 import { useRef } from "react";
 
-import { useAtomValue, bookAtom } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
+
+import { bookAtom } from "../atoms";
 
 import { debounce } from "#/utils/debounce";
 

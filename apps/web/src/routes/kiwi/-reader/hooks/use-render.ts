@@ -1,5 +1,7 @@
 import { Book } from "@bookiwi/epubjs";
-import { currentCfiAtom, isSinglePageAtom, useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
+
+import { currentCfiAtom, isSinglePageAtom } from "../atoms";
 
 const useRender = () => {
   const isSinglePage = useAtomValue(isSinglePageAtom);

@@ -1,13 +1,12 @@
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 
-import {
-  useAtomValue,
-  bookAtom,
-  useSetAtom,
-  bookmarksAtom,
-} from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { removeBookmarkAtom } from "#/routes/kiwi/-reader/atoms/record";
+import {
+  bookAtom,
+  bookmarksAtom,
+  removeBookmarkAtom,
+} from "#/routes/kiwi/-reader/atoms";
 import { Bookmark } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 

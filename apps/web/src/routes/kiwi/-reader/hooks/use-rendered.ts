@@ -2,15 +2,14 @@ import { useEffect } from "react";
 
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+
 import {
   bookAtom,
   currentSectionAtom,
   toggleCenterTouchedAtom,
   typographyAtom,
-  useAtomValue,
-  useSetAtom,
-} from "@bookiwi/jotai";
-
+} from "../atoms";
 import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {

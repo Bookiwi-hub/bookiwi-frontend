@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 
 import { Book } from "@bookiwi/epubjs";
+import { useAtom, useAtomValue } from "@bookiwi/jotai";
+
 import {
   bookAtom,
   currentLocationAtom,
   currentSectionAtom,
   isCenterTouchedAtom,
   percentageAtom,
-  useAtom,
-  useAtomValue,
-} from "@bookiwi/jotai";
+} from "./atoms";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";

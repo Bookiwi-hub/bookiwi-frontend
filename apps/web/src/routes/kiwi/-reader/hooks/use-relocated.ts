@@ -1,6 +1,7 @@
 import { Location } from "@bookiwi/epubjs";
-import { currentLocationAtom, useSetAtom } from "@bookiwi/jotai";
+import { useSetAtom } from "@bookiwi/jotai";
 
+import { currentLocationAtom } from "../atoms";
 import { setCurrentCfiAtom } from "../atoms/record";
 
 const useRelocated = () => {
