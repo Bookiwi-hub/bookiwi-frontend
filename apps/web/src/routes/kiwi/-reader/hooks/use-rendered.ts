@@ -4,7 +4,7 @@ import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
 import {
   currentSectionAtom,
-  toggleProgressBarAtom,
+  toggleCenterTouchedAtom,
   useSetAtom,
 } from "@bookiwi/jotai";
 
@@ -12,7 +12,7 @@ import { useBook, useSettings } from "../contexts";
 import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {
-  const toggleProgressBar = useSetAtom(toggleProgressBarAtom);
+  const toggleProgressBar = useSetAtom(toggleCenterTouchedAtom);
   // Track if user is dragging
   let isDragging = false;
   const handleMouseDown = () => {

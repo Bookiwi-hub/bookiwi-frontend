@@ -5,8 +5,8 @@ import Section from "@bookiwi/epubjs/types/section";
 
 export const currentSectionAtom = atom<Section>();
 export const currentLocationAtom = atom<Location>();
-export const isProgressBarOpenAtom = atom<boolean>(false);
+export const isCenterTouchedAtom = atom<boolean>(false);
 
-export const toggleProgressBarAtom = atom(null, (get, set) => {
-  set(isProgressBarOpenAtom, !get(isProgressBarOpenAtom));
+export const toggleCenterTouchedAtom = atom(null, (get, set) => {
+  set(isCenterTouchedAtom, !get(isCenterTouchedAtom));
 });

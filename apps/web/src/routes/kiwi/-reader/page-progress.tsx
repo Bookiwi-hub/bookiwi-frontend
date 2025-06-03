@@ -4,7 +4,7 @@ import { Book } from "@bookiwi/epubjs";
 import {
   currentLocationAtom,
   currentSectionAtom,
-  isProgressBarOpenAtom,
+  isCenterTouchedAtom,
   useAtom,
   useAtomValue,
 } from "@bookiwi/jotai";
@@ -40,9 +40,7 @@ const usePage = (book: Book | null) => {
 function ReaderPageProgress() {
   const { book } = useBook();
   const { currentTocLabel, currentPage, totalPages } = usePage(book);
-  const [isProgressBarOpen, setProgressBarOpen] = useAtom(
-    isProgressBarOpenAtom,
-  );
+  const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
   const { percentage } = useRecord();
 
   const throttledDisplay = useMemo(() => {
