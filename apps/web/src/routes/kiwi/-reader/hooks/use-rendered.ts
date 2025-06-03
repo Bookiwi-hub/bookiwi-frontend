@@ -5,10 +5,12 @@ import Section from "@bookiwi/epubjs/types/section";
 import {
   currentSectionAtom,
   toggleCenterTouchedAtom,
+  typographyAtom,
+  useAtomValue,
   useSetAtom,
 } from "@bookiwi/jotai";
 
-import { useBook, useSettings } from "../contexts";
+import { useBook } from "../contexts";
 import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {
@@ -57,18 +59,13 @@ const useToggleProgressBar = () => {
 
 const useUpdateCustomStyle = () => {
   const { book } = useBook();
-  const { fontSize, fontFamily, fontWeight, lineHeight } = useSettings();
+  const typography = useAtomValue(typographyAtom);
 
   useEffect(() => {
     const handleRendered = async () => {
       const contents = book?.rendition.getContents()[0];
       if (!contents) return;
-      await updateCustomStyle(contents, {
-        fontSize,
-        fontFamily,
-        fontWeight,
-        lineHeight,
-      });
+      await updateCustomStyle(contents, typography);
     };
 
     book?.rendition?.on("rendered", handleRendered);
@@ -76,7 +73,7 @@ const useUpdateCustomStyle = () => {
     return () => {
       book?.rendition?.off("rendered", handleRendered);
     };
-  }, [fontSize, fontFamily, fontWeight, lineHeight, book]);
+  }, [typography, book]);
 };
 
 const useRendered = () => {

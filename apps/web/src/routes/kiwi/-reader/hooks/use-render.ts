@@ -1,9 +1,10 @@
 import { Book } from "@bookiwi/epubjs";
+import { isSinglePageAtom, useAtomValue } from "@bookiwi/jotai";
 
-import { useRecord, useSettings } from "../contexts";
+import { useRecord } from "../contexts";
 
 const useRender = () => {
-  const { isSinglePage } = useSettings();
+  const isSinglePage = useAtomValue(isSinglePageAtom);
   const { currentCfi } = useRecord();
 
   const render = (node: HTMLDivElement, book: Book) => {

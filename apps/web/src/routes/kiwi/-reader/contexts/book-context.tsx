@@ -10,6 +10,7 @@ import {
 
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
+import { useSetAtom, bookAtom, participantIdAtom } from "@bookiwi/jotai";
 
 interface BookContextType {
   book: Book | null;
@@ -29,15 +30,19 @@ interface BookProviderProps {
   children: ReactNode;
   epubFile: File;
   locations: string;
+  participantId: string;
 }
 
 export function BookProvider({
   children,
   epubFile,
   locations,
+  participantId,
 }: BookProviderProps) {
   const [book, setBook] = useState<Book | null>(null);
   const navigate = useNavigate();
+  const setBookAtom = useSetAtom(bookAtom);
+  const setParticipantIdAtom = useSetAtom(participantIdAtom);
 
   useEffect(() => {
     let mounted = true;
@@ -57,6 +62,8 @@ export function BookProvider({
 
         if (mounted) {
           setBook(epubBook);
+          setBookAtom(epubBook);
+          setParticipantIdAtom(participantId);
         }
       } catch (error) {
         if (mounted) {
@@ -75,7 +82,14 @@ export function BookProvider({
       epubBook.destroy();
       setBook(null);
     };
-  }, [navigate, epubFile, locations]);
+  }, [
+    navigate,
+    epubFile,
+    locations,
+    setBookAtom,
+    setParticipantIdAtom,
+    participantId,
+  ]);
 
   const value = useMemo(
     () => ({

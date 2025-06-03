@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+
+import { settingsAtom, useSetAtom } from "@bookiwi/jotai";
 
 import { BookProvider, SettingsProvider, RecordProvider } from "./contexts";
 
@@ -21,8 +23,16 @@ function ReaderProvider({
   readingRecord,
   participantId,
 }: ReaderProviderProps) {
+  const setSettings = useSetAtom(settingsAtom);
+  useEffect(() => {
+    setSettings(initialSettings);
+  }, [initialSettings, setSettings]);
   return (
-    <BookProvider epubFile={epubFile} locations={locations}>
+    <BookProvider
+      epubFile={epubFile}
+      locations={locations}
+      participantId={participantId}
+    >
       <SettingsProvider
         initialSettings={initialSettings}
         participantId={participantId}
