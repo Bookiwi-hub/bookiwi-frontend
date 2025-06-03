@@ -2,7 +2,7 @@ import { ReactNode, useEffect } from "react";
 
 import { settingsAtom, useSetAtom } from "@bookiwi/jotai";
 
-import { BookProvider, SettingsProvider, RecordProvider } from "./contexts";
+import { BookProvider, RecordProvider } from "./contexts";
 
 import { Settings, ReadingRecord } from "#/types/kiwi";
 
@@ -33,17 +33,12 @@ function ReaderProvider({
       locations={locations}
       participantId={participantId}
     >
-      <SettingsProvider
-        initialSettings={initialSettings}
+      <RecordProvider
+        readingRecord={readingRecord}
         participantId={participantId}
       >
-        <RecordProvider
-          readingRecord={readingRecord}
-          participantId={participantId}
-        >
-          {children}
-        </RecordProvider>
-      </SettingsProvider>
+        {children}
+      </RecordProvider>
     </BookProvider>
   );
 }
