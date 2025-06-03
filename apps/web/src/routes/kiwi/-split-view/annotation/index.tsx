@@ -1,6 +1,6 @@
 import { useAtom } from "@bookiwi/jotai";
 
-import { tabStateAtom, TabType } from "./atom";
+import { tabStateAtom, TabType } from "./atoms";
 import AnnotationHeader from "./header";
 import Highlight from "./tabs/highlight";
 import HighlightList from "./tabs/highlight-list";

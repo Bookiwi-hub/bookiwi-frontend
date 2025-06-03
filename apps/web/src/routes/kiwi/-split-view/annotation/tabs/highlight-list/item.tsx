@@ -1,6 +1,6 @@
 import { useSetAtom } from "@bookiwi/jotai";
 
-import { highlightIdAtom, setTabToHighlightAtom } from "../../atom";
+import { highlightIdAtom, setTabToHighlightAtom } from "../../atoms";
 import { useTruncatedText } from "../hooks/use-truncated-text";
 
 import { formatDate } from "#/utils/format-date";

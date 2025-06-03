@@ -13,7 +13,7 @@ import {
   setTabToHighlightListAtom,
   setTabToHighlightAtom,
   TabType,
-} from "./atom";
+} from "./atoms";
 
 import { TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { cn } from "#/lib/utils";
