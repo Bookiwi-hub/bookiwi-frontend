@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 
-import { useBook } from "./book-context";
+import { bookAtom, useAtomValue } from "@bookiwi/jotai";
 
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
@@ -41,7 +41,7 @@ export function RecordProvider({
   readingRecord,
   participantId,
 }: RecordProviderProps) {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const [currentCfiState, setCurrentCfiState] = useState(
     readingRecord.currentCfi,
   );

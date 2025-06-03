@@ -1,6 +1,7 @@
 import { useCallback, ComponentPropsWithoutRef } from "react";
 
-import { useBook } from "./contexts";
+import { bookAtom, useAtomValue } from "@bookiwi/jotai";
+
 import {
   useObserver,
   useKeydown,
@@ -11,7 +12,7 @@ import {
 import { defaultStyle } from "./styles";
 
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const render = useRender();
   const handleRendered = useRendered();
   const handleRelocated = useRelocated();

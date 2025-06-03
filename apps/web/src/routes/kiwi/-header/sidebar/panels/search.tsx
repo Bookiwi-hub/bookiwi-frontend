@@ -2,9 +2,9 @@ import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { memo, useCallback, useMemo, useState } from "react";
 
 import Section from "@bookiwi/epubjs/types/section";
+import { bookAtom, useAtomValue } from "@bookiwi/jotai";
 
 import { Input } from "#/components/ui/input";
-import { useBook } from "#/routes/kiwi/-reader";
 import { debounce } from "#/utils/debounce";
 import truncate from "#/utils/truncate";
 
@@ -195,7 +195,7 @@ function SearchResults({
 const MemoizedSearchResults = memo(SearchResults);
 
 function SearchPanel() {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const [searchTerm, setSearchTerm] = useState("");
   const [matchResults, setMatchResults] = useState<MatchType[]>([]);
   const [isSearching, setIsSearching] = useState(false);

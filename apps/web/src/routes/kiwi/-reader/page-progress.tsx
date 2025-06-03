@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import { Book } from "@bookiwi/epubjs";
 import {
+  bookAtom,
   currentLocationAtom,
   currentSectionAtom,
   isCenterTouchedAtom,
@@ -9,7 +10,7 @@ import {
   useAtomValue,
 } from "@bookiwi/jotai";
 
-import { useBook, useRecord } from "./contexts";
+import { useRecord } from "./contexts";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
@@ -38,7 +39,7 @@ const usePage = (book: Book | null) => {
 };
 
 function ReaderPageProgress() {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const { currentTocLabel, currentPage, totalPages } = usePage(book);
   const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
   const { percentage } = useRecord();

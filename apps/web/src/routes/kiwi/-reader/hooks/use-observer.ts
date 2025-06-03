@@ -1,11 +1,11 @@
 import { useRef } from "react";
 
-import { useBook } from "../contexts";
+import { useAtomValue, bookAtom } from "@bookiwi/jotai";
 
 import { debounce } from "#/utils/debounce";
 
 const useObserver = () => {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const prevSize = useRef(0);
   const resizeRef = useRef<(() => void) | null>(null);
 

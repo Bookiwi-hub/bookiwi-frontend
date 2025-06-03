@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
 import {
+  bookAtom,
   currentSectionAtom,
   toggleCenterTouchedAtom,
   typographyAtom,
@@ -10,7 +11,6 @@ import {
   useSetAtom,
 } from "@bookiwi/jotai";
 
-import { useBook } from "../contexts";
 import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {
@@ -58,7 +58,7 @@ const useToggleProgressBar = () => {
 };
 
 const useUpdateCustomStyle = () => {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const typography = useAtomValue(typographyAtom);
 
   useEffect(() => {
