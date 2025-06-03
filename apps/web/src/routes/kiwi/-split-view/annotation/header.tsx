@@ -1,42 +1,38 @@
 import { Pin, X } from "lucide-react";
 
-import { Pane, usePane, useSplitViewContext } from "../split-view";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { useAnnotationPane } from "./context";
-import { useAnnotationTab, TabType } from "./tabs/context";
+import {
+  isAnnotationPinnedAtom,
+  unpinAnnotationPaneAtom,
+  pinAnnotationPaneAtom,
+  closeAnnotationPaneAtom,
+} from "../atoms";
+
+import {
+  setTabToHighlightListAtom,
+  setTabToHighlightAtom,
+  TabType,
+} from "./atoms";
 
 import { TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { cn } from "#/lib/utils";
 
 function AnnotationHeader() {
-  const { isPinned, pin, unpin, close } = useAnnotationPane();
-  const { setTabState } = useAnnotationTab();
-  const bookPane = usePane(Pane.BOOK);
-  const annotationPane = usePane(Pane.ANNOTATION);
-  const { splitViewWidth } = useSplitViewContext();
+  const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
+  const pinAnnotationPane = useSetAtom(pinAnnotationPaneAtom);
+  const unpinAnnotationPane = useSetAtom(unpinAnnotationPaneAtom);
+  const closeAnnotationPane = useSetAtom(closeAnnotationPaneAtom);
+
+  const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
+  const setTabToHighlightList = useSetAtom(setTabToHighlightListAtom);
 
   const handlePin = () => {
-    if (isPinned) {
-      unpin();
-      bookPane.setSize(splitViewWidth);
+    if (isAnnotationPinned) {
+      unpinAnnotationPane();
     } else {
-      pin();
-      bookPane.setSize(() => {
-        if (splitViewWidth && annotationPane.size) {
-          return splitViewWidth - annotationPane.size;
-        }
-        return splitViewWidth;
-      });
+      pinAnnotationPane();
     }
-  };
-
-  const handleClose = () => {
-    close();
-    bookPane.setSize(undefined);
-  };
-
-  const handleTabChange = (value: TabType) => {
-    setTabState(value);
   };
 
   return (
@@ -45,7 +41,7 @@ function AnnotationHeader() {
         <TabsTrigger
           className="w-full"
           value={TabType.HIGHLIGHT}
-          onClick={() => handleTabChange(TabType.HIGHLIGHT)}
+          onClick={setTabToHighlight}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
@@ -54,7 +50,7 @@ function AnnotationHeader() {
         <TabsTrigger
           className="w-full"
           value={TabType.HIGHLIGHT_LIST}
-          onClick={() => handleTabChange(TabType.HIGHLIGHT_LIST)}
+          onClick={setTabToHighlightList}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
@@ -67,9 +63,11 @@ function AnnotationHeader() {
           onClick={handlePin}
           className={cn(
             "rounded-md p-2",
-            isPinned ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100",
+            isAnnotationPinned
+              ? "bg-blue-100 text-blue-600"
+              : "hover:bg-gray-100",
           )}
-          aria-label={isPinned ? "Unpin panel" : "Pin panel"}
+          aria-label={isAnnotationPinned ? "Unpin panel" : "Pin panel"}
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
@@ -77,7 +75,7 @@ function AnnotationHeader() {
         </button>
         <button
           type="button"
-          onClick={handleClose}
+          onClick={closeAnnotationPane}
           className="rounded-md p-2 hover:bg-gray-100"
           aria-label="Close panel"
         >

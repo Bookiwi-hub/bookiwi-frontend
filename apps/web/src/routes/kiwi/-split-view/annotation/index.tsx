@@ -1,12 +1,14 @@
+import { useAtom } from "@bookiwi/jotai";
+
+import { tabStateAtom, TabType } from "./atoms";
 import AnnotationHeader from "./header";
-import { useAnnotationTab, TabType } from "./tabs/context";
 import Highlight from "./tabs/highlight";
 import HighlightList from "./tabs/highlight-list";
 
 import { Tabs, TabsContent } from "#/components/ui/tabs";
 
 function Annotation() {
-  const { tabState, setTabState } = useAnnotationTab();
+  const [tabState, setTabState] = useAtom(tabStateAtom);
 
   return (
     <Tabs
