@@ -1,10 +1,11 @@
 import { Location } from "@bookiwi/epubjs";
+import { currentLocationAtom, useSetAtom } from "@bookiwi/jotai";
 
-import { useRecord, useReading } from "../contexts";
+import { useRecord } from "../contexts";
 
 const useRelocated = () => {
   const { setCurrentCfi } = useRecord();
-  const { setCurrentLocation } = useReading();
+  const setCurrentLocation = useSetAtom(currentLocationAtom);
 
   const handleRelocated = async (location: Location) => {
     const { cfi } = location.start;

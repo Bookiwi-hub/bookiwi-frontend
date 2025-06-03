@@ -2,12 +2,17 @@ import { useEffect } from "react";
 
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
+import {
+  currentSectionAtom,
+  toggleProgressBarAtom,
+  useSetAtom,
+} from "@bookiwi/jotai";
 
-import { useBook, useReading, useSettings } from "../contexts";
+import { useBook, useSettings } from "../contexts";
 import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {
-  const { setProgressBarOpen } = useReading();
+  const toggleProgressBar = useSetAtom(toggleProgressBarAtom);
   // Track if user is dragging
   let isDragging = false;
   const handleMouseDown = () => {
@@ -30,7 +35,7 @@ const useToggleProgressBar = () => {
 
     // Only toggle if not dragging and no text is selected
     if (!isDragging && (!selection || selection.toString().trim() === "")) {
-      setProgressBarOpen((prev) => !prev);
+      toggleProgressBar();
     }
 
     // Reset the dragging state
@@ -75,7 +80,7 @@ const useUpdateCustomStyle = () => {
 };
 
 const useRendered = () => {
-  const { setCurrentSection } = useReading();
+  const setCurrentSection = useSetAtom(currentSectionAtom);
   const addProgressBarToggleEvent = useToggleProgressBar();
 
   useUpdateCustomStyle();

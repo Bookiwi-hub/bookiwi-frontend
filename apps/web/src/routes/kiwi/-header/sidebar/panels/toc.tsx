@@ -1,8 +1,10 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
 import { useState, memo, useCallback } from "react";
 
+import { currentSectionAtom, useAtomValue } from "@bookiwi/jotai";
+
 import { cn } from "#/lib/utils";
-import { useBook, useReading } from "#/routes/kiwi/-reader";
+import { useBook } from "#/routes/kiwi/-reader";
 
 interface NavItem {
   href: string;
@@ -97,7 +99,7 @@ const MemoizedTocItemComponent = memo(TocItemComponent);
 function TocPanel() {
   const { book } = useBook();
   const [toc, setToc] = useState<NavItem[]>([]);
-  const { currentSection } = useReading();
+  const currentSection = useAtomValue(currentSectionAtom);
   const currentSectionHref = currentSection?.href;
 
   const tocRef = useCallback(

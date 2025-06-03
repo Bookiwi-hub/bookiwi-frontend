@@ -1,11 +1,6 @@
 import { ReactNode } from "react";
 
-import {
-  BookProvider,
-  SettingsProvider,
-  RecordProvider,
-  ReadingProvider,
-} from "./contexts";
+import { BookProvider, SettingsProvider, RecordProvider } from "./contexts";
 
 import { Settings, ReadingRecord } from "#/types/kiwi";
 
@@ -36,7 +31,7 @@ function ReaderProvider({
           readingRecord={readingRecord}
           participantId={participantId}
         >
-          <ReadingProvider>{children}</ReadingProvider>
+          {children}
         </RecordProvider>
       </SettingsProvider>
     </BookProvider>
