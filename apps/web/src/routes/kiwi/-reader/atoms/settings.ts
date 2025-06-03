@@ -85,7 +85,9 @@ export const setFontWeightAtom = atom(
 export const setLineHeightAtom = atom(
   null,
   async (get, set, newLineHeight: number | null) => {
-    set(lineHeightAtom, newLineHeight);
+    const formattedLineHeight =
+      newLineHeight !== null ? Number(newLineHeight.toFixed(1)) : null;
+    set(lineHeightAtom, formattedLineHeight);
     const participantId = get(participantIdAtom);
     const book = get(bookAtom);
     if (!participantId || !book) return;
@@ -95,7 +97,7 @@ export const setLineHeightAtom = atom(
       fontFamily: get(fontFamilyAtom),
       fontSize: get(fontSizeAtom),
       fontWeight: get(fontWeightAtom),
-      lineHeight: newLineHeight,
+      lineHeight: formattedLineHeight,
     });
     await updateIDBSettings(get(settingsAtom), participantId);
   },
