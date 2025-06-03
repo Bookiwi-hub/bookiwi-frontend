@@ -1,2 +1,2 @@
 export * from "jotai";
-export * from "./atoms";
+export * from "./kiwi";

@@ -4,7 +4,6 @@
   "description": "Jotai state management utilities for Bookiwi",
   "main": "src/index.ts",
   "dependencies": {
-    "jotai": "^2.12.5",
-    "@bookiwi/epubjs": "workspace:*"
+    "jotai": "^2.12.5"
   }
 }

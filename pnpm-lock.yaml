@@ -256,9 +256,6 @@ importers:
 
   packages/jotai:
     dependencies:
-      '@bookiwi/epubjs':
-        specifier: workspace:*
-        version: link:../epubjs
       jotai:
         specifier: ^2.12.5
         version: 2.12.5(@types/react@19.1.0)(react@19.1.0)
