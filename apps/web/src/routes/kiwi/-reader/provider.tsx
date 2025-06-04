@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useMemo } from "react";
 
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
-import { participantIdAtom, Provider, createStore } from "@bookiwi/jotai";
+import { Provider, createStore } from "@bookiwi/jotai";
 
 import {
   recordAtom,
@@ -12,6 +12,7 @@ import {
   currentSectionAtom,
   currentLocationAtom,
   isCenterTouchedAtom,
+  participantIdAtom,
 } from "./atoms";
 
 import { Settings, ReadingRecord } from "#/types/kiwi";

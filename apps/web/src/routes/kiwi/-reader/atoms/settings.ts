@@ -1,9 +1,10 @@
-import { atom, participantIdAtom } from "@bookiwi/jotai";
+import { atom } from "@bookiwi/jotai";
 
 import { updateCustomStyle } from "../styles";
 import { updateIDBSettings } from "../utils/idb";
 
 import { bookAtom } from "./book";
+import { participantIdAtom } from "./kiwi";
 
 import { Settings } from "#/types/kiwi";
 

@@ -1,8 +1,9 @@
-import { atom, participantIdAtom } from "@bookiwi/jotai";
+import { atom } from "@bookiwi/jotai";
 
 import { updateIDBRecord } from "../utils/idb";
 
 import { bookAtom } from "./book";
+import { participantIdAtom } from "./kiwi";
 
 import { Bookmark, ReadingRecord } from "#/types/kiwi";
 
