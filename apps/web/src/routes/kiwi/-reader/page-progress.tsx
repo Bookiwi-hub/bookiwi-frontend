@@ -1,8 +1,15 @@
 import { useMemo } from "react";
 
 import { Book } from "@bookiwi/epubjs";
+import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
-import { useBook, useReading, useRecord } from "./contexts";
+import {
+  bookAtom,
+  currentLocationAtom,
+  currentSectionAtom,
+  isCenterTouchedAtom,
+  percentageAtom,
+} from "./atoms";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
@@ -12,7 +19,8 @@ import truncate from "#/utils/truncate";
 const MAX_SECTION_LENGTH = 25;
 
 const usePage = (book: Book | null) => {
-  const { currentLocation, currentSection } = useReading();
+  const currentSection = useAtomValue(currentSectionAtom);
+  const currentLocation = useAtomValue(currentLocationAtom);
 
   if (!book || !currentSection || !currentLocation)
     return { currentTocLabel: null, currentPage: null, totalPages: null };
@@ -30,10 +38,10 @@ const usePage = (book: Book | null) => {
 };
 
 function ReaderPageProgress() {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const { currentTocLabel, currentPage, totalPages } = usePage(book);
-  const { isProgressBarOpen, setProgressBarOpen } = useReading();
-  const { percentage } = useRecord();
+  const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
+  const percentage = useAtomValue(percentageAtom);
 
   const throttledDisplay = useMemo(() => {
     if (!book) return null;

@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import {
   Select,
   SelectContent,
@@ -62,4 +64,4 @@ function FontFamilySelector({
   );
 }
 
-export default FontFamilySelector;
+export default memo(FontFamilySelector);

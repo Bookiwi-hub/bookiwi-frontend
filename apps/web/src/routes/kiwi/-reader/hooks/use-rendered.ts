@@ -2,12 +2,18 @@ import { useEffect } from "react";
 
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { useBook, useReading, useSettings } from "../contexts";
+import {
+  bookAtom,
+  currentSectionAtom,
+  toggleCenterTouchedAtom,
+  typographyAtom,
+} from "../atoms";
 import { updateCustomStyle } from "../styles";
 
 const useToggleProgressBar = () => {
-  const { setProgressBarOpen } = useReading();
+  const toggleProgressBar = useSetAtom(toggleCenterTouchedAtom);
   // Track if user is dragging
   let isDragging = false;
   const handleMouseDown = () => {
@@ -30,7 +36,7 @@ const useToggleProgressBar = () => {
 
     // Only toggle if not dragging and no text is selected
     if (!isDragging && (!selection || selection.toString().trim() === "")) {
-      setProgressBarOpen((prev) => !prev);
+      toggleProgressBar();
     }
 
     // Reset the dragging state
@@ -51,19 +57,14 @@ const useToggleProgressBar = () => {
 };
 
 const useUpdateCustomStyle = () => {
-  const { book } = useBook();
-  const { fontSize, fontFamily, fontWeight, lineHeight } = useSettings();
+  const book = useAtomValue(bookAtom);
+  const typography = useAtomValue(typographyAtom);
 
   useEffect(() => {
     const handleRendered = async () => {
       const contents = book?.rendition.getContents()[0];
       if (!contents) return;
-      await updateCustomStyle(contents, {
-        fontSize,
-        fontFamily,
-        fontWeight,
-        lineHeight,
-      });
+      await updateCustomStyle(contents, typography);
     };
 
     book?.rendition?.on("rendered", handleRendered);
@@ -71,11 +72,11 @@ const useUpdateCustomStyle = () => {
     return () => {
       book?.rendition?.off("rendered", handleRendered);
     };
-  }, [fontSize, fontFamily, fontWeight, lineHeight, book]);
+  }, [typography, book]);
 };
 
 const useRendered = () => {
-  const { setCurrentSection } = useReading();
+  const setCurrentSection = useSetAtom(currentSectionAtom);
   const addProgressBarToggleEvent = useToggleProgressBar();
 
   useUpdateCustomStyle();

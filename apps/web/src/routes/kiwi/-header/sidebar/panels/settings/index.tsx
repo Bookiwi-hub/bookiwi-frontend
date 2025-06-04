@@ -1,23 +1,35 @@
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+
 import ButtonController from "./button-controller";
 import FontFamilySelector from "./font-family-selector";
 import SinglePageToggler from "./single-page-toggler";
 
 import { Separator } from "#/components/ui/separator";
-import { useSettings } from "#/routes/kiwi/-reader";
+import {
+  setFontWeightAtom,
+  setFontFamilyAtom,
+  setIsSinglePageAtom,
+  setLineHeightAtom,
+  setFontSizeAtom,
+  fontWeightAtom,
+  lineHeightAtom,
+  fontSizeAtom,
+  fontFamilyAtom,
+  isSinglePageAtom,
+} from "#/routes/kiwi/-reader/atoms";
 
 function SettingsPanel() {
-  const {
-    isSinglePage,
-    setIsSinglePage,
-    fontSize,
-    setFontSize,
-    fontWeight,
-    setFontWeight,
-    lineHeight,
-    setLineHeight,
-    fontFamily,
-    setFontFamily,
-  } = useSettings();
+  const isSinglePage = useAtomValue(isSinglePageAtom);
+  const fontFamily = useAtomValue(fontFamilyAtom);
+  const fontSize = useAtomValue(fontSizeAtom);
+  const fontWeight = useAtomValue(fontWeightAtom);
+  const lineHeight = useAtomValue(lineHeightAtom);
+  const setIsSinglePage = useSetAtom(setIsSinglePageAtom);
+  const setFontFamily = useSetAtom(setFontFamilyAtom);
+  const setFontSize = useSetAtom(setFontSizeAtom);
+  const setFontWeight = useSetAtom(setFontWeightAtom);
+  const setLineHeight = useSetAtom(setLineHeightAtom);
+
   return (
     <div>
       <h3 className="mb-8 text-lg font-medium">설정</h3>

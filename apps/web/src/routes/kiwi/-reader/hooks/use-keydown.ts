@@ -1,7 +1,9 @@
-import { useBook } from "../contexts";
+import { useAtomValue } from "@bookiwi/jotai";
+
+import { bookAtom } from "../atoms";
 
 const useKeydown = () => {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   // 키보드 이벤트 처리
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.code === "ArrowRight" || e.code === "ArrowDown") {

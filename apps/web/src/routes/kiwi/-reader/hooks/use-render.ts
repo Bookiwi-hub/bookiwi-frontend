@@ -1,10 +1,11 @@
 import { Book } from "@bookiwi/epubjs";
+import { useAtomValue } from "@bookiwi/jotai";
 
-import { useRecord, useSettings } from "../contexts";
+import { currentCfiAtom, isSinglePageAtom } from "../atoms";
 
 const useRender = () => {
-  const { isSinglePage } = useSettings();
-  const { currentCfi } = useRecord();
+  const isSinglePage = useAtomValue(isSinglePageAtom);
+  const currentCfi = useAtomValue(currentCfiAtom);
 
   const render = (node: HTMLDivElement, book: Book) => {
     // rendition 객체 생성

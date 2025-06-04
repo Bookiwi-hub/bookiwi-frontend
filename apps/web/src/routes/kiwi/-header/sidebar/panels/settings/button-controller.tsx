@@ -1,4 +1,5 @@
 import { MinusIcon, PlusIcon, RotateCcwIcon } from "lucide-react";
+import { memo } from "react";
 
 import { Button } from "#/components/ui/button";
 
@@ -81,4 +82,4 @@ function ButtonController<T extends number>({
   );
 }
 
-export default ButtonController;
+export default memo(ButtonController);

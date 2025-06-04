@@ -1,9 +1,11 @@
 import { ComponentProps } from "react";
 
-import { useBook } from "./contexts";
+import { useAtomValue } from "@bookiwi/jotai";
+
+import { bookAtom } from "./atoms";
 
 function ReaderPrevPageButton(props: ComponentProps<"button">) {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const { children, ...rest } = props;
 
   const goToPrevPage = () => {
@@ -26,7 +28,7 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
 }
 
 function ReaderNextPageButton(props: ComponentProps<"button">) {
-  const { book } = useBook();
+  const book = useAtomValue(bookAtom);
   const { children, ...rest } = props;
 
   const goToNextPage = () => {
