@@ -1,11 +1,18 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
-import { participantIdAtom, useSetAtom } from "@bookiwi/jotai";
+import { participantIdAtom, Provider, createStore } from "@bookiwi/jotai";
 
-import { recordAtom, settingsAtom, bookAtom } from "./atoms";
+import {
+  recordAtom,
+  settingsAtom,
+  bookAtom,
+  currentSectionAtom,
+  currentLocationAtom,
+  isCenterTouchedAtom,
+} from "./atoms";
 
 import { Settings, ReadingRecord } from "#/types/kiwi";
 
@@ -27,10 +34,20 @@ function ReaderProvider({
   participantId,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
-  const setSettings = useSetAtom(settingsAtom);
-  const setRecordAtom = useSetAtom(recordAtom);
-  const setBookAtom = useSetAtom(bookAtom);
-  const setParticipantIdAtom = useSetAtom(participantIdAtom);
+
+  // 리더 전용 store 생성
+  const store = useMemo(() => {
+    const readerStore = createStore();
+    // 초기값 설정
+    readerStore.set(bookAtom, null);
+    readerStore.set(isCenterTouchedAtom, false);
+    readerStore.set(settingsAtom, initialSettings);
+    readerStore.set(recordAtom, readingRecord);
+    readerStore.set(participantIdAtom, participantId);
+    readerStore.set(currentSectionAtom, undefined);
+    readerStore.set(currentLocationAtom, undefined);
+    return readerStore;
+  }, [initialSettings, readingRecord, participantId]);
 
   useEffect(() => {
     // Create a new Book instance
@@ -47,7 +64,7 @@ function ReaderProvider({
           section.load(epubBook.load.bind(epubBook)),
         );
 
-        setBookAtom(epubBook);
+        store.set(bookAtom, epubBook);
       } catch (error) {
         alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
         navigate({ to: "/my-kiwis" });
@@ -58,30 +75,10 @@ function ReaderProvider({
 
     return () => {
       epubBook.destroy();
-      setBookAtom(null);
     };
-  }, [
-    navigate,
-    epubFile,
-    locations,
-    setBookAtom,
-    setParticipantIdAtom,
-    participantId,
-  ]);
+  }, [navigate, epubFile, locations, store]);
 
-  useEffect(() => {
-    setParticipantIdAtom(participantId);
-    setSettings(initialSettings);
-    setRecordAtom(readingRecord);
-  }, [
-    initialSettings,
-    setSettings,
-    setParticipantIdAtom,
-    participantId,
-    readingRecord,
-    setRecordAtom,
-  ]);
-  return children;
+  return <Provider store={store}>{children}</Provider>;
 }
 
 export default ReaderProvider;
