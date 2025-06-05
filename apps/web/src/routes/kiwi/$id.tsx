@@ -16,7 +16,7 @@ export const Route = createFileRoute("/kiwi/$id")({
   head: ({ loaderData }) => ({
     meta: [
       {
-        title: `Kiwi | ${loaderData.kiwiTitle}`,
+        title: `Kiwi | ${loaderData.kiwiData.name}`,
       },
     ],
   }),
@@ -24,23 +24,14 @@ export const Route = createFileRoute("/kiwi/$id")({
 });
 
 function Kiwi() {
-  const {
-    epubFile,
-    initialSettings,
-    kiwiTitle,
-    readingRecord,
-    locations,
-    participantId,
-  } = Route.useLoaderData();
+  const { epubData, kiwiData, participantData } = Route.useLoaderData();
   return (
     <ReaderProvider
-      epubFile={epubFile}
-      initialSettings={initialSettings}
-      readingRecord={readingRecord}
-      locations={locations}
-      participantId={participantId}
+      epubData={epubData}
+      kiwiData={kiwiData}
+      participantData={participantData}
     >
-      <KiwiContent kiwiTitle={kiwiTitle} />
+      <KiwiContent kiwiTitle={kiwiData.name} />
     </ReaderProvider>
   );
 }

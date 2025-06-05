@@ -2,15 +2,11 @@ import tempUser from "#/DB/users";
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
-import { ReadingRecord, Settings } from "#/types/kiwi";
 
 type GetBookResponse = {
-  readingRecord: ReadingRecord;
-  initialSettings: Settings;
-  locations: string;
-  epubFile: File;
-  kiwiTitle: string;
-  participantId: string;
+  epubData: EpubIDBData;
+  kiwiData: KiwiIDBData;
+  participantData: ParticipantIDBData;
 };
 
 const getBook = async (id: string): Promise<GetBookResponse> => {
@@ -48,12 +44,9 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
     }
 
     return {
-      locations: epubData.locations,
-      epubFile: epubData.file,
-      readingRecord: currentParticipant.record,
-      initialSettings: currentParticipant.settings,
-      kiwiTitle: kiwiData.name,
-      participantId: currentParticipant.id,
+      epubData,
+      kiwiData,
+      participantData: currentParticipant,
     };
   } catch (error) {
     throw new Error("Failed to fetch book");

@@ -6,33 +6,28 @@ import Section from "@bookiwi/epubjs/types/section";
 import { Provider, createStore } from "@bookiwi/jotai";
 
 import {
-  recordAtom,
-  settingsAtom,
   bookAtom,
   currentSectionAtom,
   currentLocationAtom,
   isCenterTouchedAtom,
-  participantIdAtom,
+  participantAtom,
+  kiwiAtom,
 } from "./atoms";
 
-import { Settings, ReadingRecord } from "#/types/kiwi";
+import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 
 interface ReaderProviderProps {
   children: ReactNode;
-  epubFile: File;
-  locations: string;
-  initialSettings: Settings;
-  readingRecord: ReadingRecord;
-  participantId: string;
+  epubData: EpubIDBData;
+  kiwiData: KiwiIDBData;
+  participantData: ParticipantIDBData;
 }
 
 function ReaderProvider({
   children,
-  epubFile,
-  locations,
-  initialSettings,
-  readingRecord,
-  participantId,
+  epubData,
+  kiwiData,
+  participantData,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
 
@@ -42,17 +37,16 @@ function ReaderProvider({
     // 초기값 설정
     readerStore.set(bookAtom, null);
     readerStore.set(isCenterTouchedAtom, false);
-    readerStore.set(settingsAtom, initialSettings);
-    readerStore.set(recordAtom, readingRecord);
-    readerStore.set(participantIdAtom, participantId);
+    readerStore.set(kiwiAtom, kiwiData);
+    readerStore.set(participantAtom, participantData);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
     return readerStore;
-  }, [initialSettings, readingRecord, participantId]);
+  }, [kiwiData, participantData]);
 
   useEffect(() => {
     // Create a new Book instance
-    const epubBook = new Book(epubFile);
+    const epubBook = new Book(epubData.file);
 
     // Wait for the book to be fully loaded before setting it
     const loadBook = async () => {
@@ -60,7 +54,7 @@ function ReaderProvider({
         await epubBook.ready;
 
         // 책 내용 검색 기능을 위한 코드
-        epubBook.locations.load(locations);
+        epubBook.locations.load(epubData.locations);
         epubBook.spine.each((section: Section) =>
           section.load(epubBook.load.bind(epubBook)),
         );
@@ -77,7 +71,7 @@ function ReaderProvider({
     return () => {
       epubBook.destroy();
     };
-  }, [navigate, epubFile, locations, store]);
+  }, [navigate, epubData, store]);
 
   return <Provider store={store}>{children}</Provider>;
 }

@@ -7,7 +7,7 @@ import {
   currentCfiAtom,
   removeBookmarkAtom,
   setBookmarkAtom,
-} from "../-reader/atoms/record";
+} from "../-reader/atoms";
 
 function BookmarkButton() {
   const currentCfi = useAtomValue(currentCfiAtom);

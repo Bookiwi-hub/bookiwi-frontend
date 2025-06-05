@@ -1,3 +1,5 @@
 import { atom } from "@bookiwi/jotai";
 
-export const participantIdAtom = atom<string>();
+import { KiwiIDBData } from "#/types/idb";
+
+export const kiwiAtom = atom<KiwiIDBData | null>(null);
