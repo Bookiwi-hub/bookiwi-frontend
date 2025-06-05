@@ -1,7 +1,7 @@
 import { atom } from "@bookiwi/jotai";
 
 import { updateCustomStyle } from "../styles";
-import { updateIDBParticipant, updateIDBSettings } from "../utils/idb";
+import { updateIDBParticipant } from "../utils/idb";
 
 import { bookAtom } from "./book";
 import { kiwiIdAtom } from "./kiwi";
@@ -69,6 +69,7 @@ export const removeBookmarkAtom = atom(null, async (get, set, cfi: string) => {
     bookmarksAtom,
     get(bookmarksAtom).filter((b) => b.cfi !== cfi),
   );
+  set(participantLastActivityAtAtom, new Date().toISOString());
   const updatedParticipant = get(participantAtom);
   if (!updatedParticipant) return;
   await updateIDBParticipant(updatedParticipant);
@@ -121,10 +122,12 @@ export const setIsSinglePageAtom = atom(
   async (get, set, newIsSinglePage: boolean) => {
     set(isSinglePageAtom, newIsSinglePage);
     const book = get(bookAtom);
-    const participantId = get(participantIdAtom);
-    if (!participantId || !book) return;
+    if (!book) return;
     book.rendition.spread(newIsSinglePage ? "none" : "auto");
-    await updateIDBSettings(get(settingsAtom), participantId);
+    const updatedParticipant = get(participantAtom);
+    if (!updatedParticipant) return;
+    set(participantLastActivityAtAtom, new Date().toISOString());
+    await updateIDBParticipant(updatedParticipant);
   },
 );
 
@@ -132,9 +135,8 @@ export const setFontFamilyAtom = atom(
   null,
   async (get, set, newFontFamily: string | null) => {
     set(fontFamilyAtom, newFontFamily);
-    const participantId = get(participantIdAtom);
     const book = get(bookAtom);
-    if (!participantId || !book) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
     await updateCustomStyle(contents, {
@@ -143,7 +145,10 @@ export const setFontFamilyAtom = atom(
       fontWeight: get(fontWeightAtom),
       lineHeight: get(lineHeightAtom),
     });
-    await updateIDBSettings(get(settingsAtom), participantId);
+    const updatedParticipant = get(participantAtom);
+    if (!updatedParticipant) return;
+    set(participantLastActivityAtAtom, new Date().toISOString());
+    await updateIDBParticipant(updatedParticipant);
   },
 );
 
@@ -151,9 +156,8 @@ export const setFontSizeAtom = atom(
   null,
   async (get, set, newFontSize: number | null) => {
     set(fontSizeAtom, newFontSize);
-    const participantId = get(participantIdAtom);
     const book = get(bookAtom);
-    if (!participantId || !book) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
     await updateCustomStyle(contents, {
@@ -162,7 +166,10 @@ export const setFontSizeAtom = atom(
       fontWeight: get(fontWeightAtom),
       lineHeight: get(lineHeightAtom),
     });
-    await updateIDBSettings(get(settingsAtom), participantId);
+    const updatedParticipant = get(participantAtom);
+    if (!updatedParticipant) return;
+    set(participantLastActivityAtAtom, new Date().toISOString());
+    await updateIDBParticipant(updatedParticipant);
   },
 );
 
@@ -170,9 +177,8 @@ export const setFontWeightAtom = atom(
   null,
   async (get, set, newFontWeight: number | null) => {
     set(fontWeightAtom, newFontWeight);
-    const participantId = get(participantIdAtom);
     const book = get(bookAtom);
-    if (!participantId || !book) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
     await updateCustomStyle(contents, {
@@ -181,7 +187,10 @@ export const setFontWeightAtom = atom(
       fontWeight: newFontWeight,
       lineHeight: get(lineHeightAtom),
     });
-    await updateIDBSettings(get(settingsAtom), participantId);
+    const updatedParticipant = get(participantAtom);
+    if (!updatedParticipant) return;
+    set(participantLastActivityAtAtom, new Date().toISOString());
+    await updateIDBParticipant(updatedParticipant);
   },
 );
 
@@ -191,9 +200,8 @@ export const setLineHeightAtom = atom(
     const formattedLineHeight =
       newLineHeight !== null ? Number(newLineHeight.toFixed(1)) : null;
     set(lineHeightAtom, formattedLineHeight);
-    const participantId = get(participantIdAtom);
     const book = get(bookAtom);
-    if (!participantId || !book) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
     await updateCustomStyle(contents, {
@@ -202,7 +210,10 @@ export const setLineHeightAtom = atom(
       fontWeight: get(fontWeightAtom),
       lineHeight: formattedLineHeight,
     });
-    await updateIDBSettings(get(settingsAtom), participantId);
+    const updatedParticipant = get(participantAtom);
+    if (!updatedParticipant) return;
+    set(participantLastActivityAtAtom, new Date().toISOString());
+    await updateIDBParticipant(updatedParticipant);
   },
 );
 
@@ -255,6 +266,6 @@ export const participantAtom = atom<
     set(participantColorAtom, participant.color);
     set(recordAtom, participant.record);
     set(settingsAtom, participant.settings);
-    set(participantLastActivityAtAtom, participant.lastActivityAt);
+    set(participantLastActivityAtAtom, new Date().toISOString());
   },
 );
