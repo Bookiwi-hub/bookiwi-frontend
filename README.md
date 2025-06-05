@@ -23,6 +23,7 @@ Bookiwi는 소셜 이북 리더기입니다. 여러 사용자가 하나의 EPUB 
 
 - [Optimizing a Slider with Throttling and Memoization](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Throttling-Memoization)
 - [Solving Overfetching in IndexedDB by Splitting Object Stores](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Splitting-IndexedDB-Stores)
+- [Migrating from React Context to Jotai](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Jotai)
 
 ### 🛠 Technique
 
