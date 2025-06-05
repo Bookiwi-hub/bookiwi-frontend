@@ -11,25 +11,23 @@ import {
   currentLocationAtom,
   isCenterTouchedAtom,
   participantAtom,
-  kiwiIdAtom,
+  kiwiAtom,
 } from "./atoms";
 
-import { KiwiIDBData, ParticipantIDBData } from "#/types/idb";
+import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 
 interface ReaderProviderProps {
   children: ReactNode;
-  epubFile: File;
-  locations: string;
-  kiwi: KiwiIDBData;
-  participant: ParticipantIDBData;
+  epubData: EpubIDBData;
+  kiwiData: KiwiIDBData;
+  participantData: ParticipantIDBData;
 }
 
 function ReaderProvider({
   children,
-  epubFile,
-  locations,
-  kiwi,
-  participant,
+  epubData,
+  kiwiData,
+  participantData,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
 
@@ -39,16 +37,16 @@ function ReaderProvider({
     // 초기값 설정
     readerStore.set(bookAtom, null);
     readerStore.set(isCenterTouchedAtom, false);
-    readerStore.set(kiwiIdAtom, kiwi.id);
-    readerStore.set(participantAtom, participant);
+    readerStore.set(kiwiAtom, kiwiData);
+    readerStore.set(participantAtom, participantData);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
     return readerStore;
-  }, [participant, kiwi]);
+  }, [kiwiData, participantData]);
 
   useEffect(() => {
     // Create a new Book instance
-    const epubBook = new Book(epubFile);
+    const epubBook = new Book(epubData.file);
 
     // Wait for the book to be fully loaded before setting it
     const loadBook = async () => {
@@ -56,7 +54,7 @@ function ReaderProvider({
         await epubBook.ready;
 
         // 책 내용 검색 기능을 위한 코드
-        epubBook.locations.load(locations);
+        epubBook.locations.load(epubData.locations);
         epubBook.spine.each((section: Section) =>
           section.load(epubBook.load.bind(epubBook)),
         );
@@ -73,7 +71,7 @@ function ReaderProvider({
     return () => {
       epubBook.destroy();
     };
-  }, [navigate, epubFile, locations, store]);
+  }, [navigate, epubData, store]);
 
   return <Provider store={store}>{children}</Provider>;
 }

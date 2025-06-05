@@ -4,10 +4,9 @@ import idb from "#/managers/idb";
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 
 type GetBookResponse = {
-  locations: string;
-  epubFile: File;
-  kiwi: KiwiIDBData;
-  participant: ParticipantIDBData;
+  epubData: EpubIDBData;
+  kiwiData: KiwiIDBData;
+  participantData: ParticipantIDBData;
 };
 
 const getBook = async (id: string): Promise<GetBookResponse> => {
@@ -45,10 +44,9 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
     }
 
     return {
-      locations: epubData.locations,
-      epubFile: epubData.file,
-      kiwi: kiwiData,
-      participant: currentParticipant,
+      epubData,
+      kiwiData,
+      participantData: currentParticipant,
     };
   } catch (error) {
     throw new Error("Failed to fetch book");

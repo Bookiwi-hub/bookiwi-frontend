@@ -4,17 +4,17 @@ import { updateCustomStyle } from "../styles";
 import { updateIDBParticipant } from "../utils/idb";
 
 import { bookAtom } from "./book";
-import { kiwiIdAtom } from "./kiwi";
 
 import { ParticipantIDBData } from "#/types/idb";
 import { Bookmark, ReadingRecord, Settings } from "#/types/kiwi";
 
+export const participantIdAtom = atom<string | null>(null);
 export const participantUserIdAtom = atom<string | null>(null);
+export const participantKiwiIdAtom = atom<string | null>(null);
 export const participantNameAtom = atom<string | null>(null);
 export const participantProfileImageAtom = atom<string | null>(null);
 export const participantColorAtom = atom<string | null>(null);
 export const participantLastActivityAtAtom = atom<string | null>(null);
-export const participantIdAtom = atom<string | null>(null);
 
 // record
 
@@ -224,7 +224,7 @@ export const participantAtom = atom<
   void
 >(
   (get) => {
-    const kiwiId = get(kiwiIdAtom);
+    const kiwiId = get(participantKiwiIdAtom);
     const userId = get(participantUserIdAtom);
     const name = get(participantNameAtom);
     const profileImage = get(participantProfileImageAtom);
@@ -267,5 +267,6 @@ export const participantAtom = atom<
     set(recordAtom, participant.record);
     set(settingsAtom, participant.settings);
     set(participantLastActivityAtAtom, new Date().toISOString());
+    set(participantKiwiIdAtom, participant.kiwiId);
   },
 );
