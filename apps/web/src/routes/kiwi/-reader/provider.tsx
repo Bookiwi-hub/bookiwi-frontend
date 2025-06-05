@@ -6,33 +6,30 @@ import Section from "@bookiwi/epubjs/types/section";
 import { Provider, createStore } from "@bookiwi/jotai";
 
 import {
-  recordAtom,
-  settingsAtom,
   bookAtom,
   currentSectionAtom,
   currentLocationAtom,
   isCenterTouchedAtom,
-  participantIdAtom,
+  participantAtom,
+  kiwiIdAtom,
 } from "./atoms";
 
-import { Settings, ReadingRecord } from "#/types/kiwi";
+import { KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 
 interface ReaderProviderProps {
   children: ReactNode;
   epubFile: File;
   locations: string;
-  initialSettings: Settings;
-  readingRecord: ReadingRecord;
-  participantId: string;
+  kiwi: KiwiIDBData;
+  participant: ParticipantIDBData;
 }
 
 function ReaderProvider({
   children,
   epubFile,
   locations,
-  initialSettings,
-  readingRecord,
-  participantId,
+  kiwi,
+  participant,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
 
@@ -42,13 +39,12 @@ function ReaderProvider({
     // 초기값 설정
     readerStore.set(bookAtom, null);
     readerStore.set(isCenterTouchedAtom, false);
-    readerStore.set(settingsAtom, initialSettings);
-    readerStore.set(recordAtom, readingRecord);
-    readerStore.set(participantIdAtom, participantId);
+    readerStore.set(kiwiIdAtom, kiwi.id);
+    readerStore.set(participantAtom, participant);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
     return readerStore;
-  }, [initialSettings, readingRecord, participantId]);
+  }, [participant, kiwi]);
 
   useEffect(() => {
     // Create a new Book instance

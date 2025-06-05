@@ -1,12 +1,80 @@
 import { atom } from "@bookiwi/jotai";
 
 import { updateCustomStyle } from "../styles";
-import { updateIDBSettings } from "../utils/idb";
+import { updateIDBParticipant, updateIDBSettings } from "../utils/idb";
 
 import { bookAtom } from "./book";
-import { participantIdAtom } from "./kiwi";
+import { kiwiIdAtom } from "./kiwi";
 
-import { Settings } from "#/types/kiwi";
+import { ParticipantIDBData } from "#/types/idb";
+import { Bookmark, ReadingRecord, Settings } from "#/types/kiwi";
+
+export const participantUserIdAtom = atom<string | null>(null);
+export const participantNameAtom = atom<string | null>(null);
+export const participantProfileImageAtom = atom<string | null>(null);
+export const participantColorAtom = atom<string | null>(null);
+export const participantLastActivityAtAtom = atom<string | null>(null);
+export const participantIdAtom = atom<string | null>(null);
+
+// record
+
+export const currentCfiAtom = atom<string | null>(null);
+export const percentageAtom = atom<number | null>((get) => {
+  const book = get(bookAtom);
+  const currentCfi = get(currentCfiAtom);
+  if (!book || !currentCfi) return null;
+  const percent = Math.floor(
+    book.locations.percentageFromCfi(currentCfi) * 100,
+  );
+  return percent;
+});
+export const bookmarksAtom = atom<Bookmark[]>([]);
+
+export const recordAtom = atom<ReadingRecord, [ReadingRecord], void>(
+  (get) => ({
+    currentCfi: get(currentCfiAtom),
+    percentage: get(percentageAtom),
+    bookmarks: get(bookmarksAtom),
+  }),
+  (get, set, newRecord: ReadingRecord) => {
+    set(currentCfiAtom, newRecord.currentCfi);
+    set(bookmarksAtom, newRecord.bookmarks);
+  },
+);
+
+export const setCurrentCfiAtom = atom(null, async (get, set, cfi: string) => {
+  set(currentCfiAtom, cfi);
+  set(participantLastActivityAtAtom, new Date().toISOString());
+  const updatedParticipant = get(participantAtom);
+  if (!updatedParticipant) return;
+  await updateIDBParticipant(updatedParticipant);
+});
+
+export const setBookmarkAtom = atom(null, async (get, set, cfi: string) => {
+  const createdAt = new Date().toISOString();
+  const newBookmark = {
+    cfi,
+    createdAt,
+  };
+
+  set(bookmarksAtom, [...get(bookmarksAtom), newBookmark]);
+  set(participantLastActivityAtAtom, createdAt);
+  const updatedParticipant = get(participantAtom);
+  if (!updatedParticipant) return;
+  await updateIDBParticipant(updatedParticipant);
+});
+
+export const removeBookmarkAtom = atom(null, async (get, set, cfi: string) => {
+  set(
+    bookmarksAtom,
+    get(bookmarksAtom).filter((b) => b.cfi !== cfi),
+  );
+  const updatedParticipant = get(participantAtom);
+  if (!updatedParticipant) return;
+  await updateIDBParticipant(updatedParticipant);
+});
+
+// settings
 
 export const isSinglePageAtom = atom<boolean>(false);
 export const fontFamilyAtom = atom<string | null>(null);
@@ -135,5 +203,58 @@ export const setLineHeightAtom = atom(
       lineHeight: formattedLineHeight,
     });
     await updateIDBSettings(get(settingsAtom), participantId);
+  },
+);
+
+// participant atom
+export const participantAtom = atom<
+  ParticipantIDBData | null,
+  [ParticipantIDBData],
+  void
+>(
+  (get) => {
+    const kiwiId = get(kiwiIdAtom);
+    const userId = get(participantUserIdAtom);
+    const name = get(participantNameAtom);
+    const profileImage = get(participantProfileImageAtom);
+    const color = get(participantColorAtom);
+    const lastActivityAt = get(participantLastActivityAtAtom);
+    const record = get(recordAtom);
+    const settings = get(settingsAtom);
+    const id = get(participantIdAtom);
+
+    if (
+      !id ||
+      !kiwiId ||
+      !userId ||
+      !name ||
+      !profileImage ||
+      !color ||
+      !lastActivityAt
+    )
+      return null;
+
+    const participant: ParticipantIDBData = {
+      id,
+      kiwiId,
+      userId,
+      name,
+      profileImage,
+      color,
+      settings,
+      record,
+      lastActivityAt,
+    };
+    return participant;
+  },
+  (get, set, participant: ParticipantIDBData) => {
+    set(participantIdAtom, participant.id);
+    set(participantUserIdAtom, participant.userId);
+    set(participantNameAtom, participant.name);
+    set(participantProfileImageAtom, participant.profileImage);
+    set(participantColorAtom, participant.color);
+    set(recordAtom, participant.record);
+    set(settingsAtom, participant.settings);
+    set(participantLastActivityAtAtom, participant.lastActivityAt);
   },
 );

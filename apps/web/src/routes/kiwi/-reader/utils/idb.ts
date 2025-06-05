@@ -1,5 +1,6 @@
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
+import { ParticipantIDBData } from "#/types/idb";
 import { ReadingRecord, Settings } from "#/types/kiwi";
 
 export const updateIDBSettings = async (
@@ -20,4 +21,8 @@ export const updateIDBRecord = async (
     record,
     lastActivityAt: new Date().toISOString(),
   });
+};
+
+export const updateIDBParticipant = async (participant: ParticipantIDBData) => {
+  await idb.put(IDBStore.ParticipantStore, participant);
 };
