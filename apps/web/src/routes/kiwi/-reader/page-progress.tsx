@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 
-import { Book } from "@bookiwi/epubjs";
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
 import {
@@ -8,8 +7,10 @@ import {
   currentLocationAtom,
   currentSectionAtom,
   isCenterTouchedAtom,
+  navAtom,
   percentageAtom,
 } from "./atoms";
+import { mapSectionHrefToNavItem } from "./utils/nav";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
@@ -18,14 +19,15 @@ import truncate from "#/utils/truncate";
 
 const MAX_SECTION_LENGTH = 25;
 
-const usePage = (book: Book | null) => {
+const usePage = () => {
   const currentSection = useAtomValue(currentSectionAtom);
   const currentLocation = useAtomValue(currentLocationAtom);
+  const nav = useAtomValue(navAtom);
 
-  if (!book || !currentSection || !currentLocation)
+  if (!nav || !currentSection || !currentLocation)
     return { currentTocLabel: null, currentPage: null, totalPages: null };
 
-  const currentNavItem = book.navigation.get(currentSection.href);
+  const currentNavItem = mapSectionHrefToNavItem(nav, currentSection.href);
 
   const currentTocLabel = truncate(
     currentNavItem?.label || "",
@@ -39,7 +41,7 @@ const usePage = (book: Book | null) => {
 
 function ReaderPageProgress() {
   const book = useAtomValue(bookAtom);
-  const { currentTocLabel, currentPage, totalPages } = usePage(book);
+  const { currentTocLabel, currentPage, totalPages } = usePage();
   const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
   const percentage = useAtomValue(percentageAtom);
 
