@@ -12,6 +12,7 @@ import {
   isCenterTouchedAtom,
   participantAtom,
   kiwiAtom,
+  navAtom,
 } from "./atoms";
 
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
@@ -41,6 +42,7 @@ function ReaderProvider({
     readerStore.set(participantAtom, participantData);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
+    readerStore.set(navAtom, kiwiData.bookMetadata.toc);
     return readerStore;
   }, [kiwiData, participantData]);
 
