@@ -2,48 +2,18 @@ import { useMemo } from "react";
 
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
-import {
-  bookAtom,
-  currentLocationAtom,
-  currentSectionAtom,
-  isCenterTouchedAtom,
-  navAtom,
-  percentageAtom,
-} from "./atoms";
-import { mapSectionHrefToNavItem } from "./utils/nav";
+import { bookAtom, isCenterTouchedAtom, percentageAtom } from "./atoms";
+import { usePage } from "./hooks";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
 import { throttle } from "#/utils/throttle";
-import truncate from "#/utils/truncate";
-
-const MAX_SECTION_LENGTH = 25;
-
-const usePage = () => {
-  const currentSection = useAtomValue(currentSectionAtom);
-  const currentLocation = useAtomValue(currentLocationAtom);
-  const nav = useAtomValue(navAtom);
-
-  if (!nav || !currentSection || !currentLocation)
-    return { currentTocLabel: null, currentPage: null, totalPages: null };
-
-  const currentNavItem = mapSectionHrefToNavItem(nav, currentSection.href);
-
-  const currentTocLabel = truncate(
-    currentNavItem?.label || "",
-    MAX_SECTION_LENGTH,
-  );
-  const { page: currentPage, total: totalPages } = currentLocation.start
-    .displayed || { page: 0, total: 0 };
-
-  return { currentTocLabel, currentPage, totalPages };
-};
 
 function ReaderPageProgress() {
   const book = useAtomValue(bookAtom);
-  const { currentTocLabel, currentPage, totalPages } = usePage();
   const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
   const percentage = useAtomValue(percentageAtom);
+  const { currentTocLabel, currentPage, totalPages } = usePage();
 
   const throttledDisplay = useMemo(() => {
     if (!book) return null;
