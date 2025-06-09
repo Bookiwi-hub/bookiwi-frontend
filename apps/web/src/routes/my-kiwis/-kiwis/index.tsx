@@ -40,7 +40,7 @@ function Kiwis() {
           </div>
         </div>
         <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          {kiwis.length === 0 ? (
+          {kiwis.length === 0 || kiwis.length === 1 ? (
             <>
               <CreateKiwiCardButton setIsModalOpen={setIsCreateKiwiModalOpen} />
               <KiwiSampleCard />
