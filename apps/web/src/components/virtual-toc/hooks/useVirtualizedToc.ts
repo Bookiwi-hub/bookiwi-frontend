@@ -8,7 +8,7 @@ interface FlattenedTocItem extends NavItem {
   isExpanded?: boolean;
   hasChildren: boolean;
   parentIndex?: number;
-  numbering: string; // string으로 확정
+  numbering: string;
 }
 
 interface UseVirtualizedTocProps {
@@ -27,7 +27,7 @@ export function useVirtualizedToc({
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const [scrollTop, setScrollTop] = useState(0);
 
-  // 🎯 트리를 평면화하는 함수 (numbering 포함)
+  // 트리를 평면화하는 함수
   const flattenToc = useMemo(() => {
     const flattenItems = (
       items: NavItem[],
@@ -41,7 +41,6 @@ export function useVirtualizedToc({
         const currentIndex = result.length;
         const hasChildren = Boolean(item.subitems && item.subitems.length > 0);
 
-        // 🚀 numbering 계산
         const numbering = parentNumbering
           ? `${parentNumbering}.${index + 1}`
           : `${index + 1}`;
@@ -52,7 +51,7 @@ export function useVirtualizedToc({
           index: currentIndex,
           hasChildren,
           parentIndex,
-          numbering, // 추가!
+          numbering,
           isExpanded: expandedByDefault || expandedItems.has(currentIndex),
         };
 
@@ -107,7 +106,7 @@ export function useVirtualizedToc({
     });
   };
 
-  // 무한 스크롤을 위한 페이지네이션 (필요시)
+  // 푸후 무한 스크롤을 위한 페이지네이션 (필요시)
   const loadMoreItems = () => {
     // 실제 API 호출이 있다면 여기서 구현
     console.log("Load more items...");

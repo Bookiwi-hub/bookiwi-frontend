@@ -1,5 +1,5 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, memo } from "react";
 
 import tempUser from "#/DB/users";
 import { SimpleVirtualizedToc } from "#/components/virtual-toc/simple-virtualized-toc";
@@ -11,7 +11,7 @@ interface InformationTabProps {
   kiwi: Kiwi;
 }
 
-function InformationTab({ kiwi }: InformationTabProps) {
+const InformationTab = memo(({ kiwi }: InformationTabProps) => {
   const {
     adminId,
     bookMetadata,
@@ -22,6 +22,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
     participants,
   } = kiwi;
 
+  // 실제로 비용이 큰 계산만 메모이제이션
   const admin = useMemo(
     () => participants.find((participant) => participant.userId === adminId),
     [participants, adminId],
@@ -33,7 +34,6 @@ function InformationTab({ kiwi }: InformationTabProps) {
     [participants],
   );
 
-  // 🎯 자주 변경되지 않는 함수만 메모이제이션
   const handleTocNavigate = useCallback((href: string) => {
     console.log("목차 네비게이션:", href);
     // TODO: 실제 구현에서는 모달을 닫고 해당 위치로 이동하는 로직 추가
@@ -133,6 +133,6 @@ function InformationTab({ kiwi }: InformationTabProps) {
       )}
     </div>
   );
-}
+});
 
 export default InformationTab;
