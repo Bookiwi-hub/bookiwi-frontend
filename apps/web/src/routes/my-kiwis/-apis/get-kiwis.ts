@@ -1,4 +1,4 @@
-import { IDBStore, SAMPLE_KIWI_DATA_ID } from "#/constants/idb";
+import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
 import { KiwiIDBData } from "#/types/idb";
 import { Kiwi } from "#/types/kiwi";
@@ -16,11 +16,7 @@ const getKiwisFromIDB = async (): Promise<Kiwi[]> => {
       return [];
     }
 
-    // 유효한 키위 데이터만 필터링
-    const validKiwiData = kiwiStoreData.filter(
-      (kiwiItem) => kiwiItem.id !== SAMPLE_KIWI_DATA_ID,
-    );
-    const kiwis = await Promise.all(validKiwiData.map(kiwIDBDataToKiwi));
+    const kiwis = await Promise.all(kiwiStoreData.map(kiwIDBDataToKiwi));
 
     return kiwis;
   } catch (error) {

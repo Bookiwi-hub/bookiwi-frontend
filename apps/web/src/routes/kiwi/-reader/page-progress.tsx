@@ -1,45 +1,15 @@
 import { useMemo } from "react";
 
-import { Book } from "@bookiwi/epubjs";
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
-import {
-  bookAtom,
-  currentLocationAtom,
-  currentSectionAtom,
-  isCenterTouchedAtom,
-  percentageAtom,
-} from "./atoms";
+import { bookAtom, isCenterTouchedAtom, percentageAtom } from "./atoms";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
 import { throttle } from "#/utils/throttle";
-import truncate from "#/utils/truncate";
-
-const MAX_SECTION_LENGTH = 25;
-
-const usePage = (book: Book | null) => {
-  const currentSection = useAtomValue(currentSectionAtom);
-  const currentLocation = useAtomValue(currentLocationAtom);
-
-  if (!book || !currentSection || !currentLocation)
-    return { currentTocLabel: null, currentPage: null, totalPages: null };
-
-  const currentNavItem = book.navigation.get(currentSection.href);
-
-  const currentTocLabel = truncate(
-    currentNavItem?.label || "",
-    MAX_SECTION_LENGTH,
-  );
-  const { page: currentPage, total: totalPages } = currentLocation.start
-    .displayed || { page: 0, total: 0 };
-
-  return { currentTocLabel, currentPage, totalPages };
-};
 
 function ReaderPageProgress() {
   const book = useAtomValue(bookAtom);
-  const { currentTocLabel, currentPage, totalPages } = usePage(book);
   const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
   const percentage = useAtomValue(percentageAtom);
 
@@ -66,13 +36,7 @@ function ReaderPageProgress() {
           isProgressBarOpen ? "opacity-100" : "opacity-0",
         )}
       >
-        <div className="flex size-full justify-between text-sm text-black">
-          <div>
-            <span>{currentTocLabel || "이번 챕터"}</span>
-            <span>
-              {currentPage && totalPages ? ` ${currentPage}/${totalPages}` : ""}
-            </span>
-          </div>
+        <div className="flex size-full justify-end text-sm text-black">
           <span>{`${percentage}%`}</span>
         </div>
         {percentage !== null && (
