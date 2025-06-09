@@ -3,7 +3,6 @@ import { useMemo } from "react";
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
 import { bookAtom, isCenterTouchedAtom, percentageAtom } from "./atoms";
-import { usePage } from "./hooks";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";
@@ -13,7 +12,6 @@ function ReaderPageProgress() {
   const book = useAtomValue(bookAtom);
   const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
   const percentage = useAtomValue(percentageAtom);
-  const { currentTocLabel, currentPage, totalPages } = usePage();
 
   const throttledDisplay = useMemo(() => {
     if (!book) return null;
@@ -38,13 +36,7 @@ function ReaderPageProgress() {
           isProgressBarOpen ? "opacity-100" : "opacity-0",
         )}
       >
-        <div className="flex size-full justify-between text-sm text-black">
-          <div>
-            <span>{currentTocLabel || "이번 챕터"}</span>
-            <span>
-              {currentPage && totalPages ? ` ${currentPage}/${totalPages}` : ""}
-            </span>
-          </div>
+        <div className="flex size-full justify-end text-sm text-black">
           <span>{`${percentage}%`}</span>
         </div>
         {percentage !== null && (
