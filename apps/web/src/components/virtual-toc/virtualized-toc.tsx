@@ -18,13 +18,13 @@ interface VirtualizedTocProps {
 
   // 🎯 UI 설정
   containerHeight?: number;
-  maxHeight?: number; // SimpleVirtualizedToc 호환성을 위해 추가
+  maxHeight?: number;
   itemHeight?: number;
   className?: string;
   expandedByDefault?: boolean;
 
   // 🎯 렌더링 모드
-  variant?: "full" | "simple"; // full: VirtualizedTocItem 사용, simple: 인라인 렌더링
+  variant?: "full" | "simple"; // full: VirtualizedTocItem 사용 추후 사이드바목차, simple: 인라인 렌더링
   showTitle?: boolean; // 제목 표시 여부
   showNumbering?: boolean; // 번호 표시 여부
 }
@@ -43,17 +43,17 @@ export function VirtualizedToc({
   showTitle = true,
   showNumbering = true,
 }: VirtualizedTocProps) {
-  // 🎯 높이 설정 (maxHeight 우선, 없으면 containerHeight)
+  // 높이 설정 (maxHeight 우선, 없으면 containerHeight)
   const finalHeight = maxHeight || containerHeight || 400;
 
-  // 🎯 Atom 데이터 (variant가 "full"일 때만)
+  // Atom 데이터 (variant가 "full"일 때만)
   const atomBook = useAtomValue(bookAtom);
   const atomCurrentSection = useAtomValue(currentSectionAtom);
 
   const book = propBook || (variant === "full" ? atomBook : null);
   const toc = propToc || book?.navigation?.toc || [];
 
-  // 🎯 현재 섹션 메모이제이션 (variant가 "full"일 때만)
+  // 현재 섹션 메모이제이션 (variant가 "full"일 때만)
   const currentSection = useMemo(() => {
     if (variant === "simple") return null;
     return propCurrentHref ? { href: propCurrentHref } : atomCurrentSection;
@@ -69,7 +69,7 @@ export function VirtualizedToc({
       expandedByDefault,
     });
 
-  // 🎯 통합된 네비게이션 핸들러
+  //  통합된 네비게이션 핸들러
   const handleNavClick = useCallback(
     (href: string) => {
       if (onNavigate) {
@@ -81,7 +81,7 @@ export function VirtualizedToc({
     [book, onNavigate],
   );
 
-  // 🎯 통합된 스크롤 핸들러
+  //  통합된 스크롤 핸들러
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
       const target = e.target as HTMLDivElement;
@@ -98,7 +98,7 @@ export function VirtualizedToc({
     [setScrollTop, loadMoreItems, variant],
   );
 
-  // 🎯 확장/축소 핸들러 (simple variant용)
+  // 확장/축소 핸들러 (simple variant용)
   const handleToggleExpand = useCallback(
     (e: React.MouseEvent, index: number) => {
       e.stopPropagation();
@@ -107,7 +107,7 @@ export function VirtualizedToc({
     [toggleExpand],
   );
 
-  // 🎯 현재 섹션 자동 스크롤 (variant가 "full"일 때만)
+  //  현재 섹션 자동 스크롤 (variant가 "full"일 때만)
   useEffect(() => {
     if (variant === "full" && currentSection && scrollContainerRef.current) {
       const currentIndex = virtualItems.items.findIndex(
@@ -122,7 +122,7 @@ export function VirtualizedToc({
     }
   }, [currentSection, virtualItems, itemHeight, variant]);
 
-  // 🎯 빈 상태 처리
+  // 빈 상태 처리
   if (!toc || toc.length === 0) {
     const EmptyIcon = variant === "simple" ? Book : BookOpen;
     const emptyMessage =
@@ -145,7 +145,6 @@ export function VirtualizedToc({
 
   return (
     <div className={className}>
-      {/* 제목 (showTitle이 true이고 propToc가 없을 때만) */}
       {showTitle && !propToc && (
         <h3 className="mb-4 text-lg font-medium">목차</h3>
       )}
@@ -190,7 +189,7 @@ export function VirtualizedToc({
                   }}
                 />
               ) : (
-                /* eslint-disable */
+                /*eslint-disable*/
                 <div
                   key={`${item.id || item.href}-${item.index}`}
                   className="py-1"
@@ -247,11 +246,4 @@ export function VirtualizedToc({
       )}
     </div>
   );
-}
-
-// 🎯 SimpleVirtualizedToc를 위한 편의 함수
-export function SimpleVirtualizedToc(
-  props: Omit<VirtualizedTocProps, "variant">,
-) {
-  return <VirtualizedToc {...props} variant="simple" showTitle={false} />;
 }
