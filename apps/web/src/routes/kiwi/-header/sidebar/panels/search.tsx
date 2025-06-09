@@ -1,11 +1,10 @@
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { memo, useCallback, useMemo, useState } from "react";
 
-import Section from "@bookiwi/epubjs/types/section";
 import { useAtomValue } from "@bookiwi/jotai";
 
 import { Input } from "#/components/ui/input";
-import { bookAtom } from "#/routes/kiwi/-reader/atoms";
+import { bookAtom, sectionsAtom } from "#/routes/kiwi/-reader/atoms";
 import { debounce } from "#/utils/debounce";
 import truncate from "#/utils/truncate";
 
@@ -197,6 +196,7 @@ const MemoizedSearchResults = memo(SearchResults);
 
 function SearchPanel() {
   const book = useAtomValue(bookAtom);
+  const sections = useAtomValue(sectionsAtom);
   const [searchTerm, setSearchTerm] = useState("");
   const [matchResults, setMatchResults] = useState<MatchType[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -207,12 +207,6 @@ function SearchPanel() {
 
       return new Promise((resolve) => {
         const matchItems: MatchType[] = [];
-        const sections: Section[] = [];
-
-        // First, collect all the sections
-        book.spine.each((section: Section) => {
-          sections.push(section);
-        });
 
         let completedSearches = 0;
 
@@ -248,7 +242,7 @@ function SearchPanel() {
         });
       });
     },
-    [book],
+    [book, sections],
   );
 
   const handleSearch = useCallback(

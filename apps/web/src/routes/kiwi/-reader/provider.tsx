@@ -13,6 +13,7 @@ import {
   participantAtom,
   kiwiAtom,
   navAtom,
+  sectionsAtom,
 } from "./atoms";
 
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
@@ -43,6 +44,7 @@ function ReaderProvider({
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
     readerStore.set(navAtom, kiwiData.bookMetadata.toc);
+    readerStore.set(sectionsAtom, []);
     return readerStore;
   }, [kiwiData, participantData]);
 
@@ -57,9 +59,12 @@ function ReaderProvider({
 
         // 책 내용 검색 기능을 위한 코드
         epubBook.locations.load(epubData.locations);
-        epubBook.spine.each((section: Section) =>
-          section.load(epubBook.load.bind(epubBook)),
-        );
+        const sections: Section[] = [];
+        epubBook.spine.each((section: Section) => {
+          section.load(epubBook.load.bind(epubBook));
+          sections.push(section);
+        });
+        store.set(sectionsAtom, sections);
 
         store.set(bookAtom, epubBook);
       } catch (error) {

@@ -7,6 +7,7 @@ export const bookAtom = atom<Book | null>(null);
 export const currentSectionAtom = atom<Section>();
 export const currentLocationAtom = atom<Location>();
 export const navAtom = atom<NavItem[]>();
+export const sectionsAtom = atom<Section[]>([]);
 export const isCenterTouchedAtom = atom<boolean>(false);
 
 export const toggleCenterTouchedAtom = atom(null, (get, set) => {
