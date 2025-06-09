@@ -8,6 +8,7 @@ interface FlattenedTocItem extends NavItem {
   isExpanded?: boolean;
   hasChildren: boolean;
   parentIndex?: number;
+  numbering: string; // string으로 확정
 }
 
 interface UseVirtualizedTocProps {
@@ -26,18 +27,24 @@ export function useVirtualizedToc({
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const [scrollTop, setScrollTop] = useState(0);
 
-  // 트리를 평면화하는 함수
+  // 🎯 트리를 평면화하는 함수 (numbering 포함)
   const flattenToc = useMemo(() => {
     const flattenItems = (
       items: NavItem[],
       level = 0,
       parentIndex?: number,
+      parentNumbering = "", // 부모 번호
     ): FlattenedTocItem[] => {
       const result: FlattenedTocItem[] = [];
 
-      items.forEach((item) => {
+      items.forEach((item, index) => {
         const currentIndex = result.length;
-        const hasChildren = Boolean(item.subitems && item.subitems.length > 0); // Boolean으로 명시적 변환
+        const hasChildren = Boolean(item.subitems && item.subitems.length > 0);
+
+        // 🚀 numbering 계산
+        const numbering = parentNumbering
+          ? `${parentNumbering}.${index + 1}`
+          : `${index + 1}`;
 
         const flatItem: FlattenedTocItem = {
           ...item,
@@ -45,6 +52,7 @@ export function useVirtualizedToc({
           index: currentIndex,
           hasChildren,
           parentIndex,
+          numbering, // 추가!
           isExpanded: expandedByDefault || expandedItems.has(currentIndex),
         };
 
@@ -59,6 +67,7 @@ export function useVirtualizedToc({
             item.subitems!,
             level + 1,
             currentIndex,
+            numbering, // 부모 numbering 전달
           );
           result.push(...children);
         }
@@ -114,3 +123,5 @@ export function useVirtualizedToc({
     totalItems: flattenToc.length,
   };
 }
+
+export type { FlattenedTocItem, UseVirtualizedTocProps };

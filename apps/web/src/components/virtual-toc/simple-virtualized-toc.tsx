@@ -1,22 +1,16 @@
 import { Book, ChevronRight, ChevronDown } from "lucide-react";
-import { useCallback, useRef, useState, useMemo } from "react";
+import { useCallback, useRef } from "react";
 
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
-// 평면화된 목차 아이템 타입
-interface FlatTocItem extends NavItem {
-  level: number;
-  index: number;
-  numbering: string;
-  isExpanded?: boolean;
-  hasChildren: boolean;
-}
+import { useVirtualizedToc } from "./hooks/useVirtualizedToc";
 
 interface SimpleVirtualizedTocProps {
   toc: NavItem[];
   maxHeight?: number;
   itemHeight?: number;
   onNavigate?: (href: string) => void;
+  expandedByDefault?: boolean;
 }
 
 export function SimpleVirtualizedToc({
@@ -24,89 +18,26 @@ export function SimpleVirtualizedToc({
   maxHeight = 240,
   itemHeight = 32,
   onNavigate,
+  expandedByDefault = false,
 }: SimpleVirtualizedTocProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [scrollTop, setScrollTop] = useState(0);
-  const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
-  // 목차를 평면화하는 함수
-  const flattenedToc = useMemo(() => {
-    const flattenItems = (
-      items: NavItem[],
-      level = 0,
-      parentNumbering = "",
-    ): FlatTocItem[] => {
-      const result: FlatTocItem[] = [];
+  const { virtualItems, setScrollTop, toggleExpand } = useVirtualizedToc({
+    toc,
+    itemHeight,
+    containerHeight: maxHeight,
+    expandedByDefault,
+  });
 
-      items.forEach((item, index) => {
-        const currentIndex = result.length;
-        const numbering = parentNumbering
-          ? `${parentNumbering}.${index + 1}`
-          : `${index + 1}`;
-        const hasChildren = Boolean(item.subitems?.length);
+  // 🎯 메모이제이션된 핸들러들
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLDivElement;
+      setScrollTop(target.scrollTop);
+    },
+    [setScrollTop],
+  );
 
-        const flatItem: FlatTocItem = {
-          ...item,
-          level,
-          index: currentIndex,
-          numbering,
-          hasChildren,
-          isExpanded: expandedItems.has(currentIndex),
-        };
-
-        result.push(flatItem);
-
-        // 확장된 상태이고 자식이 있으면 자식들도 추가
-        if (hasChildren && expandedItems.has(currentIndex)) {
-          const children = flattenItems(item.subitems!, level + 1, numbering);
-          result.push(...children);
-        }
-      });
-
-      return result;
-    };
-
-    return flattenItems(toc);
-  }, [toc, expandedItems]);
-
-  // 가상 스크롤 계산
-  const virtualItems = useMemo(() => {
-    const visibleItemCount = Math.ceil(maxHeight / itemHeight) + 2;
-    const startIndex = Math.floor(scrollTop / itemHeight);
-    const endIndex = Math.min(
-      startIndex + visibleItemCount,
-      flattenedToc.length,
-    );
-
-    return {
-      items: flattenedToc.slice(startIndex, endIndex),
-      startIndex,
-      endIndex,
-      totalHeight: flattenedToc.length * itemHeight,
-      offsetY: startIndex * itemHeight,
-    };
-  }, [flattenedToc, scrollTop, itemHeight, maxHeight]);
-
-  // 스크롤 핸들러
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    setScrollTop(target.scrollTop);
-  }, []);
-
-  // 확장/축소 토글
-  const toggleExpand = useCallback((index: number) => {
-    setExpandedItems((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
-    });
-  }, []);
-
-  // 네비게이션 핸들러
   const handleNavigate = useCallback(
     (href: string) => {
       if (onNavigate) {
@@ -114,6 +45,14 @@ export function SimpleVirtualizedToc({
       }
     },
     [onNavigate],
+  );
+
+  const handleToggleExpand = useCallback(
+    (e: React.MouseEvent, index: number) => {
+      e.stopPropagation();
+      toggleExpand(index);
+    },
+    [toggleExpand],
   );
 
   if (!toc || toc.length === 0) {
@@ -145,7 +84,7 @@ export function SimpleVirtualizedToc({
           }}
         >
           {virtualItems.items.map((item) => (
-            /* eslint-disable */
+            /*eslint-disable*/
             <div
               key={`${item.id || item.href}-${item.index}`}
               className="py-1"
@@ -161,10 +100,7 @@ export function SimpleVirtualizedToc({
                   <button
                     type="button"
                     className="mr-1 rounded p-0.5 hover:bg-gray-200"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleExpand(item.index);
-                    }}
+                    onClick={(e) => handleToggleExpand(e, item.index)}
                   >
                     {item.isExpanded ? (
                       <ChevronDown size={12} />
