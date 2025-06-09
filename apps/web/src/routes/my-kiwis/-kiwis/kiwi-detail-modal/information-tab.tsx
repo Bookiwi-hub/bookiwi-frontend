@@ -1,8 +1,8 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
-
-import { NavItem } from "@bookiwi/epubjs/types/navigation";
+import { useMemo, useCallback } from "react";
 
 import tempUser from "#/DB/users";
+import { SimpleVirtualizedToc } from "#/components/virtual-toc/simple-virtualized-toc";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import { Kiwi } from "#/types/kiwi";
 import { formatDate, formatDateOnly } from "#/utils/format-date";
@@ -22,13 +22,22 @@ function InformationTab({ kiwi }: InformationTabProps) {
     participants,
   } = kiwi;
 
-  const admin = participants.find(
-    (participant) => participant.userId === adminId,
+  const admin = useMemo(
+    () => participants.find((participant) => participant.userId === adminId),
+    [participants, adminId],
   );
 
-  const currentParticipant = participants.find(
-    (participant) => participant.userId === tempUser.id,
+  const currentParticipant = useMemo(
+    () =>
+      participants.find((participant) => participant.userId === tempUser.id),
+    [participants],
   );
+
+  // 🎯 자주 변경되지 않는 함수만 메모이제이션
+  const handleTocNavigate = useCallback((href: string) => {
+    console.log("목차 네비게이션:", href);
+    // TODO: 실제 구현에서는 모달을 닫고 해당 위치로 이동하는 로직 추가
+  }, []);
 
   return (
     <div className="mb-10 space-y-6">
@@ -100,13 +109,18 @@ function InformationTab({ kiwi }: InformationTabProps) {
           </div>
         </div>
       </div>
+
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
-        <ul className="max-h-60 overflow-y-auto pr-1">
-          {bookMetadata.toc.map((item, index) => (
-            <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
-          ))}
-        </ul>
+
+        <div className="overflow-hidden rounded-lg border border-gray-200">
+          <SimpleVirtualizedToc
+            toc={bookMetadata.toc}
+            maxHeight={300}
+            itemHeight={36}
+            onNavigate={handleTocNavigate}
+          />
+        </div>
       </div>
 
       {detailDescription && (
@@ -118,36 +132,6 @@ function InformationTab({ kiwi }: InformationTabProps) {
         </div>
       )}
     </div>
-  );
-}
-
-interface TocItemProps {
-  tocItem: NavItem;
-  numbering: string;
-}
-function TocItem({ tocItem, numbering }: TocItemProps) {
-  return (
-    <li className="py-1">
-      <div className="group flex items-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-muted">
-        <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-xs font-medium text-primary">
-          {numbering}
-        </span>
-        <span className="text-sm group-hover:text-primary">
-          {tocItem.label}
-        </span>
-      </div>
-      {tocItem.subitems && tocItem.subitems.length > 0 && (
-        <ul className="ml-7 mt-1 space-y-0.5 border-l border-muted pl-2">
-          {tocItem.subitems.map((subitem, index) => (
-            <TocItem
-              key={subitem.id}
-              tocItem={subitem}
-              numbering={`${numbering}.${index + 1}`}
-            />
-          ))}
-        </ul>
-      )}
-    </li>
   );
 }
 
