@@ -1,44 +1,48 @@
 import { ChevronDown, ChevronRight, BookOpen } from "lucide-react";
-import { useState, memo, useCallback } from "react";
+import { useState, memo } from "react";
 
+import { NavItem } from "@bookiwi/epubjs";
 import { useAtomValue } from "@bookiwi/jotai";
 
 import { cn } from "#/lib/utils";
-import { bookAtom, currentSectionAtom } from "#/routes/kiwi/-reader/atoms";
+import {
+  bookAtom,
+  currentSectionAtom,
+  navAtom,
+} from "#/routes/kiwi/-reader/atoms";
+import { mapSectionHrefToNavItem } from "#/routes/kiwi/-reader/utils/nav";
 
-interface NavItem {
-  href: string;
-  id?: string;
-  label: string;
-  subitems?: NavItem[];
-}
 interface TocItemComponentProps {
   item: NavItem;
-  handleNavClick: (href: string) => void;
   level?: number;
-  currentSectionHref?: string;
-  isActive?: boolean;
+  currentNavItem?: NavItem;
 }
 function TocItemComponent({
   item,
-  handleNavClick,
   level = 0,
-  currentSectionHref,
-  isActive,
+  currentNavItem,
 }: TocItemComponentProps) {
+  const book = useAtomValue(bookAtom);
   const [isOpen, setIsOpen] = useState(level === 0);
 
   // 서브목차 존재 여부 확인
   const hasSubitems = item.subitems && item.subitems.length > 0;
+
+  // 목차 항목 클릭 시 해당 페이지로 이동
+  const handleNavClick = () => {
+    if (book && book.rendition) {
+      book.rendition.display(item.href);
+    }
+  };
 
   return (
     <li>
       <div
         className={cn(
           "group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100",
-          isActive && "bg-gray-100",
+          currentNavItem?.id === item.id && "bg-gray-100",
         )}
-        onClick={() => handleNavClick(item.href)}
+        onClick={handleNavClick}
         role="button"
         tabIndex={-1}
         onMouseDown={(e) => e.preventDefault()}
@@ -71,23 +75,14 @@ function TocItemComponent({
       </div>
       {hasSubitems && isOpen && (
         <ul className="ml-2 mt-1 space-y-1 border-l-2 border-gray-100 pl-2">
-          {item.subitems!.map((subitem, i) => {
-            const isActiveSubitem = currentSectionHref === subitem.href;
-            return (
-              <TocItemComponent
-                key={`${subitem.id || i}`}
-                item={subitem}
-                handleNavClick={handleNavClick}
-                level={level + 1}
-                isActive={isActiveSubitem}
-                currentSectionHref={
-                  !isActiveSubitem && subitem.subitems?.length
-                    ? currentSectionHref
-                    : undefined
-                }
-              />
-            );
-          })}
+          {item.subitems!.map((subitem, i) => (
+            <TocItemComponent
+              key={`${subitem.id || i}`}
+              item={subitem}
+              level={level + 1}
+              currentNavItem={currentNavItem}
+            />
+          ))}
         </ul>
       )}
     </li>
@@ -97,62 +92,31 @@ function TocItemComponent({
 const MemoizedTocItemComponent = memo(TocItemComponent);
 
 function TocPanel() {
-  const book = useAtomValue(bookAtom);
-  const [toc, setToc] = useState<NavItem[]>([]);
+  const navItems = useAtomValue(navAtom);
   const currentSection = useAtomValue(currentSectionAtom);
-  const currentSectionHref = currentSection?.href;
 
-  const tocRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node || !book) return;
-      book.loaded.navigation.then((navigation) => {
-        setToc(navigation.toc);
-      });
-    },
-    [book],
-  );
-  // 목차 항목 클릭 시 해당 페이지로 이동
-  const handleNavClick = useCallback(
-    (href: string) => {
-      if (book && book.rendition) {
-        book.rendition.display(href);
-      }
-    },
-    [book],
-  );
+  if (!navItems || !currentSection || !navItems.length)
+    return (
+      <div className="flex flex-col items-center justify-center py-6 text-center">
+        <BookOpen className="mb-2 size-8 text-gray-400" />
+        <p className="text-xs text-gray-500">목차가 없습니다.</p>
+      </div>
+    );
+
+  const currentNavItem = mapSectionHrefToNavItem(navItems, currentSection.href);
 
   return (
-    <div ref={tocRef}>
+    <div>
       <h3 className="mb-4 text-lg font-medium">목차</h3>
-      {toc.length > 0 ? (
-        <ul className="space-y-2">
-          {toc.map((item, index) => {
-            const isActive = currentSectionHref === item.href;
-
-            return (
-              <MemoizedTocItemComponent
-                key={item.id || index}
-                item={item}
-                handleNavClick={handleNavClick}
-                isActive={isActive}
-                currentSectionHref={
-                  !isActive && item.subitems?.length
-                    ? currentSectionHref
-                    : undefined
-                }
-              />
-            );
-          })}
-        </ul>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-6 text-center">
-          <BookOpen className="mb-2 size-8 text-gray-400" />
-          <p className="text-sm text-gray-600">목차를 불러오는 중입니다</p>
-          <p className="text-xs text-gray-500">
-            잠시만 기다려주세요. 또는 이 책에 목차가 없을 수 있습니다.
-          </p>
-        </div>
-      )}
+      <ul className="space-y-2">
+        {navItems.map((item, index) => (
+          <MemoizedTocItemComponent
+            key={item.id || index}
+            item={item}
+            currentNavItem={currentNavItem}
+          />
+        ))}
+      </ul>
     </div>
   );
 }
