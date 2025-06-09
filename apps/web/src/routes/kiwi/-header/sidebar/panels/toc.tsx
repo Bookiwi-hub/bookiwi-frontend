@@ -10,23 +10,24 @@ import {
   currentSectionAtom,
   navAtom,
 } from "#/routes/kiwi/-reader/atoms";
-import { mapSectionHrefToNavItem } from "#/routes/kiwi/-reader/utils/nav";
 
 interface TocItemComponentProps {
   item: NavItem;
   level?: number;
-  currentNavItem?: NavItem;
+  currentHref?: string;
 }
 function TocItemComponent({
   item,
   level = 0,
-  currentNavItem,
+  currentHref,
 }: TocItemComponentProps) {
   const book = useAtomValue(bookAtom);
   const [isOpen, setIsOpen] = useState(level === 0);
 
   // 서브목차 존재 여부 확인
   const hasSubitems = item.subitems && item.subitems.length > 0;
+
+  const isActive = currentHref === item.href;
 
   // 목차 항목 클릭 시 해당 페이지로 이동
   const handleNavClick = () => {
@@ -40,7 +41,7 @@ function TocItemComponent({
       <div
         className={cn(
           "group flex cursor-pointer items-center rounded-md p-2 hover:bg-gray-100",
-          currentNavItem?.id === item.id && "bg-gray-100",
+          isActive && "bg-gray-100",
         )}
         onClick={handleNavClick}
         role="button"
@@ -80,7 +81,7 @@ function TocItemComponent({
               key={`${subitem.id || i}`}
               item={subitem}
               level={level + 1}
-              currentNavItem={currentNavItem}
+              currentHref={currentHref}
             />
           ))}
         </ul>
@@ -95,15 +96,13 @@ function TocPanel() {
   const navItems = useAtomValue(navAtom);
   const currentSection = useAtomValue(currentSectionAtom);
 
-  if (!navItems || !currentSection || !navItems.length)
+  if (!navItems || !navItems.length)
     return (
       <div className="flex flex-col items-center justify-center py-6 text-center">
         <BookOpen className="mb-2 size-8 text-gray-400" />
         <p className="text-xs text-gray-500">목차가 없습니다.</p>
       </div>
     );
-
-  const currentNavItem = mapSectionHrefToNavItem(navItems, currentSection.href);
 
   return (
     <div>
@@ -113,7 +112,7 @@ function TocPanel() {
           <MemoizedTocItemComponent
             key={item.id || index}
             item={item}
-            currentNavItem={currentNavItem}
+            currentHref={currentSection?.href}
           />
         ))}
       </ul>
