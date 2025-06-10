@@ -85,6 +85,8 @@ const useTextSelect = () => {
       const selection = iframe.getSelection();
       if (hasSelection(selection)) {
         setSelection({ selection });
+      } else {
+        setSelection(null);
       }
     });
   };

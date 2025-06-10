@@ -48,7 +48,7 @@ function ReaderProvider({
     readerStore.set(currentViewAtom, undefined);
     readerStore.set(navAtom, kiwiData.bookMetadata.toc);
     readerStore.set(sectionsAtom, []);
-    readerStore.set(selectionAtom, undefined);
+    readerStore.set(selectionAtom, null);
     return readerStore;
   }, [kiwiData, participantData]);
 

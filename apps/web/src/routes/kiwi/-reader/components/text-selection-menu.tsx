@@ -1,6 +1,4 @@
-import { useState } from "react";
-
-import { useAtomValue } from "@bookiwi/jotai";
+import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
 import { currentViewAtom, selectionAtom } from "../atoms";
 import { isForwardSelection } from "../utils";
@@ -10,13 +8,11 @@ import {
   calculateAnchorOffset,
 } from "../utils/anchor";
 
-import { cn } from "#/lib/utils";
+import Overlay from "#/components/ui/overlay";
 
 export default function TextSelectionMenu() {
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
   const currentView = useAtomValue(currentViewAtom);
-  const selectionAtomValue = useAtomValue(selectionAtom);
+  const [selectionAtomValue, setSelectionAtom] = useAtom(selectionAtom);
   const selection = selectionAtomValue?.selection;
 
   if (!currentView || !selection) return null;
@@ -47,40 +43,46 @@ export default function TextSelectionMenu() {
 
   const setSelectionMenuSize = (el: HTMLDivElement) => {
     if (!el) return;
-    setWidth(el.clientWidth);
-    setHeight(el.clientHeight);
     el.focus();
   };
 
+  const hide = () => {
+    selection.removeAllRanges();
+    setSelectionAtom(null);
+  };
+
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div
-      ref={setSelectionMenuSize}
-      className={cn("absolute z-20 bg-red-500 w-10 h-10")}
-      style={{
-        // 메뉴 위치 계산 - 가로 위치 (부모 컨테이너 기반으로 상대 좌표를 사용 **중요)
-        left: calculateAnchorOffset(containerRect.width, width, {
-          offset: anchorRect.left + viewRect.left - containerRect.left,
-          size: anchorRect.width,
-          mode: AnchorMode.ALIGN,
-          position: forward ? AnchorPosition.Before : AnchorPosition.After,
-        }),
-        // 메뉴 위치 계산 - 세로 위치
-        top: calculateAnchorOffset(containerRect.height, height, {
-          offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
-          size: lineHeight,
-          mode: AnchorMode.AVOID,
-          position: forward ? AnchorPosition.Before : AnchorPosition.After,
-        }),
-      }}
-      tabIndex={-1}
-      // 키보드 단축키 처리 (Ctrl+C)
-      onKeyDown={(e) => {
-        e.stopPropagation();
-        if (e.key === "c" && e.ctrlKey) {
-          //   copy(text);
-        }
-      }}
-    />
+    <>
+      <Overlay className="!z-20 !bg-transparent" onClick={hide} />
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+      <div
+        ref={setSelectionMenuSize}
+        className="absolute z-30 size-10 bg-red-500"
+        style={{
+          // 메뉴 위치 계산 - 가로 위치 (부모 컨테이너 기반으로 상대 좌표를 사용 **중요)
+          left: calculateAnchorOffset(containerRect.width, 10, {
+            offset: anchorRect.left + viewRect.left - containerRect.left,
+            size: anchorRect.width,
+            mode: AnchorMode.ALIGN,
+            position: forward ? AnchorPosition.Before : AnchorPosition.After,
+          }),
+          // 메뉴 위치 계산 - 세로 위치
+          top: calculateAnchorOffset(containerRect.height, 10, {
+            offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
+            size: lineHeight,
+            mode: AnchorMode.AVOID,
+            position: forward ? AnchorPosition.Before : AnchorPosition.After,
+          }),
+        }}
+        tabIndex={-1}
+        // 키보드 단축키 처리 (Ctrl+C)
+        onKeyDown={(e) => {
+          e.stopPropagation();
+          if (e.key === "c" && e.ctrlKey) {
+            //   copy(text);
+          }
+        }}
+      />
+    </>
   );
 }
