@@ -1,21 +1,43 @@
 import { Bookmark } from "lucide-react";
 
+import { EpubCFI } from "@bookiwi/epubjs";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import {
   bookmarksAtom,
   currentCfiAtom,
+  currentLocationAtom,
   removeBookmarkAtom,
   setBookmarkAtom,
 } from "../-reader/atoms";
 
+const isCfiInRange = (
+  cfi: string,
+  startCfi: string,
+  endCfi: string,
+): boolean => {
+  const cfiInstance = new EpubCFI();
+  return (
+    cfiInstance.compare(cfi, startCfi) >= 0 &&
+    cfiInstance.compare(cfi, endCfi) <= 0
+  );
+};
+
 function BookmarkButton() {
   const currentCfi = useAtomValue(currentCfiAtom);
+  const currentLocation = useAtomValue(currentLocationAtom);
   const bookmarks = useAtomValue(bookmarksAtom);
   const setBookmark = useSetAtom(setBookmarkAtom);
   const removeBookmark = useSetAtom(removeBookmarkAtom);
-  const isBookmarked = currentCfi
-    ? bookmarks.some((bookmark) => bookmark.cfi === currentCfi)
+
+  const isBookmarked = currentLocation
+    ? bookmarks.some((bookmark) =>
+        isCfiInRange(
+          bookmark.cfi,
+          currentLocation.start.cfi,
+          currentLocation.end.cfi,
+        ),
+      )
     : false;
 
   const toggleBookmark = () => {

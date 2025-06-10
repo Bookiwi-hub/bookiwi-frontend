@@ -28,6 +28,7 @@ interface BookmarkItemProps {
   bookmark: Bookmark;
   index: number;
   navItemLabel: string;
+  percentage: number;
   onClick: (cfi: string) => void;
   onRemove: (cfi: string) => void;
 }
@@ -36,6 +37,7 @@ function BookmarkItem({
   bookmark,
   index,
   navItemLabel,
+  percentage,
   onClick,
   onRemove,
 }: BookmarkItemProps) {
@@ -53,6 +55,7 @@ function BookmarkItem({
         {navItemLabel && (
           <p className="mt-0.5 text-sm text-muted-foreground">{navItemLabel}</p>
         )}
+        <p className="mt-0.5 text-sm text-muted-foreground">{percentage}%</p>
 
         <p className="mt-1 text-xs font-medium text-muted-foreground/70">
           {formatDate(bookmark.createdAt)}
@@ -91,8 +94,12 @@ function BookmarksPanel() {
       ) : (
         <ul className="space-y-2">
           {bookmarks.map((bookmark, index) => {
-            const spineItem = book?.spine.get(bookmark.cfi);
-            const navItem = book?.navigation.get(spineItem?.href || "");
+            if (!book) return null;
+            const spineItem = book.spine.get(bookmark.cfi);
+            const navItem = book.navigation.get(spineItem?.href || "");
+            const percentage = Math.floor(
+              book.locations.percentageFromCfi(bookmark.cfi) * 100,
+            );
 
             return (
               <BookmarkItem
@@ -100,6 +107,7 @@ function BookmarksPanel() {
                 bookmark={bookmark}
                 index={index}
                 navItemLabel={navItem?.label || ""}
+                percentage={percentage}
                 onClick={handleBookmarkClick}
                 onRemove={removeBookmark}
               />
