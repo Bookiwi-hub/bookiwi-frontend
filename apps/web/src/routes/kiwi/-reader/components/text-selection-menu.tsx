@@ -17,12 +17,9 @@ export default function TextSelectionMenu() {
 
   if (!currentView || !selection) return null;
 
-  const epubjsView = currentView.element;
-  const epubjsContainer = epubjsView.parentElement!;
-
-  const containerRect = epubjsContainer.getBoundingClientRect();
-  const viewRect = epubjsView.getBoundingClientRect();
-
+  const viewRect = currentView.element.getBoundingClientRect();
+  const containerRect =
+    currentView.element.parentElement!.getBoundingClientRect();
   if (!containerRect || !viewRect) return null;
 
   const forward = isForwardSelection(selection);
@@ -61,17 +58,17 @@ export default function TextSelectionMenu() {
         style={{
           // 메뉴 위치 계산 - 가로 위치 (부모 컨테이너 기반으로 상대 좌표를 사용 **중요)
           left: calculateAnchorOffset(containerRect.width, 10, {
-            offset: anchorRect.left + viewRect.left - containerRect.left,
+            offset: anchorRect.left + viewRect.left,
             size: anchorRect.width,
             mode: AnchorMode.ALIGN,
-            position: forward ? AnchorPosition.Before : AnchorPosition.After,
+            position: forward ? AnchorPosition.After : AnchorPosition.Before,
           }),
           // 메뉴 위치 계산 - 세로 위치
           top: calculateAnchorOffset(containerRect.height, 10, {
             offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
             size: lineHeight,
             mode: AnchorMode.AVOID,
-            position: forward ? AnchorPosition.Before : AnchorPosition.After,
+            position: forward ? AnchorPosition.After : AnchorPosition.Before,
           }),
         }}
         tabIndex={-1}
