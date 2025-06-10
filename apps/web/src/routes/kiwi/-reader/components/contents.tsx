@@ -12,6 +12,8 @@ import {
 } from "../hooks";
 import { defaultStyle } from "../utils/styles";
 
+import TextSelectionMenu from "./text-selection-menu";
+
 function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   const book = useAtomValue(bookAtom);
   const render = useRender();
@@ -50,7 +52,11 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
     [book],
   );
 
-  return <div ref={setViewerRef} {...props} />;
+  return (
+    <div ref={setViewerRef} className="relative" {...props}>
+      <TextSelectionMenu />
+    </div>
+  );
 }
 
 export default ReaderContents;
