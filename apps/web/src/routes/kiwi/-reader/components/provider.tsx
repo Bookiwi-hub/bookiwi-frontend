@@ -14,6 +14,8 @@ import {
   kiwiAtom,
   navAtom,
   sectionsAtom,
+  currentViewAtom,
+  selectionAtom,
 } from "../atoms";
 
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
@@ -43,8 +45,10 @@ function ReaderProvider({
     readerStore.set(participantAtom, participantData);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
+    readerStore.set(currentViewAtom, undefined);
     readerStore.set(navAtom, kiwiData.bookMetadata.toc);
     readerStore.set(sectionsAtom, []);
+    readerStore.set(selectionAtom, undefined);
     return readerStore;
   }, [kiwiData, participantData]);
 
