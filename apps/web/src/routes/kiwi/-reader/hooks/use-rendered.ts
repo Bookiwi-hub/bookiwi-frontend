@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
@@ -79,14 +79,12 @@ const useUpdateCustomStyle = () => {
 
 const useTextSelect = () => {
   const setSelection = useSetAtom(selectionAtom);
-  const [, render] = useState({});
 
   const addTextSelectEvent = (iframe: Document) => {
     iframe.addEventListener("mouseup", () => {
       const selection = iframe.getSelection();
       if (hasSelection(selection)) {
-        render({});
-        setSelection(selection);
+        setSelection({ selection });
       }
     });
   };

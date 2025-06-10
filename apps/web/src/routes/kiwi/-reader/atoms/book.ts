@@ -11,7 +11,7 @@ export const currentViewAtom = atom<IframeView>();
 export const navAtom = atom<NavItem[]>();
 export const sectionsAtom = atom<Section[]>([]);
 export const isCenterTouchedAtom = atom<boolean>(false);
-export const selectionAtom = atom<Selection>();
+export const selectionAtom = atom<{ selection: Selection }>();
 
 export const toggleCenterTouchedAtom = atom(null, (get, set) => {
   set(isCenterTouchedAtom, !get(isCenterTouchedAtom));

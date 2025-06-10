@@ -16,7 +16,8 @@ export default function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const currentView = useAtomValue(currentViewAtom);
-  const selection = useAtomValue(selectionAtom);
+  const selectionAtomValue = useAtomValue(selectionAtom);
+  const selection = selectionAtomValue?.selection;
 
   if (!currentView || !selection) return null;
 
