@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
-import { bookAtom, isCenterTouchedAtom, percentageAtom } from "./atoms";
+import { bookAtom, isCenterTouchedAtom, percentageAtom } from "../atoms";
 
 import { Slider } from "#/components/ui/slider";
 import { cn } from "#/lib/utils";

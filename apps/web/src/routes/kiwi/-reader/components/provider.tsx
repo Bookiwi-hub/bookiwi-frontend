@@ -14,7 +14,7 @@ import {
   kiwiAtom,
   navAtom,
   sectionsAtom,
-} from "./atoms";
+} from "../atoms";
 
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 

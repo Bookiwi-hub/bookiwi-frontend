@@ -10,7 +10,7 @@ import {
   toggleCenterTouchedAtom,
   typographyAtom,
 } from "../atoms";
-import { updateCustomStyle } from "../styles";
+import { updateCustomStyle } from "../utils/styles";
 
 const useToggleProgressBar = () => {
   const toggleProgressBar = useSetAtom(toggleCenterTouchedAtom);
