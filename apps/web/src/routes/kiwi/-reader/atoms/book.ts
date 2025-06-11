@@ -13,6 +13,9 @@ export const sectionsAtom = atom<Section[]>([]);
 export const isCenterTouchedAtom = atom<boolean>(false);
 export const selectionAtom = atom<{ selection: Selection } | null>(null);
 
+export const initialCfiAtom = atom<string | null>(null);
+export const initialIsSinglePageAtom = atom<boolean>(false);
+
 export const toggleCenterTouchedAtom = atom(null, (get, set) => {
   set(isCenterTouchedAtom, !get(isCenterTouchedAtom));
 });
