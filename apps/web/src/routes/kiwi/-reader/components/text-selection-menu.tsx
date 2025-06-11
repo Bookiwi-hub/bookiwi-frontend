@@ -17,13 +17,19 @@ export default function TextSelectionMenu() {
 
   if (!currentView || !selection) return null;
 
-  const viewRect = currentView.element.getBoundingClientRect();
-  const containerRect =
-    currentView.element.parentElement!.getBoundingClientRect();
+  const viewElement = currentView.element;
+  const containerElement = viewElement.parentElement;
+  if (!viewElement || !containerElement) return null;
+
+  const viewRect = viewElement.getBoundingClientRect();
+  const containerRect = containerElement.getBoundingClientRect();
   if (!containerRect || !viewRect) return null;
 
   const forward = isForwardSelection(selection);
   const range = selection.getRangeAt(0);
+
+  if (!range) return null;
+
   const rects = [...range.getClientRects()].filter((r) => Math.round(r.width));
   const anchorRect = forward ? rects[rects.length - 1] : rects[0];
 
