@@ -56,18 +56,19 @@ export default function TextSelectionMenu() {
   return (
     <>
       <Overlay className="!z-20 !bg-transparent" onClick={hide} />
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+
       <div
+        role="toolbar"
         ref={setSelectionMenuSize}
-        className="absolute z-30 size-10 bg-red-500"
+        className="absolute z-30 size-20 bg-red-500"
         style={{
-          left: calculateAnchorOffset(containerRect.width, 40, {
+          left: calculateAnchorOffset(containerRect.width, 80, {
             offset: anchorRect.left + viewRect.left - containerRect.left,
             size: anchorRect.width,
             mode: AnchorMode.ALIGN,
             position: forward ? AnchorPosition.After : AnchorPosition.Before,
           }),
-          top: calculateAnchorOffset(containerRect.height, 40, {
+          top: calculateAnchorOffset(containerRect.height, 80, {
             offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
             size: lineHeight,
             mode: AnchorMode.AVOID,
@@ -82,7 +83,9 @@ export default function TextSelectionMenu() {
             //   copy(text);
           }
         }}
-      />
+      >
+        Text Selection Menu
+      </div>
     </>
   );
 }
