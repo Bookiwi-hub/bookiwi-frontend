@@ -1,56 +1,33 @@
-import { useAtom, useAtomValue } from "@bookiwi/jotai";
+import { KeyboardEvent } from "react";
 
-import { currentViewAtom, selectionAtom } from "../atoms";
-import {
-  AnchorMode,
-  AnchorPosition,
-  calculateAnchorOffset,
-  isForwardSelection,
-} from "../utils";
+import { useTextSelectionPosition } from "../hooks";
+import { AnchorMode, AnchorPosition, calculateAnchorOffset } from "../utils";
 
 import Overlay from "#/components/ui/overlay";
 
 export default function TextSelectionMenu() {
-  const currentView = useAtomValue(currentViewAtom);
-  const [selectionAtomValue, setSelectionAtom] = useAtom(selectionAtom);
-  const selection = selectionAtomValue?.selection;
+  const {
+    isReady,
+    forward,
+    anchorRect,
+    lineHeight,
+    containerRect,
+    viewRect,
+    hide,
+  } = useTextSelectionPosition();
 
-  if (!currentView || !selection) return null;
+  if (!isReady || !anchorRect || !containerRect || !viewRect) return null;
 
-  const viewElement = currentView.element;
-  const containerElement = viewElement.parentElement;
-  if (!viewElement || !containerElement) return null;
-
-  const viewRect = viewElement.getBoundingClientRect();
-  const containerRect = containerElement.getBoundingClientRect();
-  if (!containerRect || !viewRect) return null;
-
-  const forward = isForwardSelection(selection);
-  const range = selection.getRangeAt(0);
-
-  if (!range) return null;
-
-  const rects = [...range.getClientRects()].filter((r) => Math.round(r.width));
-  const anchorRect = forward ? rects[rects.length - 1] : rects[0];
-
-  if (!anchorRect) return null;
-  const endContainer = forward ? range.endContainer : range.startContainer;
-
-  const currentLineHeight = parseFloat(
-    getComputedStyle(endContainer.parentElement!).lineHeight,
-  );
-  const lineHeight = Number.isNaN(currentLineHeight)
-    ? anchorRect.height
-    : currentLineHeight;
-
-  const setSelectionMenuSize = (el: HTMLDivElement) => {
+  const refFunc = (el: HTMLDivElement) => {
     if (!el) return;
     el.focus();
   };
 
-  const hide = () => {
-    selection.removeAllRanges();
-    setSelectionAtom(null);
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (e.key === "c" && e.ctrlKey) {
+      //   copy(text);
+    }
   };
 
   return (
@@ -59,7 +36,7 @@ export default function TextSelectionMenu() {
 
       <div
         role="toolbar"
-        ref={setSelectionMenuSize}
+        ref={refFunc}
         className="absolute z-30 size-20 bg-red-500"
         style={{
           left: calculateAnchorOffset(containerRect.width, 80, {
@@ -77,12 +54,7 @@ export default function TextSelectionMenu() {
         }}
         tabIndex={-1}
         // 키보드 단축키 처리 (Ctrl+C)
-        onKeyDown={(e) => {
-          e.stopPropagation();
-          if (e.key === "c" && e.ctrlKey) {
-            //   copy(text);
-          }
-        }}
+        onKeyDown={handleKeyDown}
       >
         Text Selection Menu
       </div>
