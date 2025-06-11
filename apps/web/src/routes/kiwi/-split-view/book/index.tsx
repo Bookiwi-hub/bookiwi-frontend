@@ -13,7 +13,7 @@ function Book() {
       <ReaderPrevPageButton className="group/button absolute left-0 top-0 flex h-full w-20 items-center justify-center">
         <ChevronLeftIcon className="size-6 opacity-0 transition-opacity group-hover/button:opacity-100" />
       </ReaderPrevPageButton>
-      <ReaderContents className="size-full" />
+      <ReaderContents />
       <ReaderNextPageButton className="group/button absolute right-0 top-0 flex h-full w-20 items-center justify-center">
         <ChevronRightIcon className="size-6 opacity-0 transition-opacity group-hover/button:opacity-100" />
       </ReaderNextPageButton>

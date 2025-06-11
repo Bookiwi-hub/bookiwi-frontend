@@ -14,7 +14,11 @@ import {
   kiwiAtom,
   navAtom,
   sectionsAtom,
-} from "./atoms";
+  currentViewAtom,
+  selectionAtom,
+  initialCfiAtom,
+  initialIsSinglePageAtom,
+} from "../atoms";
 
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 
@@ -43,8 +47,15 @@ function ReaderProvider({
     readerStore.set(participantAtom, participantData);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
+    readerStore.set(currentViewAtom, undefined);
     readerStore.set(navAtom, kiwiData.bookMetadata.toc);
     readerStore.set(sectionsAtom, []);
+    readerStore.set(selectionAtom, null);
+    readerStore.set(
+      initialIsSinglePageAtom,
+      participantData.settings.isSinglePage,
+    );
+    readerStore.set(initialCfiAtom, participantData.record.currentCfi);
     return readerStore;
   }, [kiwiData, participantData]);
 

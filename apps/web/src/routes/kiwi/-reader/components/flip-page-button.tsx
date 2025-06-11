@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
 
-import { bookAtom } from "./atoms";
+import { bookAtom } from "../atoms";
 
 function ReaderPrevPageButton(props: ComponentProps<"button">) {
   const book = useAtomValue(bookAtom);
