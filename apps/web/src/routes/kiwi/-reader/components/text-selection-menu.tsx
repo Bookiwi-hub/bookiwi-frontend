@@ -1,12 +1,12 @@
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
 import { currentViewAtom, selectionAtom } from "../atoms";
-import { isForwardSelection } from "../utils";
 import {
   AnchorMode,
   AnchorPosition,
   calculateAnchorOffset,
-} from "../utils/anchor";
+  isForwardSelection,
+} from "../utils";
 
 import Overlay from "#/components/ui/overlay";
 
