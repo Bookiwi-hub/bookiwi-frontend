@@ -11,7 +11,18 @@ export const currentViewAtom = atom<IframeView>();
 export const navAtom = atom<NavItem[]>();
 export const sectionsAtom = atom<Section[]>([]);
 export const isCenterTouchedAtom = atom<boolean>(false);
-export const selectionAtom = atom<{ selection: Selection } | null>(null);
+export const selectionObjectAtom = atom<{ selection: Selection | null } | null>(
+  null,
+);
+export const selectionAtom = atom<Selection | null, [Selection | null], void>(
+  (get) => {
+    const selectionObject = get(selectionObjectAtom);
+    return selectionObject?.selection ?? null;
+  },
+  (get, set, selection: Selection | null) => {
+    set(selectionObjectAtom, { selection });
+  },
+);
 
 export const initialCfiAtom = atom<string | null>(null);
 export const initialIsSinglePageAtom = atom<boolean>(false);

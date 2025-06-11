@@ -8,8 +8,7 @@ import { useSelectionMenuOffset } from "../hooks";
 import Overlay from "#/components/ui/overlay";
 
 export default function TextSelectionMenu() {
-  const [selectionAtomValue, setSelectionAtom] = useAtom(selectionAtom);
-  const selection = selectionAtomValue?.selection;
+  const [selection, setSelection] = useAtom(selectionAtom);
 
   const offsets = useSelectionMenuOffset();
 
@@ -17,7 +16,7 @@ export default function TextSelectionMenu() {
 
   const hide = () => {
     selection?.removeAllRanges();
-    setSelectionAtom(null);
+    setSelection(null);
   };
 
   const refFunc = (el: HTMLDivElement) => {

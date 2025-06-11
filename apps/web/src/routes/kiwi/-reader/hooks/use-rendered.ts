@@ -84,7 +84,7 @@ const useTextSelect = () => {
     iframe.addEventListener("mouseup", () => {
       const selection = iframe.getSelection();
       if (hasSelection(selection)) {
-        setSelection({ selection });
+        setSelection(selection);
       } else {
         setSelection(null);
       }

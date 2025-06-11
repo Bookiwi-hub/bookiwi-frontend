@@ -15,8 +15,7 @@ interface TextSelectionPosition {
 
 const useSelectionMenuOffset = (): TextSelectionPosition | null => {
   const currentView = useAtomValue(currentViewAtom);
-  const selectionAtomValue = useAtomValue(selectionAtom);
-  const selection = selectionAtomValue?.selection;
+  const selection = useAtomValue(selectionAtom);
 
   if (!currentView || !selection) {
     return null;
