@@ -1,22 +1,24 @@
 import { KeyboardEvent } from "react";
 
-import { useTextSelectionPosition } from "../hooks";
-import { AnchorMode, AnchorPosition, calculateAnchorOffset } from "../utils";
+import { useAtom } from "@bookiwi/jotai";
+
+import { selectionAtom } from "../atoms";
+import { useSelectionMenuOffset } from "../hooks";
 
 import Overlay from "#/components/ui/overlay";
 
 export default function TextSelectionMenu() {
-  const {
-    isReady,
-    forward,
-    anchorRect,
-    lineHeight,
-    containerRect,
-    viewRect,
-    hide,
-  } = useTextSelectionPosition();
+  const [selectionAtomValue, setSelectionAtom] = useAtom(selectionAtom);
+  const selection = selectionAtomValue?.selection;
 
-  if (!isReady || !anchorRect || !containerRect || !viewRect) return null;
+  const offsets = useSelectionMenuOffset();
+
+  if (!offsets) return null;
+
+  const hide = () => {
+    selection?.removeAllRanges();
+    setSelectionAtom(null);
+  };
 
   const refFunc = (el: HTMLDivElement) => {
     if (!el) return;
@@ -39,18 +41,8 @@ export default function TextSelectionMenu() {
         ref={refFunc}
         className="absolute z-30 size-20 bg-red-500"
         style={{
-          left: calculateAnchorOffset(containerRect.width, 80, {
-            offset: anchorRect.left + viewRect.left - containerRect.left,
-            size: anchorRect.width,
-            mode: AnchorMode.ALIGN,
-            position: forward ? AnchorPosition.After : AnchorPosition.Before,
-          }),
-          top: calculateAnchorOffset(containerRect.height, 80, {
-            offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
-            size: lineHeight,
-            mode: AnchorMode.AVOID,
-            position: forward ? AnchorPosition.Before : AnchorPosition.After,
-          }),
+          left: offsets.leftOffset,
+          top: offsets.topOffset,
         }}
         tabIndex={-1}
         // 키보드 단축키 처리 (Ctrl+C)
