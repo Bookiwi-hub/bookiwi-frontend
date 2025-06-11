@@ -1,4 +1,4 @@
-import { useCallback, ComponentPropsWithoutRef } from "react";
+import { useCallback } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
 
@@ -14,7 +14,7 @@ import { defaultStyle } from "../utils/styles";
 
 import TextSelectionMenu from "./text-selection-menu";
 
-function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
+function ReaderContents() {
   const book = useAtomValue(bookAtom);
   const render = useRender();
   const handleRendered = useRendered();
@@ -53,7 +53,7 @@ function ReaderContents(props: ComponentPropsWithoutRef<"div">) {
   );
 
   return (
-    <div ref={setViewerRef} className="relative" {...props}>
+    <div id="reader-contents" ref={setViewerRef} className="relative size-full">
       <TextSelectionMenu />
     </div>
   );

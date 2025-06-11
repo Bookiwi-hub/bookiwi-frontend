@@ -28,7 +28,6 @@ export default function TextSelectionMenu() {
   const anchorRect = forward ? rects[rects.length - 1] : rects[0];
 
   if (!anchorRect) return null;
-
   const endContainer = forward ? range.endContainer : range.startContainer;
 
   const currentLineHeight = parseFloat(
@@ -56,19 +55,17 @@ export default function TextSelectionMenu() {
         ref={setSelectionMenuSize}
         className="absolute z-30 size-10 bg-red-500"
         style={{
-          // 메뉴 위치 계산 - 가로 위치 (부모 컨테이너 기반으로 상대 좌표를 사용 **중요)
-          left: calculateAnchorOffset(containerRect.width, 10, {
-            offset: anchorRect.left + viewRect.left,
+          left: calculateAnchorOffset(containerRect.width, 40, {
+            offset: anchorRect.left + viewRect.left - containerRect.left,
             size: anchorRect.width,
             mode: AnchorMode.ALIGN,
             position: forward ? AnchorPosition.After : AnchorPosition.Before,
           }),
-          // 메뉴 위치 계산 - 세로 위치
-          top: calculateAnchorOffset(containerRect.height, 10, {
+          top: calculateAnchorOffset(containerRect.height, 40, {
             offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
             size: lineHeight,
             mode: AnchorMode.AVOID,
-            position: forward ? AnchorPosition.After : AnchorPosition.Before,
+            position: forward ? AnchorPosition.Before : AnchorPosition.After,
           }),
         }}
         tabIndex={-1}
