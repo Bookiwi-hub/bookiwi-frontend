@@ -1,5 +1,6 @@
 import { participants } from "#/DB/participants";
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
+import Dot from "#/components/ui/dot";
 import {
   Popover,
   PopoverContent,
@@ -13,14 +14,15 @@ interface ProfileButtonProps {
 
 function ProfileButton({ profileImage, color }: ProfileButtonProps) {
   return (
-    <div className="relative cursor-pointer rounded-md p-2 hover:bg-gray-100">
-      <Avatar className="size-7">
+    <div className="relative m-2 cursor-pointer hover:bg-gray-100">
+      <Avatar className="size-8">
         <AvatarImage src={profileImage} />
         <AvatarFallback>U</AvatarFallback>
       </Avatar>
-      <span
-        className="absolute left-[25px] top-6 size-[10px] rounded-full ring-2 ring-white"
-        style={{ backgroundColor: color }}
+      <Dot
+        color={color}
+        size="sm"
+        className="absolute left-5 top-5  ring-2 ring-white"
       />
     </div>
   );
@@ -52,9 +54,10 @@ function Profiles({ profileImage, color }: ProfilesProps) {
                   <AvatarImage src={participant.profileImage} />
                   <AvatarFallback>{participant.name[0]}</AvatarFallback>
                 </Avatar>
-                <span
-                  className="absolute left-6 top-6 size-2.5 rounded-full ring-2 ring-white"
-                  style={{ backgroundColor: participant.color }}
+                <Dot
+                  color={participant.color}
+                  size="sm"
+                  className="absolute left-5 top-5 ring-2 ring-white"
                 />
               </div>
               <span className="text-sm font-medium">{participant.name}</span>

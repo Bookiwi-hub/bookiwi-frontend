@@ -10,7 +10,6 @@ import {
   useRelocated,
   useRender,
 } from "../hooks";
-import { defaultStyle } from "../utils/styles";
 
 import TextSelectionMenu from "./text-selection-menu";
 
@@ -30,9 +29,6 @@ function ReaderContents() {
 
       globalThis.addEventListener("keydown", handleKeyDown);
       rendition.on("keydown", handleKeyDown);
-
-      // 기본 스타일 적용
-      rendition.themes.default(defaultStyle);
 
       // 책 이동 시 이벤트 등록(현재 위치 업데이트)
       rendition.on("relocated", handleRelocated);

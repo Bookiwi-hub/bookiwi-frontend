@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { participants } from "#/DB/participants";
 import { Button } from "#/components/ui/button";
+import Dot from "#/components/ui/dot";
 import {
   Popover,
   PopoverContent,
@@ -95,10 +96,7 @@ function CreatorFilter({
               onMouseDown={(e) => e.preventDefault()}
               tabIndex={-1}
             >
-              <div
-                className="mr-2 size-3 rounded-full"
-                style={{ backgroundColor: participant.color }}
-              />
+              <Dot color={participant.color} size="sm" className="mr-2" />
               <span>{participant.name}</span>
               {selectedCreators.includes(participant.userId) && (
                 <Check className="ml-auto size-4" />

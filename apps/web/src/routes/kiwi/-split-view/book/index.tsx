@@ -1,4 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { memo } from "react";
 
 import {
   ReaderContents,
@@ -24,4 +25,4 @@ function Book() {
   );
 }
 
-export default Book;
+export default memo(Book);
