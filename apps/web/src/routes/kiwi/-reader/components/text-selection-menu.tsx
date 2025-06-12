@@ -84,8 +84,9 @@ export default function TextSelectionMenu() {
         >
           <Highlighter
             className="size-3.5"
+            strokeWidth={4}
             style={{
-              color: participantColor || undefined,
+              color: participantColor || "rgba(186, 230, 55)",
             }}
           />
           <span className="ml-1.5 text-muted-foreground">하이라이트</span>
