@@ -1,9 +1,9 @@
 import { Highlighter, MessageSquare } from "lucide-react";
 import { KeyboardEvent } from "react";
 
-import { useAtom } from "@bookiwi/jotai";
+import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
-import { selectionAtom } from "../atoms";
+import { participantColorAtom, selectionAtom } from "../atoms";
 import { useSelectionMenuOffset } from "../hooks";
 
 import { Button } from "#/components/ui/button";
@@ -12,6 +12,7 @@ import { cn } from "#/lib/utils";
 
 export default function TextSelectionMenu() {
   const [selection, setSelection] = useAtom(selectionAtom);
+  const participantColor = useAtomValue(participantColorAtom);
 
   const offsets = useSelectionMenuOffset();
 
@@ -64,7 +65,7 @@ export default function TextSelectionMenu() {
         role="toolbar"
         ref={refFunc}
         className={cn(
-          "absolute z-30 flex flex-col items-stretch gap-1 rounded-lg border border-border/50 bg-background/95 p-1 shadow-lg backdrop-blur-sm",
+          "absolute z-30 flex flex-col items-stretch gap-1 rounded-lg border border-border/50 bg-background/95 p-1 shadow-xl backdrop-blur-md",
           "animate-in fade-in-0 zoom-in-95 duration-150 focus:outline-none",
         )}
         style={{
@@ -78,11 +79,16 @@ export default function TextSelectionMenu() {
           variant="ghost"
           size="sm"
           onClick={handleHighlight}
-          className="flex h-8 justify-between px-2 text-xs text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700"
+          className="flex h-8 justify-between px-2 text-xs"
           title="하이라이트 (Ctrl+H)"
         >
-          <Highlighter className="size-3.5" />
-          <span className="ml-1.5">하이라이트</span>
+          <Highlighter
+            className="size-3.5"
+            style={{
+              color: participantColor || undefined,
+            }}
+          />
+          <span className="ml-1.5 text-muted-foreground">하이라이트</span>
           <span className="ml-1 text-[10px] text-muted-foreground/60">
             Ctrl+H
           </span>
@@ -94,11 +100,11 @@ export default function TextSelectionMenu() {
           variant="ghost"
           size="sm"
           onClick={handleAddNote}
-          className="flex h-8 justify-between px-2 text-xs text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+          className="flex h-8 justify-between px-2 text-xs"
           title="메모 추가 (Ctrl+M)"
         >
-          <MessageSquare className="size-3.5" />
-          <span className="ml-1.5">코멘트</span>
+          <MessageSquare className="size-3.5 text-blue-600" />
+          <span className="ml-1.5 text-muted-foreground">코멘트</span>
           <span className="ml-1 text-[10px] text-muted-foreground/60">
             Ctrl+M
           </span>
