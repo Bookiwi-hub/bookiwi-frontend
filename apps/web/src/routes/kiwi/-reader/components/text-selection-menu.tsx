@@ -1,8 +1,12 @@
 import { Highlighter, MessageSquare } from "lucide-react";
 import { KeyboardEvent } from "react";
 
-import { useAtom, useAtomValue } from "@bookiwi/jotai";
+import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
+import {
+  isAnnotationOpenAtom,
+  openAnnotationPaneAtom,
+} from "../../-split-view/atoms";
 import { participantColorAtom, selectionAtom } from "../atoms";
 import { useSelectionMenuOffset } from "../hooks";
 
@@ -13,6 +17,8 @@ import { cn } from "#/lib/utils";
 export default function TextSelectionMenu() {
   const [selection, setSelection] = useAtom(selectionAtom);
   const participantColor = useAtomValue(participantColorAtom);
+  const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
+  const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
 
   const offsets = useSelectionMenuOffset();
 
@@ -54,6 +60,9 @@ export default function TextSelectionMenu() {
     const text = getSelectedText();
     // TODO: 메모 추가 기능 구현
     console.log("Add Note:", text);
+    if (!isAnnotationOpen) {
+      openAnnotationPane();
+    }
     hide();
   };
 
