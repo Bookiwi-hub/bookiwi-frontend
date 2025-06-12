@@ -10,6 +10,7 @@ Bookiwi는 소셜 이북 리더기입니다. 여러 사용자가 하나의 EPUB 
 
 - [Resizable Split View](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/resizable)
 - [IndexedDB with a Singleton Manager Class](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/IndexedDB-Singleton-Manager-Class)
+- [Floating Text Selection Menu by DOM Range and Bounding ClientRects](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Text-Selection-Menu)
 
 ### ❗ Error & 🐞Bug
 
@@ -18,6 +19,7 @@ Bookiwi는 소셜 이북 리더기입니다. 여러 사용자가 하나의 EPUB 
 - [Fixing Success Screen Appearing After Cancel Using AbortController](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Fixing-Success-Screen-Appearing-After-Cancel-Using-AbortController)
 - [Solving "Database Not Initialized" in IndexedDB with Promises](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/IndexedDB-Not-Initialized)
 - [Data Inconsistency Caused by Tanstack Router Caching](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Data-Inconsistency-Caused-by-Tanstack-Router-Caching)
+- [Fixing React’s Re-render Failures Caused by Unchanging Selection References with Derived atoms](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Persistent-Selection-Object-References)
 
 ### 🚀 Optimizing
 
@@ -31,7 +33,8 @@ Bookiwi는 소셜 이북 리더기입니다. 여러 사용자가 하나의 EPUB 
 - [Callback ref for DOM interaction instead of useRef & useEffect](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Callback-ref-for-DOM-interaction-instead-of-useRef-%26-useEffect)
 - [ResizeObserver for Monitoring Resizable Containers](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/ResizeObserver-for-Monitoring-Resizable-Containers)
 - [useReducer instead of useState for Complex State](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/useReducer-instead-of-useState--for-Complex-State)
-- [pwa](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/pwa)
+- [Selection WEB API for Text Select](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Selection-WEB-API)
+- [Detecting Text Select Direction with Range and Selection](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Detecting-Selection-Direction)
 
 ### ⚙️ Setup
 
