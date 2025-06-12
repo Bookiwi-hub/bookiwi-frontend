@@ -5,26 +5,6 @@ import Contents from "@bookiwi/epubjs/types/contents";
 import { Settings } from "#/types/kiwi";
 import { getKeys } from "#/utils";
 
-// 활성화된 요소(예: 선택된 항목)에 적용할 CSS 클래스 이름입니다.
-export const activeClass = "bg-primary70";
-
-// EPUB 문서의 기본 스타일을 정의합니다.
-export const defaultStyle = {
-  html: {
-    padding: "0 !important", // HTML 요소의 패딩을 0으로 강제 설정
-  },
-  body: {
-    background: "transparent", // body 배경을 투명하게 설정
-  },
-  "a:any-link": {
-    color: "#3b82f6 !important", // 모든 링크의 색상을 파란색(#3b82f6)으로 설정
-    "text-decoration": "none !important", // 링크의 밑줄을 제거
-  },
-  "::selection": {
-    "background-color": "rgba(186, 230, 55, 0.2)", // 텍스트 선택 시 배경색
-  },
-};
-
 // 커스텀 스타일을 식별하기 위한 열거형
 export enum Style {
   Custom = "custom", // 커스텀 스타일의 고유 식별자
