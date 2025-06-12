@@ -13,7 +13,10 @@ interface TextSelectionPosition {
   topOffset: number;
 }
 
-const useSelectionMenuOffset = (): TextSelectionPosition | null => {
+const useSelectionMenuOffset = (
+  menuWidth: number,
+  menuHeight: number,
+): TextSelectionPosition | null => {
   const currentView = useAtomValue(currentViewAtom);
   const selection = useAtomValue(selectionAtom);
 
@@ -57,13 +60,13 @@ const useSelectionMenuOffset = (): TextSelectionPosition | null => {
     ? anchorRect.height
     : currentLineHeight;
 
-  const leftOffset = calculateAnchorOffset(containerRect.width, 81, {
+  const leftOffset = calculateAnchorOffset(containerRect.width, menuWidth, {
     offset: anchorRect.left + viewRect.left - containerRect.left,
     size: anchorRect.width,
     mode: AnchorMode.ALIGN,
     position: forward ? AnchorPosition.After : AnchorPosition.Before,
   });
-  const topOffset = calculateAnchorOffset(containerRect.height, 81, {
+  const topOffset = calculateAnchorOffset(containerRect.height, menuHeight, {
     offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
     size: lineHeight,
     mode: AnchorMode.AVOID,

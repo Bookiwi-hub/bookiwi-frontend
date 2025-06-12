@@ -1,5 +1,5 @@
 import { Highlighter, MessageSquare } from "lucide-react";
-import { KeyboardEvent } from "react";
+import { KeyboardEvent, useState } from "react";
 
 import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -15,12 +15,14 @@ import Overlay from "#/components/ui/overlay";
 import { cn } from "#/lib/utils";
 
 export default function TextSelectionMenu() {
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
   const [selection, setSelection] = useAtom(selectionAtom);
   const participantColor = useAtomValue(participantColorAtom);
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
 
-  const offsets = useSelectionMenuOffset();
+  const offsets = useSelectionMenuOffset(width, height);
 
   if (!offsets) return null;
 
@@ -31,6 +33,8 @@ export default function TextSelectionMenu() {
 
   const refFunc = (el: HTMLDivElement) => {
     if (!el) return;
+    setWidth(el.clientWidth);
+    setHeight(el.clientHeight);
     el.focus();
   };
 
