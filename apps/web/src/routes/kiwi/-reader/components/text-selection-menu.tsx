@@ -7,7 +7,12 @@ import {
   isAnnotationOpenAtom,
   openAnnotationPaneAtom,
 } from "../../-split-view/atoms";
-import { participantColorAtom, selectionAtom } from "../atoms";
+import {
+  bookAtom,
+  currentSectionAtom,
+  participantColorAtom,
+  selectionAtom,
+} from "../atoms";
 import { useSelectionMenuOffset } from "../hooks";
 
 import { Button } from "#/components/ui/button";
@@ -17,14 +22,16 @@ import { cn } from "#/lib/utils";
 export default function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const book = useAtomValue(bookAtom);
   const [selection, setSelection] = useAtom(selectionAtom);
+  const currentSection = useAtomValue(currentSectionAtom);
   const participantColor = useAtomValue(participantColorAtom);
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
 
   const offsets = useSelectionMenuOffset(width, height);
 
-  if (!offsets) return null;
+  if (!offsets || !selection || !currentSection || !book) return null;
 
   const hide = () => {
     selection?.removeAllRanges();
@@ -51,19 +58,27 @@ export default function TextSelectionMenu() {
     }
   };
 
-  const getSelectedText = () => selection?.toString() || "";
-
   const handleHighlight = () => {
-    const text = getSelectedText();
-    // TODO: 하이라이트 기능 구현
-    console.log("Highlight:", text);
+    // const text = selection.toString();;
+    const textRange = selection.getRangeAt(0);
+    const textCfi = currentSection.cfiFromRange(textRange);
+
+    book.rendition.annotations.highlight(
+      textCfi,
+      undefined,
+      undefined,
+      undefined,
+      {
+        fill: participantColor,
+      },
+    );
     hide();
   };
 
   const handleAddNote = () => {
-    const text = getSelectedText();
+    // const text = selection.toString();
     // TODO: 메모 추가 기능 구현
-    console.log("Add Note:", text);
+    // console.log("Add Note:", text);
     if (!isAnnotationOpen) {
       openAnnotationPane();
     }
