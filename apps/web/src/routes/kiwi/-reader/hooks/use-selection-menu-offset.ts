@@ -57,13 +57,13 @@ const useSelectionMenuOffset = (): TextSelectionPosition | null => {
     ? anchorRect.height
     : currentLineHeight;
 
-  const leftOffset = calculateAnchorOffset(containerRect.width, 80, {
+  const leftOffset = calculateAnchorOffset(containerRect.width, 81, {
     offset: anchorRect.left + viewRect.left - containerRect.left,
     size: anchorRect.width,
     mode: AnchorMode.ALIGN,
     position: forward ? AnchorPosition.After : AnchorPosition.Before,
   });
-  const topOffset = calculateAnchorOffset(containerRect.height, 80, {
+  const topOffset = calculateAnchorOffset(containerRect.height, 81, {
     offset: anchorRect.top - (lineHeight - anchorRect.height) / 2,
     size: lineHeight,
     mode: AnchorMode.AVOID,
