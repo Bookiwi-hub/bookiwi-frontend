@@ -48,10 +48,6 @@ function TextSelectionMenu() {
   )
     return null;
 
-  const textRange = selection.getRangeAt(0);
-  const textCfi = currentSection.cfiFromRange(textRange);
-  const existingAnnotation = annotations.find((a) => a.cfi === textCfi);
-
   const hide = () => {
     selection.removeAllRanges();
     setSelection(null);
@@ -64,18 +60,9 @@ function TextSelectionMenu() {
     el.focus();
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    if (e.key === "Escape") {
-      hide();
-    } else if (e.key === "h" && e.ctrlKey) {
-      e.preventDefault();
-      handleAddHighlight();
-    } else if (e.key === "m" && e.ctrlKey) {
-      e.preventDefault();
-      handleAddNote();
-    }
-  };
+  const textRange = selection.getRangeAt(0);
+  const textCfi = currentSection.cfiFromRange(textRange);
+  const existingAnnotation = annotations.find((a) => a.cfi === textCfi);
 
   const addHighlight = () => {
     const newAnnotation: AnnotationIDBData = {
@@ -97,12 +84,34 @@ function TextSelectionMenu() {
     hide();
   };
 
-  const handleAddNote = () => {
-    addHighlight();
+  const handleComment = () => {
+    if (
+      !existingAnnotation ||
+      existingAnnotation.participantId !== participantId
+    ) {
+      addHighlight();
+    }
     if (!isAnnotationOpen) {
       openAnnotationPane();
     }
     hide();
+  };
+
+  const handleRemoveHighlight = () => {
+    hide();
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (e.key === "Escape") {
+      hide();
+    } else if (e.key === "h" && e.ctrlKey) {
+      e.preventDefault();
+      handleAddHighlight();
+    } else if (e.key === "m" && e.ctrlKey) {
+      e.preventDefault();
+      handleComment();
+    }
   };
 
   return (
@@ -123,8 +132,9 @@ function TextSelectionMenu() {
         tabIndex={-1}
         onKeyDown={handleKeyDown}
       >
-        {existingAnnotation ? (
-          <RemoveHighlightButton onClick={() => {}} />
+        {existingAnnotation &&
+        existingAnnotation.participantId === participantId ? (
+          <RemoveHighlightButton onClick={handleRemoveHighlight} />
         ) : (
           <AddHighlightButton
             participantColor={participantColor}
@@ -134,7 +144,7 @@ function TextSelectionMenu() {
 
         <div className="h-px w-full bg-border/50" />
 
-        <CommentButton onClick={handleAddNote} />
+        <CommentButton onClick={handleComment} />
       </div>
     </>
   );
