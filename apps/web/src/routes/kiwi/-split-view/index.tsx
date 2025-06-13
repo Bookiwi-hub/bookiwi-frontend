@@ -65,10 +65,7 @@ function SplitView() {
       </div>
 
       {isAnnotationOpen && (
-        <SplitViewSeparator
-          separatorThickness={isAnnotationPinned ? 4 : 2}
-          className="animate-slide-in-right"
-        />
+        <SplitViewSeparator separatorThickness={isAnnotationPinned ? 4 : 2} />
       )}
       {isAnnotationOpen && !isAnnotationPinned && (
         <Overlay
@@ -79,7 +76,7 @@ function SplitView() {
 
       {isAnnotationOpen && (
         <div
-          className="z-20 animate-slide-in-right bg-white shadow-2xl"
+          className="z-20 bg-white shadow-2xl"
           style={{
             width: annotationPaneSize,
           }}
