@@ -74,7 +74,7 @@ export default function TextSelectionMenu() {
     }
   };
 
-  const handleHighlight = () => {
+  const addHighlight = () => {
     const textRange = selection.getRangeAt(0);
     const textCfi = currentSection.cfiFromRange(textRange);
 
@@ -99,10 +99,15 @@ export default function TextSelectionMenu() {
       comments: [],
     };
     addAnnotation(newAnnotation);
+  };
+
+  const handleHighlight = () => {
+    addHighlight();
     hide();
   };
 
   const handleAddNote = () => {
+    addHighlight();
     if (!isAnnotationOpen) {
       openAnnotationPane();
     }
