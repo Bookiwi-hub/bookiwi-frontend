@@ -638,7 +638,7 @@ interface IndexConfig {
 
 const config: DBConfig = {
   name: "bookiwi-idb",
-  version: 1,
+  version: 2,
   stores: [
     {
       name: IDBStore.KiwiStore,
@@ -681,6 +681,42 @@ const config: DBConfig = {
         {
           name: "userId",
           keyPath: "userId",
+        },
+      ],
+    },
+    {
+      name: IDBStore.AnnotationStore,
+      keyPath: "id",
+      autoIncrement: false,
+      indices: [
+        {
+          name: "kiwiId",
+          keyPath: "kiwiId",
+          options: { unique: false },
+        },
+        {
+          name: "userId",
+          keyPath: "userId",
+        },
+        {
+          name: "cfi",
+          keyPath: "cfi",
+          options: { unique: false },
+        },
+        {
+          name: "participantId",
+          keyPath: "participantId",
+          options: { unique: false },
+        },
+        {
+          name: "sectionIndex",
+          keyPath: "sectionIndex",
+          options: { unique: false },
+        },
+        {
+          name: "color",
+          keyPath: "color",
+          options: { unique: false },
         },
       ],
     },

@@ -54,6 +54,7 @@ function CommentForm({ onSubmit, currentUser }: CommentFormProps) {
         className="h-9 min-h-9 resize-none overflow-hidden px-3 py-2"
         onKeyDown={handleKeyDown}
         onInput={handleInput}
+        autoFocus
       />
       <Button
         type="submit"

@@ -18,33 +18,51 @@ import {
   selectionAtom,
   initialCfiAtom,
   initialIsSinglePageAtom,
+  participantsAtom,
+  annotationsTotalAtom,
 } from "../atoms";
 
-import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
+import tempUser from "#/DB/users";
+import {
+  AnnotationIDBData,
+  EpubIDBData,
+  KiwiIDBData,
+  ParticipantIDBData,
+} from "#/types/idb";
 
 interface ReaderProviderProps {
   children: ReactNode;
   epubData: EpubIDBData;
   kiwiData: KiwiIDBData;
-  participantData: ParticipantIDBData;
+  participantsData: ParticipantIDBData[];
+  annotationsData: AnnotationIDBData[];
 }
 
 function ReaderProvider({
   children,
   epubData,
   kiwiData,
-  participantData,
+  participantsData,
+  annotationsData,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
 
   // 리더 전용 store 생성
   const store = useMemo(() => {
     const readerStore = createStore();
+    const currentParticipant = participantsData.find(
+      (participant) => participant.userId === tempUser.id,
+    );
+    if (!currentParticipant) {
+      throw new Error(`Participant with userId ${tempUser.id} not found`);
+    }
     // 초기값 설정
     readerStore.set(bookAtom, null);
     readerStore.set(isCenterTouchedAtom, false);
     readerStore.set(kiwiAtom, kiwiData);
-    readerStore.set(participantAtom, participantData);
+    readerStore.set(participantsAtom, participantsData);
+    readerStore.set(annotationsTotalAtom, annotationsData);
+    readerStore.set(participantAtom, currentParticipant);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
     readerStore.set(currentViewAtom, undefined);
@@ -53,11 +71,11 @@ function ReaderProvider({
     readerStore.set(selectionAtom, null);
     readerStore.set(
       initialIsSinglePageAtom,
-      participantData.settings.isSinglePage,
+      currentParticipant.settings.isSinglePage,
     );
-    readerStore.set(initialCfiAtom, participantData.record.currentCfi);
+    readerStore.set(initialCfiAtom, currentParticipant.record.currentCfi);
     return readerStore;
-  }, [kiwiData, participantData]);
+  }, [kiwiData, participantsData, annotationsData]);
 
   useEffect(() => {
     // Create a new Book instance

@@ -1,12 +1,13 @@
 import { atom } from "@bookiwi/jotai";
 
-import { updateIDBParticipant } from "../utils/idb";
-import { updateCustomStyle } from "../utils/styles";
+import { updateIDBParticipant, updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
 
 import { ParticipantIDBData } from "#/types/idb";
 import { Bookmark, ReadingRecord, Settings } from "#/types/kiwi";
+
+export const participantsAtom = atom<ParticipantIDBData[]>([]);
 
 export const participantIdAtom = atom<string | null>(null);
 export const participantUserIdAtom = atom<string | null>(null);

@@ -24,12 +24,14 @@ export const Route = createFileRoute("/kiwi/$id")({
 });
 
 function Kiwi() {
-  const { epubData, kiwiData, participantData } = Route.useLoaderData();
+  const { epubData, kiwiData, participantsData, annotationsData } =
+    Route.useLoaderData();
   return (
     <ReaderProvider
       epubData={epubData}
       kiwiData={kiwiData}
-      participantData={participantData}
+      participantsData={participantsData}
+      annotationsData={annotationsData}
     >
       <KiwiContent kiwiTitle={kiwiData.name} />
     </ReaderProvider>
@@ -38,7 +40,7 @@ function Kiwi() {
 
 function KiwiContent({ kiwiTitle }: { kiwiTitle: string }) {
   return (
-    <main className="flex size-full flex-col overflow-hidden">
+    <main className="flex size-full select-none flex-col overflow-hidden">
       <Header
         title={kiwiTitle}
         profileImage="https://github.com/shadcn.png"

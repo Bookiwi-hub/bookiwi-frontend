@@ -11,6 +11,7 @@ import {
   useRender,
 } from "../hooks";
 
+import Highlights from "./highlights";
 import TextSelectionMenu from "./text-selection-menu";
 
 function ReaderContents() {
@@ -51,6 +52,7 @@ function ReaderContents() {
   return (
     <div id="reader-contents" ref={setViewerRef} className="relative size-full">
       <TextSelectionMenu />
+      <Highlights />
     </div>
   );
 }

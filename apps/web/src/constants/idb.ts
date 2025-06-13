@@ -5,6 +5,7 @@ export enum IDBStore {
   KiwiStore = "kiwiStore",
   EpubStore = "epubStore",
   ParticipantStore = "participantStore",
+  AnnotationStore = "annotationStore",
 }
 
 export const SAMPLE_KIWI_DATA_ID = "sample-kiwi";
