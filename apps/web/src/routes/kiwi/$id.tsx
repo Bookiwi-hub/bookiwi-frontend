@@ -40,7 +40,7 @@ function Kiwi() {
 
 function KiwiContent({ kiwiTitle }: { kiwiTitle: string }) {
   return (
-    <main className="flex size-full flex-col overflow-hidden">
+    <main className="flex size-full select-none flex-col overflow-hidden">
       <Header
         title={kiwiTitle}
         profileImage="https://github.com/shadcn.png"
