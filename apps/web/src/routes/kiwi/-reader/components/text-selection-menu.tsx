@@ -8,7 +8,6 @@ import {
   openAnnotationPaneAtom,
 } from "../../-split-view/atoms";
 import {
-  bookAtom,
   currentSectionAtom,
   participantColorAtom,
   participantIdAtom,
@@ -26,7 +25,6 @@ import { AnnotationIDBData } from "#/types/idb";
 export default function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const book = useAtomValue(bookAtom);
   const [selection, setSelection] = useAtom(selectionAtom);
   const currentSection = useAtomValue(currentSectionAtom);
   const participantColor = useAtomValue(participantColorAtom);
@@ -42,7 +40,6 @@ export default function TextSelectionMenu() {
     !offsets ||
     !selection ||
     !currentSection ||
-    !book ||
     !kiwiId ||
     !participantId ||
     !participantColor
@@ -78,15 +75,6 @@ export default function TextSelectionMenu() {
     const textRange = selection.getRangeAt(0);
     const textCfi = currentSection.cfiFromRange(textRange);
 
-    book.rendition.annotations.highlight(
-      textCfi,
-      undefined,
-      undefined,
-      undefined,
-      {
-        fill: participantColor,
-      },
-    );
     const newAnnotation: AnnotationIDBData = {
       id: `${participantId}-${textCfi}`,
       kiwiId,
