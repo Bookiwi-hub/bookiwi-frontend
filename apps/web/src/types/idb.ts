@@ -49,3 +49,19 @@ export interface ParticipantIDBData {
   };
   lastActivityAt: string;
 }
+
+export interface AnnotationIDBData {
+  id: string;
+  kiwiId: string;
+  cfi: string;
+  color: string;
+  participantId: string;
+  createdAt: string;
+  sectionIndex: number;
+  comment: {
+    text: string;
+    createdAt: string;
+    updatedAt: string;
+    participantId: string;
+  }[];
+}
