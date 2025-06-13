@@ -50,3 +50,11 @@ export interface BookMetadata {
   publisher: string;
   toc: NavItem[];
 }
+
+export interface AnnotationComment {
+  id: string;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
+  participantId: string;
+}

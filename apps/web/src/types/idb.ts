@@ -57,8 +57,10 @@ export interface AnnotationIDBData {
   color: string;
   participantId: string;
   createdAt: string;
+  updatedAt: string;
   sectionIndex: number;
-  comment: {
+  comments: {
+    id: string;
     text: string;
     createdAt: string;
     updatedAt: string;
