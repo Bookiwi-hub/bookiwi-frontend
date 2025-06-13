@@ -11,13 +11,17 @@ import {
   bookAtom,
   currentSectionAtom,
   participantColorAtom,
+  participantIdAtom,
+  participantKiwiIdAtom,
   selectionAtom,
+  addAnnotationAtom,
 } from "../atoms";
 import { useSelectionMenuOffset } from "../hooks";
 
 import { Button } from "#/components/ui/button";
 import Overlay from "#/components/ui/overlay";
 import { cn } from "#/lib/utils";
+import { AnnotationIDBData } from "#/types/idb";
 
 export default function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
@@ -26,12 +30,24 @@ export default function TextSelectionMenu() {
   const [selection, setSelection] = useAtom(selectionAtom);
   const currentSection = useAtomValue(currentSectionAtom);
   const participantColor = useAtomValue(participantColorAtom);
+  const participantId = useAtomValue(participantIdAtom);
+  const kiwiId = useAtomValue(participantKiwiIdAtom);
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
+  const addAnnotation = useSetAtom(addAnnotationAtom);
 
   const offsets = useSelectionMenuOffset(width, height);
 
-  if (!offsets || !selection || !currentSection || !book) return null;
+  if (
+    !offsets ||
+    !selection ||
+    !currentSection ||
+    !book ||
+    !kiwiId ||
+    !participantId ||
+    !participantColor
+  )
+    return null;
 
   const hide = () => {
     selection?.removeAllRanges();
@@ -59,7 +75,6 @@ export default function TextSelectionMenu() {
   };
 
   const handleHighlight = () => {
-    // const text = selection.toString();;
     const textRange = selection.getRangeAt(0);
     const textCfi = currentSection.cfiFromRange(textRange);
 
@@ -72,13 +87,22 @@ export default function TextSelectionMenu() {
         fill: participantColor,
       },
     );
+    const newAnnotation: AnnotationIDBData = {
+      id: `${participantId}-${textCfi}`,
+      kiwiId,
+      cfi: textCfi,
+      color: participantColor,
+      participantId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      sectionIndex: currentSection.index,
+      comments: [],
+    };
+    addAnnotation(newAnnotation);
     hide();
   };
 
   const handleAddNote = () => {
-    // const text = selection.toString();
-    // TODO: 메모 추가 기능 구현
-    // console.log("Add Note:", text);
     if (!isAnnotationOpen) {
       openAnnotationPane();
     }
