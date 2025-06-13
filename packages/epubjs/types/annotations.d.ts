@@ -21,7 +21,7 @@ export default class Annotations {
     cb?: Function,
     className?: string,
     styles?: object,
-  ): void;
+  ): Annotation;
 
   underline(
     cfiRange: string,
@@ -57,6 +57,15 @@ declare class Annotation {
     className?: string;
     styles?: object;
   });
+
+  mark: {
+    attributes: object;
+    className: string;
+    container: HTMLElement;
+    data: object;
+    element: SVGGElement;
+    range: Range;
+  };
 
   update(data: object): void;
 

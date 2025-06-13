@@ -10,7 +10,7 @@ function Highlights() {
   useEffect(() => {
     if (!book) return () => {};
     annotations.forEach((annotation) => {
-      book.rendition.annotations.highlight(
+      const highlight = book.rendition.annotations.highlight(
         annotation.cfi,
         undefined,
         undefined,
@@ -19,6 +19,12 @@ function Highlights() {
           fill: annotation.color,
         },
       );
+      const highlightElement = highlight?.mark?.element;
+      if (highlightElement) {
+        highlightElement.addEventListener("click", () => {
+          console.log("click", highlight);
+        });
+      }
     });
     return () => {
       annotations.forEach((annotation) => {
