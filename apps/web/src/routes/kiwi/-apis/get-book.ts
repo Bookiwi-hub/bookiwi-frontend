@@ -1,4 +1,3 @@
-import tempUser from "#/DB/users";
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
@@ -6,7 +5,7 @@ import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 type GetBookResponse = {
   epubData: EpubIDBData;
   kiwiData: KiwiIDBData;
-  participantData: ParticipantIDBData;
+  participantsData: ParticipantIDBData[];
 };
 
 const getBook = async (id: string): Promise<GetBookResponse> => {
@@ -29,24 +28,19 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
       throw new Error("Epub data not found");
     }
 
-    const participants = await idb.getByIndex<ParticipantIDBData>(
+    const participantsData = await idb.getByIndex<ParticipantIDBData>(
       IDBStore.ParticipantStore,
       "kiwiId",
       epubData.kiwiId,
     );
-
-    const currentParticipant = participants.find(
-      (participant) => participant.userId === tempUser.id,
-    );
-
-    if (!currentParticipant) {
+    if (!participantsData) {
       throw new Error("Current participant not found");
     }
 
     return {
       epubData,
       kiwiData,
-      participantData: currentParticipant,
+      participantsData,
     };
   } catch (error) {
     throw new Error("Failed to fetch book");

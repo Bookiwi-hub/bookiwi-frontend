@@ -8,6 +8,8 @@ import { bookAtom } from "./book";
 import { ParticipantIDBData } from "#/types/idb";
 import { Bookmark, ReadingRecord, Settings } from "#/types/kiwi";
 
+export const participantsAtom = atom<ParticipantIDBData[]>([]);
+
 export const participantIdAtom = atom<string | null>(null);
 export const participantUserIdAtom = atom<string | null>(null);
 export const participantKiwiIdAtom = atom<string | null>(null);
