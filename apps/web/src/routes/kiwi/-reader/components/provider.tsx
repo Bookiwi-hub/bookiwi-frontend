@@ -19,7 +19,7 @@ import {
   initialCfiAtom,
   initialIsSinglePageAtom,
   participantsAtom,
-  annotationsAtom,
+  annotationsTotalAtom,
 } from "../atoms";
 
 import tempUser from "#/DB/users";
@@ -61,7 +61,7 @@ function ReaderProvider({
     readerStore.set(isCenterTouchedAtom, false);
     readerStore.set(kiwiAtom, kiwiData);
     readerStore.set(participantsAtom, participantsData);
-    readerStore.set(annotationsAtom, annotationsData);
+    readerStore.set(annotationsTotalAtom, annotationsData);
     readerStore.set(participantAtom, currentParticipant);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
