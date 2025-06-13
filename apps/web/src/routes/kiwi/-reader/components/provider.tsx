@@ -19,16 +19,23 @@ import {
   initialCfiAtom,
   initialIsSinglePageAtom,
   participantsAtom,
+  annotationsAtom,
 } from "../atoms";
 
 import tempUser from "#/DB/users";
-import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
+import {
+  AnnotationIDBData,
+  EpubIDBData,
+  KiwiIDBData,
+  ParticipantIDBData,
+} from "#/types/idb";
 
 interface ReaderProviderProps {
   children: ReactNode;
   epubData: EpubIDBData;
   kiwiData: KiwiIDBData;
   participantsData: ParticipantIDBData[];
+  annotationsData: AnnotationIDBData[];
 }
 
 function ReaderProvider({
@@ -36,6 +43,7 @@ function ReaderProvider({
   epubData,
   kiwiData,
   participantsData,
+  annotationsData,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
 
@@ -53,6 +61,7 @@ function ReaderProvider({
     readerStore.set(isCenterTouchedAtom, false);
     readerStore.set(kiwiAtom, kiwiData);
     readerStore.set(participantsAtom, participantsData);
+    readerStore.set(annotationsAtom, annotationsData);
     readerStore.set(participantAtom, currentParticipant);
     readerStore.set(currentSectionAtom, undefined);
     readerStore.set(currentLocationAtom, undefined);
@@ -66,7 +75,7 @@ function ReaderProvider({
     );
     readerStore.set(initialCfiAtom, currentParticipant.record.currentCfi);
     return readerStore;
-  }, [kiwiData, participantsData]);
+  }, [kiwiData, participantsData, annotationsData]);
 
   useEffect(() => {
     // Create a new Book instance

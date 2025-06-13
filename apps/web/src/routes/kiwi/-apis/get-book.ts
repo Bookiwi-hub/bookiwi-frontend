@@ -1,11 +1,17 @@
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
-import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
+import {
+  AnnotationIDBData,
+  EpubIDBData,
+  KiwiIDBData,
+  ParticipantIDBData,
+} from "#/types/idb";
 
 type GetBookResponse = {
   epubData: EpubIDBData;
   kiwiData: KiwiIDBData;
   participantsData: ParticipantIDBData[];
+  annotationsData: AnnotationIDBData[];
 };
 
 const getBook = async (id: string): Promise<GetBookResponse> => {
@@ -31,16 +37,26 @@ const getBook = async (id: string): Promise<GetBookResponse> => {
     const participantsData = await idb.getByIndex<ParticipantIDBData>(
       IDBStore.ParticipantStore,
       "kiwiId",
-      epubData.kiwiId,
+      id,
     );
     if (!participantsData) {
       throw new Error("Current participant not found");
+    }
+
+    const annotationsData = await idb.getByIndex<AnnotationIDBData>(
+      IDBStore.AnnotationStore,
+      "kiwiId",
+      id,
+    );
+    if (!annotationsData) {
+      throw new Error("Annotations data not found");
     }
 
     return {
       epubData,
       kiwiData,
       participantsData,
+      annotationsData,
     };
   } catch (error) {
     throw new Error("Failed to fetch book");
