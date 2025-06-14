@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
@@ -18,6 +18,92 @@ interface UseVirtualizedTocProps {
   expandedByDefault?: boolean;
 }
 
+// 캐시를 위한 WeakMap - toc 구조별로 기본 평면화 결과 저장
+const tocCache = new WeakMap<NavItem[], FlattenedTocItem[]>();
+
+// 기본 구조 평면화 (확장 상태 무관)
+function createBaseFlatStructure(
+  items: NavItem[],
+  level = 0,
+  parentIndex?: number,
+  parentNumbering = "",
+): FlattenedTocItem[] {
+  const result: FlattenedTocItem[] = [];
+
+  items.forEach((item, index) => {
+    const currentIndex = result.length;
+    const hasChildren = Boolean(item.subitems && item.subitems.length > 0);
+    const numbering = parentNumbering
+      ? `${parentNumbering}.${index + 1}`
+      : `${index + 1}`;
+
+    const flatItem: FlattenedTocItem = {
+      ...item,
+      level,
+      index: currentIndex,
+      hasChildren,
+      parentIndex,
+      numbering,
+    };
+
+    result.push(flatItem);
+
+    // 자식이 있으면 모든 자식을 재귀적으로 추가 (확장 상태 무관)
+    if (hasChildren) {
+      const children = createBaseFlatStructure(
+        item.subitems!,
+        level + 1,
+        currentIndex,
+        numbering,
+      );
+      result.push(...children);
+    }
+  });
+
+  return result;
+}
+
+// 확장 상태에 따라 필터링
+function filterByExpandedState(
+  baseStructure: FlattenedTocItem[],
+  expandedItems: Set<number>,
+  expandedByDefault: boolean,
+): FlattenedTocItem[] {
+  const result: FlattenedTocItem[] = [];
+  const skipLevels = new Set<number>();
+
+  baseStructure.forEach((item) => {
+    // 현재 레벨보다 깊은 레벨의 스킵 정보 정리
+    const levelsToDelete = Array.from(skipLevels).filter(
+      (level) => level >= item.level,
+    );
+    levelsToDelete.forEach((level) => skipLevels.delete(level));
+
+    // 부모가 접혀있으면 스킵
+    if (skipLevels.has(item.level)) {
+      return;
+    }
+
+    const isExpanded = expandedByDefault || expandedItems.has(item.index);
+    const newItem: FlattenedTocItem = {
+      ...item,
+      level: item.level, // 명시적으로 level 포함
+      hasChildren: item.hasChildren, // 명시적으로 hasChildren 포함
+      index: result.length, // 새로운 인덱스 할당
+      isExpanded,
+    };
+
+    result.push(newItem);
+
+    // 자식이 있지만 접혀있으면 자식들을 스킵하도록 설정
+    if (item.hasChildren && !isExpanded) {
+      skipLevels.add(item.level + 1);
+    }
+  });
+
+  return result;
+}
+
 export function useVirtualizedToc({
   toc,
   itemHeight = 40,
@@ -27,60 +113,30 @@ export function useVirtualizedToc({
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const [scrollTop, setScrollTop] = useState(0);
 
-  // 트리를 평면화하는 함수
-  const flattenToc = useMemo(() => {
-    const flattenItems = (
-      items: NavItem[],
-      level = 0,
-      parentIndex?: number,
-      parentNumbering = "", // 부모 번호
-    ): FlattenedTocItem[] => {
-      const result: FlattenedTocItem[] = [];
+  // 기본 평면화 구조 캐싱
+  const baseStructure = useMemo(() => {
+    // 캐시에서 확인
+    let cached = tocCache.get(toc);
 
-      items.forEach((item, index) => {
-        const currentIndex = result.length;
-        const hasChildren = Boolean(item.subitems && item.subitems.length > 0);
+    if (!cached) {
+      // 캐시에 없으면 새로 계산하고 저장
+      cached = createBaseFlatStructure(toc);
+      tocCache.set(toc, cached);
+    }
 
-        const numbering = parentNumbering
-          ? `${parentNumbering}.${index + 1}`
-          : `${index + 1}`;
+    return cached;
+  }, [toc]);
 
-        const flatItem: FlattenedTocItem = {
-          ...item,
-          level,
-          index: currentIndex,
-          hasChildren,
-          parentIndex,
-          numbering,
-          isExpanded: expandedByDefault || expandedItems.has(currentIndex),
-        };
-
-        result.push(flatItem);
-
-        // 자식이 있고 확장된 상태라면 자식들도 추가
-        if (
-          hasChildren &&
-          (expandedByDefault || expandedItems.has(currentIndex))
-        ) {
-          const children = flattenItems(
-            item.subitems!,
-            level + 1,
-            currentIndex,
-            numbering, // 부모 numbering 전달
-          );
-          result.push(...children);
-        }
-      });
-
-      return result;
-    };
-
-    return flattenItems(toc);
-  }, [toc, expandedItems, expandedByDefault]);
+  // 확장 상태에 따른 최종 평면화 (확장 상태가 변경될 때만 재계산)
+  const flattenToc = useMemo(
+    () =>
+      filterByExpandedState(baseStructure, expandedItems, expandedByDefault),
+    [baseStructure, expandedItems, expandedByDefault],
+  );
 
   // 가상 스크롤 계산
   const virtualItems = useMemo(() => {
-    const visibleItemCount = Math.ceil(containerHeight / itemHeight) + 2; // 버퍼 추가
+    const visibleItemCount = Math.ceil(containerHeight / itemHeight) + 2;
     const startIndex = Math.floor(scrollTop / itemHeight);
     const endIndex = Math.min(startIndex + visibleItemCount, flattenToc.length);
 
@@ -94,7 +150,7 @@ export function useVirtualizedToc({
   }, [flattenToc, scrollTop, itemHeight, containerHeight]);
 
   // 항목 확장/축소 토글
-  const toggleExpand = (index: number) => {
+  const toggleExpand = useCallback((index: number) => {
     setExpandedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(index)) {
@@ -104,13 +160,12 @@ export function useVirtualizedToc({
       }
       return newSet;
     });
-  };
+  }, []);
 
-  // 푸후 무한 스크롤을 위한 페이지네이션 (필요시)
-  const loadMoreItems = () => {
-    // 실제 API 호출이 있다면 여기서 구현
+  // 무한 스크롤을 위한 페이지네이션
+  const loadMoreItems = useCallback(() => {
     console.log("Load more items...");
-  };
+  }, []);
 
   return {
     virtualItems,
