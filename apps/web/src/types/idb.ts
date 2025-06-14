@@ -54,6 +54,7 @@ export interface AnnotationIDBData {
   id: string;
   kiwiId: string;
   cfi: string;
+  text: string;
   color: string;
   participantId: string;
   createdAt: string;
