@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 
-import { useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { annotationsAtom, bookAtom } from "../atoms";
+import { annotationsAtom, bookAtom, selectedAnnotationAtom } from "../atoms";
 
 function Highlights() {
   const annotations = useAtomValue(annotationsAtom);
   const book = useAtomValue(bookAtom);
+  const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
   useEffect(() => {
     if (!book) return () => {};
     annotations.forEach((annotation) => {
@@ -22,7 +23,7 @@ function Highlights() {
       const highlightElement = highlight?.mark?.element;
       if (highlightElement) {
         highlightElement.addEventListener("click", () => {
-          console.log("click", highlight);
+          setSelectedAnnotation(annotation);
         });
       }
     });
@@ -31,7 +32,7 @@ function Highlights() {
         book.rendition.annotations.remove(annotation.cfi, "highlight");
       });
     };
-  }, [annotations, book]);
+  }, [annotations, book, setSelectedAnnotation]);
 
   return null;
 }
