@@ -23,3 +23,5 @@ export const annotationsAtom = atom((get) => {
   if (!currentSection) return [];
   return annotations.filter((a) => a.sectionIndex === currentSection.index);
 });
+
+export const selectedAnnotationAtom = atom<AnnotationIDBData | null>(null);

@@ -68,6 +68,7 @@ function TextSelectionMenu() {
     const newAnnotation: AnnotationIDBData = {
       id: `${participantId}-${textCfi}`,
       kiwiId,
+      text: selection.toString(),
       cfi: textCfi,
       color: participantColor,
       participantId,
