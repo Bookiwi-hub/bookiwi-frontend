@@ -20,6 +20,7 @@ import {
   initialIsSinglePageAtom,
   participantsAtom,
   annotationsTotalAtom,
+  selectedAnnotationAtom,
 } from "../atoms";
 
 import tempUser from "#/DB/users";
@@ -74,6 +75,7 @@ function ReaderProvider({
       currentParticipant.settings.isSinglePage,
     );
     readerStore.set(initialCfiAtom, currentParticipant.record.currentCfi);
+    readerStore.set(selectedAnnotationAtom, null);
     return readerStore;
   }, [kiwiData, participantsData, annotationsData]);
 
