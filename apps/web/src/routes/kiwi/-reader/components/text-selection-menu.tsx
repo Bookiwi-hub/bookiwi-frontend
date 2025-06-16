@@ -1,22 +1,19 @@
 import { Highlighter, MessageSquare, Trash2 } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
 
-import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import {
   isAnnotationOpenAtom,
   openAnnotationPaneAtom,
 } from "../../-split-view/atoms";
 import {
-  currentSectionAtom,
   participantColorAtom,
   participantIdAtom,
   participantKiwiIdAtom,
-  selectionAtom,
   addAnnotationAtom,
-  annotationsAtom,
 } from "../atoms";
-import { useSelectionMenuOffset } from "../hooks";
+import { useSelectionMenu } from "../hooks";
 
 import { Button } from "#/components/ui/button";
 import Overlay from "#/components/ui/overlay";
@@ -26,31 +23,21 @@ import { AnnotationIDBData } from "#/types/idb";
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const [selection, setSelection] = useAtom(selectionAtom);
-  const currentSection = useAtomValue(currentSectionAtom);
   const participantColor = useAtomValue(participantColorAtom);
   const participantId = useAtomValue(participantIdAtom);
   const kiwiId = useAtomValue(participantKiwiIdAtom);
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
-  const annotations = useAtomValue(annotationsAtom);
   const addAnnotation = useSetAtom(addAnnotationAtom);
+  const result = useSelectionMenu(width, height);
 
-  const offsets = useSelectionMenuOffset(width, height);
-
-  if (
-    !offsets ||
-    !selection ||
-    !currentSection ||
-    !kiwiId ||
-    !participantId ||
-    !participantColor
-  )
+  if (!result || !kiwiId || !participantId || !participantColor) {
     return null;
+  }
+  const { offsets, selectedText } = result;
 
   const hide = () => {
-    selection.removeAllRanges();
-    setSelection(null);
+    selectedText.remove();
   };
 
   const refFunc = (el: HTMLDivElement) => {
@@ -60,21 +47,17 @@ function TextSelectionMenu() {
     el.focus();
   };
 
-  const textRange = selection.getRangeAt(0);
-  const textCfi = currentSection.cfiFromRange(textRange);
-  const existingAnnotation = annotations.find((a) => a.cfi === textCfi);
-
   const addHighlight = () => {
     const newAnnotation: AnnotationIDBData = {
-      id: `${participantId}-${textCfi}`,
+      id: `${participantId}-${selectedText?.cfi}`,
       kiwiId,
-      text: selection.toString(),
-      cfi: textCfi,
+      text: selectedText.text,
+      cfi: selectedText.cfi,
       color: participantColor,
       participantId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      sectionIndex: currentSection.index,
+      sectionIndex: selectedText.sectionIndex,
       comments: [],
     };
     addAnnotation(newAnnotation);
@@ -86,10 +69,7 @@ function TextSelectionMenu() {
   };
 
   const handleComment = () => {
-    if (
-      !existingAnnotation ||
-      existingAnnotation.participantId !== participantId
-    ) {
+    if (!selectedText.isMine) {
       addHighlight();
     }
     if (!isAnnotationOpen) {
@@ -133,8 +113,7 @@ function TextSelectionMenu() {
         tabIndex={-1}
         onKeyDown={handleKeyDown}
       >
-        {existingAnnotation &&
-        existingAnnotation.participantId === participantId ? (
+        {selectedText.isMine ? (
           <RemoveHighlightButton onClick={handleRemoveHighlight} />
         ) : (
           <AddHighlightButton
