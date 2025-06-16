@@ -73,7 +73,7 @@ function TextSelectionMenu() {
   };
 
   const handleComment = () => {
-    if (!selectedText.status.isMine) {
+    if (!selectedText.status.isAlreadyExists) {
       addHighlight();
     }
     if (!isAnnotationOpen) {
