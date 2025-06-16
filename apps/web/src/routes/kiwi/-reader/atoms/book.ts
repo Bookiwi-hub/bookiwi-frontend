@@ -30,3 +30,5 @@ export const initialIsSinglePageAtom = atom<boolean>(false);
 export const toggleCenterTouchedAtom = atom(null, (get, set) => {
   set(isCenterTouchedAtom, !get(isCenterTouchedAtom));
 });
+
+export const highlightClickedAtom = atom<boolean>(false);

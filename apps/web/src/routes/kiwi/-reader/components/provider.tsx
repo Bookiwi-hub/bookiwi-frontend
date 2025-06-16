@@ -21,6 +21,7 @@ import {
   participantsAtom,
   annotationsTotalAtom,
   selectedAnnotationAtom,
+  highlightClickedAtom,
 } from "../atoms";
 
 import tempUser from "#/DB/users";
@@ -76,6 +77,7 @@ function ReaderProvider({
     );
     readerStore.set(initialCfiAtom, currentParticipant.record.currentCfi);
     readerStore.set(selectedAnnotationAtom, null);
+    readerStore.set(highlightClickedAtom, false);
     return readerStore;
   }, [kiwiData, participantsData, annotationsData]);
 
