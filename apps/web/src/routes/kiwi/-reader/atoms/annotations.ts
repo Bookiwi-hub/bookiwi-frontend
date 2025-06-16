@@ -1,6 +1,6 @@
 import { atom } from "@bookiwi/jotai";
 
-import { addIDBAnnotation } from "../utils";
+import { addIDBAnnotation, removeIDBAnnotation } from "../utils";
 
 import { currentSectionAtom } from "./book";
 
@@ -16,6 +16,15 @@ export const addAnnotationAtom = atom(
     await addIDBAnnotation(annotation);
   },
 );
+
+export const removeAnnotationAtom = atom(null, async (get, set, id: string) => {
+  const annotations = get(annotationsTotalAtom);
+  set(
+    annotationsTotalAtom,
+    annotations.filter((a) => a.id !== id),
+  );
+  await removeIDBAnnotation(id);
+});
 
 export const annotationsAtom = atom((get) => {
   const annotations = get(annotationsTotalAtom);
