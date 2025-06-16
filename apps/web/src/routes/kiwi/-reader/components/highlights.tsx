@@ -6,6 +6,7 @@ import {
   annotationsAtom,
   bookAtom,
   highlightClickedAtom,
+  isCenterTouchedAtom,
   selectedAnnotationAtom,
 } from "../atoms";
 
@@ -14,6 +15,7 @@ function Highlights() {
   const book = useAtomValue(bookAtom);
   const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
   const setHighlightClicked = useSetAtom(highlightClickedAtom);
+  const setIsCenterTouched = useSetAtom(isCenterTouchedAtom);
   useEffect(() => {
     if (!book) return () => {};
     annotations.forEach((annotation) => {
@@ -26,12 +28,16 @@ function Highlights() {
           fill: annotation.color,
         },
       );
+
       const highlightElement = highlight?.mark?.element;
+
+      const handleClick = () => {
+        setSelectedAnnotation(annotation);
+        setHighlightClicked(true);
+        setIsCenterTouched(false);
+      };
       if (highlightElement) {
-        highlightElement.addEventListener("click", () => {
-          setSelectedAnnotation(annotation);
-          setHighlightClicked(true);
-        });
+        highlightElement.addEventListener("click", handleClick);
       }
     });
     return () => {
@@ -39,7 +45,13 @@ function Highlights() {
         book.rendition.annotations.remove(annotation.cfi, "highlight");
       });
     };
-  }, [annotations, book, setSelectedAnnotation, setHighlightClicked]);
+  }, [
+    annotations,
+    book,
+    setSelectedAnnotation,
+    setHighlightClicked,
+    setIsCenterTouched,
+  ]);
 
   return null;
 }
