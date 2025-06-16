@@ -73,7 +73,7 @@ function TextSelectionMenu() {
   };
 
   const handleComment = () => {
-    if (!selectedText.isMine) {
+    if (!selectedText.status.isMine) {
       addHighlight();
     }
     if (!isAnnotationOpen) {
@@ -99,6 +99,7 @@ function TextSelectionMenu() {
     }
   };
 
+  const { isAlreadyExists, isMine } = selectedText.status;
   return (
     <>
       <Overlay className="!z-20 !bg-transparent" onClick={hide} />
@@ -117,8 +118,8 @@ function TextSelectionMenu() {
         tabIndex={-1}
         onKeyDown={handleKeyDown}
       >
-        {selectedText.isMine ? (
-          <RemoveHighlightButton onClick={handleRemoveHighlight} />
+        {isAlreadyExists ? (
+          isMine && <RemoveHighlightButton onClick={handleRemoveHighlight} />
         ) : (
           <AddHighlightButton
             participantColor={color}

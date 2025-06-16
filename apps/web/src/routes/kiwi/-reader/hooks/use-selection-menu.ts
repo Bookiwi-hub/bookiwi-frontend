@@ -22,7 +22,7 @@ interface TextSelection {
   cfi: string;
   range: Range;
   isForward: boolean;
-  isMine: boolean;
+  status: { isAlreadyExists: boolean; isMine: boolean };
   sectionIndex: number;
   remove: () => void;
 }
@@ -54,9 +54,10 @@ export const useSelectedText = (): TextSelection | null => {
     const text = range.toString();
     const cfi = currentSection.cfiFromRange(range);
     const isForward = isForwardSelection(selection);
-    const isMine = annotations.some(
+    const existingHighlight = annotations.find(
       (a) => a.cfi === cfi && a.participantId === participantId,
     );
+    const isMine = existingHighlight?.participantId === participantId;
 
     const remove = () => {
       selection.removeAllRanges();
@@ -69,7 +70,10 @@ export const useSelectedText = (): TextSelection | null => {
       cfi,
       range,
       isForward,
-      isMine,
+      status: {
+        isAlreadyExists: !!existingHighlight,
+        isMine,
+      },
       sectionIndex: currentSection.index,
       remove,
     };
@@ -85,7 +89,10 @@ export const useSelectedText = (): TextSelection | null => {
       cfi: selectedAnnotation.cfi,
       range: currentView.contents.range(selectedAnnotation.cfi),
       isForward: true,
-      isMine: selectedAnnotation.participantId === participantId,
+      status: {
+        isAlreadyExists: true,
+        isMine: selectedAnnotation.participantId === participantId,
+      },
       sectionIndex: selectedAnnotation.sectionIndex,
       remove,
     };
