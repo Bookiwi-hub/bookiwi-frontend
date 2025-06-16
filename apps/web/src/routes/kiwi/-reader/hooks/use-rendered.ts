@@ -16,43 +16,13 @@ import { hasSelection, updateCustomStyle } from "../utils";
 
 const useToggleProgressBar = () => {
   const toggleProgressBar = useSetAtom(toggleCenterTouchedAtom);
-  // Track if user is dragging
-  let isDragging = false;
-  const handleMouseDown = () => {
-    isDragging = false;
-  };
-  const handleMouseMove = () => {
-    isDragging = true;
-  };
-  const handleTouchStart = () => {
-    isDragging = false;
-  };
-  const handleTouchMove = () => {
-    isDragging = true;
-  };
 
-  const handleTouchAndClick = (e: MouseEvent | TouchEvent) => {
-    // Check if there's any text selected
-    const target = e.currentTarget as Document;
-    const selection = target.getSelection();
-
-    // Only toggle if not dragging and no text is selected
-    if (!isDragging && (!selection || selection.toString().trim() === "")) {
-      toggleProgressBar();
-    }
-
-    // Reset the dragging state
-    isDragging = false;
+  const handleTouchAndClick = () => {
+    toggleProgressBar();
   };
 
   const addProgressBarToggleEvent = (iframe: Document) => {
     iframe.addEventListener("click", handleTouchAndClick);
-
-    // Add drag detection events
-    iframe.addEventListener("mousedown", handleMouseDown);
-    iframe.addEventListener("mousemove", handleMouseMove);
-    iframe.addEventListener("touchstart", handleTouchStart);
-    iframe.addEventListener("touchmove", handleTouchMove);
   };
 
   return addProgressBarToggleEvent;
