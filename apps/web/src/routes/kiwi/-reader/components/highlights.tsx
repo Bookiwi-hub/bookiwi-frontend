@@ -5,16 +5,16 @@ import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import {
   annotationsAtom,
   bookAtom,
-  highlightClickedAtom,
   isCenterTouchedAtom,
   selectedAnnotationAtom,
+  setHighlightClickedAtom,
 } from "../atoms";
 
 function Highlights() {
   const annotations = useAtomValue(annotationsAtom);
   const book = useAtomValue(bookAtom);
   const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
-  const setHighlightClicked = useSetAtom(highlightClickedAtom);
+  const setHighlightClicked = useSetAtom(setHighlightClickedAtom);
   const setIsCenterTouched = useSetAtom(isCenterTouchedAtom);
   useEffect(() => {
     if (!book) return () => {};
@@ -34,7 +34,6 @@ function Highlights() {
       const handleClick = () => {
         setSelectedAnnotation(annotation);
         setHighlightClicked(true);
-        setIsCenterTouched(false);
       };
       if (highlightElement) {
         highlightElement.addEventListener("click", handleClick);

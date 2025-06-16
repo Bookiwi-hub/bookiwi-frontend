@@ -35,3 +35,11 @@ export const toggleCenterTouchedAtom = atom(null, (get, set) => {
 });
 
 export const highlightClickedAtom = atom<boolean>(false);
+
+export const setHighlightClickedAtom = atom(
+  null,
+  (get, set, clicked: boolean) => {
+    set(highlightClickedAtom, clicked);
+    set(isCenterTouchedAtom, false);
+  },
+);
