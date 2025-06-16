@@ -1,7 +1,7 @@
 import { Highlighter, MessageSquare, Trash2 } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
 
-import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import {
   isAnnotationOpenAtom,
@@ -20,18 +20,22 @@ import Overlay from "#/components/ui/overlay";
 import { cn } from "#/lib/utils";
 import { AnnotationIDBData } from "#/types/idb";
 
+const participantInfoAtom = atom((get) => ({
+  id: get(participantIdAtom),
+  kiwiId: get(participantKiwiIdAtom),
+  color: get(participantColorAtom),
+}));
+
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const participantColor = useAtomValue(participantColorAtom);
-  const participantId = useAtomValue(participantIdAtom);
-  const kiwiId = useAtomValue(participantKiwiIdAtom);
+  const { id, kiwiId, color } = useAtomValue(participantInfoAtom);
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
   const addAnnotation = useSetAtom(addAnnotationAtom);
   const result = useSelectionMenu(width, height);
 
-  if (!result || !kiwiId || !participantId || !participantColor) {
+  if (!result || !kiwiId || !id || !color) {
     return null;
   }
   const { offsets, selectedText } = result;
@@ -49,12 +53,12 @@ function TextSelectionMenu() {
 
   const addHighlight = () => {
     const newAnnotation: AnnotationIDBData = {
-      id: `${participantId}-${selectedText?.cfi}`,
+      id: `${id}-${selectedText?.cfi}`,
       kiwiId,
       text: selectedText.text,
       cfi: selectedText.cfi,
-      color: participantColor,
-      participantId,
+      color,
+      participantId: id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       sectionIndex: selectedText.sectionIndex,
@@ -117,7 +121,7 @@ function TextSelectionMenu() {
           <RemoveHighlightButton onClick={handleRemoveHighlight} />
         ) : (
           <AddHighlightButton
-            participantColor={participantColor}
+            participantColor={color}
             onClick={handleAddHighlight}
           />
         )}
