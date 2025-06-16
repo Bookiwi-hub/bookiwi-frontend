@@ -1,16 +1,25 @@
 import { useEffect } from "react";
 
-import { useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { annotationsAtom, bookAtom } from "../atoms";
+import {
+  annotationsAtom,
+  bookAtom,
+  isCenterTouchedAtom,
+  selectedAnnotationAtom,
+  setHighlightClickedAtom,
+} from "../atoms";
 
 function Highlights() {
   const annotations = useAtomValue(annotationsAtom);
   const book = useAtomValue(bookAtom);
+  const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
+  const setHighlightClicked = useSetAtom(setHighlightClickedAtom);
+  const setIsCenterTouched = useSetAtom(isCenterTouchedAtom);
   useEffect(() => {
     if (!book) return () => {};
     annotations.forEach((annotation) => {
-      book.rendition.annotations.highlight(
+      const highlight = book.rendition.annotations.highlight(
         annotation.cfi,
         undefined,
         undefined,
@@ -19,13 +28,29 @@ function Highlights() {
           fill: annotation.color,
         },
       );
+
+      const highlightElement = highlight?.mark?.element;
+
+      const handleClick = () => {
+        setSelectedAnnotation(annotation);
+        setHighlightClicked(true);
+      };
+      if (highlightElement) {
+        highlightElement.addEventListener("click", handleClick);
+      }
     });
     return () => {
       annotations.forEach((annotation) => {
         book.rendition.annotations.remove(annotation.cfi, "highlight");
       });
     };
-  }, [annotations, book]);
+  }, [
+    annotations,
+    book,
+    setSelectedAnnotation,
+    setHighlightClicked,
+    setIsCenterTouched,
+  ]);
 
   return null;
 }

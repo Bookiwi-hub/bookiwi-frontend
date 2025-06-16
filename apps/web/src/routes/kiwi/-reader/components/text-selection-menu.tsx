@@ -1,56 +1,47 @@
 import { Highlighter, MessageSquare, Trash2 } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
 
-import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import {
   isAnnotationOpenAtom,
   openAnnotationPaneAtom,
 } from "../../-split-view/atoms";
 import {
-  currentSectionAtom,
   participantColorAtom,
   participantIdAtom,
   participantKiwiIdAtom,
-  selectionAtom,
   addAnnotationAtom,
-  annotationsAtom,
 } from "../atoms";
-import { useSelectionMenuOffset } from "../hooks";
+import { useSelectionMenu } from "../hooks";
 
 import { Button } from "#/components/ui/button";
 import Overlay from "#/components/ui/overlay";
 import { cn } from "#/lib/utils";
 import { AnnotationIDBData } from "#/types/idb";
 
+const participantInfoAtom = atom((get) => ({
+  id: get(participantIdAtom),
+  kiwiId: get(participantKiwiIdAtom),
+  color: get(participantColorAtom),
+}));
+
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const [selection, setSelection] = useAtom(selectionAtom);
-  const currentSection = useAtomValue(currentSectionAtom);
-  const participantColor = useAtomValue(participantColorAtom);
-  const participantId = useAtomValue(participantIdAtom);
-  const kiwiId = useAtomValue(participantKiwiIdAtom);
+  const { id, kiwiId, color } = useAtomValue(participantInfoAtom);
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
-  const annotations = useAtomValue(annotationsAtom);
   const addAnnotation = useSetAtom(addAnnotationAtom);
+  const result = useSelectionMenu(width, height);
 
-  const offsets = useSelectionMenuOffset(width, height);
-
-  if (
-    !offsets ||
-    !selection ||
-    !currentSection ||
-    !kiwiId ||
-    !participantId ||
-    !participantColor
-  )
+  if (!result || !kiwiId || !id || !color) {
     return null;
+  }
+  const { offsets, selectedText } = result;
 
   const hide = () => {
-    selection.removeAllRanges();
-    setSelection(null);
+    selectedText.remove();
   };
 
   const refFunc = (el: HTMLDivElement) => {
@@ -60,20 +51,17 @@ function TextSelectionMenu() {
     el.focus();
   };
 
-  const textRange = selection.getRangeAt(0);
-  const textCfi = currentSection.cfiFromRange(textRange);
-  const existingAnnotation = annotations.find((a) => a.cfi === textCfi);
-
   const addHighlight = () => {
     const newAnnotation: AnnotationIDBData = {
-      id: `${participantId}-${textCfi}`,
+      id: `${id}-${selectedText?.cfi}`,
       kiwiId,
-      cfi: textCfi,
-      color: participantColor,
-      participantId,
+      text: selectedText.text,
+      cfi: selectedText.cfi,
+      color,
+      participantId: id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      sectionIndex: currentSection.index,
+      sectionIndex: selectedText.sectionIndex,
       comments: [],
     };
     addAnnotation(newAnnotation);
@@ -85,10 +73,7 @@ function TextSelectionMenu() {
   };
 
   const handleComment = () => {
-    if (
-      !existingAnnotation ||
-      existingAnnotation.participantId !== participantId
-    ) {
+    if (!selectedText.status.isAlreadyExists) {
       addHighlight();
     }
     if (!isAnnotationOpen) {
@@ -114,6 +99,7 @@ function TextSelectionMenu() {
     }
   };
 
+  const { isAlreadyExists, isMine } = selectedText.status;
   return (
     <>
       <Overlay className="!z-20 !bg-transparent" onClick={hide} />
@@ -132,12 +118,11 @@ function TextSelectionMenu() {
         tabIndex={-1}
         onKeyDown={handleKeyDown}
       >
-        {existingAnnotation &&
-        existingAnnotation.participantId === participantId ? (
-          <RemoveHighlightButton onClick={handleRemoveHighlight} />
+        {isAlreadyExists ? (
+          isMine && <RemoveHighlightButton onClick={handleRemoveHighlight} />
         ) : (
           <AddHighlightButton
-            participantColor={participantColor}
+            participantColor={color}
             onClick={handleAddHighlight}
           />
         )}

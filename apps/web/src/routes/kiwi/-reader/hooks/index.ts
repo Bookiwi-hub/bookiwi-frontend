@@ -4,4 +4,4 @@ export { default as useRelocated } from "./use-relocated";
 export { default as useRendered } from "./use-rendered";
 export { default as useRender } from "./use-render";
 export { default as usePage } from "./use-page";
-export { default as useSelectionMenuOffset } from "./use-selection-menu-offset";
+export * from "./use-selection-menu";
