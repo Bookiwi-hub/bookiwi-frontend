@@ -7,6 +7,7 @@ import {
   currentViewAtom,
   highlightClickedAtom,
   participantIdAtom,
+  participantKiwiIdAtom,
   selectedAnnotationAtom,
   selectionAtom,
 } from "../atoms";
@@ -44,6 +45,7 @@ export const useSelectedText = (): TextSelection | null => {
   const [highlightClicked, setHighlightClicked] = useAtom(highlightClickedAtom);
   const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
   const participantId = useAtomValue(participantIdAtom);
+  const kiwiId = useAtomValue(participantKiwiIdAtom);
   const currentView = useAtomValue(currentViewAtom);
   const annotations = useAtomValue(annotationsAtom);
   if (!currentSection || !currentView) {
@@ -67,7 +69,9 @@ export const useSelectedText = (): TextSelection | null => {
     };
 
     return {
-      id: existingHighlight ? existingHighlight.id : `${participantId}-${cfi}`,
+      id: existingHighlight
+        ? existingHighlight.id
+        : `${kiwiId}-${participantId}-${cfi}`,
       text,
       cfi,
       range,
