@@ -18,6 +18,7 @@ import {
 } from "../utils";
 
 interface TextSelection {
+  id: string;
   text: string;
   cfi: string;
   range: Range;
@@ -66,6 +67,7 @@ export const useSelectedText = (): TextSelection | null => {
     };
 
     return {
+      id: existingHighlight ? existingHighlight.id : `${participantId}-${cfi}`,
       text,
       cfi,
       range,
@@ -85,6 +87,7 @@ export const useSelectedText = (): TextSelection | null => {
     };
 
     return {
+      id: selectedAnnotation.id,
       text: selectedAnnotation.text,
       cfi: selectedAnnotation.cfi,
       range: currentView.contents.range(selectedAnnotation.cfi),
