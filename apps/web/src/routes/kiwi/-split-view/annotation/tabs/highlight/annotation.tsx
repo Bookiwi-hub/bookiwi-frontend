@@ -22,20 +22,25 @@ interface CommentProps {
 function Annotation({ annotation }: CommentProps) {
   const { comments } = annotation;
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const prevCommentsLengthRef = useRef<number>(comments.length);
   const participantColor = useAtomValue(participantColorAtom);
   const participants = useAtomValue(participantsAtom);
   const participantId = useAtomValue(participantIdAtom);
   const updateAnnotation = useSetAtom(updateAnnotationAtom);
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current.querySelector(
-        "[data-radix-scroll-area-viewport]",
-      );
-      if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    // 새 코멘트가 추가되었을 때만 스크롤을 맨 아래로 이동
+    if (comments.length > prevCommentsLengthRef.current) {
+      if (scrollAreaRef.current) {
+        const scrollContainer = scrollAreaRef.current.querySelector(
+          "[data-radix-scroll-area-viewport]",
+        );
+        if (scrollContainer) {
+          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        }
       }
     }
+    prevCommentsLengthRef.current = comments.length;
   }, [comments]);
 
   if (!participantId) return null;
