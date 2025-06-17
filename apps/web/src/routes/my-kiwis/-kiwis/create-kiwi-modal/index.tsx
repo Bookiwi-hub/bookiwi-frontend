@@ -14,7 +14,7 @@ import KiwiInfo from "./kiwi-info";
 import Loading from "./loading";
 import { ActionTypes, Step } from "./reducer";
 
-import color from "#/DB/color";
+import { color } from "#/DB/color";
 import tempUser from "#/DB/users";
 import {
   Dialog,

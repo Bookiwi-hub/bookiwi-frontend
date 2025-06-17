@@ -59,7 +59,7 @@ export interface AnnotationIDBData {
   participantId: string;
   createdAt: string;
   updatedAt: string;
-  sectionIndex: number;
+  sectionHref: string;
   comments: {
     id: string;
     text: string;

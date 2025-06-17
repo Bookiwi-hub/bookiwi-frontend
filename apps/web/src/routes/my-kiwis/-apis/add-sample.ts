@@ -1,4 +1,4 @@
-import color from "#/DB/color";
+import { color } from "#/DB/color";
 import tempUser from "#/DB/users";
 import {
   IDBStore,

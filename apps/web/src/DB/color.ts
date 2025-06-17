@@ -1,4 +1,4 @@
-const color = [
+export const color = [
   "rgba(186, 230, 55)",
   "rgba(252, 165, 165)",
   "rgba(147, 197, 253)",
@@ -6,5 +6,4 @@ const color = [
   "rgba(216, 180, 254)",
   "rgba(251, 146, 60)",
 ] as const;
-
-export default color;
+export const primaryColor = "rgba(186, 230, 55)";

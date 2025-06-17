@@ -3,14 +3,13 @@ import { useState } from "react";
 
 import { Button } from "#/components/ui/button";
 import { Textarea } from "#/components/ui/textarea";
-import { Participant } from "#/types/kiwi";
 
 interface CommentFormProps {
   onSubmit: (commentText: string) => void;
-  currentUser: Participant;
+  participantColor: string;
 }
 
-function CommentForm({ onSubmit, currentUser }: CommentFormProps) {
+function CommentForm({ onSubmit, participantColor }: CommentFormProps) {
   const [newComment, setNewComment] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,7 +61,7 @@ function CommentForm({ onSubmit, currentUser }: CommentFormProps) {
         size="icon"
         disabled={!newComment.trim()}
         style={{
-          backgroundColor: newComment.trim() ? currentUser.color : "",
+          backgroundColor: newComment.trim() ? participantColor : "",
         }}
         className="h-full"
       >

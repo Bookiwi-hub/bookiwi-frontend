@@ -2,22 +2,22 @@ import { memo } from "react";
 
 import { useTruncatedText } from "../hooks/use-truncated-text";
 
-import { formatDate } from "#/utils/format-date";
+import { truncate, formatDate } from "#/utils";
 
 interface HighlightedTextProps {
   color: string;
   text: string;
-  page: number;
   date: string;
   creatorName: string;
+  sectionLabel?: string;
 }
 
 function HighlightedText({
   color,
   text,
-  page,
   date,
   creatorName,
+  sectionLabel,
 }: HighlightedTextProps) {
   const { displayText, isTruncated, isExpanded, toggleExpanded } =
     useTruncatedText({
@@ -38,7 +38,7 @@ function HighlightedText({
           <button
             type="button"
             onClick={toggleExpanded}
-            className="ml-1 text-xs text-gray-700 hover:underline"
+            className="ml-3 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 hover:text-gray-800"
           >
             {isExpanded ? "접기" : "더 보기"}
           </button>
@@ -46,7 +46,9 @@ function HighlightedText({
       </p>
       <div className="mt-2 flex items-center justify-between">
         <div>
-          <span className="text-xs text-gray-700">{page} 페이지</span>
+          <span className="text-xs text-gray-700">
+            {sectionLabel ? truncate(sectionLabel, 20) : ""}
+          </span>
           <span className="ml-2 text-xs text-gray-600">by {creatorName}</span>
         </div>
         <span className="text-xs text-gray-700">{formatDate(date)}</span>

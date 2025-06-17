@@ -1,4 +1,4 @@
-import color from "#/DB/color";
+import { color } from "#/DB/color";
 import { ParticipantIDBData } from "#/types/idb";
 
 export enum IDBStore {
