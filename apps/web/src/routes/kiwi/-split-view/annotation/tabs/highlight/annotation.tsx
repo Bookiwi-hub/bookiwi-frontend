@@ -8,12 +8,13 @@ import HighlightedText from "./highlighted-text";
 
 import { primaryColor } from "#/DB/color";
 import { ScrollArea } from "#/components/ui/scroll-area";
-import { updateAnnotationAtom } from "#/routes/kiwi/-reader/atoms/annotations";
 import {
+  updateAnnotationAtom,
   participantColorAtom,
   participantIdAtom,
   participantsAtom,
-} from "#/routes/kiwi/-reader/atoms/participants";
+  navAtom,
+} from "#/routes/kiwi/-reader/atoms";
 import { AnnotationIDBData } from "#/types/idb";
 
 interface CommentProps {
@@ -27,7 +28,7 @@ function Annotation({ annotation }: CommentProps) {
   const participants = useAtomValue(participantsAtom);
   const participantId = useAtomValue(participantIdAtom);
   const updateAnnotation = useSetAtom(updateAnnotationAtom);
-
+  const navItem = useAtomValue(navAtom);
   useEffect(() => {
     // 새 코멘트가 추가되었을 때만 스크롤을 맨 아래로 이동
     if (comments.length > prevCommentsLengthRef.current) {
