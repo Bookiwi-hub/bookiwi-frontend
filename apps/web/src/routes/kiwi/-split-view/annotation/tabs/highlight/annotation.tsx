@@ -9,10 +9,10 @@ import { ScrollArea } from "#/components/ui/scroll-area";
 import { AnnotationIDBData } from "#/types/idb";
 
 interface CommentProps {
-  selectedAnnotation: AnnotationIDBData;
+  annotation: AnnotationIDBData;
 }
-function Comments({ selectedAnnotation }: CommentProps) {
-  const { comments } = selectedAnnotation;
+function Annotation({ annotation }: CommentProps) {
+  const { comments } = annotation;
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const handleCommentSubmit = (commentText: string) => {
     const currentDate = new Date().toISOString();
@@ -35,11 +35,11 @@ function Comments({ selectedAnnotation }: CommentProps) {
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
         <HighlightedText
-          color={selectedAnnotation?.color ?? ""}
-          text={selectedAnnotation?.text ?? ""}
-          page={selectedAnnotation?.sectionIndex ?? 0}
-          date={selectedAnnotation?.updatedAt ?? ""}
-          creatorName={selectedAnnotation?.participantId ?? ""}
+          color={annotation?.color ?? ""}
+          text={annotation?.text ?? ""}
+          page={annotation?.sectionIndex ?? 0}
+          date={annotation?.updatedAt ?? ""}
+          creatorName={annotation?.participantId ?? ""}
         />
         {comments.length > 0 ? (
           comments.map((comment) => (
@@ -50,7 +50,7 @@ function Comments({ selectedAnnotation }: CommentProps) {
               isMine={false}
               profileImage={comment.participantId}
               name={comment.participantId}
-              color={selectedAnnotation?.color ?? ""}
+              color={annotation?.color ?? ""}
             />
           ))
         ) : (
@@ -60,10 +60,10 @@ function Comments({ selectedAnnotation }: CommentProps) {
 
       <CommentForm
         onSubmit={handleCommentSubmit}
-        participantColor={selectedAnnotation?.color ?? ""}
+        participantColor={annotation?.color ?? ""}
       />
     </div>
   );
 }
 
-export default Comments;
+export default Annotation;
