@@ -2,13 +2,14 @@ import { memo } from "react";
 
 import { useTruncatedText } from "../hooks/use-truncated-text";
 
-import { formatDate } from "#/utils/format-date";
+import { truncate, formatDate } from "#/utils";
 
 interface HighlightedTextProps {
   color: string;
   text: string;
   date: string;
   creatorName: string;
+  sectionLabel?: string;
 }
 
 function HighlightedText({
@@ -16,6 +17,7 @@ function HighlightedText({
   text,
   date,
   creatorName,
+  sectionLabel,
 }: HighlightedTextProps) {
   const { displayText, isTruncated, isExpanded, toggleExpanded } =
     useTruncatedText({
@@ -44,6 +46,9 @@ function HighlightedText({
       </p>
       <div className="mt-2 flex items-center justify-between">
         <div>
+          <span className="text-xs text-gray-700">
+            {sectionLabel ? truncate(sectionLabel, 20) : ""}
+          </span>
           <span className="ml-2 text-xs text-gray-600">by {creatorName}</span>
         </div>
         <span className="text-xs text-gray-700">{formatDate(date)}</span>

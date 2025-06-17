@@ -28,7 +28,12 @@ function Annotation({ annotation }: CommentProps) {
   const participants = useAtomValue(participantsAtom);
   const participantId = useAtomValue(participantIdAtom);
   const updateAnnotation = useSetAtom(updateAnnotationAtom);
-  const navItem = useAtomValue(navAtom);
+  const navItems = useAtomValue(navAtom);
+  const annotationNav = navItems?.find(
+    (item) => item.href === annotation.sectionHref,
+  );
+  const sectionLabel = annotationNav?.label;
+
   useEffect(() => {
     // 새 코멘트가 추가되었을 때만 스크롤을 맨 아래로 이동
     if (comments.length > prevCommentsLengthRef.current) {
@@ -73,6 +78,7 @@ function Annotation({ annotation }: CommentProps) {
           text={annotation.text}
           date={annotation.updatedAt}
           creatorName={highlighter?.name ?? ""}
+          sectionLabel={sectionLabel}
         />
         <Comments comments={comments} />
       </ScrollArea>
