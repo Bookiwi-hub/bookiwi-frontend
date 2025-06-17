@@ -31,3 +31,13 @@ export const removeIDBAnnotation = async (id: string) => {
     );
   }
 };
+
+export const updateIDBAnnotation = async (annotation: AnnotationIDBData) => {
+  try {
+    return await idb.put(IDBStore.AnnotationStore, annotation);
+  } catch (error) {
+    throw new Error(
+      `Failed to update annotation: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+};
