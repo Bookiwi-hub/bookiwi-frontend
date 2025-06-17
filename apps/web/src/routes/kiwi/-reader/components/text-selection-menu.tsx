@@ -12,6 +12,7 @@ import {
   participantIdAtom,
   participantKiwiIdAtom,
   addAnnotationAtom,
+  removeAnnotationAtom,
 } from "../atoms";
 import { useSelectionMenu } from "../hooks";
 
@@ -21,7 +22,7 @@ import { cn } from "#/lib/utils";
 import { AnnotationIDBData } from "#/types/idb";
 
 const participantInfoAtom = atom((get) => ({
-  id: get(participantIdAtom),
+  participantId: get(participantIdAtom),
   kiwiId: get(participantKiwiIdAtom),
   color: get(participantColorAtom),
 }));
@@ -29,13 +30,14 @@ const participantInfoAtom = atom((get) => ({
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const { id, kiwiId, color } = useAtomValue(participantInfoAtom);
+  const { participantId, kiwiId, color } = useAtomValue(participantInfoAtom);
   const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
   const addAnnotation = useSetAtom(addAnnotationAtom);
+  const removeAnnotation = useSetAtom(removeAnnotationAtom);
   const result = useSelectionMenu(width, height);
 
-  if (!result || !kiwiId || !id || !color) {
+  if (!result || !kiwiId || !participantId || !color) {
     return null;
   }
   const { offsets, selectedText } = result;
@@ -53,12 +55,12 @@ function TextSelectionMenu() {
 
   const addHighlight = () => {
     const newAnnotation: AnnotationIDBData = {
-      id: `${id}-${selectedText?.cfi}`,
+      id: selectedText.id,
       kiwiId,
       text: selectedText.text,
       cfi: selectedText.cfi,
       color,
-      participantId: id,
+      participantId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       sectionIndex: selectedText.sectionIndex,
@@ -83,6 +85,7 @@ function TextSelectionMenu() {
   };
 
   const handleRemoveHighlight = () => {
+    removeAnnotation(selectedText.id);
     hide();
   };
 
@@ -96,6 +99,9 @@ function TextSelectionMenu() {
     } else if (e.key === "m" && e.ctrlKey) {
       e.preventDefault();
       handleComment();
+    } else if (e.key === "d" && e.ctrlKey) {
+      e.preventDefault();
+      handleRemoveHighlight();
     }
   };
 
@@ -174,7 +180,7 @@ function RemoveHighlightButton({ onClick }: { onClick: () => void }) {
     >
       <Trash2 className="size-3.5" />
       <span className="ml-1.5 text-muted-foreground">삭제</span>
-      <span className="ml-1 text-[10px] text-muted-foreground/60">Ctrl+H</span>
+      <span className="ml-1 text-[10px] text-muted-foreground/60">Ctrl+D</span>
     </Button>
   );
 }
