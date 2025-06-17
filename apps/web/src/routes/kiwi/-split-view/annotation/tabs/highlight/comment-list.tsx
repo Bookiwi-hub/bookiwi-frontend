@@ -2,14 +2,12 @@ import CommentItem from "./comment-item";
 import EmptyComments from "./empty-comments";
 
 import { CommentType } from "#/DB/annotation-highlight";
-import { Participant } from "#/types/kiwi";
 
 interface CommentsListProps {
   comments: CommentType[];
-  currentUser: Participant;
 }
 
-function CommentsList({ comments, currentUser }: CommentsListProps) {
+function CommentsList({ comments }: CommentsListProps) {
   if (comments.length === 0) {
     return <EmptyComments />;
   }
@@ -19,10 +17,12 @@ function CommentsList({ comments, currentUser }: CommentsListProps) {
       {comments.map((comment) => (
         <CommentItem
           key={comment.id}
-          creator={comment.creator}
           text={comment.text}
           date={comment.date}
-          currentUser={currentUser}
+          isMine={false}
+          profileImage={comment.creator.profileImage}
+          name={comment.creator.name}
+          color={comment.creator.color}
         />
       ))}
     </div>
