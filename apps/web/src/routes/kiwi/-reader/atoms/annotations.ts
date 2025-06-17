@@ -1,6 +1,10 @@
 import { atom } from "@bookiwi/jotai";
 
-import { addIDBAnnotation, removeIDBAnnotation } from "../utils";
+import {
+  addIDBAnnotation,
+  removeIDBAnnotation,
+  updateIDBAnnotation,
+} from "../utils";
 
 import { currentSectionAtom } from "./book";
 
@@ -34,3 +38,16 @@ export const annotationsAtom = atom((get) => {
 });
 
 export const selectedAnnotationAtom = atom<AnnotationIDBData | null>(null);
+
+export const updateAnnotationAtom = atom(
+  null,
+  async (get, set, annotation: AnnotationIDBData) => {
+    const id = await updateIDBAnnotation(annotation);
+    const annotations = get(annotationsTotalAtom);
+    set(
+      annotationsTotalAtom,
+      annotations.map((a) => (a.id === id ? annotation : a)),
+    );
+    set(selectedAnnotationAtom, annotation);
+  },
+);
