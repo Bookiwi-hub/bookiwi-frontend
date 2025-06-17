@@ -25,7 +25,7 @@ interface TextSelection {
   range: Range;
   isForward: boolean;
   status: { isAlreadyExists: boolean; isMine: boolean };
-  sectionIndex: number;
+  sectionHref: string;
   remove: () => void;
 }
 
@@ -80,7 +80,7 @@ export const useSelectedText = (): TextSelection | null => {
         isAlreadyExists: !!existingHighlight,
         isMine,
       },
-      sectionIndex: currentSection.index,
+      sectionHref: currentSection.href,
       remove,
     };
   }
@@ -100,7 +100,7 @@ export const useSelectedText = (): TextSelection | null => {
         isAlreadyExists: true,
         isMine: selectedAnnotation.participantId === participantId,
       },
-      sectionIndex: selectedAnnotation.sectionIndex,
+      sectionHref: selectedAnnotation.sectionHref,
       remove,
     };
   }

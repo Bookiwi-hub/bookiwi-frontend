@@ -65,7 +65,7 @@ function TextSelectionMenu() {
       participantId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      sectionIndex: selectedText.sectionIndex,
+      sectionHref: selectedText.sectionHref,
       comments: [],
     };
     addAnnotation(newAnnotation);

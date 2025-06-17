@@ -34,7 +34,7 @@ export const annotationsAtom = atom((get) => {
   const annotations = get(annotationsTotalAtom);
   const currentSection = get(currentSectionAtom);
   if (!currentSection) return [];
-  return annotations.filter((a) => a.sectionIndex === currentSection.index);
+  return annotations.filter((a) => a.sectionHref === currentSection.href);
 });
 
 export const selectedAnnotationAtom = atom<AnnotationIDBData | null>(null);
