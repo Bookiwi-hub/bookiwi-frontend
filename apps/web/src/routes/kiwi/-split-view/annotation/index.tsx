@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { useAtom } from "@bookiwi/jotai";
 
 import { tabStateAtom, TabType } from "./atoms";
@@ -33,4 +35,4 @@ function Annotation() {
   );
 }
 
-export default Annotation;
+export default memo(Annotation);
