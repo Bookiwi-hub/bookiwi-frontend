@@ -36,7 +36,7 @@ function HighlightedText({
           <button
             type="button"
             onClick={toggleExpanded}
-            className="ml-1 text-xs text-gray-700 hover:underline"
+            className="ml-3 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 hover:text-gray-800"
           >
             {isExpanded ? "접기" : "더 보기"}
           </button>
