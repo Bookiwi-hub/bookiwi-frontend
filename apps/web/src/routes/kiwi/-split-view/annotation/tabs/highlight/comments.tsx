@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { useAtomValue } from "@bookiwi/jotai";
 
 import CommentItem from "./comment-item";
@@ -40,4 +42,4 @@ function Comments({ comments }: CommentsProps) {
   );
 }
 
-export default Comments;
+export default memo(Comments);

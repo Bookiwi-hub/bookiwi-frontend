@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { memo, useEffect, useRef } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -21,11 +21,12 @@ interface CommentProps {
 }
 function Annotation({ annotation }: CommentProps) {
   const { comments } = annotation;
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const participantColor = useAtomValue(participantColorAtom);
   const participants = useAtomValue(participantsAtom);
   const participantId = useAtomValue(participantIdAtom);
   const updateAnnotation = useSetAtom(updateAnnotationAtom);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (scrollAreaRef.current) {
       const scrollContainer = scrollAreaRef.current.querySelector(
@@ -35,7 +36,8 @@ function Annotation({ annotation }: CommentProps) {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
     }
-  }, []);
+  }, [comments]);
+
   if (!participantId) return null;
   const highlighter = participants.find(
     (participant) => participant.id === annotation.participantId,
@@ -77,4 +79,4 @@ function Annotation({ annotation }: CommentProps) {
   );
 }
 
-export default Annotation;
+export default memo(Annotation);
