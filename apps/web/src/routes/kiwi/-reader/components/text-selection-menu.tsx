@@ -13,6 +13,7 @@ import {
   participantKiwiIdAtom,
   addAnnotationAtom,
   removeAnnotationAtom,
+  selectedAnnotationAtom,
 } from "../atoms";
 import { useSelectionMenu } from "../hooks";
 
@@ -35,6 +36,7 @@ function TextSelectionMenu() {
   const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
   const addAnnotation = useSetAtom(addAnnotationAtom);
   const removeAnnotation = useSetAtom(removeAnnotationAtom);
+  const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
   const result = useSelectionMenu(width, height);
 
   if (!result || !kiwiId || !participantId || !color) {
@@ -67,6 +69,7 @@ function TextSelectionMenu() {
       comments: [],
     };
     addAnnotation(newAnnotation);
+    return newAnnotation;
   };
 
   const handleAddHighlight = () => {
@@ -76,7 +79,8 @@ function TextSelectionMenu() {
 
   const handleComment = () => {
     if (!selectedText.status.isAlreadyExists) {
-      addHighlight();
+      const newAnnotation = addHighlight();
+      setSelectedAnnotation(newAnnotation);
     }
     if (!isAnnotationOpen) {
       openAnnotationPane();

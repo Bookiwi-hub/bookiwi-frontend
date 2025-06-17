@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 
 // import { useAnnotationTab } from "../context";
 
+import { useAtomValue } from "@bookiwi/jotai";
+
 import CommentForm from "./comment-form";
 import CommentsList from "./comment-list";
 import HighlightedText from "./highlighted-text";
@@ -9,6 +11,7 @@ import HighlightedText from "./highlighted-text";
 import { highlightData } from "#/DB/annotation-highlight";
 import { participants } from "#/DB/participants";
 import { ScrollArea } from "#/components/ui/scroll-area";
+import { selectedAnnotationAtom } from "#/routes/kiwi/-reader/atoms/annotations";
 
 function Highlight() {
   // const { highlightId } = useAnnotationTab();
@@ -16,6 +19,7 @@ function Highlight() {
   const [currentHighlight, setCurrentHighlight] = useState(highlightData);
   const currentUser = participants[0]!;
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
 
   const handleCommentSubmit = (commentText: string) => {
     const currentDate = new Date().toISOString();
@@ -46,22 +50,19 @@ function Highlight() {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
     }
-  }, [currentHighlight.comments]);
+  }, [selectedAnnotation?.comments]);
 
   return (
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
         <HighlightedText
-          color={currentHighlight.creator.color}
-          text={currentHighlight.text}
-          page={currentHighlight.page}
-          date={currentHighlight.date}
-          creatorName={currentHighlight.creator.name}
+          color={selectedAnnotation?.color ?? ""}
+          text={selectedAnnotation?.text ?? ""}
+          page={selectedAnnotation?.sectionIndex ?? 0}
+          date={selectedAnnotation?.updatedAt ?? ""}
+          creatorName={selectedAnnotation?.participantId ?? ""}
         />
-        <CommentsList
-          comments={currentHighlight.comments}
-          currentUser={currentUser}
-        />
+        <CommentsList comments={[]} currentUser={currentUser} />
       </ScrollArea>
 
       <CommentForm onSubmit={handleCommentSubmit} currentUser={currentUser} />
