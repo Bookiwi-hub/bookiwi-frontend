@@ -1,11 +1,17 @@
 import { useRef, useEffect } from "react";
 
+import { useAtomValue } from "@bookiwi/jotai";
+
 import CommentForm from "./comment-form";
-import CommentItem from "./comment-item";
-import EmptyComments from "./empty-comments";
+import Comments from "./comments";
 import HighlightedText from "./highlighted-text";
 
+import { primaryColor } from "#/DB/color";
 import { ScrollArea } from "#/components/ui/scroll-area";
+import {
+  participantColorAtom,
+  participantsAtom,
+} from "#/routes/kiwi/-reader/atoms/participants";
 import { AnnotationIDBData } from "#/types/idb";
 
 interface CommentProps {
@@ -13,6 +19,12 @@ interface CommentProps {
 }
 function Annotation({ annotation }: CommentProps) {
   const { comments } = annotation;
+  const participantColor = useAtomValue(participantColorAtom);
+  const participants = useAtomValue(participantsAtom);
+  const highlighter = participants.find(
+    (participant) => participant.id === annotation.participantId,
+  );
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const handleCommentSubmit = (commentText: string) => {
     const currentDate = new Date().toISOString();
@@ -35,32 +47,17 @@ function Annotation({ annotation }: CommentProps) {
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
         <HighlightedText
-          color={annotation?.color ?? ""}
-          text={annotation?.text ?? ""}
-          page={annotation?.sectionIndex ?? 0}
-          date={annotation?.updatedAt ?? ""}
-          creatorName={annotation?.participantId ?? ""}
+          color={annotation.color}
+          text={annotation.text}
+          date={annotation.updatedAt}
+          creatorName={highlighter?.name ?? ""}
         />
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <CommentItem
-              key={comment.id}
-              text={comment.text}
-              date={comment.updatedAt}
-              isMine={false}
-              profileImage={comment.participantId}
-              name={comment.participantId}
-              color={annotation?.color ?? ""}
-            />
-          ))
-        ) : (
-          <EmptyComments />
-        )}
+        <Comments comments={comments} />
       </ScrollArea>
 
       <CommentForm
         onSubmit={handleCommentSubmit}
-        participantColor={annotation?.color ?? ""}
+        participantColor={participantColor ?? primaryColor}
       />
     </div>
   );

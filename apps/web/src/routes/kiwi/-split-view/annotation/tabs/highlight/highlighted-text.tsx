@@ -7,7 +7,6 @@ import { formatDate } from "#/utils/format-date";
 interface HighlightedTextProps {
   color: string;
   text: string;
-  page: number;
   date: string;
   creatorName: string;
 }
@@ -15,7 +14,6 @@ interface HighlightedTextProps {
 function HighlightedText({
   color,
   text,
-  page,
   date,
   creatorName,
 }: HighlightedTextProps) {
@@ -46,7 +44,6 @@ function HighlightedText({
       </p>
       <div className="mt-2 flex items-center justify-between">
         <div>
-          <span className="text-xs text-gray-700">{page} 페이지</span>
           <span className="ml-2 text-xs text-gray-600">by {creatorName}</span>
         </div>
         <span className="text-xs text-gray-700">{formatDate(date)}</span>
