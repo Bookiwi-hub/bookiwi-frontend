@@ -1,7 +1,8 @@
 import { useRef, useEffect } from "react";
 
 import CommentForm from "./comment-form";
-import CommentsList from "./comment-list";
+import CommentItem from "./comment-item";
+import EmptyComments from "./empty-comments";
 import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
@@ -10,7 +11,8 @@ import { AnnotationIDBData } from "#/types/idb";
 interface CommentProps {
   selectedAnnotation: AnnotationIDBData;
 }
-function Comment({ selectedAnnotation }: CommentProps) {
+function Comments({ selectedAnnotation }: CommentProps) {
+  const { comments } = selectedAnnotation;
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const handleCommentSubmit = (commentText: string) => {
     const currentDate = new Date().toISOString();
@@ -39,7 +41,21 @@ function Comment({ selectedAnnotation }: CommentProps) {
           date={selectedAnnotation?.updatedAt ?? ""}
           creatorName={selectedAnnotation?.participantId ?? ""}
         />
-        <CommentsList comments={[]} />
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <CommentItem
+              key={comment.id}
+              text={comment.text}
+              date={comment.updatedAt}
+              isMine={false}
+              profileImage={comment.participantId}
+              name={comment.participantId}
+              color={selectedAnnotation?.color ?? ""}
+            />
+          ))
+        ) : (
+          <EmptyComments />
+        )}
       </ScrollArea>
 
       <CommentForm
@@ -50,4 +66,4 @@ function Comment({ selectedAnnotation }: CommentProps) {
   );
 }
 
-export default Comment;
+export default Comments;

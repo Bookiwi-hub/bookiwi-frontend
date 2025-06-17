@@ -1,6 +1,6 @@
 import { useAtomValue } from "@bookiwi/jotai";
 
-import Comment from "./comment";
+import Comments from "./comments";
 import NotSelected from "./not-selected";
 
 import { primaryColor } from "#/DB/color";
@@ -14,7 +14,7 @@ function Highlight() {
   if (!selectedAnnotation)
     return <NotSelected color={participantColor ?? primaryColor} />;
 
-  return <Comment selectedAnnotation={selectedAnnotation} />;
+  return <Comments selectedAnnotation={selectedAnnotation} />;
 }
 
 export default Highlight;
