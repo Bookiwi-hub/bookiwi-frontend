@@ -6,7 +6,6 @@ export enum TabType {
 }
 
 export const tabStateAtom = atom<TabType>(TabType.HIGHLIGHT);
-export const highlightIdAtom = atom<number>(0);
 
 export const setTabToHighlightAtom = atom(null, (get, set) => {
   set(tabStateAtom, TabType.HIGHLIGHT);

@@ -1,7 +1,8 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 
-import { participants } from "#/DB/participants";
+import { atom, useAtomValue } from "@bookiwi/jotai";
+
 import { Button } from "#/components/ui/button";
 import Dot from "#/components/ui/dot";
 import {
@@ -10,40 +11,45 @@ import {
   PopoverTrigger,
 } from "#/components/ui/popover";
 import { cn } from "#/lib/utils";
+import { participantsAtom } from "#/routes/kiwi/-reader/atoms";
 
-interface CreatorFilterProps {
-  selectedCreators: string[];
-  onCreatorsChange: (creatorIds: string[]) => void;
+interface ParticipantsFilterProps {
+  selectedParticipantsIds: string[];
+  onParticipantsIdsChange: (participantIds: string[]) => void;
 }
+const participantIdsAtom = atom((get) =>
+  get(participantsAtom).map((p) => p.id),
+);
 
-function CreatorFilter({
-  selectedCreators,
-  onCreatorsChange,
-}: CreatorFilterProps) {
+function ParticipantsFilter({
+  selectedParticipantsIds,
+  onParticipantsIdsChange,
+}: ParticipantsFilterProps) {
   const [open, setOpen] = useState(false);
+  const participantIds = useAtomValue(participantIdsAtom);
 
-  const handleToggleCreator = (creatorId: string) => {
-    const newSelection = selectedCreators.includes(creatorId)
-      ? selectedCreators.filter((id) => id !== creatorId)
-      : [...selectedCreators, creatorId];
+  const handleToggleParticipant = (participantId: string) => {
+    const newSelection = selectedParticipantsIds.includes(participantId)
+      ? selectedParticipantsIds.filter((id) => id !== participantId)
+      : [...selectedParticipantsIds, participantId];
 
-    onCreatorsChange(newSelection);
+    onParticipantsIdsChange(newSelection);
   };
 
   const selectAll = () => {
-    onCreatorsChange(participants.map((p) => p.userId));
+    onParticipantsIdsChange(participantIds);
   };
 
   const clearAll = () => {
-    onCreatorsChange([]);
+    onParticipantsIdsChange([]);
   };
 
   let displayText = "전체 목록";
-  if (selectedCreators.length > 0) {
-    if (selectedCreators.length === participants.length) {
+  if (selectedParticipantsIds.length > 0) {
+    if (selectedParticipantsIds.length === participantIds.length) {
       displayText = "전체 목록";
     } else {
-      displayText = `${selectedCreators.length}명 선택됨`;
+      displayText = `${selectedParticipantsIds.length}명 선택됨`;
     }
   }
 
@@ -84,21 +90,21 @@ function CreatorFilter({
           </Button>
         </div>
         <div className="max-h-60 overflow-y-auto">
-          {participants.map((participant) => (
+          {participantIds.map((id) => (
             <Button
-              key={participant.userId}
+              key={id}
               variant="ghost"
               className={cn(
                 "flex w-full items-center justify-start px-3 py-2",
-                selectedCreators.includes(participant.userId) && "bg-accent/50",
+                selectedParticipantsIds.includes(id) && "bg-accent/50",
               )}
-              onClick={() => handleToggleCreator(participant.userId)}
+              onClick={() => handleToggleParticipant(id)}
               onMouseDown={(e) => e.preventDefault()}
               tabIndex={-1}
             >
-              <Dot color={participant.color} size="sm" className="mr-2" />
-              <span>{participant.name}</span>
-              {selectedCreators.includes(participant.userId) && (
+              <Dot color={id} size="sm" className="mr-2" />
+              <span>{id}</span>
+              {selectedParticipantsIds.includes(id) && (
                 <Check className="ml-auto size-4" />
               )}
             </Button>
@@ -109,4 +115,4 @@ function CreatorFilter({
   );
 }
 
-export default CreatorFilter;
+export default ParticipantsFilter;

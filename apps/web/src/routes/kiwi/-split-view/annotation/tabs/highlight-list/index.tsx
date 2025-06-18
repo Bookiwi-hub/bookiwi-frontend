@@ -1,53 +1,45 @@
 import { useState, useMemo } from "react";
 
-import CreatorFilter from "./filter";
+import { useAtomValue } from "@bookiwi/jotai";
+
+import ParticipantsFilter from "./filter";
 import HighlightItem from "./item";
 
-import {
-  highlightList,
-  type HighlightListType,
-} from "#/DB/annotation-highlight-list";
 import { ScrollArea } from "#/components/ui/scroll-area";
+import { annotationsTotalAtom } from "#/routes/kiwi/-reader/atoms";
 
 function HighlightList() {
-  const [highlights] = useState<HighlightListType[]>(highlightList);
-  const [selectedCreators, setSelectedCreators] = useState<string[]>([]);
+  const totalAnnotations = useAtomValue(annotationsTotalAtom);
+  const [selectedParticipantsIds, setSelectedParticipantsIds] = useState<
+    string[]
+  >([]);
 
-  const filteredHighlights = useMemo(() => {
-    if (selectedCreators.length === 0) return highlights;
-    return highlights.filter((highlight) =>
-      selectedCreators.includes(highlight.creator.userId),
+  const filteredAnnotations = useMemo(() => {
+    if (selectedParticipantsIds.length === 0) return totalAnnotations;
+    return totalAnnotations.filter((annotation) =>
+      selectedParticipantsIds.includes(annotation.participantId),
     );
-  }, [highlights, selectedCreators]);
+  }, [totalAnnotations, selectedParticipantsIds]);
 
   return (
     <div className="flex size-full flex-col">
       <div className="px-4 pt-4">
         <div className="mb-3 flex items-center justify-between">
           <div className="font-medium">
-            하이라이트 목록 ({filteredHighlights.length})
+            하이라이트 목록 ({filteredAnnotations.length})
           </div>
           <div className="w-1/2">
-            <CreatorFilter
-              selectedCreators={selectedCreators}
-              onCreatorsChange={setSelectedCreators}
+            <ParticipantsFilter
+              selectedParticipantsIds={selectedParticipantsIds}
+              onParticipantsIdsChange={setSelectedParticipantsIds}
             />
           </div>
         </div>
       </div>
       <ScrollArea className="size-full px-4 pb-4">
-        {filteredHighlights.length > 0 ? (
-          filteredHighlights.map((highlight) => (
-            <HighlightItem
-              key={highlight.id}
-              id={highlight.id}
-              text={highlight.text}
-              color={highlight.creator.color}
-              name={highlight.creator.name}
-              page={highlight.page}
-              date={highlight.date}
-              totalComments={highlight.totalComments}
-            />
+        {filteredAnnotations.length > 0 ? (
+          filteredAnnotations.map((annotation) => (
+            <HighlightItem key={annotation.id} annotation={annotation} />
           ))
         ) : (
           <div className="flex h-full items-center justify-center text-gray-500">

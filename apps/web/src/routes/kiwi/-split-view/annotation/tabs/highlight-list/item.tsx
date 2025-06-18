@@ -1,29 +1,31 @@
-import { useSetAtom } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { highlightIdAtom, setTabToHighlightAtom } from "../../atoms";
+import { setTabToHighlightAtom } from "../../atoms";
 import { useTruncatedText } from "../hooks/use-truncated-text";
 
+import {
+  navAtom,
+  participantsAtom,
+  selectedAnnotationAtom,
+} from "#/routes/kiwi/-reader/atoms";
+import { AnnotationIDBData } from "#/types/idb";
+import { truncate } from "#/utils";
 import { formatDate } from "#/utils/format-date";
 
 interface HighlightItemProps {
-  id: number;
-  text: string;
-  color: string;
-  name: string;
-  page: number;
-  date: string;
-  totalComments: number;
+  annotation: AnnotationIDBData;
 }
 
-function HighlightItem({
-  id,
-  text,
-  color,
-  name,
-  page,
-  date,
-  totalComments,
-}: HighlightItemProps) {
+function HighlightItem({ annotation }: HighlightItemProps) {
+  const participants = useAtomValue(participantsAtom);
+  const navItems = useAtomValue(navAtom);
+  const { text, color, participantId, sectionHref, createdAt, comments } =
+    annotation;
+  const participant = participants.find((p) => p.id === participantId);
+  const sectionLabel = navItems?.find(
+    (item) => item.href === sectionHref,
+  )?.label;
+
   const { displayText, isTruncated, isExpanded, toggleExpanded } =
     useTruncatedText({
       text,
@@ -31,11 +33,11 @@ function HighlightItem({
     });
 
   const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
-  const setHighlightId = useSetAtom(highlightIdAtom);
+  const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
 
   const handleClick = () => {
     setTabToHighlight();
-    setHighlightId(id);
+    setSelectedAnnotation(annotation);
   };
 
   return (
@@ -51,7 +53,7 @@ function HighlightItem({
       tabIndex={0}
     >
       <div className="mb-2 text-sm font-medium" style={{ color }}>
-        {name}
+        {participant?.name}
       </div>
       <div className="mb-3 text-sm text-gray-700">
         {displayText}
@@ -69,11 +71,11 @@ function HighlightItem({
         )}
       </div>
       <div className="flex items-center justify-between text-xs text-gray-500">
-        <div>페이지 {page}</div>
-        <div>{formatDate(date)}</div>
+        <div>{sectionLabel && truncate(sectionLabel, 20)}</div>
+        <div>{formatDate(createdAt)}</div>
       </div>
       <div className="mt-2 text-xs text-gray-500">
-        {totalComments > 0 ? `댓글 ${totalComments}개` : ""}
+        {`댓글 ${comments.length}개`}
       </div>
     </div>
   );
