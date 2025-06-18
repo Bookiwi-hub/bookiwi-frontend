@@ -5,7 +5,7 @@ export enum TabType {
   HIGHLIGHT_LIST = "highlightList",
 }
 
-export const tabStateAtom = atom<TabType>(TabType.HIGHLIGHT);
+export const tabStateAtom = atom<TabType>(TabType.HIGHLIGHT_LIST);
 
 export const setTabToHighlightAtom = atom(null, (get, set) => {
   set(tabStateAtom, TabType.HIGHLIGHT);
