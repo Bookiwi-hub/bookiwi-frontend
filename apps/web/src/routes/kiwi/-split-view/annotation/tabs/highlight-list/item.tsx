@@ -4,6 +4,7 @@ import { setTabToHighlightAtom } from "../../atoms";
 import { useTruncatedText } from "../hooks/use-truncated-text";
 
 import {
+  bookAtom,
   navAtom,
   participantsAtom,
   selectedAnnotationAtom,
@@ -19,6 +20,7 @@ interface HighlightItemProps {
 function HighlightItem({ annotation }: HighlightItemProps) {
   const participants = useAtomValue(participantsAtom);
   const navItems = useAtomValue(navAtom);
+  const book = useAtomValue(bookAtom);
   const { text, color, participantId, sectionHref, createdAt, comments } =
     annotation;
   const participant = participants.find((p) => p.id === participantId);
@@ -38,6 +40,7 @@ function HighlightItem({ annotation }: HighlightItemProps) {
   const handleClick = () => {
     setTabToHighlight();
     setSelectedAnnotation(annotation);
+    book?.rendition.display(annotation.cfi);
   };
 
   return (
