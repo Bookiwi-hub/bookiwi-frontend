@@ -5,6 +5,9 @@ import {
   SAMPLE_EPUB_DATA_ID,
   SAMPLE_EPUB_URL,
   SAMPLE_KIWI_DATA_ID,
+  SAMPLE_KIWI_DESCRIPTION,
+  SAMPLE_KIWI_DETAIL_DESCRIPTION,
+  SAMPLE_KIWI_NAME,
   SAMPLE_PARTICIPANT_IDS,
   sampleIDBParticipants,
 } from "#/constants/idb";
@@ -33,10 +36,10 @@ const addSampleKiwi = async (): Promise<Kiwi> => {
 
     const sampleKiwiIDBData: KiwiIDBData = {
       id: SAMPLE_KIWI_DATA_ID,
-      name: "Sample Kiwi",
-      description: "키위를 체험해보세요",
+      name: SAMPLE_KIWI_NAME,
+      description: SAMPLE_KIWI_DESCRIPTION,
       maxParticipants: 3,
-      detailDescription: "키위를 체험해보세요",
+      detailDescription: SAMPLE_KIWI_DETAIL_DESCRIPTION,
       password: null,
       shareCode: "예시 키위는 공유할 수 없습니다.",
       createdAt: new Date().toISOString(),
