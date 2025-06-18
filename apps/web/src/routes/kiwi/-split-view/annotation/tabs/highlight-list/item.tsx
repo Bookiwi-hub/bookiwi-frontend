@@ -57,8 +57,11 @@ function HighlightItem({ annotation }: HighlightItemProps) {
       role="button"
       tabIndex={0}
     >
-      <div className="mb-2 text-sm font-medium" style={{ color }}>
-        {participant?.name}
+      <div className="mb-2 flex items-center justify-between">
+        <div className="text-sm font-medium" style={{ color }}>
+          {participant?.name}
+        </div>
+        <div className="text-xs text-gray-500">{formatDate(createdAt)}</div>
       </div>
       <div className="mb-3 text-sm text-gray-700">
         {displayText}
@@ -77,10 +80,7 @@ function HighlightItem({ annotation }: HighlightItemProps) {
       </div>
       <div className="flex items-center justify-between text-xs text-gray-500">
         <div>{sectionLabel && truncate(sectionLabel, 20)}</div>
-        <div>{formatDate(createdAt)}</div>
-      </div>
-      <div className="mt-2 text-xs text-gray-500">
-        {`댓글 ${comments.length}개`}
+        <div>{`댓글 ${comments.length}개`}</div>
       </div>
     </div>
   );
