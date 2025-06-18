@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 
 import { useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -88,4 +88,4 @@ function SplitView() {
   );
 }
 
-export default SplitView;
+export default memo(SplitView);

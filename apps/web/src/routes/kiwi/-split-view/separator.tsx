@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -78,4 +78,4 @@ function SplitViewSeparator({
   );
 }
 
-export default SplitViewSeparator;
+export default memo(SplitViewSeparator);

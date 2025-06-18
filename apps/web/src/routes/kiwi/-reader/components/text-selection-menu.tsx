@@ -3,9 +3,11 @@ import { KeyboardEvent, useState } from "react";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
+import { tabStateAtom, TabType } from "../../-split-view/annotation/atoms";
 import {
+  AnnotationPaneState,
+  annotationPaneStateAtom,
   isAnnotationOpenAtom,
-  openAnnotationPaneAtom,
 } from "../../-split-view/atoms";
 import {
   participantColorAtom,
@@ -27,13 +29,18 @@ const participantInfoAtom = atom((get) => ({
   kiwiId: get(participantKiwiIdAtom),
   color: get(participantColorAtom),
 }));
-
+const openHighlightTabAtom = atom(null, (get, set) => {
+  const isAnnotationOpen = get(isAnnotationOpenAtom);
+  if (!isAnnotationOpen) {
+    set(annotationPaneStateAtom, AnnotationPaneState.OPEN);
+  }
+  set(tabStateAtom, TabType.HIGHLIGHT);
+});
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const { participantId, kiwiId, color } = useAtomValue(participantInfoAtom);
-  const isAnnotationOpen = useAtomValue(isAnnotationOpenAtom);
-  const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
+  const openHighlightTab = useSetAtom(openHighlightTabAtom);
   const addAnnotation = useSetAtom(addAnnotationAtom);
   const removeAnnotation = useSetAtom(removeAnnotationAtom);
   const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
@@ -82,9 +89,7 @@ function TextSelectionMenu() {
       const newAnnotation = addHighlight();
       setSelectedAnnotation(newAnnotation);
     }
-    if (!isAnnotationOpen) {
-      openAnnotationPane();
-    }
+    openHighlightTab();
     hide();
   };
 

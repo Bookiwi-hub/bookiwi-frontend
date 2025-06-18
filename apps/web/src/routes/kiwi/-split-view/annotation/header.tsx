@@ -1,4 +1,5 @@
 import { Pin, X } from "lucide-react";
+import { memo } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -86,4 +87,4 @@ function AnnotationHeader() {
   );
 }
 
-export default AnnotationHeader;
+export default memo(AnnotationHeader);
