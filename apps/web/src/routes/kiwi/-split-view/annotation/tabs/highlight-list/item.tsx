@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import { setTabToHighlightAtom } from "../../atoms";
@@ -84,4 +86,4 @@ function HighlightItem({ annotation }: HighlightItemProps) {
   );
 }
 
-export default HighlightItem;
+export default memo(HighlightItem);

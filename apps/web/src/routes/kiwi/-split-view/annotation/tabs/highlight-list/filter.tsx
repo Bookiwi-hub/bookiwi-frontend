@@ -1,5 +1,5 @@
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { atom, useAtomValue } from "@bookiwi/jotai";
 
@@ -115,4 +115,4 @@ function ParticipantsFilter({
   );
 }
 
-export default ParticipantsFilter;
+export default memo(ParticipantsFilter);

@@ -1,4 +1,5 @@
 import { MessageSquareQuote } from "lucide-react";
+import { memo } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -28,4 +29,4 @@ function AnnotationPaneTrigger() {
   );
 }
 
-export default AnnotationPaneTrigger;
+export default memo(AnnotationPaneTrigger);

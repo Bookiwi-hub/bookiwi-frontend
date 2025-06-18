@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
 
@@ -51,4 +51,4 @@ function HighlightList() {
   );
 }
 
-export default HighlightList;
+export default memo(HighlightList);
