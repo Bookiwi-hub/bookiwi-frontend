@@ -8,6 +8,7 @@ import {
   currentViewAtom,
   selectedAnnotationAtom,
   setHighlightClickedAtom,
+  typographyAtom,
 } from "../atoms";
 
 function Highlights() {
@@ -16,6 +17,7 @@ function Highlights() {
   const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
   const setHighlightClicked = useSetAtom(setHighlightClickedAtom);
   const currentView = useAtomValue(currentViewAtom);
+  const typography = useAtomValue(typographyAtom);
 
   useEffect(() => {
     if (!currentView?.contents || !book) return () => {};
@@ -52,6 +54,7 @@ function Highlights() {
     book,
     setHighlightClicked,
     setSelectedAnnotation,
+    typography,
   ]);
 
   return null;
