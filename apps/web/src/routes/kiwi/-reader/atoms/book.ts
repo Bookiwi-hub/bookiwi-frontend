@@ -29,8 +29,11 @@ export const initialIsSinglePageAtom = atom<boolean>(false);
 
 export const toggleCenterTouchedAtom = atom(null, (get, set) => {
   const selection = get(selectionAtom);
+  const highlightClicked = get(highlightClickedAtom);
   if (!selection || selection.toString().trim() === "") {
-    set(isCenterTouchedAtom, !get(isCenterTouchedAtom));
+    if (!highlightClicked) {
+      set(isCenterTouchedAtom, !get(isCenterTouchedAtom));
+    }
   }
 });
 
