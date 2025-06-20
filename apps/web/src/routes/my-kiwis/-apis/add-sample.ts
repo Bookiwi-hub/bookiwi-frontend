@@ -9,6 +9,7 @@ import {
   SAMPLE_KIWI_DETAIL_DESCRIPTION,
   SAMPLE_KIWI_NAME,
   SAMPLE_PARTICIPANT_IDS,
+  sampleIDBAnnotations,
   sampleIDBParticipants,
 } from "#/constants/idb";
 import idb from "#/managers/idb";
@@ -89,6 +90,9 @@ const addSampleKiwi = async (): Promise<Kiwi> => {
     await idb.add(IDBStore.ParticipantStore, sampleParticipantIDBData);
     sampleIDBParticipants.forEach(async (participant) => {
       await idb.add(IDBStore.ParticipantStore, participant);
+    });
+    sampleIDBAnnotations.forEach(async (annotation) => {
+      await idb.add(IDBStore.AnnotationStore, annotation);
     });
     const sampleKiwi = await kiwIDBDataToKiwi(sampleKiwiIDBData);
 
