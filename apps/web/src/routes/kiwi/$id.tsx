@@ -33,19 +33,15 @@ function Kiwi() {
       participantsData={participantsData}
       annotationsData={annotationsData}
     >
-      <KiwiContent kiwiTitle={kiwiData.name} />
+      <KiwiContent />
     </ReaderProvider>
   );
 }
 
-function KiwiContent({ kiwiTitle }: { kiwiTitle: string }) {
+function KiwiContent() {
   return (
     <main className="flex size-full select-none flex-col overflow-hidden">
-      <Header
-        title={kiwiTitle}
-        profileImage="https://github.com/shadcn.png"
-        color="rgba(186, 230, 55, 1)"
-      />
+      <Header />
       <SplitView />
     </main>
   );

@@ -1,5 +1,8 @@
 import { Link } from "@tanstack/react-router";
 
+import { useAtomValue } from "@bookiwi/jotai";
+
+import { kiwiAtom } from "../-reader/atoms";
 import AnnotationPaneTrigger from "../-split-view/annotation/trigger";
 
 import BookmarkButton from "./bookmark-button";
@@ -8,13 +11,8 @@ import Sidebar from "./sidebar";
 
 import { Separator } from "#/components/ui/separator";
 
-interface HeaderProps {
-  title: string;
-  profileImage?: string;
-  color: string;
-}
-
-function Header({ title, profileImage, color }: HeaderProps) {
+function Header() {
+  const kiwi = useAtomValue(kiwiAtom);
   return (
     <header className="relative">
       <div className="flex items-center justify-between p-1">
@@ -29,12 +27,12 @@ function Header({ title, profileImage, color }: HeaderProps) {
           <Sidebar />
         </div>
         <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-lg">
-          {title}
+          {kiwi?.name}
         </h1>
         <div className="flex items-center gap-4 pr-3">
           <BookmarkButton />
           <AnnotationPaneTrigger />
-          <Profiles profileImage={profileImage} color={color} />
+          <Profiles />
         </div>
       </div>
       <Separator />
