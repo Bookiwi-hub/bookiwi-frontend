@@ -6,16 +6,6 @@ import { participantsAtom } from "#/routes/kiwi/-reader/atoms";
 function ParticipantsPanel() {
   const participants = useAtomValue(participantsAtom);
 
-  if (participants.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
-        <div className="text-sm text-muted-foreground">
-          아직 참가자가 없습니다
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-3">
       <div className="mb-2 text-sm font-medium text-foreground">
