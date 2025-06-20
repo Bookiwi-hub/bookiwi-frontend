@@ -6,8 +6,8 @@ import CommentForm from "./comment-form";
 import Comments from "./comments";
 import HighlightedText from "./highlighted-text";
 
-import { primaryColor } from "#/DB/color";
 import { ScrollArea } from "#/components/ui/scroll-area";
+import { primaryColor } from "#/constants/color";
 import {
   updateAnnotationAtom,
   participantColorAtom,

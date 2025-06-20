@@ -1,4 +1,4 @@
-import { color } from "./color";
+import { color } from "../constants/color";
 
 import { Participant } from "#/types/kiwi";
 
