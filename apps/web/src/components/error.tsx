@@ -25,7 +25,7 @@ function ErrorPage({
         <div className="flex justify-center">
           <div className="rounded-full bg-white p-4 shadow-sm">
             <img
-              src="/images/icon.png"
+              src="/images/icon.webp"
               alt="Bookiwi logo"
               className="size-16 animate-bounce"
             />

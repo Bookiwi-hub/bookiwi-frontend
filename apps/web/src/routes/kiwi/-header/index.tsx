@@ -19,7 +19,7 @@ function Header() {
         <div className="flex items-center gap-2">
           <Link to="/">
             <img
-              src="/images/icon.png"
+              src="/images/icon.webp"
               alt="Bookiwi logo"
               className="size-9 mobile:size-8"
             />
