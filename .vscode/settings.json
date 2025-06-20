@@ -12,6 +12,7 @@
     "bookiwi",
     "epubjs",
     "tanstack",
-    "tanstackrouter"
+    "tanstackrouter",
+    "sonner"
   ]
 }
