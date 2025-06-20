@@ -34,11 +34,11 @@ function InformationTab({ kiwi }: InformationTabProps) {
     <div className="mb-10 space-y-6">
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-1">
-          <div className="aspect-[3/4] overflow-hidden rounded-md bg-gray-100">
+          <div className="aspect-[3/4] overflow-hidden rounded-md">
             <img
               src={coverImage || FALLBACK_IMAGE_URL}
               alt="Book cover"
-              className="size-full object-cover"
+              className="size-full object-contain"
             />
           </div>
         </div>

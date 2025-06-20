@@ -41,7 +41,7 @@ function KiwiCard({
         <img
           src={coverImage || FALLBACK_IMAGE_URL}
           alt="Book cover"
-          className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="size-full object-contain transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
           onError={(e) => {
             e.currentTarget.src = FALLBACK_IMAGE_URL;
