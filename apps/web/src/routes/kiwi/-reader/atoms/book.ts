@@ -24,7 +24,7 @@ export const selectionAtom = atom<Selection | null, [Selection | null], void>(
   },
 );
 
-export const initialCfiAtom = atom<string | null>(null);
+export const initialCfiAtom = atom<{ start: string; end: string } | null>(null);
 export const initialIsSinglePageAtom = atom<boolean>(false);
 
 export const toggleCenterTouchedAtom = atom(null, (get, set) => {

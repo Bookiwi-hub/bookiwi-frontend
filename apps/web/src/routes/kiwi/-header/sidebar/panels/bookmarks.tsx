@@ -7,7 +7,7 @@ import {
   bookmarksAtom,
   removeBookmarkAtom,
 } from "#/routes/kiwi/-reader/atoms";
-import { Bookmark } from "#/types/kiwi";
+import { ParticipantIDBData } from "#/types/idb";
 import { formatDate } from "#/utils/format-date";
 
 function EmptyBookmarksView() {
@@ -25,12 +25,12 @@ function EmptyBookmarksView() {
 }
 
 interface BookmarkItemProps {
-  bookmark: Bookmark;
+  bookmark: ParticipantIDBData["record"]["bookmarks"][number];
   index: number;
   navItemLabel: string;
   percentage: number;
   onClick: (cfi: string) => void;
-  onRemove: (cfi: string) => void;
+  onRemove: (cfi: { start: string; end: string }) => void;
 }
 
 function BookmarkItem({
@@ -45,7 +45,7 @@ function BookmarkItem({
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <li
       className="group relative flex w-full items-start gap-3 rounded-md border border-transparent p-3 text-left transition-all hover:border-border hover:bg-accent/40"
-      onClick={() => onClick(bookmark.cfi)}
+      onClick={() => onClick(bookmark.cfi.start)}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
       role="button"
     >
@@ -95,15 +95,15 @@ function BookmarksPanel() {
         <ul className="space-y-2">
           {bookmarks.map((bookmark, index) => {
             if (!book) return null;
-            const spineItem = book.spine.get(bookmark.cfi);
+            const spineItem = book.spine.get(bookmark.cfi.start);
             const navItem = book.navigation.get(spineItem?.href || "");
             const percentage = Math.floor(
-              book.locations.percentageFromCfi(bookmark.cfi) * 100,
+              book.locations.percentageFromCfi(bookmark.cfi.start) * 100,
             );
 
             return (
               <BookmarkItem
-                key={bookmark.cfi}
+                key={bookmark.cfi.start}
                 bookmark={bookmark}
                 index={index}
                 navItemLabel={navItem?.label || ""}

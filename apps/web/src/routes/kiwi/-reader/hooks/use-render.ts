@@ -37,7 +37,7 @@ const useRender = () => {
       },
     });
     // 책 렌더링
-    rendition.display(initialCfi || undefined);
+    rendition.display(initialCfi?.start || undefined);
     return rendition;
   };
 

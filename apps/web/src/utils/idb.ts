@@ -33,9 +33,9 @@ const convertCoverImage = async (
 /**
  * 참가자 데이터를 변환
  */
-const convertParticipantData = async (
+const convertParticipantData = (
   participant: ParticipantIDBData,
-): Promise<Participant> => ({
+): Participant => ({
   id: participant.id,
   userId: participant.userId,
   name: participant.name,
@@ -57,9 +57,7 @@ const enrichKiwiWithParticipants = async (
     item.id,
   );
 
-  const participants = await Promise.all(
-    storedParticipants.map(convertParticipantData),
-  );
+  const participants = storedParticipants.map(convertParticipantData);
 
   return {
     id: item.id,

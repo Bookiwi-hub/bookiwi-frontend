@@ -43,9 +43,9 @@ export interface ParticipantIDBData {
     fontWeight: number | null;
   };
   record: {
-    currentCfi: string | null;
+    currentCfi: { start: string; end: string } | null;
     percentage: number | null;
-    bookmarks: { cfi: string; createdAt: string }[];
+    bookmarks: { cfi: { start: string; end: string }; createdAt: string }[];
   };
   lastActivityAt: string;
 }

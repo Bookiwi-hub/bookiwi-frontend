@@ -34,12 +34,12 @@ export interface Settings {
 }
 
 export interface Bookmark {
-  cfi: string;
+  cfi: { start: string; end: string };
   createdAt: string;
 }
 
 export interface ReadingRecord {
-  currentCfi: string | null;
+  currentCfi: { start: string; end: string } | null;
   percentage: number | null;
   bookmarks: Bookmark[];
 }

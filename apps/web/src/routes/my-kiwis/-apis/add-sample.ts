@@ -1,5 +1,5 @@
-import { color } from "#/DB/color";
 import tempUser from "#/DB/users";
+import { color } from "#/constants/color";
 import {
   IDBStore,
   SAMPLE_EPUB_DATA_ID,

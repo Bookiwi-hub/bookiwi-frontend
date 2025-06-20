@@ -14,7 +14,6 @@ import KiwiInfo from "./kiwi-info";
 import Loading from "./loading";
 import { ActionTypes, Step } from "./reducer";
 
-import { color } from "#/DB/color";
 import tempUser from "#/DB/users";
 import {
   Dialog,
@@ -24,11 +23,12 @@ import {
   DialogTitle,
   DialogFooter,
 } from "#/components/ui/dialog";
+import { color } from "#/constants/color";
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
 import { useKiwis } from "#/routes/my-kiwis/-context";
 import { KiwiIDBData, EpubIDBData, ParticipantIDBData } from "#/types/idb";
-import { BookMetadata, Kiwi } from "#/types/kiwi";
+import { Kiwi } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";
 import { kiwIDBDataToKiwi } from "#/utils/idb";
 
@@ -111,7 +111,7 @@ function CreateKiwiModalDialog({ open, setOpen }: ModalProps) {
         return;
       }
 
-      const bookMetadata: BookMetadata = {
+      const bookMetadata: KiwiIDBData["bookMetadata"] = {
         title: bookInfo.title,
         author: bookInfo.author,
         publisher: bookInfo.publisher,

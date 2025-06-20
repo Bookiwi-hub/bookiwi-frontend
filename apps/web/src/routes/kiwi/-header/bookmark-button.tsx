@@ -11,16 +11,20 @@ import {
   setBookmarkAtom,
 } from "../-reader/atoms";
 
-const isCfiInRange = (
-  cfi: string,
-  startCfi: string,
-  endCfi: string,
-): boolean => {
+interface Cfi {
+  start: string;
+  end: string;
+}
+
+const isCfiInRange = (cfi: Cfi, currentCfi: Cfi): boolean => {
   const cfiInstance = new EpubCFI();
-  return (
-    cfiInstance.compare(cfi, startCfi) >= 0 &&
-    cfiInstance.compare(cfi, endCfi) <= 0
-  );
+  const isStartInRange =
+    cfiInstance.compare(cfi.start, currentCfi.start) >= 0 &&
+    cfiInstance.compare(cfi.start, currentCfi.end) <= 0;
+  const isEndInRange =
+    cfiInstance.compare(cfi.end, currentCfi.start) >= 0 &&
+    cfiInstance.compare(cfi.end, currentCfi.end) <= 0;
+  return isStartInRange || isEndInRange;
 };
 
 function BookmarkButton() {
@@ -32,11 +36,10 @@ function BookmarkButton() {
 
   const isBookmarked = currentLocation
     ? bookmarks.some((bookmark) =>
-        isCfiInRange(
-          bookmark.cfi,
-          currentLocation.start.cfi,
-          currentLocation.end.cfi,
-        ),
+        isCfiInRange(bookmark.cfi, {
+          start: currentLocation.start.cfi,
+          end: currentLocation.end.cfi,
+        }),
       )
     : false;
 
