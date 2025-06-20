@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
 
@@ -9,18 +9,16 @@ import { debounce } from "#/utils/debounce";
 const useObserver = () => {
   const book = useAtomValue(bookAtom);
   const prevSize = useRef(0);
-  const [, setWidth] = useState(0);
 
-  const handleResize = debounce((size: number) => {
+  const handleResize = debounce(() => {
     book?.rendition.resize();
-    setWidth(size);
   }, 200);
 
   const observer = new ResizeObserver(([e]) => {
     const size = e?.contentRect.width ?? 0;
 
     if (size !== 0 && prevSize.current !== 0 && size !== prevSize.current) {
-      handleResize(size);
+      handleResize();
     }
 
     prevSize.current = size;
