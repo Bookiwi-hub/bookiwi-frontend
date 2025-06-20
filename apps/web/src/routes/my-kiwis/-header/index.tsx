@@ -15,7 +15,7 @@ function Header() {
             className="flex items-center gap-2 text-xl font-bold text-primary mobile:text-lg"
           >
             <img
-              src="/images/logo.png"
+              src="/images/icon.webp"
               alt="Bookiwi logo"
               className="size-12 mobile:size-10"
             />

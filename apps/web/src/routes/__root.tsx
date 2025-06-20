@@ -1,5 +1,6 @@
 import { Outlet, createRootRoute, HeadContent } from "@tanstack/react-router";
 
+import ErrorPage from "#/components/error";
 import { PWA } from "#/components/pwa";
 
 // import { TanStackRouterDevtools } from "@tanstack/router-plugin-vite";
@@ -25,5 +26,12 @@ export const Route = createRootRoute({
       <Outlet />
       {/* <TanStackRouterDevtools /> */}
     </>
+  ),
+  errorComponent: () => <ErrorPage />,
+  notFoundComponent: () => (
+    <ErrorPage
+      title="페이지를 찾을 수 없어요"
+      message="홈으로 돌아가 볼까요?"
+    />
   ),
 });

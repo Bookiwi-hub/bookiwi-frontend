@@ -1,4 +1,5 @@
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -24,13 +25,15 @@ function EmptyBookmarksView() {
   );
 }
 
+type Cfi = ParticipantIDBData["record"]["bookmarks"][number]["cfi"];
+
 interface BookmarkItemProps {
   bookmark: ParticipantIDBData["record"]["bookmarks"][number];
   index: number;
   navItemLabel: string;
   percentage: number;
   onClick: (cfi: string) => void;
-  onRemove: (cfi: { start: string; end: string }) => void;
+  onRemove: (cfi: Cfi) => Promise<void>;
 }
 
 function BookmarkItem({
@@ -64,9 +67,9 @@ function BookmarkItem({
       <button
         type="button"
         className="absolute right-3 top-3 rounded-full p-1 opacity-0 transition-all hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-        onClick={(e) => {
+        onClick={async (e) => {
           e.stopPropagation();
-          onRemove(bookmark.cfi);
+          await onRemove(bookmark.cfi);
         }}
         aria-label="Remove bookmark"
       >
@@ -84,6 +87,13 @@ function BookmarksPanel() {
   const handleBookmarkClick = (cfi: string) => {
     if (!book) return;
     book.rendition.display(cfi);
+  };
+  const handleRemove = async (cfi: Cfi) => {
+    try {
+      await removeBookmark(cfi);
+    } catch (error) {
+      toast.error("북마크 정보가 저장되지 않았습니다.");
+    }
   };
 
   return (
@@ -109,7 +119,7 @@ function BookmarksPanel() {
                 navItemLabel={navItem?.label || ""}
                 percentage={percentage}
                 onClick={handleBookmarkClick}
-                onRemove={removeBookmark}
+                onRemove={handleRemove}
               />
             );
           })}

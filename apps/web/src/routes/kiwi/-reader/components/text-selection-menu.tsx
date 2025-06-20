@@ -1,5 +1,6 @@
 import { Highlighter, MessageSquare, Trash2 } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
+import { toast } from "sonner";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -62,7 +63,7 @@ function TextSelectionMenu() {
     el.focus();
   };
 
-  const addHighlight = () => {
+  const addHighlight = async () => {
     const newAnnotation: AnnotationIDBData = {
       id: selectedText.id,
       kiwiId,
@@ -75,26 +76,34 @@ function TextSelectionMenu() {
       sectionHref: selectedText.sectionHref,
       comments: [],
     };
-    addAnnotation(newAnnotation);
+    try {
+      await addAnnotation(newAnnotation);
+    } catch (error) {
+      toast.error("하이라이트가 저장되지 않았습니다.");
+    }
     return newAnnotation;
   };
 
-  const handleAddHighlight = () => {
-    addHighlight();
+  const handleAddHighlight = async () => {
+    await addHighlight();
     hide();
   };
 
-  const handleComment = () => {
+  const handleComment = async () => {
     if (!selectedText.status.isAlreadyExists) {
-      const newAnnotation = addHighlight();
+      const newAnnotation = await addHighlight();
       setSelectedAnnotation(newAnnotation);
     }
     openHighlightTab();
     hide();
   };
 
-  const handleRemoveHighlight = () => {
-    removeAnnotation(selectedText.id);
+  const handleRemoveHighlight = async () => {
+    try {
+      await removeAnnotation(selectedText.id);
+    } catch (error) {
+      toast.error("하이라이트 정보가 삭제되지 않았습니다.");
+    }
     hide();
   };
 

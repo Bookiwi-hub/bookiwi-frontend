@@ -1,4 +1,5 @@
 import { Bookmark } from "lucide-react";
+import { toast } from "sonner";
 
 import { EpubCFI } from "@bookiwi/epubjs";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
@@ -43,13 +44,16 @@ function BookmarkButton() {
       )
     : false;
 
-  const toggleBookmark = () => {
+  const toggleBookmark = async () => {
     if (!currentCfi) return;
-
-    if (isBookmarked) {
-      removeBookmark(currentCfi);
-    } else {
-      setBookmark(currentCfi);
+    try {
+      if (isBookmarked) {
+        await removeBookmark(currentCfi);
+      } else {
+        await setBookmark(currentCfi);
+      }
+    } catch (error) {
+      toast.error("북마크 정보가 저장되지 않았습니다.");
     }
   };
 
