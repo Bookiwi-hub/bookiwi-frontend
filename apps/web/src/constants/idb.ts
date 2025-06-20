@@ -10,10 +10,14 @@ export enum IDBStore {
 
 export const SAMPLE_KIWI_DATA_ID = "sample-kiwi";
 
-export const SAMPLE_EPUB_URL =
-  "https://s3.amazonaws.com/moby-dick/moby-dick.epub";
+export const SAMPLE_EPUB_URL = "/sample.epub";
 
 export const SAMPLE_EPUB_DATA_ID = "sample-epub-data";
+
+export const SAMPLE_KIWI_NAME = "운수 좋은 날";
+export const SAMPLE_KIWI_DESCRIPTION = "예시 키위로 체험해 보세요.";
+export const SAMPLE_KIWI_DETAIL_DESCRIPTION =
+  "운수 좋은 날로 키위를 체험하세요";
 
 export const SAMPLE_PARTICIPANT_IDS = [
   "sample-kiwi-participant-0",
