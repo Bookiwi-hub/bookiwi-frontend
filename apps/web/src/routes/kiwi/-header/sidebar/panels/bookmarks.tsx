@@ -1,4 +1,5 @@
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -24,13 +25,15 @@ function EmptyBookmarksView() {
   );
 }
 
+type Cfi = ParticipantIDBData["record"]["bookmarks"][number]["cfi"];
+
 interface BookmarkItemProps {
   bookmark: ParticipantIDBData["record"]["bookmarks"][number];
   index: number;
   navItemLabel: string;
   percentage: number;
-  onClick: () => void;
-  onRemove: () => Promise<void>;
+  onClick: (cfi: string) => void;
+  onRemove: (cfi: Cfi) => Promise<void>;
 }
 
 function BookmarkItem({
@@ -45,7 +48,7 @@ function BookmarkItem({
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <li
       className="group relative flex w-full items-start gap-3 rounded-md border border-transparent p-3 text-left transition-all hover:border-border hover:bg-accent/40"
-      onClick={onClick}
+      onClick={() => onClick(bookmark.cfi.start)}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
       role="button"
     >
@@ -64,9 +67,9 @@ function BookmarkItem({
       <button
         type="button"
         className="absolute right-3 top-3 rounded-full p-1 opacity-0 transition-all hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-        onClick={(e) => {
+        onClick={async (e) => {
           e.stopPropagation();
-          onRemove();
+          await onRemove(bookmark.cfi);
         }}
         aria-label="Remove bookmark"
       >
@@ -80,6 +83,18 @@ function BookmarksPanel() {
   const book = useAtomValue(bookAtom);
   const bookmarks = useAtomValue(bookmarksAtom);
   const removeBookmark = useSetAtom(removeBookmarkAtom);
+
+  const handleBookmarkClick = (cfi: string) => {
+    if (!book) return;
+    book.rendition.display(cfi);
+  };
+  const handleRemove = async (cfi: Cfi) => {
+    try {
+      await removeBookmark(cfi);
+    } catch (error) {
+      toast.error("북마크 정보가 저장되지 않았습니다.");
+    }
+  };
 
   return (
     <div className="px-1">
@@ -95,13 +110,6 @@ function BookmarksPanel() {
             const percentage = Math.floor(
               book.locations.percentageFromCfi(bookmark.cfi.start) * 100,
             );
-            const handleBookmarkClick = () => {
-              if (!book) return;
-              book.rendition.display(bookmark.cfi.start);
-            };
-            const handleRemove = async () => {
-              await removeBookmark(bookmark.cfi);
-            };
 
             return (
               <BookmarkItem

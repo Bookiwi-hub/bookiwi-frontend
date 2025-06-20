@@ -1,5 +1,6 @@
 import { MinusIcon, PlusIcon, RotateCcwIcon } from "lucide-react";
 import { memo } from "react";
+import { toast } from "sonner";
 
 import { Button } from "#/components/ui/button";
 
@@ -25,18 +26,22 @@ function ButtonController<T extends number>({
   step,
 }: ButtonControllerProps<T>) {
   const handleChange = async (action: "increase" | "decrease" | "reset") => {
-    if (action === "reset") {
-      await setValue(null);
-      return;
-    }
+    try {
+      if (action === "reset") {
+        await setValue(null);
+        return;
+      }
 
-    const currentValue = value ?? initialValue;
-    if (action === "increase") {
-      const newValue = Number(Math.min(max, currentValue + step));
-      await setValue(newValue as T);
-    } else {
-      const newValue = Number(Math.max(min, currentValue - step));
-      await setValue(newValue as T);
+      const currentValue = value ?? initialValue;
+      if (action === "increase") {
+        const newValue = Number(Math.min(max, currentValue + step));
+        await setValue(newValue as T);
+      } else {
+        const newValue = Number(Math.max(min, currentValue - step));
+        await setValue(newValue as T);
+      }
+    } catch (error) {
+      toast.error("설정 정보가 저장되지 않았습니다.");
     }
   };
 
