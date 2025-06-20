@@ -1,4 +1,7 @@
-import { participants } from "#/DB/participants";
+import { useAtomValue } from "@bookiwi/jotai";
+
+import { participantsAtom } from "../-reader/atoms";
+
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import Dot from "#/components/ui/dot";
 import {
@@ -12,7 +15,7 @@ interface ProfileButtonProps {
   color: string;
 }
 
-function ProfileButton({ profileImage, color }: ProfileButtonProps) {
+function ProfileIcon({ profileImage, color }: ProfileButtonProps) {
   return (
     <div className="relative m-2 cursor-pointer hover:bg-gray-100">
       <Avatar className="size-8">
@@ -34,10 +37,11 @@ interface ProfilesProps {
 }
 
 function Profiles({ profileImage, color }: ProfilesProps) {
+  const participants = useAtomValue(participantsAtom);
   return (
     <Popover>
       <PopoverTrigger>
-        <ProfileButton profileImage={profileImage} color={color} />
+        <ProfileIcon profileImage={profileImage} color={color} />
       </PopoverTrigger>
       <PopoverContent className="w-64 p-0">
         <div className="border-b px-4 py-3">
@@ -46,7 +50,7 @@ function Profiles({ profileImage, color }: ProfilesProps) {
         <div className="max-h-80 overflow-y-auto">
           {participants.map((participant) => (
             <div
-              key={participant.userId}
+              key={participant.id}
               className="flex items-center gap-3 p-3 hover:bg-gray-50"
             >
               <div className="relative">
