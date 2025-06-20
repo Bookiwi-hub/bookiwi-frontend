@@ -5,6 +5,8 @@ import { KiwisProvider } from "./-context";
 import Header from "./-header";
 import Kiwis from "./-kiwis";
 
+import LoadingPage from "#/components/loading";
+
 export const Route = createFileRoute("/my-kiwis/")({
   loader: async () => {
     const kiwi = await getKiwisFromIndexedDB();
@@ -18,6 +20,12 @@ export const Route = createFileRoute("/my-kiwis/")({
     ],
   }),
   component: MyKiwisPage,
+  pendingComponent: () => (
+    <LoadingPage
+      title="북키위에 오신 것을 환영합니다"
+      message="잠시만 기다려주세요..."
+    />
+  ),
 });
 
 function MyKiwis() {
