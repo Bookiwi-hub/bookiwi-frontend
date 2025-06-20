@@ -17,7 +17,8 @@ import { hasSelection, updateCustomStyle } from "../utils";
 const useToggleProgressBar = () => {
   const toggleProgressBar = useSetAtom(toggleCenterTouchedAtom);
 
-  const addProgressBarToggleEvent = (document: Document) => {
+  const addProgressBarToggleEvent = (document?: Document) => {
+    if (!document) return;
     document.addEventListener("click", toggleProgressBar);
   };
 
@@ -46,7 +47,8 @@ const useUpdateCustomStyle = () => {
 const useTextSelect = () => {
   const setSelection = useSetAtom(selectionAtom);
 
-  const addTextSelectEvent = (document: Document) => {
+  const addTextSelectEvent = (document?: Document) => {
+    if (!document) return;
     document.addEventListener("mouseup", () => {
       const selection = document.getSelection();
       if (hasSelection(selection)) {
@@ -69,14 +71,11 @@ const useRendered = () => {
   useUpdateCustomStyle();
 
   const handleRendered = (section: Section, iframeView: IframeView) => {
-    const { contents } = iframeView;
-    const { document } = contents;
-
     setCurrentView(iframeView);
     setCurrentSection(section);
 
-    addProgressBarToggleEvent(document);
-    addTextSelectEvent(document);
+    addProgressBarToggleEvent(iframeView.contents?.document);
+    addTextSelectEvent(iframeView.contents?.document);
   };
 
   return handleRendered;

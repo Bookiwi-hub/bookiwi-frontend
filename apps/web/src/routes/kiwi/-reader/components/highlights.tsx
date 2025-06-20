@@ -5,19 +5,22 @@ import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import {
   annotationsAtom,
   bookAtom,
-  isCenterTouchedAtom,
+  currentViewAtom,
   selectedAnnotationAtom,
   setHighlightClickedAtom,
+  typographyAtom,
 } from "../atoms";
 
 function Highlights() {
-  const annotations = useAtomValue(annotationsAtom);
   const book = useAtomValue(bookAtom);
+  const annotations = useAtomValue(annotationsAtom);
   const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
   const setHighlightClicked = useSetAtom(setHighlightClickedAtom);
-  const setIsCenterTouched = useSetAtom(isCenterTouchedAtom);
+  const currentView = useAtomValue(currentViewAtom);
+  const typography = useAtomValue(typographyAtom);
+
   useEffect(() => {
-    if (!book) return () => {};
+    if (!currentView?.contents || !book) return () => {};
     annotations.forEach((annotation) => {
       const highlight = book.rendition.annotations.highlight(
         annotation.cfi,
@@ -39,17 +42,19 @@ function Highlights() {
         highlightElement.addEventListener("click", handleClick);
       }
     });
+
     return () => {
       annotations.forEach((annotation) => {
         book.rendition.annotations.remove(annotation.cfi, "highlight");
       });
     };
   }, [
+    currentView,
     annotations,
     book,
-    setSelectedAnnotation,
     setHighlightClicked,
-    setIsCenterTouched,
+    setSelectedAnnotation,
+    typography,
   ]);
 
   return null;
