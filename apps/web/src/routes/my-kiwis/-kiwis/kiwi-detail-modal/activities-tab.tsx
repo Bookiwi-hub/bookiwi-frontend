@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Separator } from "#/components/ui/separator";
-import { Kiwi, Participant } from "#/types/kiwi";
+import { Kiwi } from "#/types/kiwi";
 
 interface ActivitiesTabProps {
   kiwi: Kiwi;
@@ -15,7 +15,7 @@ function ActivitiesTab({ kiwi }: ActivitiesTabProps) {
       <div className="space-y-3">
         <h3 className="font-medium">팀원 진도율</h3>
         <div className="space-y-3 rounded-lg border p-4">
-          {participants.map((participant: Participant) => (
+          {participants.map((participant) => (
             <div key={participant.userId} className="flex items-center gap-3">
               <Avatar className="size-8">
                 <AvatarImage src={participant.profileImage} />

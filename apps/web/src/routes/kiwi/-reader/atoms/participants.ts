@@ -5,7 +5,6 @@ import { updateIDBParticipant, updateCustomStyle } from "../utils";
 import { bookAtom } from "./book";
 
 import { ParticipantIDBData } from "#/types/idb";
-import { Bookmark, ReadingRecord, Settings } from "#/types/kiwi";
 
 export const participantsAtom = atom<ParticipantIDBData[]>([]);
 
@@ -32,15 +31,21 @@ export const percentageAtom = atom<number | null>((get) => {
   );
   return percent;
 });
-export const bookmarksAtom = atom<Bookmark[]>([]);
+export const bookmarksAtom = atom<ParticipantIDBData["record"]["bookmarks"]>(
+  [],
+);
 
-export const recordAtom = atom<ReadingRecord, [ReadingRecord], void>(
+export const recordAtom = atom<
+  ParticipantIDBData["record"],
+  [ParticipantIDBData["record"]],
+  void
+>(
   (get) => ({
     currentCfi: get(currentCfiAtom),
     percentage: get(percentageAtom),
     bookmarks: get(bookmarksAtom),
   }),
-  (get, set, newRecord: ReadingRecord) => {
+  (get, set, newRecord: ParticipantIDBData["record"]) => {
     set(currentCfiAtom, newRecord.currentCfi);
     set(bookmarksAtom, newRecord.bookmarks);
   },
@@ -95,7 +100,7 @@ export const fontSizeAtom = atom<number | null>(null);
 export const lineHeightAtom = atom<number | null>(null);
 export const fontWeightAtom = atom<number | null>(null);
 
-type Typography = Omit<Settings, "isSinglePage">;
+type Typography = Omit<ParticipantIDBData["settings"], "isSinglePage">;
 
 export const typographyAtom = atom<Typography, [Typography], void>(
   (get) => ({
@@ -112,7 +117,11 @@ export const typographyAtom = atom<Typography, [Typography], void>(
   },
 );
 
-export const settingsAtom = atom<Settings, [Settings], void>(
+export const settingsAtom = atom<
+  ParticipantIDBData["settings"],
+  [ParticipantIDBData["settings"]],
+  void
+>(
   (get) => ({
     isSinglePage: get(isSinglePageAtom),
     fontFamily: get(fontFamilyAtom),
@@ -120,7 +129,7 @@ export const settingsAtom = atom<Settings, [Settings], void>(
     lineHeight: get(lineHeightAtom),
     fontWeight: get(fontWeightAtom),
   }),
-  (get, set, newSettings: Settings) => {
+  (get, set, newSettings: ParticipantIDBData["settings"]) => {
     set(isSinglePageAtom, newSettings.isSinglePage);
     set(fontFamilyAtom, newSettings.fontFamily);
     set(fontSizeAtom, newSettings.fontSize);
