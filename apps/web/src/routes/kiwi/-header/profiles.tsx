@@ -15,7 +15,7 @@ interface ProfileButtonProps {
   color: string;
 }
 
-function ProfileIcon({ profileImage, color }: ProfileButtonProps) {
+function ProfileButton({ profileImage, color }: ProfileButtonProps) {
   return (
     <div className="relative m-2 cursor-pointer hover:bg-gray-100">
       <Avatar className="size-8">
@@ -40,8 +40,8 @@ function Profiles({ profileImage, color }: ProfilesProps) {
   const participants = useAtomValue(participantsAtom);
   return (
     <Popover>
-      <PopoverTrigger>
-        <ProfileIcon profileImage={profileImage} color={color} />
+      <PopoverTrigger tabIndex={-1} onMouseDown={(e) => e.preventDefault()}>
+        <ProfileButton profileImage={profileImage} color={color} />
       </PopoverTrigger>
       <PopoverContent className="w-64 p-0">
         <div className="border-b px-4 py-3">
