@@ -33,7 +33,7 @@ function BookmarkButton() {
   const isBookmarked = currentLocation
     ? bookmarks.some((bookmark) =>
         isCfiInRange(
-          bookmark.cfi,
+          bookmark.cfi.start,
           currentLocation.start.cfi,
           currentLocation.end.cfi,
         ),

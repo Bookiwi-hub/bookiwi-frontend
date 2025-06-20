@@ -8,8 +8,10 @@ const useRelocated = () => {
   const setCurrentLocation = useSetAtom(currentLocationAtom);
 
   const handleRelocated = async (location: Location) => {
-    const { cfi } = location.start;
-    await setCurrentCfi(cfi);
+    await setCurrentCfi({
+      start: location.start.cfi,
+      end: location.end.cfi,
+    });
     setCurrentLocation(location);
   };
 

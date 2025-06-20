@@ -18,14 +18,17 @@ export const participantColorAtom = atom<string | null>(null);
 export const participantLastActivityAtAtom = atom<string | null>(null);
 
 // record
-
-export const currentCfiAtom = atom<string | null>(null);
+interface CurrentCfi {
+  start: string;
+  end: string;
+}
+export const currentCfiAtom = atom<CurrentCfi | null>(null);
 export const percentageAtom = atom<number | null>((get) => {
   const book = get(bookAtom);
   const currentCfi = get(currentCfiAtom);
   if (!book || !currentCfi) return null;
   const percent = Math.floor(
-    book.locations.percentageFromCfi(currentCfi) * 100,
+    book.locations.percentageFromCfi(currentCfi.end) * 100,
   );
   return percent;
 });
@@ -43,15 +46,18 @@ export const recordAtom = atom<ReadingRecord, [ReadingRecord], void>(
   },
 );
 
-export const setCurrentCfiAtom = atom(null, async (get, set, cfi: string) => {
-  set(currentCfiAtom, cfi);
-  set(participantLastActivityAtAtom, new Date().toISOString());
-  const updatedParticipant = get(participantAtom);
-  if (!updatedParticipant) return;
-  await updateIDBParticipant(updatedParticipant);
-});
+export const setCurrentCfiAtom = atom(
+  null,
+  async (get, set, cfi: CurrentCfi) => {
+    set(currentCfiAtom, cfi);
+    set(participantLastActivityAtAtom, new Date().toISOString());
+    const updatedParticipant = get(participantAtom);
+    if (!updatedParticipant) return;
+    await updateIDBParticipant(updatedParticipant);
+  },
+);
 
-export const setBookmarkAtom = atom(null, async (get, set, cfi: string) => {
+export const setBookmarkAtom = atom(null, async (get, set, cfi: CurrentCfi) => {
   const createdAt = new Date().toISOString();
   const newBookmark = {
     cfi,
@@ -65,16 +71,21 @@ export const setBookmarkAtom = atom(null, async (get, set, cfi: string) => {
   await updateIDBParticipant(updatedParticipant);
 });
 
-export const removeBookmarkAtom = atom(null, async (get, set, cfi: string) => {
-  set(
-    bookmarksAtom,
-    get(bookmarksAtom).filter((b) => b.cfi !== cfi),
-  );
-  set(participantLastActivityAtAtom, new Date().toISOString());
-  const updatedParticipant = get(participantAtom);
-  if (!updatedParticipant) return;
-  await updateIDBParticipant(updatedParticipant);
-});
+export const removeBookmarkAtom = atom(
+  null,
+  async (get, set, cfi: CurrentCfi) => {
+    set(
+      bookmarksAtom,
+      get(bookmarksAtom).filter(
+        (b) => b.cfi.start !== cfi.start && b.cfi.end !== cfi.end,
+      ),
+    );
+    set(participantLastActivityAtAtom, new Date().toISOString());
+    const updatedParticipant = get(participantAtom);
+    if (!updatedParticipant) return;
+    await updateIDBParticipant(updatedParticipant);
+  },
+);
 
 // settings
 
