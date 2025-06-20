@@ -6,6 +6,7 @@ import MobileKiwi from "./-mobile";
 import { ReaderProvider } from "./-reader";
 import SplitView from "./-split-view";
 
+import LoadingPage from "#/components/loading";
 import { Toaster } from "#/components/ui/sonner";
 import { isDesktop } from "#/constants/device-type";
 
@@ -22,6 +23,12 @@ export const Route = createFileRoute("/kiwi/$id")({
     ],
   }),
   component: isDesktop ? Kiwi : MobileKiwi,
+  pendingComponent: () => (
+    <LoadingPage
+      title="키위를 불러오는 중입니다"
+      message="잠시만 기다려주세요..."
+    />
+  ),
 });
 
 function Kiwi() {

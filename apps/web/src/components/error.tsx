@@ -19,11 +19,14 @@ function ErrorPage({
   showHomeButton = true,
 }: ErrorProps) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-300 p-6">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
       <div className="max-w-sm space-y-8 text-center">
         {/* 로고 */}
         <div className="flex justify-center">
-          <div className="rounded-full bg-white p-4 shadow-sm">
+          <div
+            className="rounded-full p-4 shadow-sm"
+            style={{ backgroundColor: primaryColor }}
+          >
             <img
               src="/images/icon.webp"
               alt="Bookiwi logo"
@@ -55,7 +58,6 @@ function ErrorPage({
             <Button
               asChild
               className="w-full rounded-full border-0 text-white transition-all hover:opacity-90 hover:shadow-lg"
-              style={{ backgroundColor: primaryColor }}
               size="lg"
             >
               <Link to="/my-kiwis">

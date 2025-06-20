@@ -10,16 +10,15 @@ function Header() {
     <header className="sticky top-0 z-20 bg-white/50">
       <nav className="flex items-center justify-between p-3 mobile:p-2">
         <div className="flex items-center">
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-xl font-bold text-primary mobile:text-lg"
-          >
+          <Link to="/" className="flex items-center gap-3">
             <img
               src="/images/icon.webp"
               alt="Bookiwi logo"
               className="size-12 mobile:size-10"
             />
-            Bookiwi
+            <span className="text-xl font-bold text-primary mobile:hidden">
+              Bookiwi
+            </span>
           </Link>
         </div>
         <div className="flex items-center gap-2">
