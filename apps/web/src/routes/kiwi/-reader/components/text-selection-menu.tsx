@@ -62,7 +62,7 @@ function TextSelectionMenu() {
     el.focus();
   };
 
-  const addHighlight = () => {
+  const addHighlight = async () => {
     const newAnnotation: AnnotationIDBData = {
       id: selectedText.id,
       kiwiId,
@@ -75,26 +75,26 @@ function TextSelectionMenu() {
       sectionHref: selectedText.sectionHref,
       comments: [],
     };
-    addAnnotation(newAnnotation);
+    await addAnnotation(newAnnotation);
     return newAnnotation;
   };
 
-  const handleAddHighlight = () => {
-    addHighlight();
+  const handleAddHighlight = async () => {
+    await addHighlight();
     hide();
   };
 
-  const handleComment = () => {
+  const handleComment = async () => {
     if (!selectedText.status.isAlreadyExists) {
-      const newAnnotation = addHighlight();
+      const newAnnotation = await addHighlight();
       setSelectedAnnotation(newAnnotation);
     }
     openHighlightTab();
     hide();
   };
 
-  const handleRemoveHighlight = () => {
-    removeAnnotation(selectedText.id);
+  const handleRemoveHighlight = async () => {
+    await removeAnnotation(selectedText.id);
     hide();
   };
 

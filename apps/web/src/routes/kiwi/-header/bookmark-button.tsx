@@ -43,13 +43,13 @@ function BookmarkButton() {
       )
     : false;
 
-  const toggleBookmark = () => {
+  const toggleBookmark = async () => {
     if (!currentCfi) return;
 
     if (isBookmarked) {
-      removeBookmark(currentCfi);
+      await removeBookmark(currentCfi);
     } else {
-      setBookmark(currentCfi);
+      await setBookmark(currentCfi);
     }
   };
 

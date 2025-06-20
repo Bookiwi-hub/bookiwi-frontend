@@ -29,8 +29,8 @@ interface BookmarkItemProps {
   index: number;
   navItemLabel: string;
   percentage: number;
-  onClick: (cfi: string) => void;
-  onRemove: (cfi: { start: string; end: string }) => void;
+  onClick: () => void;
+  onRemove: () => Promise<void>;
 }
 
 function BookmarkItem({
@@ -45,7 +45,7 @@ function BookmarkItem({
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <li
       className="group relative flex w-full items-start gap-3 rounded-md border border-transparent p-3 text-left transition-all hover:border-border hover:bg-accent/40"
-      onClick={() => onClick(bookmark.cfi.start)}
+      onClick={onClick}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
       role="button"
     >
@@ -66,7 +66,7 @@ function BookmarkItem({
         className="absolute right-3 top-3 rounded-full p-1 opacity-0 transition-all hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
         onClick={(e) => {
           e.stopPropagation();
-          onRemove(bookmark.cfi);
+          onRemove();
         }}
         aria-label="Remove bookmark"
       >
@@ -80,11 +80,6 @@ function BookmarksPanel() {
   const book = useAtomValue(bookAtom);
   const bookmarks = useAtomValue(bookmarksAtom);
   const removeBookmark = useSetAtom(removeBookmarkAtom);
-
-  const handleBookmarkClick = (cfi: string) => {
-    if (!book) return;
-    book.rendition.display(cfi);
-  };
 
   return (
     <div className="px-1">
@@ -100,6 +95,13 @@ function BookmarksPanel() {
             const percentage = Math.floor(
               book.locations.percentageFromCfi(bookmark.cfi.start) * 100,
             );
+            const handleBookmarkClick = () => {
+              if (!book) return;
+              book.rendition.display(bookmark.cfi.start);
+            };
+            const handleRemove = async () => {
+              await removeBookmark(bookmark.cfi);
+            };
 
             return (
               <BookmarkItem
@@ -109,7 +111,7 @@ function BookmarksPanel() {
                 navItemLabel={navItem?.label || ""}
                 percentage={percentage}
                 onClick={handleBookmarkClick}
-                onRemove={removeBookmark}
+                onRemove={handleRemove}
               />
             );
           })}
