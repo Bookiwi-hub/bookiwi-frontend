@@ -28,5 +28,10 @@ export const Route = createRootRoute({
     </>
   ),
   errorComponent: () => <ErrorPage />,
-  notFoundComponent: () => <div>Not Found</div>,
+  notFoundComponent: () => (
+    <ErrorPage
+      title="페이지를 찾을 수 없어요"
+      message="홈으로 돌아가 볼까요?"
+    />
+  ),
 });
