@@ -1,4 +1,9 @@
 #!/bin/sh
+
+# Disable Oh My Zsh loading in non-interactive shells
+export ZSH_DISABLE_COMPFIX=true
+export DISABLE_AUTO_UPDATE=true
+
 . "$(dirname "$0")/_/husky.sh"
 
 pnpm lint-staged
