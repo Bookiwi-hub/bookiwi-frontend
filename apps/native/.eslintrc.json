@@ -18,5 +18,10 @@
     "global-require": "off",
     "react/no-unstable-nested-components": "off"
   },
-  "ignorePatterns": ["scripts/*"]
+  "ignorePatterns": [
+    "scripts/*",
+    "babel.config.js",
+    "metro.config.js",
+    "tailwind.config.js"
+  ]
 }
