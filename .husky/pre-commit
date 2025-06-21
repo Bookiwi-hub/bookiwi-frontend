@@ -1,6 +1,2 @@
 #!/bin/sh
-
-# Disable Oh My Zsh loading in non-interactive shells
-. "$(dirname "$0")/_/husky.sh"
-
 pnpm lint-staged
