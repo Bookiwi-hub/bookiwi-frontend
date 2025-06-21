@@ -1,4 +1,5 @@
 import {
+  Theme,
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
@@ -9,10 +10,20 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import "@/global.css";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { NAV_THEME } from "@/constants/Colors";
+import { useColorScheme } from "@/lib/useColorScheme";
+
+const LIGHT_THEME: Theme = {
+  ...DefaultTheme,
+  colors: NAV_THEME.light,
+};
+const DARK_THEME: Theme = {
+  ...DarkTheme,
+  colors: NAV_THEME.dark,
+};
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const { isDarkColorScheme } = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -23,7 +34,7 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <Stack>
         <Stack.Screen name="+not-found" />
       </Stack>
