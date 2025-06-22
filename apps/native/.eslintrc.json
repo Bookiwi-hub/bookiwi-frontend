@@ -1,0 +1,27 @@
+// https://docs.expo.dev/guides/using-eslint/
+
+// const expoConfig = require("eslint-config-expo/flat");
+
+// module.exports = [
+//   expoConfig,
+//   {
+//     ignores: ["dist/*"],
+//   },
+// ];
+
+{
+  "extends": ["../../.eslintrc.json", "eslint-config-expo"],
+  "rules": {
+    "@typescript-eslint/no-use-before-define": "off",
+    "react/style-prop-object": "off",
+    "react/require-default-props": "off",
+    "global-require": "off",
+    "react/no-unstable-nested-components": "off"
+  },
+  "ignorePatterns": [
+    "scripts/*",
+    "babel.config.js",
+    "metro.config.js",
+    "tailwind.config.js"
+  ]
+}

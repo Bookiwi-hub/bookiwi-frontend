@@ -1,0 +1,8 @@
+# ESLint ignore patterns
+# Ignore build outputs
+/build
+/dist
+/.expo
+
+# Ignore config files in native app
+apps/native/**/*.js 
