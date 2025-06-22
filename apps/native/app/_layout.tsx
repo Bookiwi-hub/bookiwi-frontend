@@ -10,8 +10,8 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import "@/global.css";
 
-import { NAV_THEME } from "@/constants/Colors";
-import { useColorScheme } from "@/lib/useColorScheme";
+import { NAV_THEME } from "@/constants/colors";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
