@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import getKiwisFromIndexedDB from "./-apis/get-kiwis";
-import { KiwisProvider } from "./-context";
 import Header from "./-header";
 import Kiwis from "./-kiwis";
+import CreateKiwiModal from "./-modals/create-kiwi";
 
 import LoadingPage from "#/components/loading";
 
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/my-kiwis/")({
       },
     ],
   }),
-  component: MyKiwisPage,
+  component: MyKiwis,
   pendingComponent: () => (
     <LoadingPage
       title="북키위에 오신 것을 환영합니다"
@@ -29,21 +29,14 @@ export const Route = createFileRoute("/my-kiwis/")({
 });
 
 function MyKiwis() {
+  const kiwis = Route.useLoaderData();
   return (
     <div className="flex size-full flex-col">
       <Header />
       <main className="size-full bg-white p-6 mobile:p-4">
-        <Kiwis />
+        <Kiwis kiwis={kiwis} />
       </main>
+      <CreateKiwiModal />
     </div>
-  );
-}
-
-function MyKiwisPage() {
-  const kiwis = Route.useLoaderData();
-  return (
-    <KiwisProvider kiwis={kiwis}>
-      <MyKiwis />
-    </KiwisProvider>
   );
 }

@@ -1,5 +1,7 @@
 import { atom } from "@bookiwi/jotai";
 
+import { createKiwiModalOpenAtom } from "../atoms";
+
 import { CreateKiwi, Step } from "./types";
 
 export const stepAtom = atom<Step>(Step.One);
@@ -12,6 +14,19 @@ export const createKiwiAtom = atom<CreateKiwi>({
   password: null,
   file: null,
   shareCode: "",
+});
+export const closeCreateKiwiModalAtom = atom(null, (get, set) => {
+  set(createKiwiModalOpenAtom, false);
+  set(stepAtom, Step.One);
+  set(createKiwiAtom, {
+    kiwiName: "",
+    kiwiDescription: "",
+    kiwiDetailDescription: "",
+    maxParticipants: 10,
+    password: null,
+    file: null,
+    shareCode: "",
+  });
 });
 
 // step one

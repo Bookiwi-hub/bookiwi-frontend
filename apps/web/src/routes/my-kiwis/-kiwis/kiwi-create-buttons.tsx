@@ -1,14 +1,15 @@
 import { Plus } from "lucide-react";
 import { memo } from "react";
 
+import { useSetAtom } from "@bookiwi/jotai";
+
+import { createKiwiModalOpenAtom } from "../-modals/atoms";
+
 import { Button } from "#/components/ui/button";
 import { Card, CardContent } from "#/components/ui/card";
 
-interface SetIsModalOpenProps {
-  setIsModalOpen: (isModalOpen: boolean) => void;
-}
-
-function CreateKiwiCardButton({ setIsModalOpen }: SetIsModalOpenProps) {
+function CreateKiwiCardButton() {
+  const setIsModalOpen = useSetAtom(createKiwiModalOpenAtom);
   return (
     <Card
       className="group min-h-[300px] w-full cursor-pointer border border-dashed bg-card/50 transition-all duration-300 hover:border-primary/70 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/20"
@@ -31,7 +32,8 @@ function CreateKiwiCardButton({ setIsModalOpen }: SetIsModalOpenProps) {
   );
 }
 
-function CreateKiwiButton({ setIsModalOpen }: SetIsModalOpenProps) {
+function CreateKiwiButton() {
+  const setIsModalOpen = useSetAtom(createKiwiModalOpenAtom);
   return (
     <Button
       variant="outline"

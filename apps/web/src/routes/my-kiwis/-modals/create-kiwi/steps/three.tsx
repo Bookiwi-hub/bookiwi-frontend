@@ -24,7 +24,7 @@ function StepThree() {
   useEffect(() => {
     // Strict Mode에서 중복 실행 방지
     if (hasExecutedRef.current) {
-      return () => {};
+      return;
     }
     hasExecutedRef.current = true;
 
@@ -112,6 +112,8 @@ function StepThree() {
           locations: bookInfo.locations,
         };
 
+        console.log("asdasdad");
+
         await idb.add(IDBStore.KiwiStore, kiwiIDBData);
         await idb.add(IDBStore.EpubStore, epubIDBData);
         await idb.add(IDBStore.ParticipantStore, participantIDBData);
@@ -124,13 +126,6 @@ function StepThree() {
       }
     };
     handleSubmit();
-
-    return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      hasExecutedRef.current = false;
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

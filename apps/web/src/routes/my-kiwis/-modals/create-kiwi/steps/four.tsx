@@ -3,8 +3,7 @@ import { useState } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { createKiwiModalOpenAtom } from "../../atoms";
-import { createKiwiAtom } from "../atoms";
+import { closeCreateKiwiModalAtom, createKiwiAtom } from "../atoms";
 
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
@@ -14,17 +13,13 @@ import { primaryColor } from "#/constants/color";
 function StepFour() {
   const newKiwi = useAtomValue(createKiwiAtom);
   const [copied, setCopied] = useState(false);
-  const setOpen = useSetAtom(createKiwiModalOpenAtom);
+  const closeCreateKiwiModal = useSetAtom(closeCreateKiwiModalAtom);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(newKiwi.shareCode).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -67,7 +62,7 @@ function StepFour() {
         </p>
       </div>
       <DialogFooter className="sm:justify-between">
-        <Button onClick={handleClose} className="ml-auto">
+        <Button onClick={closeCreateKiwiModal} className="ml-auto">
           완료
         </Button>
       </DialogFooter>
