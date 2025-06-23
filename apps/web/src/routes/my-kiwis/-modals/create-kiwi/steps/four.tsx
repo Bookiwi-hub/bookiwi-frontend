@@ -9,6 +9,7 @@ import { createKiwiAtom } from "../atoms";
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
+import { primaryColor } from "#/constants/color";
 
 function StepFour() {
   const newKiwi = useAtomValue(createKiwiAtom);
@@ -29,8 +30,13 @@ function StepFour() {
   return (
     <>
       <div className="flex flex-col items-center space-y-4 py-8">
-        <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
-          <Check className="size-6 text-primary" />
+        <div
+          className="flex size-12 items-center justify-center rounded-full"
+          style={{
+            backgroundColor: primaryColor,
+          }}
+        >
+          <Check className="size-6 text-white" />
         </div>
         <h3 className="text-lg font-medium">
           {newKiwi.kiwiName} 키위가 생성되었습니다!
