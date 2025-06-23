@@ -1,5 +1,6 @@
 import { Check, Copy } from "lucide-react";
 import { ChangeEvent, useState } from "react";
+import { toast } from "sonner";
 
 import { useAtom, useSetAtom } from "@bookiwi/jotai";
 
@@ -19,7 +20,18 @@ function StepTwo() {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+      const file = e.target.files[0];
+      const fileName = file.name.toLowerCase();
+
+      if (fileName.endsWith(".epub")) {
+        setSelectedFile(file);
+        setError(false); // 에러 상태 리셋
+      } else {
+        setError(true);
+        toast.error("EPUB 파일만 업로드할 수 있습니다.");
+        setSelectedFile(null);
+        e.target.value = "";
+      }
     }
   };
 
