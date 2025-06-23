@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 
 import { useKiwis } from "../-context";
+import CreateKiwiModal from "../-modals/create-kiwi";
 
-import CreateKiwiModal from "./create-kiwi-modal";
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
