@@ -1,5 +1,7 @@
 import { useAtom } from "@bookiwi/jotai";
 
+import { createKiwiModalOpenAtom } from "../atoms";
+
 import { stepAtom } from "./atoms";
 import { Descriptions, Titles } from "./constants";
 import Steps from "./steps";
@@ -13,17 +15,15 @@ import {
   DialogTitle,
 } from "#/components/ui/dialog";
 
-interface ModalProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
-
-function CreateKiwiModal({ open, setOpen }: ModalProps) {
+function CreateKiwiModal() {
   const [step, setStep] = useAtom(stepAtom);
+  const [open, setOpen] = useAtom(createKiwiModalOpenAtom);
   const handleClose = () => {
     setOpen(false);
     setStep(Step.One);
   };
+
+  if (!open) return null;
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>

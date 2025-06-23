@@ -1,6 +1,9 @@
 import { useCallback, useState } from "react";
 
+import { useSetAtom } from "@bookiwi/jotai";
+
 import { useKiwis } from "../-context";
+import { createKiwiModalOpenAtom } from "../-modals/atoms";
 import CreateKiwiModal from "../-modals/create-kiwi";
 
 import KiwiCard from "./kiwi-card";
@@ -15,7 +18,7 @@ import { formatDate } from "#/utils/format-date";
 
 function Kiwis() {
   const { kiwis } = useKiwis();
-  const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
+  const setIsCreateKiwiModalOpen = useSetAtom(createKiwiModalOpenAtom);
   const [isKiwiDetailModalOpen, setIsKiwiDetailModalOpen] = useState(false);
   const [selectedKiwi, setSelectedKiwi] = useState<Kiwi | null>(null);
   const handleSetSelectedKiwi = useCallback(
@@ -73,12 +76,7 @@ function Kiwis() {
           )}
         </div>
       </div>
-      {isCreateKiwiModalOpen && (
-        <CreateKiwiModal
-          open={isCreateKiwiModalOpen}
-          setOpen={setIsCreateKiwiModalOpen}
-        />
-      )}
+      <CreateKiwiModal />
       {isKiwiDetailModalOpen && selectedKiwi && (
         <KiwiDetailModal
           kiwi={selectedKiwi}
