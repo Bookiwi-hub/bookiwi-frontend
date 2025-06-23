@@ -33,14 +33,6 @@ function StepOne() {
       errorState.kiwiName = true;
       isValid = false;
     }
-    if (state.kiwiDescription.trim() === "") {
-      errorState.kiwiDescription = true;
-      isValid = false;
-    }
-    if (state.kiwiDetailDescription.trim() === "") {
-      errorState.kiwiDetailDescription = true;
-      isValid = false;
-    }
     if (state.maxParticipants <= 0 || state.maxParticipants > 10) {
       errorState.maxParticipants = true;
       isValid = false;
@@ -90,11 +82,6 @@ function StepOne() {
           onChange={(e) =>
             dispatch({ type: "SET_KIWI_DESCRIPTION", value: e.target.value })
           }
-          error={{
-            status: error.kiwiDescription,
-            message: "키위 설명을 입력해주세요",
-          }}
-          required
         />
 
         <div className="space-y-2">
@@ -215,7 +202,7 @@ interface KiwiInfoInputProps {
   placeholder: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  error: { status: boolean; message: string };
+  error?: { status: boolean; message: string };
   required?: boolean;
 }
 
@@ -235,7 +222,7 @@ function KiwiInfoInput({
           {label}{" "}
           {required && <span className="text-xs text-destructive">*</span>}
         </Label>
-        {error.status && (
+        {error?.status && (
           <span className="flex items-center gap-1 text-xs text-destructive">
             <AlertCircle className="size-3" />
             {error.message}
@@ -247,7 +234,7 @@ function KiwiInfoInput({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={cn(error.status && "border-destructive")}
+        className={cn(error?.status && "border-destructive")}
       />
     </div>
   );

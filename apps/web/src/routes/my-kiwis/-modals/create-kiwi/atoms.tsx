@@ -18,15 +18,11 @@ export const createKiwiAtom = atom<CreateKiwi>({
 
 export const stepOneErrorAtom = atom<{
   kiwiName: boolean;
-  kiwiDescription: boolean;
-  kiwiDetailDescription: boolean;
   maxParticipants: boolean;
   password: boolean;
   confirmPassword: boolean;
 }>({
   kiwiName: false,
-  kiwiDescription: false,
-  kiwiDetailDescription: false,
   maxParticipants: false,
   password: false,
   confirmPassword: false,
@@ -114,18 +110,12 @@ export const stepOneAtom = atom(
 export const fileAtom = atom(
   (get) => {
     const { file } = get(createKiwiAtom);
-    return { file };
+    return file;
   },
-  (get, set, file: File) => {
+  (get, set, file: File | null) => {
     set(createKiwiAtom, {
       ...get(createKiwiAtom),
       file,
     });
   },
 );
-
-export const stepTwoErrorAtom = atom<{
-  file: boolean;
-}>({
-  file: false,
-});
