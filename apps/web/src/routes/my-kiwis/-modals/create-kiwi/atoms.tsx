@@ -119,3 +119,12 @@ export const fileAtom = atom(
     });
   },
 );
+
+// step three
+
+export const setShareCodeAtom = atom(null, (get, set, shareCode: string) => {
+  set(createKiwiAtom, {
+    ...get(createKiwiAtom),
+    shareCode,
+  });
+});

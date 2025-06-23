@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { createKiwiAtom, stepAtom } from "../atoms";
+import { createKiwiAtom, setShareCodeAtom, stepAtom } from "../atoms";
 import { Step } from "../types";
 
 import tempUser from "#/DB/users";
@@ -15,6 +15,7 @@ import { fileToBookInfo } from "#/utils/epubjs";
 
 function StepThree() {
   const newKiwi = useAtomValue(createKiwiAtom);
+  const setShareCode = useSetAtom(setShareCodeAtom);
   const setStep = useSetAtom(stepAtom);
   const abortControllerRef = useRef<AbortController | null>(null);
   const hasExecutedRef = useRef(false);
@@ -116,6 +117,7 @@ function StepThree() {
         await idb.add(IDBStore.ParticipantStore, participantIDBData);
 
         await router.invalidate();
+        setShareCode(generatedShareCode);
         setStep(Step.Four);
       } catch (error) {
         alert("키위 생성 중 오류가 발생했습니다.");
