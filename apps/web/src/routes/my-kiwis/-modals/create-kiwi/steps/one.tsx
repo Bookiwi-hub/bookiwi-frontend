@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 
 import { useAtom, useSetAtom } from "@bookiwi/jotai";
 
-import { errorAtom, stepAtom, stepOneAtom } from "../atom";
+import { stepOneErrorAtom, stepAtom, stepOneAtom } from "../atoms";
 import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";
@@ -16,7 +16,7 @@ import { cn } from "#/lib/utils";
 
 function StepOne() {
   const [state, dispatch] = useAtom(stepOneAtom);
-  const [error, setError] = useAtom(errorAtom);
+  const [error, setError] = useAtom(stepOneErrorAtom);
   const setStep = useSetAtom(stepAtom);
 
   const validateStepOne = () => {

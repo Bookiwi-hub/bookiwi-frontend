@@ -14,7 +14,9 @@ export const createKiwiAtom = atom<CreateKiwi>({
   shareCode: "",
 });
 
-export const errorAtom = atom<{
+// step one
+
+export const stepOneErrorAtom = atom<{
   kiwiName: boolean;
   kiwiDescription: boolean;
   kiwiDetailDescription: boolean;
@@ -38,12 +40,9 @@ interface Action {
     | "SET_MAX_PARTICIPANTS"
     | "SET_PASSWORD"
     | "SET_PASSWORD_CONFIRM"
-    | "SET_FILE"
     | "SET_PASSWORD_PROTECTED";
-  value: string | number | File | null | boolean;
+  value: string | number | null | boolean;
 }
-
-// step one
 export const passwordProtectedAtom = atom<boolean>(false);
 export const confirmPasswordAtom = atom<string>("");
 export const stepOneAtom = atom(
@@ -110,3 +109,23 @@ export const stepOneAtom = atom(
     }
   },
 );
+
+// step two
+export const fileAtom = atom(
+  (get) => {
+    const { file } = get(createKiwiAtom);
+    return { file };
+  },
+  (get, set, file: File) => {
+    set(createKiwiAtom, {
+      ...get(createKiwiAtom),
+      file,
+    });
+  },
+);
+
+export const stepTwoErrorAtom = atom<{
+  file: boolean;
+}>({
+  file: false,
+});

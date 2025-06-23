@@ -1,6 +1,6 @@
 import { useAtom } from "@bookiwi/jotai";
 
-import { stepAtom } from "./atom";
+import { stepAtom } from "./atoms";
 import { Descriptions, Titles } from "./constants";
 import Steps from "./steps";
 import { Step } from "./types";
