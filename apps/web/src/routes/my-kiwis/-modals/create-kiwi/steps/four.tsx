@@ -31,7 +31,7 @@ function StepFour() {
             backgroundColor: primaryColor,
           }}
         >
-          <Check className="size-6 text-white" />
+          <Check className="size-6 text-slate-600" />
         </div>
         <h3 className="text-lg font-medium">
           {newKiwi.kiwiName} 키위가 생성되었습니다!
