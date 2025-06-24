@@ -1,8 +1,10 @@
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { createKiwiModalOpenAtom } from "../atoms";
-
-import { closeCreateKiwiModalAtom, stepAtom } from "./atoms";
+import {
+  closeCreateKiwiModalAtom,
+  createKiwiModalOpenAtom,
+  stepAtom,
+} from "./atoms";
 import { Descriptions, Titles } from "./constants";
 import Steps from "./steps";
 import { Step } from "./types";

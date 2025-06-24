@@ -1,9 +1,8 @@
 import { atom } from "@bookiwi/jotai";
 
-import { createKiwiModalOpenAtom } from "../atoms";
-
 import { CreateKiwi, Step } from "./types";
 
+export const createKiwiModalOpenAtom = atom<boolean>(false);
 export const stepAtom = atom<Step>(Step.One);
 
 export const createKiwiAtom = atom<CreateKiwi>({

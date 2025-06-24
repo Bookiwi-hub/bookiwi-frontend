@@ -3,7 +3,7 @@ import { memo } from "react";
 
 import { useSetAtom } from "@bookiwi/jotai";
 
-import { createKiwiModalOpenAtom } from "../-modals/atoms";
+import { createKiwiModalOpenAtom } from "../-modals/create-kiwi/atoms";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardContent } from "#/components/ui/card";

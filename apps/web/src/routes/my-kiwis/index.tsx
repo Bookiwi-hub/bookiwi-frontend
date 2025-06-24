@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import getKiwisFromIndexedDB from "./-apis/get-kiwis";
 import Header from "./-header";
 import Kiwis from "./-kiwis";
-import CreateKiwiModal from "./-modals/create-kiwi";
 
 import LoadingPage from "#/components/loading";
 
@@ -36,7 +35,6 @@ function MyKiwis() {
       <main className="size-full bg-white p-6 mobile:p-4">
         <Kiwis kiwis={kiwis} />
       </main>
-      <CreateKiwiModal />
     </div>
   );
 }

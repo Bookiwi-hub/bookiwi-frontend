@@ -1,31 +1,17 @@
-import { useCallback, useState } from "react";
+import { CreateKiwiModal, DetailKiwiModal } from "../-modals";
 
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
-import KiwiDetailModal from "./kiwi-detail-modal";
 import KiwiSampleCard from "./kiwi-sample-card";
 
-import tempUser from "#/DB/users";
 import { Kiwi } from "#/types/kiwi";
-import { formatDate } from "#/utils/format-date";
 
 interface KiwisProps {
   kiwis: Kiwi[];
 }
 
 function Kiwis({ kiwis }: KiwisProps) {
-  const [isKiwiDetailModalOpen, setIsKiwiDetailModalOpen] = useState(false);
-  const [selectedKiwi, setSelectedKiwi] = useState<Kiwi | null>(null);
-  const handleSetSelectedKiwi = useCallback(
-    (id: string) => {
-      const selectedKiwiData = kiwis.find((kiwi) => kiwi.id === id);
-      setSelectedKiwi(selectedKiwiData || null);
-      setIsKiwiDetailModalOpen(true);
-    },
-    [kiwis],
-  );
-
   return (
     <>
       <div className="w-full">
@@ -45,40 +31,12 @@ function Kiwis({ kiwis }: KiwisProps) {
               <KiwiSampleCard />
             </>
           ) : (
-            kiwis.map((kiwi) => {
-              const { name, description, coverImage, participants, id } = kiwi;
-              const participantsCount = participants.length;
-              const currentParticipant = participants.find(
-                (participant) => participant.userId === tempUser.id,
-              );
-              const progress = currentParticipant?.progress || 0;
-              const lastActivityAt = currentParticipant?.lastActivityAt
-                ? formatDate(currentParticipant.lastActivityAt)
-                : "";
-              return (
-                <KiwiCard
-                  key={id}
-                  id={id}
-                  name={name}
-                  description={description}
-                  coverImage={coverImage || ""}
-                  progress={progress}
-                  participantsCount={participantsCount}
-                  lastActivityAt={lastActivityAt}
-                  handleSetSelectedKiwi={handleSetSelectedKiwi}
-                />
-              );
-            })
+            kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
           )}
         </div>
       </div>
-      {isKiwiDetailModalOpen && selectedKiwi && (
-        <KiwiDetailModal
-          kiwi={selectedKiwi}
-          isOpen={isKiwiDetailModalOpen}
-          onClose={() => setIsKiwiDetailModalOpen(false)}
-        />
-      )}
+      <DetailKiwiModal />
+      <CreateKiwiModal />
     </>
   );
 }
