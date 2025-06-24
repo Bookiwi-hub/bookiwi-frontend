@@ -1,5 +1,5 @@
 import { AlertCircle } from "lucide-react";
-import { ChangeEvent } from "react";
+import { ComponentPropsWithoutRef } from "react";
 
 import { useAtom, useSetAtom } from "@bookiwi/jotai";
 
@@ -107,37 +107,26 @@ function StepOne() {
           />
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label
-              htmlFor="max-participants"
-              className="flex items-center gap-1"
-            >
-              최대인원 <span className="text-xs text-destructive">*</span>
-            </Label>
-            {error.maxParticipants && (
-              <span className="flex items-center gap-1 text-xs text-destructive">
-                <AlertCircle className="size-3" />
-                올바른 인원수를 입력해주세요
-              </span>
-            )}
-          </div>
-          <Input
-            id="max-participants"
-            type="number"
-            placeholder="최대 참여 인원수를 입력하세요"
-            value={state.maxParticipants}
-            onChange={(e) =>
-              dispatch({
-                type: "SET_MAX_PARTICIPANTS",
-                value: Number(e.target.value),
-              })
-            }
-            className={cn(false && "border-destructive")}
-            min={1}
-            max={10}
-          />
-        </div>
+        <KiwiInfoInput
+          label="최대인원"
+          id="max-participants"
+          type="number"
+          placeholder="최대 참여 인원수를 입력하세요"
+          value={state.maxParticipants}
+          onChange={(e) =>
+            dispatch({
+              type: "SET_MAX_PARTICIPANTS",
+              value: Number(e.target.value),
+            })
+          }
+          error={{
+            status: error.maxParticipants,
+            message: "최대 참여 인원수를 입력해주세요",
+          }}
+          required
+          min={1}
+          max={10}
+        />
 
         <div className="flex items-center gap-2 space-y-0">
           <Label htmlFor="password-protection">암호 설정</Label>
@@ -158,6 +147,7 @@ function StepOne() {
             <KiwiInfoInput
               label="암호"
               id="password"
+              type="password"
               placeholder="암호를 입력하세요"
               value={state.password ?? ""}
               onChange={(e) =>
@@ -171,6 +161,7 @@ function StepOne() {
             <KiwiInfoInput
               label="암호 확인"
               id="confirm-password"
+              type="password"
               placeholder="암호를 다시 입력하세요"
               value={state.confirmPassword}
               onChange={(e) =>
@@ -196,12 +187,9 @@ function StepOne() {
   );
 }
 
-interface KiwiInfoInputProps {
+interface KiwiInfoInputProps extends ComponentPropsWithoutRef<"input"> {
   label: string;
   id: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   error?: { status: boolean; message: string };
   required?: boolean;
 }
@@ -209,12 +197,11 @@ interface KiwiInfoInputProps {
 function KiwiInfoInput({
   label,
   id,
-  placeholder,
-  value,
-  onChange,
   error,
   required,
+  ...props
 }: KiwiInfoInputProps) {
+  const { className, ...inputProps } = props;
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -231,10 +218,8 @@ function KiwiInfoInput({
       </div>
       <Input
         id={id}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className={cn(error?.status && "border-destructive")}
+        {...inputProps}
+        className={cn(error?.status && "border-destructive", className)}
       />
     </div>
   );
