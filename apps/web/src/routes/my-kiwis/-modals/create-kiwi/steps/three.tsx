@@ -7,6 +7,8 @@ import { createKiwiAtom, setShareCodeAtom, stepAtom } from "../atoms";
 import { Step } from "../types";
 
 import tempUser from "#/DB/users";
+import { Button } from "#/components/ui/button";
+import { DialogFooter } from "#/components/ui/dialog";
 import { color, primaryColor } from "#/constants/color";
 import { IDBStore } from "#/constants/idb";
 import idb from "#/managers/idb";
@@ -20,6 +22,11 @@ function StepThree() {
   const abortControllerRef = useRef<AbortController | null>(null);
   const hasExecutedRef = useRef(false);
   const router = useRouter();
+
+  const handleCancel = () => {
+    abortControllerRef.current?.abort();
+    setStep(Step.Two);
+  };
 
   useEffect(() => {
     // Strict Mode에서 중복 실행 방지
@@ -112,8 +119,6 @@ function StepThree() {
           locations: bookInfo.locations,
         };
 
-        console.log("asdasdad");
-
         await idb.add(IDBStore.KiwiStore, kiwiIDBData);
         await idb.add(IDBStore.EpubStore, epubIDBData);
         await idb.add(IDBStore.ParticipantStore, participantIDBData);
@@ -130,27 +135,34 @@ function StepThree() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-6 py-10">
-      <div className="flex justify-center">
-        <div
-          className="rounded-full p-4 shadow-sm"
-          style={{ backgroundColor: primaryColor }}
-        >
-          <img
-            src="/images/icon.webp"
-            alt="Bookiwi logo"
-            className="size-16 animate-bounce"
-          />
+    <>
+      <div className="flex flex-col items-center justify-center space-y-6 py-10">
+        <div className="flex justify-center">
+          <div
+            className="rounded-full p-4 shadow-sm"
+            style={{ backgroundColor: primaryColor }}
+          >
+            <img
+              src="/images/icon.webp"
+              alt="Bookiwi logo"
+              className="size-16 animate-bounce"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-3 text-center">
+          <h3 className="text-lg font-medium">키위를 만들고 있어요</h3>
+          <p className="text-sm text-muted-foreground">
+            시간이 거릴 수 있어요. 잠시만 기다려주세요.
+          </p>
         </div>
       </div>
-
-      <div className="space-y-3 text-center">
-        <h3 className="text-lg font-medium">키위를 만들고 있어요</h3>
-        <p className="text-sm text-muted-foreground">
-          시간이 거릴 수 있어요. 잠시만 기다려주세요.
-        </p>
-      </div>
-    </div>
+      <DialogFooter className="sm:justify-between">
+        <Button onClick={handleCancel} className="ml-auto">
+          취소
+        </Button>
+      </DialogFooter>
+    </>
   );
 }
 
