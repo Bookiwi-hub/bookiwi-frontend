@@ -12,7 +12,7 @@ function CreateKiwiCardButton() {
   const setIsModalOpen = useSetAtom(createKiwiModalOpenAtom);
   return (
     <Card
-      className="group min-h-[300px] w-full cursor-pointer border border-dashed bg-card/50 transition-all duration-300 hover:border-primary/70 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/20"
+      className="group h-96 w-full max-w-72 cursor-pointer border border-dashed bg-card/50 transition-all duration-300 hover:border-primary/70 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/20"
       onClick={() => setIsModalOpen(true)}
     >
       <CardContent className="flex h-full flex-col items-center justify-center gap-6 p-8">

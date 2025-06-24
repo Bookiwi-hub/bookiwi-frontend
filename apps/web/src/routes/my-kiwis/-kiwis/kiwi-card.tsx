@@ -67,7 +67,7 @@ function CardUI({
 }: CardUIProps) {
   return (
     <Card
-      className="group relative flex h-[420px] w-full max-w-[280px] cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
+      className="group relative flex h-96 w-full max-w-72 cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
       onClick={onClick}
     >
       {/* 이미지 영역 */}
