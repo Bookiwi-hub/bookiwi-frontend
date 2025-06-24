@@ -5,6 +5,7 @@ import { createKiwiModalOpenAtom } from "../atoms";
 import { closeCreateKiwiModalAtom, stepAtom } from "./atoms";
 import { Descriptions, Titles } from "./constants";
 import Steps from "./steps";
+import { Step } from "./types";
 
 import {
   Dialog,
@@ -19,9 +20,17 @@ function CreateKiwiModal() {
   const open = useAtomValue(createKiwiModalOpenAtom);
   const closeCreateKiwiModal = useSetAtom(closeCreateKiwiModalAtom);
 
+  const handleOpenChange = (newOpen: boolean) => {
+    // Step 3일 때는 모달이 닫히는 것을 방지
+    if (!newOpen && step === Step.Three) {
+      return;
+    }
+    closeCreateKiwiModal();
+  };
+
   if (!open) return null;
   return (
-    <Dialog open onOpenChange={closeCreateKiwiModal}>
+    <Dialog open onOpenChange={handleOpenChange}>
       <DialogContent className="min-w-[450px] mobile:min-w-full">
         <DialogHeader>
           <DialogTitle>{Titles[step]}</DialogTitle>
