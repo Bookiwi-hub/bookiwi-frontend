@@ -7,7 +7,6 @@ import { ReaderProvider } from "./-reader";
 import SplitView from "./-split-view";
 
 import LoadingPage from "#/components/loading";
-import { Toaster } from "#/components/ui/sonner";
 import { isDesktop } from "#/constants/device-type";
 
 export const Route = createFileRoute("/kiwi/$id")({
@@ -48,12 +47,9 @@ function Kiwi() {
 
 function KiwiContent() {
   return (
-    <>
-      <main className="flex size-full select-none flex-col overflow-hidden">
-        <Header />
-        <SplitView />
-      </main>
-      <Toaster />
-    </>
+    <main className="flex size-full select-none flex-col overflow-hidden">
+      <Header />
+      <SplitView />
+    </main>
   );
 }
