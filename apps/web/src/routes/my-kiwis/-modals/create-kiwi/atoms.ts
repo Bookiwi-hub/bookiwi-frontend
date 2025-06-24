@@ -30,31 +30,16 @@ export const closeCreateKiwiModalAtom = atom(null, (get, set) => {
 
 // step one
 
-export const stepOneErrorAtom = atom<{
-  kiwiName: boolean;
-  maxParticipants: boolean;
-  password: boolean;
-  confirmPassword: boolean;
-}>({
-  kiwiName: false,
-  maxParticipants: false,
-  password: false,
-  confirmPassword: false,
-});
-
 interface Action {
   type:
     | "SET_KIWI_NAME"
     | "SET_KIWI_DESCRIPTION"
     | "SET_KIWI_DETAIL_DESCRIPTION"
     | "SET_MAX_PARTICIPANTS"
-    | "SET_PASSWORD"
-    | "SET_PASSWORD_CONFIRM"
-    | "SET_PASSWORD_PROTECTED";
-  value: string | number | null | boolean;
+    | "SET_PASSWORD";
+  value: string | number | null;
 }
-export const passwordProtectedAtom = atom<boolean>(false);
-export const confirmPasswordAtom = atom<string>("");
+
 export const stepOneAtom = atom(
   (get) => {
     const {
@@ -64,16 +49,12 @@ export const stepOneAtom = atom(
       maxParticipants,
       password,
     } = get(createKiwiAtom);
-    const confirmPassword = get(confirmPasswordAtom);
-    const passwordProtected = get(passwordProtectedAtom);
     return {
       kiwiName,
       kiwiDescription,
       kiwiDetailDescription,
       maxParticipants,
       password,
-      confirmPassword,
-      passwordProtected,
     };
   },
   (get, set, action: Action) => {
@@ -108,12 +89,6 @@ export const stepOneAtom = atom(
           ...get(createKiwiAtom),
           password: value as string,
         });
-        break;
-      case "SET_PASSWORD_CONFIRM":
-        set(confirmPasswordAtom, value as string);
-        break;
-      case "SET_PASSWORD_PROTECTED":
-        set(passwordProtectedAtom, value as boolean);
         break;
       default:
     }

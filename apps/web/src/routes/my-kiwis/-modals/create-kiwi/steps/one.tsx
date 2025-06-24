@@ -1,9 +1,9 @@
 import { AlertCircle } from "lucide-react";
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, useState } from "react";
 
 import { useAtom, useSetAtom } from "@bookiwi/jotai";
 
-import { stepOneErrorAtom, stepAtom, stepOneAtom } from "../atoms";
+import { stepAtom, stepOneAtom } from "../atoms";
 import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";
@@ -16,7 +16,18 @@ import { cn } from "#/lib/utils";
 
 function StepOne() {
   const [state, dispatch] = useAtom(stepOneAtom);
-  const [error, setError] = useAtom(stepOneErrorAtom);
+  const [error, setError] = useState({
+    kiwiName: false,
+    kiwiDescription: false,
+    kiwiDetailDescription: false,
+    maxParticipants: false,
+    password: false,
+    confirmPassword: false,
+  });
+  const [passwordProtected, setPasswordProtected] = useState(
+    state.password !== null && state.password !== "",
+  );
+  const [confirmPassword, setConfirmPassword] = useState("");
   const setStep = useSetAtom(stepAtom);
 
   const validateStepOne = () => {
@@ -37,11 +48,11 @@ function StepOne() {
       errorState.maxParticipants = true;
       isValid = false;
     }
-    if (state.passwordProtected) {
+    if (passwordProtected) {
       if (state.password?.trim() === "" || state.password === null) {
         errorState.password = true;
         isValid = false;
-      } else if (state.password !== state.confirmPassword) {
+      } else if (state.password !== confirmPassword) {
         errorState.confirmPassword = true;
         isValid = false;
       }
@@ -132,17 +143,12 @@ function StepOne() {
           <Label htmlFor="password-protection">암호 설정</Label>
           <Switch
             id="password-protection"
-            checked={state.passwordProtected}
-            onCheckedChange={(checked) =>
-              dispatch({
-                type: "SET_PASSWORD_PROTECTED",
-                value: checked,
-              })
-            }
+            checked={passwordProtected}
+            onCheckedChange={(checked) => setPasswordProtected(checked)}
           />
         </div>
 
-        {state.passwordProtected && (
+        {passwordProtected && (
           <div className="space-y-2">
             <KiwiInfoInput
               label="암호"
@@ -163,13 +169,8 @@ function StepOne() {
               id="confirm-password"
               type="password"
               placeholder="암호를 다시 입력하세요"
-              value={state.confirmPassword}
-              onChange={(e) =>
-                dispatch({
-                  type: "SET_PASSWORD_CONFIRM",
-                  value: e.target.value,
-                })
-              }
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               error={{
                 status: error.confirmPassword,
                 message: "비밀번호가 일치하지 않습니다",
