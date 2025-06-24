@@ -1,5 +1,6 @@
 import { useRouter } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { AlertTriangle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
@@ -22,6 +23,7 @@ function StepThree() {
   const abortControllerRef = useRef<AbortController | null>(null);
   const hasExecutedRef = useRef(false);
   const router = useRouter();
+  const [isFailed, setIsFailed] = useState(false);
 
   const handleCancel = () => {
     abortControllerRef.current?.abort();
@@ -127,13 +129,21 @@ function StepThree() {
         setShareCode(generatedShareCode);
         setStep(Step.Four);
       } catch (error) {
-        alert("키위 생성 중 오류가 발생했습니다.");
+        setIsFailed(true);
       }
     };
     handleSubmit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  return isFailed ? (
+    <FailedKiwi onGoBack={() => setStep(Step.Two)} />
+  ) : (
+    <LoadingKiwi onCancel={handleCancel} />
+  );
+}
+
+function LoadingKiwi({ onCancel }: { onCancel: () => void }) {
   return (
     <>
       <div className="flex flex-col items-center justify-center space-y-6 py-10">
@@ -158,8 +168,38 @@ function StepThree() {
         </div>
       </div>
       <DialogFooter className="sm:justify-between">
-        <Button onClick={handleCancel} className="ml-auto">
+        <Button onClick={onCancel} className="ml-auto">
           취소
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+function FailedKiwi({ onGoBack }: { onGoBack: () => void }) {
+  return (
+    <>
+      <div className="flex flex-col items-center justify-center space-y-6 py-10">
+        <div className="flex justify-center">
+          <div className="rounded-full bg-red-100 p-4 shadow-sm">
+            <AlertTriangle className="size-16 text-red-600" />
+          </div>
+        </div>
+
+        <div className="space-y-3 text-center">
+          <h3 className="text-lg font-medium text-red-700">
+            키위 생성에 실패했어요
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            파일에 문제가 있을 수 있어요.
+            <br />
+            업로드한 파일을 다시 확인해주세요.
+          </p>
+        </div>
+      </div>
+      <DialogFooter className="sm:justify-between">
+        <Button onClick={onGoBack} variant="outline">
+          이전
         </Button>
       </DialogFooter>
     </>
