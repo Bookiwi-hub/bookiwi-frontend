@@ -1,6 +1,5 @@
 import tempUser from "#/DB/users";
 import {
-  IDBStore,
   SAMPLE_EPUB_DATA_ID,
   SAMPLE_EPUB_URL,
   SAMPLE_KIWI_DATA_ID,
@@ -11,7 +10,7 @@ import {
   sampleIDBAnnotations,
   sampleIDBParticipants,
 } from "#/constants/idb";
-import idb from "#/managers/idb";
+import idb, { IDBStore } from "#/managers/idb";
 import { EpubIDBData, KiwiIDBData } from "#/types/idb";
 import { Kiwi } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";

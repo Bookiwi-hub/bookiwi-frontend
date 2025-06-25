@@ -1,13 +1,6 @@
 import { color } from "#/constants/color";
 import { AnnotationIDBData, ParticipantIDBData } from "#/types/idb";
 
-export enum IDBStore {
-  KiwiStore = "kiwiStore",
-  EpubStore = "epubStore",
-  ParticipantStore = "participantStore",
-  AnnotationStore = "annotationStore",
-}
-
 export const SAMPLE_KIWI_DATA_ID = "sample-kiwi";
 
 export const SAMPLE_EPUB_URL = "/sample.epub";

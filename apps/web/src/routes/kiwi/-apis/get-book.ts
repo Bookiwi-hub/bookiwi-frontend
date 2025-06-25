@@ -1,5 +1,4 @@
-import { IDBStore } from "#/constants/idb";
-import idb from "#/managers/idb";
+import idb, { IDBStore } from "#/managers/idb";
 import {
   AnnotationIDBData,
   EpubIDBData,

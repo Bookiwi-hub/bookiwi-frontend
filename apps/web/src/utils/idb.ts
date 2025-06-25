@@ -1,6 +1,6 @@
 import { blobToObjectUrl } from "./file";
 
-import idb from "#/managers/idb";
+import idb, { IDBStore } from "#/managers/idb";
 import { KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 import { Kiwi, Participant } from "#/types/kiwi";
 
@@ -52,7 +52,7 @@ const enrichKiwiWithParticipants = async (
   item: Omit<KiwiIDBData, "coverImage"> & { coverImage: string | null },
 ): Promise<Kiwi> => {
   const storedParticipants = await idb.getByIndex<ParticipantIDBData>(
-    "participantStore",
+    IDBStore.ParticipantStore,
     "kiwiId",
     item.id,
   );

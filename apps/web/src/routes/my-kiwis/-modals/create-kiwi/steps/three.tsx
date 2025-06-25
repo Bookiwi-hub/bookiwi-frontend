@@ -11,8 +11,7 @@ import tempUser from "#/DB/users";
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
 import { color, primaryColor } from "#/constants/color";
-import { IDBStore } from "#/constants/idb";
-import idb from "#/managers/idb";
+import idb, { IDBStore } from "#/managers/idb";
 import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
 import { fileToBookInfo } from "#/utils/epubjs";
 
