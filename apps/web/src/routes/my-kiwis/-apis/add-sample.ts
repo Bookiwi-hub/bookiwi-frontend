@@ -9,7 +9,7 @@ import {
   SAMPLE_PARTICIPANT_IDS,
   sampleIDBAnnotations,
   sampleIDBParticipants,
-} from "#/constants/idb";
+} from "#/constants/sample";
 import idb, { IDBStore } from "#/managers/idb";
 import { EpubIDBData, KiwiIDBData } from "#/types/idb";
 import { Kiwi } from "#/types/kiwi";

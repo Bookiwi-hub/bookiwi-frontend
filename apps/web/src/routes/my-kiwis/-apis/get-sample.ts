@@ -1,4 +1,4 @@
-import { SAMPLE_KIWI_DATA_ID } from "#/constants/idb";
+import { SAMPLE_KIWI_DATA_ID } from "#/constants/sample";
 import idb, { IDBStore } from "#/managers/idb";
 import { KiwiIDBData } from "#/types/idb";
 import { Kiwi } from "#/types/kiwi";
