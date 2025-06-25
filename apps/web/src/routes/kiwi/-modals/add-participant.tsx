@@ -1,5 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
+
+import { addParticipant } from "../-apis/add-participant";
 
 import tempUser from "#/DB/users";
 import { Button } from "#/components/ui/button";
@@ -16,10 +19,16 @@ import { Label } from "#/components/ui/label";
 import { color } from "#/constants/color";
 
 interface AddParticipantModalProps {
+  kiwiId: string;
+  kiwiName: string;
   takenColors: string[];
 }
 
-function AddParticipantModal({ takenColors }: AddParticipantModalProps) {
+function AddParticipantModal({
+  kiwiName,
+  kiwiId,
+  takenColors,
+}: AddParticipantModalProps) {
   const [nickname, setNickname] = useState(tempUser.name);
   const [selectedColor, setSelectedColor] = useState<(typeof color)[number]>(
     () => {
@@ -36,14 +45,46 @@ function AddParticipantModal({ takenColors }: AddParticipantModalProps) {
   const isColorTaken = (colorOption: string) =>
     takenColors.includes(colorOption);
 
+  const handleAddParticipant = async () => {
+    try {
+      await addParticipant(kiwiId, {
+        kiwiId,
+        userId: tempUser.id,
+        name: nickname.trim(),
+        profileImage: tempUser.profileImage,
+        color: selectedColor,
+        settings: {
+          isSinglePage: false,
+          fontFamily: null,
+          fontSize: null,
+          lineHeight: null,
+          fontWeight: null,
+        },
+        record: {
+          currentCfi: null,
+          percentage: null,
+          bookmarks: [],
+        },
+        lastActivityAt: new Date().toISOString(),
+      });
+      toast.success(`${kiwiName}에 오신 것을 환영합니다!`);
+      navigate({ to: `/kiwi/${kiwiId}` });
+    } catch (error) {
+      toast.error("참가에 실패했습니다. 다시 시도해주세요.", {
+        action: {
+          label: "Home",
+          onClick: () => navigate({ to: "/" }),
+        },
+      });
+    }
+  };
+
   return (
     <Dialog open onOpenChange={handleCancel}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>키위 참가</DialogTitle>
-          <DialogDescription>
-            이 키위에서 활동할 닉네임과 색상을 선택해주세요.
-          </DialogDescription>
+          <DialogTitle>{kiwiName}에 참가하기</DialogTitle>
+          <DialogDescription>닉네임과 색상을 선택해주세요.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -103,7 +144,12 @@ function AddParticipantModal({ takenColors }: AddParticipantModalProps) {
           <Button variant="outline" onClick={handleCancel}>
             취소
           </Button>
-          <Button disabled={!nickname.trim()}>참가하기</Button>
+          <Button
+            disabled={!nickname.trim() || !selectedColor}
+            onClick={handleAddParticipant}
+          >
+            참가하기
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

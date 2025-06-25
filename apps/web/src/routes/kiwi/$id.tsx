@@ -42,6 +42,8 @@ function Kiwi() {
   if (!currentParticipant) {
     return (
       <AddParticipantModal
+        kiwiName={kiwiData.name}
+        kiwiId={kiwiData.id}
         takenColors={participantsData.map((participant) => participant.color)}
       />
     );
