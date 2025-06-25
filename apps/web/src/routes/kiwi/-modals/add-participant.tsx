@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { color } from "@bookiwi/color";
+import { colors } from "@bookiwi/color";
 
 import { addParticipant } from "../-apis/add-participant";
 
@@ -31,10 +31,10 @@ function AddParticipantModal({
   takenColors,
 }: AddParticipantModalProps) {
   const [nickname, setNickname] = useState(tempUser.name);
-  const [selectedColor, setSelectedColor] = useState<(typeof color)[number]>(
+  const [selectedColor, setSelectedColor] = useState<(typeof colors)[number]>(
     () => {
-      const availableColor = color.find((c) => !takenColors.includes(c));
-      return availableColor || color[0];
+      const availableColor = colors.find((c) => !takenColors.includes(c));
+      return availableColor || colors[0];
     },
   );
   const navigate = useNavigate();
@@ -102,7 +102,7 @@ function AddParticipantModal({
           <div className="space-y-2">
             <Label>색상</Label>
             <div className="flex flex-wrap gap-2">
-              {color.map((colorOption) => {
+              {colors.map((colorOption) => {
                 const isTaken = isColorTaken(colorOption);
                 const isSelected = selectedColor === colorOption;
 

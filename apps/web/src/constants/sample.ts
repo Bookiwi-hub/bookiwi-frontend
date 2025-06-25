@@ -1,4 +1,4 @@
-import { color } from "@bookiwi/color";
+import { colors } from "@bookiwi/color";
 
 import { AnnotationIDBData, ParticipantIDBData } from "#/types/idb";
 
@@ -24,7 +24,7 @@ export const sampleIDBParticipants: ParticipantIDBData[] = [
     userId: "sample-kiwi-participant-0",
     name: "채종민",
     profileImage: "",
-    color: color[1],
+    color: colors[1],
     kiwiId: SAMPLE_KIWI_DATA_ID,
     record: {
       currentCfi: null,
@@ -45,7 +45,7 @@ export const sampleIDBParticipants: ParticipantIDBData[] = [
     userId: "sample-kiwi-participant-1",
     name: "조현지",
     profileImage: "",
-    color: color[2],
+    color: colors[2],
     kiwiId: SAMPLE_KIWI_DATA_ID,
     record: {
       currentCfi: null,
@@ -69,7 +69,7 @@ export const sampleIDBAnnotations: AnnotationIDBData[] = [
     kiwiId: SAMPLE_KIWI_DATA_ID,
     cfi: "epubcfi(/30/4!/4/2/8,/1:101,/1:141)",
     text: "다섯 푼이 찰깍하고 손바닥에 떨어질 제 거의 눈물을 흘릴 만큼 기뻤었다.",
-    color: color[1],
+    color: colors[1],
     participantId: SAMPLE_PARTICIPANT_IDS[0],
     createdAt: "2025-06-18T02:10:37.225Z",
     updatedAt: "2025-06-18T02:10:37.225Z",
@@ -96,7 +96,7 @@ export const sampleIDBAnnotations: AnnotationIDBData[] = [
     kiwiId: SAMPLE_KIWI_DATA_ID,
     cfi: "epubcfi(/30/4!/4/2/14,/1:0,/1:139)",
     text: "“에이, 오라질 년, 조롱복은 할 수가 없어, 못 먹어 병, 먹어서 병, 어쩌란 말이야! 왜 눈을 바루 뜨지 못해!”하고 김 첨지는 앓는 이의 뺨을 한 번 후려갈겼다. 홉뜬 눈은 조금 바루어졌건만 이슬이 맺히었다. 김 첨지의 눈시울도 뜨끈뜨끈하였다.",
-    color: color[2],
+    color: colors[2],
     participantId: SAMPLE_PARTICIPANT_IDS[1],
     createdAt: "2025-06-19T02:10:37.225Z",
     updatedAt: "2025-06-19T02:10:37.225Z",

@@ -1,5 +1,5 @@
-export const color = [
-  "#C6FF00", // 형광 라임
+export const colors = [
+  "#B2FF59", // 키위 그린
   "#FFF176", // 밝은 노랑
   "#80DEEA", // 밝은 민트
   "#CE93D8", // 연보라
@@ -11,4 +11,4 @@ export const color = [
   "#A1887F", // 소프트 브라운
 ] as const;
 
-export const primaryColor = color[0]; // 기본 하이라이트 컬러: 밝은 노랑
+export const primaryColor = colors[0]; // 기본 하이라이트 컬러: 밝은 노랑
