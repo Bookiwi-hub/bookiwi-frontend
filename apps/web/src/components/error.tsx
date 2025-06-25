@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Home, RotateCcw } from "lucide-react";
 
-import { Button } from "./ui/button";
+import { primaryColor } from "@bookiwi/color";
 
-import { primaryColor } from "#/constants/color";
+import { Button } from "./ui/button";
 
 interface ErrorProps {
   title?: string;

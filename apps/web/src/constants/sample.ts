@@ -1,4 +1,5 @@
-import { color } from "#/constants/color";
+import { color } from "@bookiwi/color";
+
 import { AnnotationIDBData, ParticipantIDBData } from "#/types/idb";
 
 export const SAMPLE_KIWI_DATA_ID = "sample-kiwi";

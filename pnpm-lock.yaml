@@ -183,6 +183,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@bookiwi/color':
+        specifier: workspace:*
+        version: link:../../packages/color
       '@bookiwi/epubjs':
         specifier: workspace:*
         version: link:../../packages/epubjs
@@ -307,6 +310,8 @@ importers:
       web-vitals:
         specifier: ^4.2.4
         version: 4.2.4
+
+  packages/color: {}
 
   packages/epubjs:
     dependencies:

@@ -1,6 +1,7 @@
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
+import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import { closeCreateKiwiModalAtom, createKiwiAtom } from "../atoms";
@@ -8,7 +9,6 @@ import { closeCreateKiwiModalAtom, createKiwiAtom } from "../atoms";
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
-import { primaryColor } from "#/constants/color";
 
 function StepFour() {
   const newKiwi = useAtomValue(createKiwiAtom);

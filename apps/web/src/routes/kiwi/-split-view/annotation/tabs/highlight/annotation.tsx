@@ -1,5 +1,6 @@
 import { memo, useEffect, useRef } from "react";
 
+import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import CommentForm from "./comment-form";
@@ -7,7 +8,6 @@ import Comments from "./comments";
 import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
-import { primaryColor } from "#/constants/color";
 import {
   updateAnnotationAtom,
   participantColorAtom,

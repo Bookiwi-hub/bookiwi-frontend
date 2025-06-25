@@ -2,6 +2,7 @@ import { useRouter } from "@tanstack/react-router";
 import { AlertTriangle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import { createKiwiAtom, setShareCodeAtom, stepAtom } from "../atoms";
@@ -9,7 +10,6 @@ import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
-import { primaryColor } from "#/constants/color";
 import { createKiwi } from "#/routes/my-kiwis/-apis/create-kiwi";
 
 function StepThree() {

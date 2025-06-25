@@ -2,6 +2,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { color } from "@bookiwi/color";
+
 import { addParticipant } from "../-apis/add-participant";
 
 import tempUser from "#/DB/users";
@@ -16,7 +18,6 @@ import {
 } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
-import { color } from "#/constants/color";
 
 interface AddParticipantModalProps {
   kiwiId: string;
