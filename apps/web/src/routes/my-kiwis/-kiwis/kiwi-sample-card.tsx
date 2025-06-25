@@ -11,7 +11,7 @@ import { Kiwi } from "#/types/kiwi";
 
 function KiwiSampleCardLoading() {
   return (
-    <Card className="flex h-[420px] w-full max-w-[280px] flex-col items-center justify-center rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+    <Card className="flex h-96 w-full max-w-72 flex-col items-center justify-center rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
       <div className="flex flex-col items-center gap-3">
         <Spinner className="size-8 text-primary" />
         <div className="text-center">

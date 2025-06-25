@@ -1,5 +1,7 @@
 import { memo } from "react";
 
+import { primaryColor } from "@bookiwi/color";
+
 import { cn } from "#/lib/utils";
 
 interface SpinnerProps {
@@ -72,18 +74,24 @@ function Spinner({ size = "md", className }: SpinnerProps) {
         <div
           className={cn(
             sizeClass,
-            "animate-spin rounded-full border-4 border-gray-200 border-t-[rgba(186,230,55)]",
+            "animate-spin rounded-full border-4 border-gray-200",
           )}
-          style={sizeStyle}
+          style={{
+            ...sizeStyle,
+            borderTopColor: primaryColor,
+          }}
         />
         {/* 보조 스피너 - 펄스 효과 */}
         <div
           className={cn(
             "absolute left-0 top-0",
             sizeClass,
-            "animate-pulse rounded-full border-4 border-transparent border-t-[rgba(186,230,55,0.3)]",
+            "animate-pulse rounded-full border-4 border-transparent",
           )}
-          style={sizeStyle}
+          style={{
+            ...sizeStyle,
+            borderTopColor: `${primaryColor}30`, // 30% 투명도
+          }}
         />
       </div>
     </div>
