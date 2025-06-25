@@ -40,7 +40,11 @@ function Kiwi() {
   );
 
   if (!currentParticipant) {
-    return <AddParticipantModal />;
+    return (
+      <AddParticipantModal
+        takenColors={participantsData.map((participant) => participant.color)}
+      />
+    );
   }
 
   return (

@@ -15,16 +15,26 @@ import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { color } from "#/constants/color";
 
-function AddParticipantModal() {
+interface AddParticipantModalProps {
+  takenColors: string[];
+}
+
+function AddParticipantModal({ takenColors }: AddParticipantModalProps) {
   const [nickname, setNickname] = useState(tempUser.name);
   const [selectedColor, setSelectedColor] = useState<(typeof color)[number]>(
-    color[0],
+    () => {
+      const availableColor = color.find((c) => !takenColors.includes(c));
+      return availableColor || color[0];
+    },
   );
   const navigate = useNavigate();
 
   const handleCancel = () => {
     navigate({ to: "/my-kiwis" });
   };
+
+  const isColorTaken = (colorOption: string) =>
+    takenColors.includes(colorOption);
 
   return (
     <Dialog open onOpenChange={handleCancel}>
@@ -50,20 +60,41 @@ function AddParticipantModal() {
           <div className="space-y-2">
             <Label>색상</Label>
             <div className="flex flex-wrap gap-2">
-              {color.map((colorOption) => (
-                <button
-                  key={colorOption}
-                  type="button"
-                  className={`size-8 rounded-full border-2 transition-all ${
-                    selectedColor === colorOption
-                      ? "scale-110 border-gray-800"
-                      : "border-gray-300 hover:border-gray-500"
-                  }`}
-                  style={{ backgroundColor: colorOption }}
-                  onClick={() => setSelectedColor(colorOption)}
-                  aria-label="색상 선택"
-                />
-              ))}
+              {color.map((colorOption) => {
+                const isTaken = isColorTaken(colorOption);
+                const isSelected = selectedColor === colorOption;
+
+                return (
+                  <button
+                    key={colorOption}
+                    type="button"
+                    disabled={isTaken}
+                    className={`relative size-8 rounded-full border-2 transition-all ${
+                      isSelected
+                        ? "scale-110 border-gray-800"
+                        : "border-gray-300 hover:border-gray-500"
+                    } ${
+                      isTaken
+                        ? "cursor-not-allowed opacity-50"
+                        : "cursor-pointer"
+                    }`}
+                    style={{ backgroundColor: colorOption }}
+                    onClick={() => !isTaken && setSelectedColor(colorOption)}
+                    aria-label={isTaken ? "이미 사용중인 색상" : "색상 선택"}
+                    title={
+                      isTaken
+                        ? "이미 다른 사용자가 선택한 색상입니다"
+                        : undefined
+                    }
+                  >
+                    {isTaken && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="h-6 w-0.5 rotate-45 bg-gray-600" />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
