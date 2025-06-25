@@ -1,9 +1,9 @@
+import { primaryColor } from "@bookiwi/color";
 import { useAtomValue } from "@bookiwi/jotai";
 
 import Annotation from "./annotation";
 import NotSelected from "./not-selected";
 
-import { primaryColor } from "#/constants/color";
 import { selectedAnnotationAtom } from "#/routes/kiwi/-reader/atoms/annotations";
 import { participantColorAtom } from "#/routes/kiwi/-reader/atoms/participants";
 
