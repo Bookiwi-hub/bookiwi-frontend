@@ -1,5 +1,4 @@
 import tempUser from "#/DB/users";
-import { color } from "#/constants/color";
 import {
   IDBStore,
   SAMPLE_EPUB_DATA_ID,
@@ -13,7 +12,7 @@ import {
   sampleIDBParticipants,
 } from "#/constants/idb";
 import idb from "#/managers/idb";
-import { EpubIDBData, KiwiIDBData, ParticipantIDBData } from "#/types/idb";
+import { EpubIDBData, KiwiIDBData } from "#/types/idb";
 import { Kiwi } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";
 import { kiwIDBDataToKiwi } from "#/utils/idb";
@@ -63,31 +62,9 @@ const addSampleKiwi = async (): Promise<Kiwi> => {
       locations: bookInfo.locations,
     };
 
-    const sampleParticipantIDBData: ParticipantIDBData = {
-      id: SAMPLE_PARTICIPANT_IDS[0],
-      kiwiId: SAMPLE_KIWI_DATA_ID,
-      userId: tempUser.id,
-      name: tempUser.name,
-      profileImage: tempUser.profileImage,
-      color: color[0]!,
-      record: {
-        currentCfi: null,
-        percentage: null,
-        bookmarks: [],
-      },
-      settings: {
-        isSinglePage: false,
-        fontFamily: null,
-        fontSize: null,
-        lineHeight: null,
-        fontWeight: null,
-      },
-      lastActivityAt: new Date().toISOString(),
-    };
-
     await idb.add(IDBStore.KiwiStore, sampleKiwiIDBData);
     await idb.add(IDBStore.EpubStore, sampleEpubIDBData);
-    await idb.add(IDBStore.ParticipantStore, sampleParticipantIDBData);
+    // await idb.add(IDBStore.ParticipantStore, sampleParticipantIDBData);
     sampleIDBParticipants.forEach(async (participant) => {
       await idb.add(IDBStore.ParticipantStore, participant);
     });
