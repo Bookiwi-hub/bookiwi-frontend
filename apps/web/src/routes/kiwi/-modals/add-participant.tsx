@@ -15,7 +15,7 @@ import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { color } from "#/constants/color";
 
-function ParticipantRegistrationModal() {
+function AddParticipantModal() {
   const [nickname, setNickname] = useState(tempUser.name);
   const [selectedColor, setSelectedColor] = useState<(typeof color)[number]>(
     color[0],
@@ -79,4 +79,4 @@ function ParticipantRegistrationModal() {
   );
 }
 
-export default ParticipantRegistrationModal;
+export default AddParticipantModal;

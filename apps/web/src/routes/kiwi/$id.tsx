@@ -3,9 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import getBook from "./-apis/get-book";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
+import AddParticipantModal from "./-modals/add-participant";
 import { ReaderProvider } from "./-reader";
 import SplitView from "./-split-view";
 
+import tempUser from "#/DB/users";
 import LoadingPage from "#/components/loading";
 import { isDesktop } from "#/constants/device-type";
 
@@ -33,6 +35,14 @@ export const Route = createFileRoute("/kiwi/$id")({
 function Kiwi() {
   const { epubData, kiwiData, participantsData, annotationsData } =
     Route.useLoaderData();
+  const currentParticipant = participantsData.find(
+    (participant) => participant.userId === tempUser.id,
+  );
+
+  if (!currentParticipant) {
+    return <AddParticipantModal />;
+  }
+
   return (
     <ReaderProvider
       epubData={epubData}

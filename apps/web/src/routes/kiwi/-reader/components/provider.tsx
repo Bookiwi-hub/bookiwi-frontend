@@ -24,8 +24,6 @@ import {
   highlightClickedAtom,
 } from "../atoms";
 
-import ParticipantRegistrationModal from "./participant-registration-modal";
-
 import tempUser from "#/DB/users";
 import {
   AnnotationIDBData,
@@ -55,11 +53,11 @@ function ReaderProvider({
   const currentParticipant = participantsData.find(
     (participant) => participant.userId === tempUser.id,
   );
+  if (!currentParticipant) {
+    throw new Error("Current participant not found");
+  }
 
   useEffect(() => {
-    if (!currentParticipant) {
-      return () => {};
-    }
     // Create a new Book instance
     const epubBook = new Book(epubData.file);
 
@@ -91,9 +89,6 @@ function ReaderProvider({
     };
   }, [navigate, epubData, currentParticipant]);
 
-  if (!currentParticipant) {
-    return <ParticipantRegistrationModal />;
-  }
   readerStore.set(
     initialIsSinglePageAtom,
     currentParticipant.settings.isSinglePage,
