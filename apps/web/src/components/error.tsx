@@ -60,7 +60,7 @@ function ErrorPage({
               className="w-full rounded-full border-0 text-white transition-all hover:opacity-90 hover:shadow-lg"
               size="lg"
             >
-              <Link to="/my-kiwis">
+              <Link to="/">
                 <Home className="mr-2 size-4" />
                 홈으로 돌아가기
               </Link>
