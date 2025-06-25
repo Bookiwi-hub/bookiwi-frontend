@@ -4,7 +4,7 @@ import {
   addIDBAnnotation,
   removeIDBAnnotation,
   updateIDBAnnotation,
-} from "../utils";
+} from "../api/idb";
 
 import { currentSectionAtom } from "./book";
 
