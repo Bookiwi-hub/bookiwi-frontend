@@ -13,9 +13,13 @@ import {
 } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
+import { color } from "#/constants/color";
 
 function ParticipantRegistrationModal() {
   const [nickname, setNickname] = useState(tempUser.name);
+  const [selectedColor, setSelectedColor] = useState<(typeof color)[number]>(
+    color[0],
+  );
   const navigate = useNavigate();
 
   const handleCancel = () => {
@@ -28,7 +32,7 @@ function ParticipantRegistrationModal() {
         <DialogHeader>
           <DialogTitle>키위 참가</DialogTitle>
           <DialogDescription>
-            이 키위에 참가하려면 닉네임을 입력해주세요.
+            이 키위에서 활동할 닉네임과 색상을 선택해주세요.
           </DialogDescription>
         </DialogHeader>
 
@@ -41,6 +45,26 @@ function ParticipantRegistrationModal() {
               onChange={(e) => setNickname(e.target.value)}
               placeholder="참가할 닉네임을 입력하세요"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label>색상</Label>
+            <div className="flex flex-wrap gap-2">
+              {color.map((colorOption) => (
+                <button
+                  key={colorOption}
+                  type="button"
+                  className={`size-8 rounded-full border-2 transition-all ${
+                    selectedColor === colorOption
+                      ? "scale-110 border-gray-800"
+                      : "border-gray-300 hover:border-gray-500"
+                  }`}
+                  style={{ backgroundColor: colorOption }}
+                  onClick={() => setSelectedColor(colorOption)}
+                  aria-label="색상 선택"
+                />
+              ))}
+            </div>
           </div>
         </div>
 
