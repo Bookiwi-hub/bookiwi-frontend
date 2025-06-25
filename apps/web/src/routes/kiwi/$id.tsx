@@ -47,6 +47,7 @@ function Kiwi() {
     <ReaderProvider
       epubData={epubData}
       kiwiData={kiwiData}
+      currentParticipant={currentParticipant}
       participantsData={participantsData}
       annotationsData={annotationsData}
     >

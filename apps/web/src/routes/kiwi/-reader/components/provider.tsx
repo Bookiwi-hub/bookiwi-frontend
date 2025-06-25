@@ -24,7 +24,6 @@ import {
   highlightClickedAtom,
 } from "../atoms";
 
-import tempUser from "#/DB/users";
 import {
   AnnotationIDBData,
   EpubIDBData,
@@ -34,6 +33,7 @@ import {
 
 interface ReaderProviderProps {
   children: ReactNode;
+  currentParticipant: ParticipantIDBData;
   epubData: EpubIDBData;
   kiwiData: KiwiIDBData;
   participantsData: ParticipantIDBData[];
@@ -47,15 +47,9 @@ function ReaderProvider({
   kiwiData,
   participantsData,
   annotationsData,
+  currentParticipant,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
-
-  const currentParticipant = participantsData.find(
-    (participant) => participant.userId === tempUser.id,
-  );
-  if (!currentParticipant) {
-    throw new Error("Current participant not found");
-  }
 
   useEffect(() => {
     // Create a new Book instance
