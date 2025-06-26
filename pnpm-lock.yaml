@@ -83,6 +83,9 @@ importers:
       '@rn-primitives/avatar':
         specifier: ^1.2.0
         version: 1.2.0(react-native-web@0.20.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-native@0.79.4(@babel/core@7.26.10)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      '@rn-primitives/slot':
+        specifier: ^1.2.0
+        version: 1.2.0(react-native-web@0.20.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-native@0.79.4(@babel/core@7.26.10)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

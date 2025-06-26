@@ -9,7 +9,7 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="index"
+        name="(my-kiwis)/index"
         options={{
           title: "My Kiwis",
           tabBarIcon: ({ color }) => <Library color={color} />,
