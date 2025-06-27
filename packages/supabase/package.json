@@ -1,0 +1,9 @@
+{
+  "name": "@bookiwi/supabase",
+  "version": "0.0.1",
+  "description": "Supabase client for Bookiwi",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.2"
+  }
+}
