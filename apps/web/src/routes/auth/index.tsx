@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 
 import { primaryColor } from "@bookiwi/color";
 
+import ErrorPage from "#/components/error";
 import supabaseManager from "#/managers/supabase";
 
 export const Route = createFileRoute("/auth/")({
@@ -13,12 +15,30 @@ export const Route = createFileRoute("/auth/")({
     ],
   }),
   component: AuthPage,
+  errorComponent: ({ error }) => (
+    <ErrorPage
+      title="로그인 오류"
+      message={error?.message || "로그인 중 오류가 발생했습니다."}
+      onRetry={() => window.location.reload()}
+    />
+  ),
 });
 
 function AuthPage() {
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (error) {
+      throw error;
+    }
+  }, [error]);
+
   const handleKakaoLogin = async () => {
-    const result = await supabaseManager.auth.signInWithKakao();
-    console.log(result);
+    try {
+      await supabaseManager.auth.signInWithKakao();
+    } catch (err) {
+      setError(new Error("로그인 중 오류가 발생했습니다."));
+    }
   };
 
   const handleGuestMode = () => {

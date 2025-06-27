@@ -1,4 +1,7 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import {
+  SignInWithOAuthCredentials,
+  SupabaseClient,
+} from "@supabase/supabase-js";
 
 class SupabaseAuth {
   private supabase: SupabaseClient;
@@ -7,11 +10,17 @@ class SupabaseAuth {
     this.supabase = supabase;
   }
 
-  async signInWithKakao() {
-    const result = await this.supabase.auth.signInWithOAuth({
+  async signInWithKakao(
+    options?: Omit<SignInWithOAuthCredentials, "provider">,
+  ) {
+    const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: "kakao",
+      ...options,
     });
-    return result;
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
   }
 }
 
