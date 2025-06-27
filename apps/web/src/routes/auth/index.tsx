@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { primaryColor } from "@bookiwi/color";
 
@@ -25,7 +25,8 @@ function AuthPage() {
           {/* 로고 섹션 */}
           <header className="relative space-y-4">
             {/* 키위새 로고 (중앙 고정) */}
-            <figure
+            <Link
+              to="/"
               className="mx-auto flex size-24 items-center justify-center rounded-full shadow-lg"
               style={{
                 background: primaryColor,
@@ -36,7 +37,7 @@ function AuthPage() {
                 alt="Bookiwi Logo"
                 className="size-16 object-contain"
               />
-            </figure>
+            </Link>
 
             {/* 키위새가 말하는 말풍선 (절대 위치) */}
             <div className="absolute -top-20 left-1/2 -translate-x-1/2">
@@ -69,11 +70,11 @@ function AuthPage() {
           </header>
 
           {/* 카카오 로그인 버튼 */}
-          <section className="pt-4">
+          <section className="pt-3">
             <button
               type="button"
               onClick={handleKakaoLogin}
-              className="w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-yellow-200 active:scale-[0.98]"
+              className="w-full rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-yellow-200 active:scale-[0.98]"
               aria-label="카카오톡으로 로그인하기"
             >
               <img
