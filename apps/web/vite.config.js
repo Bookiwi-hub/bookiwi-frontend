@@ -20,15 +20,15 @@ export default defineConfig({
       "#": resolve(__dirname, "./src"),
     },
   },
-  server: {
-    hmr: {
-      // ngrok 터널을 통한 HMR 허용
-      clientPort: 443,
-    },
-    // 모든 호스트 접근 허용 (ngrok 포함)
-    host: true,
-    // 특정 호스트 허용
-    cors: true,
-    allowedHosts: "all",
-  },
+  // server: {
+  //   hmr: {
+  //     // ngrok 터널을 통한 HMR 허용
+  //     clientPort: 443,
+  //   },
+  //   // 모든 호스트 접근 허용 (ngrok 포함)
+  //   host: true,
+  //   // 특정 호스트 허용
+  //   cors: true,
+  //   allowedHosts: "all",
+  // },
 });
