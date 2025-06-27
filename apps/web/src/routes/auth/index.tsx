@@ -3,6 +3,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { primaryColor } from "@bookiwi/color";
 
 export const Route = createFileRoute("/auth/")({
+  head: () => ({
+    meta: [
+      {
+        title: "Bookiwi | 로그인",
+      },
+    ],
+  }),
   component: AuthPage,
 });
 
