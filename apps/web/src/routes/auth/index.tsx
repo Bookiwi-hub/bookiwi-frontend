@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { primaryColor } from "@bookiwi/color";
 
+import supabaseManager from "#/managers/supabase";
+
 export const Route = createFileRoute("/auth/")({
   head: () => ({
     meta: [
@@ -14,9 +16,9 @@ export const Route = createFileRoute("/auth/")({
 });
 
 function AuthPage() {
-  const handleKakaoLogin = () => {
-    // 카카오 로그인 로직 추가 예정
-    console.log("카카오 로그인 클릭됨");
+  const handleKakaoLogin = async () => {
+    const result = await supabaseManager.auth.signInWithKakao();
+    console.log(result);
   };
 
   const handleGuestMode = () => {
