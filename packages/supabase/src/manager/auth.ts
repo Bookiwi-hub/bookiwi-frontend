@@ -22,6 +22,15 @@ class SupabaseAuth {
     }
     return data;
   }
+
+  async getUser() {
+    const { data, error } = await this.supabase.auth.getUser();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
 }
 
 export default SupabaseAuth;
