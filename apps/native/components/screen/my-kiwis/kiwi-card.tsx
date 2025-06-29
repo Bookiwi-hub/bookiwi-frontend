@@ -1,4 +1,4 @@
-import { Image, Text } from "react-native";
+import { Image, Text, ImageSourcePropType } from "react-native";
 
 import {
   Card,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 
 interface KiwiCardProps {
-  // image: string;
+  image: ImageSourcePropType;
   title: string;
   description: string;
   participants: number;
@@ -18,7 +18,7 @@ interface KiwiCardProps {
 }
 
 export default function KiwiCard({
-  // image,
+  image,
   title,
   description,
   participants,
@@ -31,11 +31,7 @@ export default function KiwiCard({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1">
-        <Image
-          source={require("../../../assets/images/book-cover-ex.png")}
-          className="w-full h-full"
-          resizeMode="cover"
-        />
+        <Image source={image} className="w-full h-full" resizeMode="cover" />
       </CardContent>
       <CardFooter>
         <Text>{participants}명 참여</Text>

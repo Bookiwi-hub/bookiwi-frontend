@@ -1,13 +1,19 @@
 import { Tabs } from "expo-router";
 
 // import { useColorScheme } from "@/hooks/use-color-scheme";
+
 import { Library, UserRound } from "@/lib/icons";
 
 export default function TabLayout() {
   // const { isDarkColorScheme } = useColorScheme();
 
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: "#10b981",
+        tabBarInactiveTintColor: "#000000",
+      }}
+    >
       <Tabs.Screen
         name="(my-kiwis)/index"
         options={{

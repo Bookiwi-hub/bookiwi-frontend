@@ -1,5 +1,6 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 
+import { ThemedText } from "@/components/common/themed-text";
 import KiwiCard from "@/components/screen/my-kiwis/kiwi-card";
 
 export default function MyKiwisScreen() {
@@ -8,8 +9,10 @@ export default function MyKiwisScreen() {
   // 키위 눌렀을 때 키위 상세 페이지로 이동 혹은 바로입장하기 버튼
 
   return (
-    <View>
+    <View className="p-6">
+      <ThemedText type="title">내 키위</ThemedText>
       <KiwiCard
+        image={require("../../../assets/images/book-cover-ex.png")}
         title="운수 나쁜 날"
         description="운수 나쁜 날 책 설명"
         participants={10}

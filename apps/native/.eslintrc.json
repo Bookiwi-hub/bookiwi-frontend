@@ -16,7 +16,9 @@
     "react/style-prop-object": "off",
     "react/require-default-props": "off",
     "global-require": "off",
-    "react/no-unstable-nested-components": "off"
+    "react/no-unstable-nested-components": "off",
+    "@typescript-eslint/no-require-imports": "off",
+    "import/no-dynamic-require": "off"
   },
   "ignorePatterns": [
     "scripts/*",
