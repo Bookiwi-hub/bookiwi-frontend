@@ -31,6 +31,25 @@ class SupabaseAuth {
     }
     return data;
   }
+
+  async isLoggedIn() {
+    try {
+      const { data, error } = await this.supabase.auth.getUser();
+      if (error) {
+        return false;
+      }
+      return data.user !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  async signOut() {
+    const { error } = await this.supabase.auth.signOut();
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
 }
 
 export default SupabaseAuth;
