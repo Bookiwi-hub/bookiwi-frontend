@@ -6,7 +6,22 @@ import { User } from "#/types/user";
 class UserManager {
   private currentUser: User | null = null;
 
+  private isTempUser: boolean = false;
+
+  loginAsTempUser(user: User) {
+    this.isTempUser = true;
+    this.currentUser = user;
+  }
+
+  logoutAsTempUser() {
+    this.isTempUser = false;
+    this.currentUser = null;
+  }
+
   async isLoggedIn() {
+    if (this.isTempUser) {
+      return true;
+    }
     try {
       const { user } = await supabaseManager.auth.getUser();
       const { email, user_name, avatar_url } = user.user_metadata;
@@ -31,8 +46,12 @@ class UserManager {
   }
 
   async logout() {
-    await supabaseManager.auth.signOut();
-    this.currentUser = null;
+    if (this.isTempUser) {
+      this.logoutAsTempUser();
+    } else {
+      await supabaseManager.auth.signOut();
+      this.currentUser = null;
+    }
   }
 }
 

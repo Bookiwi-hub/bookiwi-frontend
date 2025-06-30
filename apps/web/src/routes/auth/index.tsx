@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 
 import { primaryColor } from "@bookiwi/color";
 
 import ErrorPage from "#/components/error";
 import supabaseManager from "#/managers/supabase";
+import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/auth/")({
   head: () => ({
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/auth/")({
 
 function AuthPage() {
   const [error, setError] = useState<Error | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (error) {
@@ -42,7 +44,13 @@ function AuthPage() {
   };
 
   const handleGuestMode = () => {
-    // 게스트 모드 로직 추가 예정
+    userManager.loginAsTempUser({
+      id: "temp",
+      name: "Guest",
+      email: "guest@bookiwi.com",
+      profileImage: "",
+    });
+    navigate({ to: "/my-kiwis" });
   };
 
   return (
