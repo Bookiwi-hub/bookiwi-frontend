@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -6,7 +6,6 @@ import { colors } from "@bookiwi/color";
 
 import { addParticipant } from "../-apis/add-participant";
 
-import tempUser from "#/DB/users";
 import { Button } from "#/components/ui/button";
 import {
   Dialog,
@@ -18,6 +17,7 @@ import {
 } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
+import userManager from "#/managers/user";
 
 interface AddParticipantModalProps {
   kiwiId: string;
@@ -30,7 +30,11 @@ function AddParticipantModal({
   kiwiId,
   takenColors,
 }: AddParticipantModalProps) {
-  const [nickname, setNickname] = useState(tempUser.name);
+  const { user } = userManager;
+  if (!user) {
+    throw redirect({ to: "/auth" });
+  }
+  const [nickname, setNickname] = useState(user.name);
   const [selectedColor, setSelectedColor] = useState<(typeof colors)[number]>(
     () => {
       const availableColor = colors.find((c) => !takenColors.includes(c));
@@ -50,9 +54,9 @@ function AddParticipantModal({
     try {
       await addParticipant(kiwiId, {
         kiwiId,
-        userId: tempUser.id,
+        userId: user.id,
         name: nickname.trim(),
-        profileImage: tempUser.profileImage,
+        profileImage: user.profileImage,
         color: selectedColor,
         settings: {
           isSinglePage: false,

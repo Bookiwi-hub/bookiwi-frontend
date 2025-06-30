@@ -2,8 +2,8 @@ import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
 import { NavItem } from "@bookiwi/epubjs/types/navigation";
 
-import tempUser from "#/DB/users";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
+import userManager from "#/managers/user";
 import { Kiwi } from "#/types/kiwi";
 import { formatDate, formatDateOnly } from "#/utils/format-date";
 
@@ -27,7 +27,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
   );
 
   const currentParticipant = participants.find(
-    (participant) => participant.userId === tempUser.id,
+    (participant) => participant.userId === userManager.userId,
   );
 
   return (

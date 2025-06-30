@@ -1,11 +1,15 @@
 import { CreateKiwi } from "../-modals/create-kiwi/types";
 
-import tempUser from "#/DB/users";
 import idb, { IDBStore } from "#/managers/idb";
+import userManager from "#/managers/user";
 import { EpubIDBData, KiwiIDBData } from "#/types/idb";
 import { fileToBookInfo } from "#/utils/epubjs";
 
 export const createKiwi = async (newKiwi: CreateKiwi) => {
+  const { userId } = userManager;
+  if (!userId) {
+    throw new Error("User not found");
+  }
   const bookInfo = await fileToBookInfo(newKiwi.file!);
 
   // 공유 코드 생성 (실제로는 API에서 받아와야 함)
@@ -36,7 +40,7 @@ export const createKiwi = async (newKiwi: CreateKiwi) => {
       toc: bookInfo.toc,
     },
     epubId: generatedEpubId,
-    adminId: tempUser.id,
+    adminId: userId,
     participantIds: [],
   };
 

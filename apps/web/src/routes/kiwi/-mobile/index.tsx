@@ -7,7 +7,7 @@ import MobileHeader from "./header";
 import MobileMenu from "./menu";
 import MobileViewer from "./viewer";
 
-import tempUser from "#/DB/users";
+import userManager from "#/managers/user";
 
 function MobileKiwiContent() {
   return (
@@ -26,7 +26,7 @@ function MobileKiwi() {
     });
 
   const currentParticipant = participantsData.find(
-    (participant) => participant.userId === tempUser.id,
+    (participant) => participant.userId === userManager.userId,
   );
 
   if (!currentParticipant) {

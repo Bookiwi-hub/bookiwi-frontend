@@ -13,6 +13,8 @@
     "epubjs",
     "tanstack",
     "tanstackrouter",
-    "sonner"
+    "sonner",
+    "supabase",
+    "kakao"
   ]
 }
