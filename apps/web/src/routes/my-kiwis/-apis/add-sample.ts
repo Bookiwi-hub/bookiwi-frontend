@@ -1,4 +1,3 @@
-import tempUser from "#/DB/users";
 import {
   SAMPLE_EPUB_DATA_ID,
   SAMPLE_EPUB_URL,
@@ -11,12 +10,17 @@ import {
   sampleIDBParticipants,
 } from "#/constants/sample";
 import idb, { IDBStore } from "#/managers/idb";
+import userManager from "#/managers/user";
 import { EpubIDBData, KiwiIDBData } from "#/types/idb";
 import { Kiwi } from "#/types/kiwi";
 import { fileToBookInfo } from "#/utils/epubjs";
 import { kiwIDBDataToKiwi } from "#/utils/idb";
 
 const addSampleKiwi = async (): Promise<Kiwi> => {
+  const { userId } = userManager;
+  if (!userId) {
+    throw new Error("User not found");
+  }
   try {
     const response = await fetch(SAMPLE_EPUB_URL);
 
@@ -49,7 +53,7 @@ const addSampleKiwi = async (): Promise<Kiwi> => {
         publisher: bookInfo.publisher,
         toc: bookInfo.toc,
       },
-      adminId: tempUser.id,
+      adminId: userId,
       epubId: SAMPLE_EPUB_DATA_ID,
       participantIds: [...SAMPLE_PARTICIPANT_IDS],
     };
