@@ -1,14 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { Provider } from "@bookiwi/jotai";
 
 import getKiwisFromIndexedDB from "./-apis/get-kiwis";
-import Header from "./-header";
 import Kiwis from "./-kiwis";
 
+import Header from "#/components/header";
 import LoadingPage from "#/components/loading";
+import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/my-kiwis/")({
+  beforeLoad: async () => {
+    const loggedIn = await userManager.isLoggedIn();
+    if (!loggedIn) {
+      throw redirect({ to: "/auth" });
+    }
+  },
+
   loader: async () => {
     const kiwi = await getKiwisFromIndexedDB();
     return kiwi;
@@ -31,6 +39,7 @@ export const Route = createFileRoute("/my-kiwis/")({
 
 function MyKiwis() {
   const kiwis = Route.useLoaderData();
+
   return (
     <Provider>
       <div className="flex size-full flex-col">

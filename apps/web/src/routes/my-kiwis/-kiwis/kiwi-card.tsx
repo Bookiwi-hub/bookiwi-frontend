@@ -6,10 +6,10 @@ import { useSetAtom } from "@bookiwi/jotai";
 
 import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
 
-import tempUser from "#/DB/users";
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
+import userManager from "#/managers/user";
 import { Kiwi } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 
@@ -22,7 +22,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
   const { name, description, coverImage, participants, id } = kiwi;
   const participantsCount = participants.length;
   const currentParticipant = participants.find(
-    (participant) => participant.userId === tempUser.id,
+    (participant) => participant.userId === userManager.userId,
   );
   const progress = currentParticipant?.progress || 0;
   const lastActivityAt = currentParticipant?.lastActivityAt

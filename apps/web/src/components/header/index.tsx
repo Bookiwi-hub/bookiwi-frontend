@@ -4,6 +4,7 @@ import Notification from "./notification";
 
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Separator } from "#/components/ui/separator";
+import userManager from "#/managers/user";
 
 function Header() {
   return (
@@ -30,8 +31,10 @@ function Header() {
             aria-label="Profile"
           >
             <Avatar className="size-10 mobile:size-8">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={userManager.user?.profileImage} />
+              <AvatarFallback>
+                {userManager.user?.name?.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
           </Link>
         </div>

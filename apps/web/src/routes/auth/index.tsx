@@ -1,6 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 
 import { primaryColor } from "@bookiwi/color";
+
+import ErrorPage from "#/components/error";
+import supabaseManager from "#/managers/supabase";
+import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/auth/")({
   head: () => ({
@@ -11,17 +16,41 @@ export const Route = createFileRoute("/auth/")({
     ],
   }),
   component: AuthPage,
+  errorComponent: ({ error }) => (
+    <ErrorPage
+      title="로그인 오류"
+      message={error?.message || "로그인 중 오류가 발생했습니다."}
+      onRetry={() => window.location.reload()}
+    />
+  ),
 });
 
 function AuthPage() {
-  const handleKakaoLogin = () => {
-    // 카카오 로그인 로직 추가 예정
-    console.log("카카오 로그인 클릭됨");
+  const [error, setError] = useState<Error | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      throw error;
+    }
+  }, [error]);
+
+  const handleKakaoLogin = async () => {
+    try {
+      await supabaseManager.auth.signInWithKakao();
+    } catch {
+      setError(new Error("로그인 중 오류가 발생했습니다."));
+    }
   };
 
   const handleGuestMode = () => {
-    // 게스트 모드 로직 추가 예정
-    console.log("게스트 모드로 체험하기");
+    userManager.loginAsTempUser({
+      id: "temp",
+      name: "Guest",
+      email: "guest@bookiwi.com",
+      profileImage: "",
+    });
+    navigate({ to: "/my-kiwis" });
   };
 
   return (
@@ -32,22 +61,24 @@ function AuthPage() {
           {/* 로고 섹션 */}
           <header className="relative space-y-4">
             {/* 키위새 로고 (중앙 고정) */}
-            <Link
-              to="/"
-              className="mx-auto flex size-24 items-center justify-center rounded-full shadow-lg"
+            <button
+              type="button"
+              onClick={handleGuestMode}
+              className="peer relative mx-auto flex size-24 items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200 active:scale-95"
               style={{
                 background: primaryColor,
               }}
+              aria-label="게스트 모드로 체험하기"
             >
               <img
                 src="/images/icon.webp"
                 alt="Bookiwi Logo"
                 className="size-16 object-contain"
               />
-            </Link>
+            </button>
 
             {/* 키위새가 말하는 말풍선 (절대 위치) */}
-            <div className="absolute -top-20 left-1/2 -translate-x-1/2">
+            <div className="absolute -top-20 left-1/2 -translate-x-1/2 transition-all duration-200 peer-hover:-translate-y-2 peer-hover:scale-110">
               <button
                 type="button"
                 onClick={handleGuestMode}
