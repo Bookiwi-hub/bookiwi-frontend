@@ -8,14 +8,18 @@ class UserManager {
 
   private isTempUser: boolean = false;
 
-  loginAsTempUser(user: User) {
+  loginAsGuest(user: User) {
     this.isTempUser = true;
     this.currentUser = user;
   }
 
-  logoutAsTempUser() {
+  logoutAsGuest() {
     this.isTempUser = false;
     this.currentUser = null;
+  }
+
+  isGuest() {
+    return this.isTempUser;
   }
 
   async isLoggedIn() {
@@ -47,7 +51,7 @@ class UserManager {
 
   async logout() {
     if (this.isTempUser) {
-      this.logoutAsTempUser();
+      this.logoutAsGuest();
     } else {
       await supabaseManager.auth.signOut();
       this.currentUser = null;

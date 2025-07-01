@@ -12,6 +12,7 @@ import { DialogFooter } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { cn } from "#/lib/utils";
+import userManager from "#/managers/user";
 
 function StepTwo() {
   const [selectedFile, setSelectedFile] = useAtom(fileAtom);
@@ -41,7 +42,11 @@ function StepTwo() {
 
   const handleSubmit = () => {
     if (selectedFile) {
-      setStep(Step.Three);
+      if (userManager.isGuest()) {
+        toast.error("게스트 유저는 키위를 만들 수 없습니다.");
+      } else {
+        setStep(Step.Three);
+      }
     } else {
       setError(true);
     }

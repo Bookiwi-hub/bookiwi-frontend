@@ -44,7 +44,7 @@ function AuthPage() {
   };
 
   const handleGuestMode = () => {
-    userManager.loginAsTempUser({
+    userManager.loginAsGuest({
       id: "temp",
       name: "Guest",
       email: "guest@bookiwi.com",
