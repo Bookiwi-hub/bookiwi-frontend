@@ -3,6 +3,8 @@ import {
   SupabaseClient,
 } from "@supabase/supabase-js";
 
+import { User } from "../types/response";
+
 class SupabaseAuth {
   private supabase: SupabaseClient;
 
@@ -23,13 +25,25 @@ class SupabaseAuth {
     return data;
   }
 
-  async getUser() {
+  async getUser(): Promise<User> {
     const { data, error } = await this.supabase.auth.getUser();
 
     if (error) {
       throw new Error(error.message);
     }
-    return data;
+    const { id } = data.user;
+    const {
+      email,
+      user_name: name,
+      avatar_url: profileImage,
+    } = data.user.user_metadata;
+
+    return {
+      id,
+      email,
+      name,
+      profileImage,
+    };
   }
 
   async isLoggedIn() {

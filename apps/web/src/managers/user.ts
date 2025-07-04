@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import supabaseManager from "./supabase";
+import { User } from "@bookiwi/supabase/types/response";
 
-import { User } from "#/types/user";
+import supabaseManager from "./supabase";
 
 class UserManager {
   private currentUser: User | null = null;
@@ -23,14 +23,7 @@ class UserManager {
       return true;
     }
     try {
-      const { user } = await supabaseManager.auth.getUser();
-      const { email, user_name, avatar_url } = user.user_metadata;
-      this.currentUser = {
-        id: user.id,
-        email,
-        name: user_name,
-        profileImage: avatar_url,
-      };
+      this.currentUser = await supabaseManager.auth.getUser();
       return true;
     } catch {
       return false;
