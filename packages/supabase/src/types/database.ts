@@ -1,4 +1,4 @@
-export interface User {
+export interface UserTable {
   id: string;
   name: string;
   email: string;
@@ -6,10 +6,11 @@ export interface User {
 }
 
 // User와 Kiwi 간의 다대다 관계를 위한 중간 테이블 (Junction Table)
-export interface UserKiwi {
+export interface UserKiwiTable {
   user_id: string; // User.id 참조
   kiwi_id: string; // Kiwi.id 참조
-  role: "admin" | "participant" | "shared";
+  admin: boolean;
+  participated: boolean;
   joined_at: string; // 가입일 - 중요한 추적 정보
   is_active: boolean;
 }
@@ -19,7 +20,7 @@ interface NavItem {
   subitems?: Array<NavItem>;
 }
 
-export interface Kiwi {
+export interface KiwiTable {
   id: string;
   epub_id: string;
   name: string;
@@ -31,7 +32,7 @@ export interface Kiwi {
   created_at: string;
 }
 
-export interface Epub {
+export interface EpubTable {
   id: string;
   file: string;
   locations: string;
@@ -42,7 +43,7 @@ export interface Epub {
   nav: { label: string; subitems?: Array<NavItem> }[];
 }
 
-export interface Participant {
+export interface ParticipantTable {
   id: string;
   kiwi_id: string;
   user_id: string;
@@ -64,7 +65,7 @@ export interface Participant {
   last_activity_at: string;
 }
 
-export interface Highlight {
+export interface HighlightTable {
   id: string;
   participant_id: string;
   cfi: string;
@@ -75,7 +76,7 @@ export interface Highlight {
   updated_at: string;
 }
 
-export interface Comment {
+export interface CommentTable {
   id: string;
   highlight_id: string;
   participant_id: string;
