@@ -1,0 +1,72 @@
+
+
+Table users {
+  id uuid [primary key]
+  name varchar [not null]
+  email varchar [not null, unique]
+  profile_image varchar [not null]
+}
+
+Table user_kiwis {
+  user_id uuid [primary key, ref: > users.id]
+  kiwi_id uuid [primary key, ref: > kiwis.id]
+  admin boolean
+  participated boolean
+  joined_at timestamptz [not null]
+  is_active boolean [not null, default: true]
+}
+
+Table kiwis {
+  id uuid [primary key]
+  epub_id uuid [not null, ref: - epubs.id]
+  name varchar [not null]
+  description varchar [not null]
+  max_participants integer [not null]
+  detail_description text [not null]
+  password varchar [null]
+  share_code uuid [not null, unique]
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table epubs {
+  id uuid [primary key]
+  file varchar [not null]
+  locations text [not null]
+  cover_image varchar [not null]
+  title varchar [not null]
+  author varchar [not null]
+  publisher varchar [not null]
+  nav json [not null, note: 'Navigation structure with label and subitems']
+}
+
+Table participants {
+  id uuid [primary key]
+  kiwi_id uuid [not null, ref: > kiwis.id]
+  user_id uuid [not null, ref: > users.id]
+  name varchar [not null]
+  profile_image varchar [not null]
+  color varchar [not null]
+  settings json [not null, note: 'Reading preferences: single_page, font_family, font_size, font_weight, line_height']
+  record json [not null, note: 'Reading progress: cfi, percentage, bookmarks']
+  last_activity_at timestamptz [not null]
+}
+
+Table highlights {
+  id uuid [primary key]
+  participant_id uuid [not null, ref: > participants.id]
+  cfi varchar [not null, note: 'CFI (Canonical Fragment Identifier) location']
+  text text [not null]
+  color varchar [not null]
+  section_href varchar [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+Table comments {
+  id uuid [primary key]
+  highlight_id uuid [not null, ref: > highlights.id]
+  participant_id uuid [not null, ref: > participants.id]
+  text text [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}

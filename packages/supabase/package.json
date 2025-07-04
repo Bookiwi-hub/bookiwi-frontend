@@ -5,6 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@supabase/supabase-js": "^2.50.2"
+    "@supabase/supabase-js": "^2.50.2",
+    "@bookiwi/epubjs": "workspace:*"
   }
 }
