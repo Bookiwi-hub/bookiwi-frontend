@@ -18,6 +18,7 @@ export default function TabLayout() {
         name="(my-kiwis)/index"
         options={{
           title: "My Kiwis",
+          headerShown: false,
           tabBarIcon: ({ color }) => <Library color={color} />,
         }}
       />
@@ -25,6 +26,7 @@ export default function TabLayout() {
         name="my-page/index"
         options={{
           title: "My Page",
+          headerShown: false,
           tabBarIcon: ({ color }) => <UserRound color={color} />,
         }}
       />
