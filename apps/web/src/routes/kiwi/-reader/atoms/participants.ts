@@ -1,6 +1,7 @@
 import { atom } from "@bookiwi/jotai";
 
-import { updateIDBParticipant, updateCustomStyle } from "../utils";
+import { updateIDBParticipant } from "../api/idb";
+import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
 

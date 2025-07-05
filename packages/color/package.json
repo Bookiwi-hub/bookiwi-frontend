@@ -1,0 +1,6 @@
+{
+  "name": "@bookiwi/color",
+  "version": "0.0.1",
+  "description": "color for Bookiwi",
+  "main": "src/index.ts"
+}

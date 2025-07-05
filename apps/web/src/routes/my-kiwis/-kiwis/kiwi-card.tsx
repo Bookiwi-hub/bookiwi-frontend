@@ -2,11 +2,49 @@ import { Link } from "@tanstack/react-router";
 import { Clock, Users } from "lucide-react";
 import { memo } from "react";
 
+import { useSetAtom } from "@bookiwi/jotai";
+
+import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
+
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
+import userManager from "#/managers/user";
+import { Kiwi } from "#/types/kiwi";
+import { formatDate } from "#/utils/format-date";
 
 interface KiwiCardProps {
+  kiwi: Kiwi;
+}
+
+function KiwiCard({ kiwi }: KiwiCardProps) {
+  const openKiwiDetailModal = useSetAtom(openKiwiDetailModalAtom);
+  const { name, description, coverImage, participants, id } = kiwi;
+  const participantsCount = participants.length;
+  const currentParticipant = participants.find(
+    (participant) => participant.userId === userManager.userId,
+  );
+  const progress = currentParticipant?.progress || 0;
+  const lastActivityAt = currentParticipant?.lastActivityAt
+    ? formatDate(currentParticipant.lastActivityAt)
+    : "";
+
+  return (
+    <CardUI
+      key={id}
+      id={id}
+      name={name}
+      description={description}
+      coverImage={coverImage || ""}
+      progress={progress}
+      participantsCount={participantsCount}
+      lastActivityAt={lastActivityAt}
+      onClick={() => openKiwiDetailModal(kiwi)}
+    />
+  );
+}
+
+interface CardUIProps {
   name: string;
   description: string;
   coverImage: string;
@@ -14,10 +52,10 @@ interface KiwiCardProps {
   participantsCount: number;
   lastActivityAt: string;
   id: string;
-  handleSetSelectedKiwi: (id: string) => void;
+  onClick: () => void;
 }
 
-function KiwiCard({
+function CardUI({
   name,
   description,
   coverImage,
@@ -25,16 +63,12 @@ function KiwiCard({
   participantsCount,
   lastActivityAt,
   id,
-  handleSetSelectedKiwi,
-}: KiwiCardProps) {
-  const handleCardClick = () => {
-    handleSetSelectedKiwi(id);
-  };
-
+  onClick,
+}: CardUIProps) {
   return (
     <Card
-      className="group relative flex h-[420px] w-full max-w-[280px] cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
-      onClick={handleCardClick}
+      className="group relative flex h-96 w-full max-w-72 cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
+      onClick={onClick}
     >
       {/* 이미지 영역 */}
       <div className="relative aspect-[3/4] overflow-hidden">

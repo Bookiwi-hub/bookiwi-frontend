@@ -33,7 +33,7 @@ const useRender = () => {
         "text-decoration": "none !important", // 링크의 밑줄을 제거
       },
       "::selection": {
-        "background-color": `rgba(${(participantColor ?? "#rgba(186, 230, 55)").replace(/[^\d,]/g, "")}, 0.3) !important`,
+        "background-color": `${`${participantColor}4D`} !important`,
       },
     });
     // 책 렌더링

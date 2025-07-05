@@ -1,13 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
+import { Provider } from "@bookiwi/jotai";
 
 import getKiwisFromIndexedDB from "./-apis/get-kiwis";
-import { KiwisProvider } from "./-context";
-import Header from "./-header";
 import Kiwis from "./-kiwis";
 
+import Header from "#/components/header";
 import LoadingPage from "#/components/loading";
+import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/my-kiwis/")({
+  beforeLoad: async () => {
+    const loggedIn = await userManager.isLoggedIn();
+    if (!loggedIn) {
+      throw redirect({ to: "/auth" });
+    }
+  },
+
   loader: async () => {
     const kiwi = await getKiwisFromIndexedDB();
     return kiwi;
@@ -19,7 +28,7 @@ export const Route = createFileRoute("/my-kiwis/")({
       },
     ],
   }),
-  component: MyKiwisPage,
+  component: MyKiwis,
   pendingComponent: () => (
     <LoadingPage
       title="북키위에 오신 것을 환영합니다"
@@ -29,21 +38,16 @@ export const Route = createFileRoute("/my-kiwis/")({
 });
 
 function MyKiwis() {
-  return (
-    <div className="flex size-full flex-col">
-      <Header />
-      <main className="size-full bg-white p-6 mobile:p-4">
-        <Kiwis />
-      </main>
-    </div>
-  );
-}
-
-function MyKiwisPage() {
   const kiwis = Route.useLoaderData();
+
   return (
-    <KiwisProvider kiwis={kiwis}>
-      <MyKiwis />
-    </KiwisProvider>
+    <Provider>
+      <div className="flex size-full flex-col">
+        <Header />
+        <main className="size-full bg-white p-6 mobile:p-4">
+          <Kiwis kiwis={kiwis} />
+        </main>
+      </div>
+    </Provider>
   );
 }
