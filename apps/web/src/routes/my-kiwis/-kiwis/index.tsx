@@ -1,4 +1,4 @@
-import { Kiwi } from "@bookiwi/supabase/types/response";
+import { MyKiwi } from "@bookiwi/supabase/types/response";
 
 import { CreateKiwiModal, DetailKiwiModal } from "../-modals";
 
@@ -8,7 +8,7 @@ import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
 import KiwiSampleCard from "./kiwi-sample-card";
 
 interface KiwisProps {
-  kiwis: Kiwi[];
+  kiwis: MyKiwi[];
 }
 
 function Kiwis({ kiwis }: KiwisProps) {

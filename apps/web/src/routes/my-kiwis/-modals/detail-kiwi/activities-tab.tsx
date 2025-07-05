@@ -1,10 +1,10 @@
-import { Kiwi } from "@bookiwi/supabase/types/response";
+import { MyKiwi } from "@bookiwi/supabase/types/response";
 
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Separator } from "#/components/ui/separator";
 
 interface ActivitiesTabProps {
-  kiwi: Kiwi;
+  kiwi: MyKiwi;
 }
 
 function ActivitiesTab({ kiwi }: ActivitiesTabProps) {

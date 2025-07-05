@@ -19,7 +19,7 @@ export interface NavItem {
   subitems?: Array<NavItem>;
 }
 
-export interface Kiwi {
+export interface MyKiwi {
   id: string;
   name: string;
   description: string;
@@ -28,12 +28,12 @@ export interface Kiwi {
   password: string | null;
   shareCode: string;
   bookMetadata: {
+    coverImage: string | null;
     title: string;
     author: string;
     publisher: string;
     nav: NavItem[];
   };
-  coverImage: string | null;
   createdAt: string;
   adminId: string;
   participants: {

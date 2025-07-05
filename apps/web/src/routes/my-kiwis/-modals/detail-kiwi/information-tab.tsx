@@ -1,13 +1,13 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
-import { Kiwi, NavItem } from "@bookiwi/supabase/types/response";
+import { MyKiwi, NavItem } from "@bookiwi/supabase/types/response";
 
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import userManager from "#/managers/user";
 import { formatDate, formatDateOnly } from "#/utils/format-date";
 
 interface InformationTabProps {
-  kiwi: Kiwi;
+  kiwi: MyKiwi;
 }
 
 function InformationTab({ kiwi }: InformationTabProps) {
@@ -17,7 +17,6 @@ function InformationTab({ kiwi }: InformationTabProps) {
     createdAt,
     detailDescription,
     maxParticipants,
-    coverImage,
     participants,
   } = kiwi;
 
@@ -35,7 +34,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
         <div className="col-span-1">
           <div className="aspect-[3/4] overflow-hidden rounded-md">
             <img
-              src={coverImage || FALLBACK_IMAGE_URL}
+              src={bookMetadata.coverImage || FALLBACK_IMAGE_URL}
               alt="Book cover"
               className="size-full object-contain"
             />

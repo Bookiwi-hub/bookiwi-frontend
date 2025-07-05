@@ -2,11 +2,11 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { Provider } from "@bookiwi/jotai";
 
-// import Kiwis from "./-kiwis";
+import Kiwis from "./-kiwis";
 
 import Header from "#/components/header";
 import LoadingPage from "#/components/loading";
-// import supabase from "#/managers/supabase";
+import supabase from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/my-kiwis/")({
@@ -21,8 +21,9 @@ export const Route = createFileRoute("/my-kiwis/")({
     if (!userManager.userId) {
       throw new Error("User ID is not found");
     }
-    // const kiwi = await supabase.kiwi.getKiwis(userManager.userId);
-    // return kiwi;
+    const kiwis = await supabase.kiwi.getMyKiwis(userManager.userId);
+    console.log(kiwis, "kiwis");
+    return kiwis;
   },
   head: () => ({
     meta: [
@@ -41,14 +42,14 @@ export const Route = createFileRoute("/my-kiwis/")({
 });
 
 function MyKiwis() {
-  // const kiwis = Route.useLoaderData();
+  const kiwis = Route.useLoaderData();
 
   return (
     <Provider>
       <div className="flex size-full flex-col">
         <Header />
         <main className="size-full bg-white p-6 mobile:p-4">
-          {/* <Kiwis kiwis={kiwis} /> */}
+          <Kiwis kiwis={kiwis} />
         </main>
       </div>
     </Provider>
