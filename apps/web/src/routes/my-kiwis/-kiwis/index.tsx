@@ -1,11 +1,11 @@
+import { Kiwi } from "@bookiwi/supabase/types/response";
+
 import { CreateKiwiModal, DetailKiwiModal } from "../-modals";
 
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
 import KiwiSampleCard from "./kiwi-sample-card";
-
-import { Kiwi } from "#/types/kiwi";
 
 interface KiwisProps {
   kiwis: Kiwi[];

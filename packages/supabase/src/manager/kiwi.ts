@@ -60,7 +60,6 @@ class SupabaseKiwi {
 
     const kiwi: Kiwi = {
       id: createdKiwi.id,
-      epubId: createdKiwi.epub_id,
       name: createdKiwi.name,
       description: createdKiwi.description,
       detailDescription: createdKiwi.detail_description,
@@ -68,10 +67,91 @@ class SupabaseKiwi {
       password: createdKiwi.password,
       shareCode: createdKiwi.share_code,
       createdAt: createdKiwi.created_at,
+      coverImage: epub.cover_image,
+      bookMetadata: {
+        title: epub.title,
+        author: epub.author,
+        publisher: epub.publisher,
+        nav: epub.nav,
+      },
+      adminId: newKiwi.userId,
+      participants: [],
     };
 
     return kiwi;
   }
+
+  // async getKiwis(userId: string): Promise<Kiwi[]> {
+  //   const { data, error } = await this.supabase
+  //     .from("user_kiwis")
+  //     .select(
+  //       `
+  //       kiwis!inner(
+  //         *,
+  //         epubs!inner(
+  //           cover_image,
+  //           title,
+  //           author,
+  //           publisher,
+  //           nav
+  //         )
+  //       )
+  //     `,
+  //     ) // 관계 테이블 join
+  //     .eq("user_id", userId)
+  //     .eq("is_active", true); // 필요시 active 필터링
+
+  //   if (error) {
+  //     throw new Error(error.message);
+  //   }
+  //   if (
+  //     !data ||
+  //     data.length === 0 ||
+  //     !data[0] ||
+  //     !data[0].kiwis ||
+  //     data[0].kiwis.length === 0
+  //   ) {
+  //     return [];
+  //   }
+
+  //   const userKiwis = data[0].kiwis;
+  //   const kiwis: Kiwi[] = userKiwis.map((userKiwi) => {
+  //     const { kiwi, epubs } = userKiwi;
+  //     const { cover_image: coverImage, title, author, publisher, nav } = epubs;
+  //     const {
+  //       id,
+  //       name,
+  //       description,
+  //       detail_description: detailDescription,
+  //       max_participants: maxParticipants,
+  //       password,
+  //       share_code: shareCode,
+  //       created_at: createdAt,
+  //       admin_id: adminId,
+  //     } = kiwi;
+  //     return {
+  //       id,
+  //       name,
+  //       description,
+  //       detailDescription,
+  //       maxParticipants,
+  //       password,
+  //       shareCode,
+  //       createdAt,
+  //       coverImage,
+  //       bookMetadata: {
+  //         title,
+  //         author,
+  //         publisher,
+  //         nav,
+  //       },
+  //       adminId,
+  //       participants: [],
+  //     };
+  //   });
+
+  //   return kiwis;
+  // }
 
   private async uploadEpub(file: File) {
     const { data, error } = await this.supabase.storage

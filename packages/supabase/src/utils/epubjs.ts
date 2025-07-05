@@ -1,4 +1,6 @@
-import ePub, { Book, NavItem } from "@bookiwi/epubjs";
+import ePub, { Book } from "@bookiwi/epubjs";
+
+import { NavItem } from "../types/response";
 
 const urlToFile = async (url: string, filename?: string) => {
   const response = await fetch(url);
@@ -27,7 +29,13 @@ const getMetadata = async (book: Book) => {
 const getNav = async (book: Book): Promise<NavItem[]> => {
   await book.ready;
   const navigation = await book.loaded.navigation;
-  return navigation.toc;
+  const nav: NavItem[] = navigation.toc.map((item) => ({
+    label: item.label,
+    subitems: item.subitems?.map((subitem) => ({
+      label: subitem.label,
+    })),
+  }));
+  return nav;
 };
 
 export const fileToEpubInfo = async (file: File) => {

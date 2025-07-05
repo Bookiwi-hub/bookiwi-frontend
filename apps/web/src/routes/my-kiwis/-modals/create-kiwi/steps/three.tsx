@@ -10,21 +10,17 @@ import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
-import { createKiwi } from "#/routes/my-kiwis/-apis/create-kiwi";
+import supabase from "#/managers/supabase";
+import userManager from "#/managers/user";
 
 function StepThree() {
   const newKiwi = useAtomValue(createKiwiAtom);
   const setShareCode = useSetAtom(setShareCodeAtom);
   const setStep = useSetAtom(stepAtom);
-  // const abortControllerRef = useRef<AbortController | null>(null);
+
   const hasExecutedRef = useRef(false);
   const router = useRouter();
   const [isFailed, setIsFailed] = useState(false);
-
-  // const handleCancel = () => {
-  //   abortControllerRef.current?.abort();
-  //   setStep(Step.Two);
-  // };
 
   useEffect(() => {
     // Strict Mode에서 중복 실행 방지
@@ -34,23 +30,18 @@ function StepThree() {
     hasExecutedRef.current = true;
 
     const handleSubmit = async () => {
-      // const controller = new AbortController();
-      // abortControllerRef.current = controller;
       try {
-        // 여기서 실제로 API 호출 등의 작업을 수행
-
-        // const res = await fetch('/api/submit', {
-        //   method: 'POST',
-        //   body: JSON.stringify(data),
-        //   signal: controller.signal, // ✅ 여기가 중요
-        // });
-        // const book = new Book(state.selectedFile);
-        // if (abortControllerRef.current?.signal.aborted) {
-        //   return;
-        // }
-        const kiwiIDBData = await createKiwi(newKiwi);
+        const kiwi = await supabase.kiwi.createKiwi({
+          userId: userManager.userId!,
+          name: newKiwi.kiwiName,
+          description: newKiwi.kiwiDescription,
+          detailDescription: newKiwi.kiwiDetailDescription,
+          maxParticipants: newKiwi.maxParticipants,
+          password: newKiwi.password,
+          file: newKiwi.file!,
+        });
         await router.invalidate();
-        setShareCode(kiwiIDBData.shareCode);
+        setShareCode(kiwi.shareCode);
         setStep(Step.Four);
       } catch (error) {
         setIsFailed(true);

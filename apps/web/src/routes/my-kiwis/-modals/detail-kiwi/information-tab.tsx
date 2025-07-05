@@ -1,10 +1,9 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
-import { NavItem } from "@bookiwi/epubjs/types/navigation";
+import { Kiwi, NavItem } from "@bookiwi/supabase/types/response";
 
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import userManager from "#/managers/user";
-import { Kiwi } from "#/types/kiwi";
 import { formatDate, formatDateOnly } from "#/utils/format-date";
 
 interface InformationTabProps {
@@ -111,8 +110,12 @@ function InformationTab({ kiwi }: InformationTabProps) {
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
         <ul className="max-h-60 overflow-y-auto pr-1">
-          {bookMetadata.toc.map((item, index) => (
-            <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
+          {bookMetadata.nav.map((item, index) => (
+            <TocItem
+              key={item.label}
+              tocItem={item}
+              numbering={`${index + 1}`}
+            />
           ))}
         </ul>
       </div>
@@ -148,7 +151,7 @@ function TocItem({ tocItem, numbering }: TocItemProps) {
         <ul className="ml-7 mt-1 space-y-0.5 border-l border-muted pl-2">
           {tocItem.subitems.map((subitem, index) => (
             <TocItem
-              key={subitem.id}
+              key={subitem.label}
               tocItem={subitem}
               numbering={`${numbering}.${index + 1}`}
             />

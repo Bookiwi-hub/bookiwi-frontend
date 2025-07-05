@@ -12,5 +12,5 @@ export interface CreateKiwi {
   maxParticipants: number;
   password: string | null;
   file: File | null;
-  shareCode: string;
+  shareCode: string | null;
 }

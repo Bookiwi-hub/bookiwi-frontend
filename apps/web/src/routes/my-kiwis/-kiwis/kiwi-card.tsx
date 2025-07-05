@@ -3,6 +3,7 @@ import { Clock, Users } from "lucide-react";
 import { memo } from "react";
 
 import { useSetAtom } from "@bookiwi/jotai";
+import { Kiwi } from "@bookiwi/supabase/types/response";
 
 import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
 
@@ -10,7 +11,6 @@ import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import userManager from "#/managers/user";
-import { Kiwi } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 
 interface KiwiCardProps {

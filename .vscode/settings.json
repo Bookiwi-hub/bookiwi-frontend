@@ -15,6 +15,7 @@
     "tanstackrouter",
     "sonner",
     "supabase",
-    "kakao"
+    "kakao",
+    "epubs"
   ]
 }

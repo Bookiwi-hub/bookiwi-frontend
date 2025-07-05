@@ -1,6 +1,7 @@
+import { Kiwi } from "@bookiwi/supabase/types/response";
+
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Separator } from "#/components/ui/separator";
-import { Kiwi } from "#/types/kiwi";
 
 interface ActivitiesTabProps {
   kiwi: Kiwi;

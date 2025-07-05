@@ -14,54 +14,37 @@ export interface UserKiwi {
   isActive: boolean;
 }
 
-interface NavItem {
+export interface NavItem {
   label: string;
   subitems?: Array<NavItem>;
 }
 
 export interface Kiwi {
   id: string;
-  epubId: string;
   name: string;
   description: string;
-  maxParticipants: number;
   detailDescription: string;
+  maxParticipants: number | null;
   password: string | null;
   shareCode: string;
-  createdAt: string;
-}
-
-export interface Epub {
-  id: string;
-  file: string;
-  locations: string;
+  bookMetadata: {
+    title: string;
+    author: string;
+    publisher: string;
+    nav: NavItem[];
+  };
   coverImage: string | null;
-  title: string;
-  author: string;
-  publisher: string;
-  nav: { label: string; subitems?: Array<NavItem> }[];
-}
-
-export interface Participant {
-  id: string;
-  kiwiId: string;
-  userId: string;
-  name: string;
-  profileImage: string;
-  color: string;
-  settings: {
-    singlePage: boolean;
-    fontFamily: string | null;
-    fontSize: number | null;
-    fontWeight: number | null;
-    lineHeight: number | null;
-  };
-  record: {
-    cfi: { start: string; end: string } | null;
-    percentage: number | null;
-    bookmarks: { cfi: { start: string; end: string }; createdAt: string }[];
-  };
-  last_activity_at: string;
+  createdAt: string;
+  adminId: string;
+  participants: {
+    id: string;
+    userId: string;
+    name: string;
+    profileImage: string;
+    progress: number;
+    color: string;
+    lastActivityAt: string;
+  }[];
 }
 
 export interface Highlight {

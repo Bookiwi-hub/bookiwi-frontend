@@ -16,7 +16,7 @@ function StepFour() {
   const closeCreateKiwiModal = useSetAtom(closeCreateKiwiModalAtom);
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(newKiwi.shareCode).then(() => {
+    navigator.clipboard.writeText(newKiwi.shareCode || "").then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
@@ -39,7 +39,7 @@ function StepFour() {
         <div className="flex w-full max-w-sm items-center space-x-2">
           <div className="relative flex-1">
             <Input
-              value={newKiwi.shareCode}
+              value={newKiwi.shareCode || "공유 코드가 생성되지 않았습니다."}
               readOnly
               className="pr-10 text-center font-mono"
             />

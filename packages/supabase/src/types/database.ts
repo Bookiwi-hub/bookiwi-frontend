@@ -15,11 +15,6 @@ export interface UserKiwiTable {
   is_active: boolean;
 }
 
-interface NavItem {
-  label: string;
-  subitems?: Array<NavItem>;
-}
-
 export interface KiwiTable {
   id: string;
   epub_id: string;
@@ -32,6 +27,11 @@ export interface KiwiTable {
   created_at: string;
 }
 
+export interface NavItem {
+  label: string;
+  subitems?: Array<NavItem>;
+}
+
 export interface EpubTable {
   id: string;
   file: string;
@@ -40,7 +40,7 @@ export interface EpubTable {
   title: string;
   author: string;
   publisher: string;
-  nav: { label: string; subitems?: Array<NavItem> }[];
+  nav: NavItem[];
 }
 
 export interface ParticipantTable {
