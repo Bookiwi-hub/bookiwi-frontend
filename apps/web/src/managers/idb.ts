@@ -1,5 +1,11 @@
-import { IDBStore } from "#/constants/idb";
 import { IndexDBError } from "#/errors";
+
+export enum IDBStore {
+  KiwiStore = "kiwiStore",
+  EpubStore = "epubStore",
+  ParticipantStore = "participantStore",
+  AnnotationStore = "annotationStore",
+}
 
 class IndexedDBManager {
   private db: IDBDatabase | null = null;

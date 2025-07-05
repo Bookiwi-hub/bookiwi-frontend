@@ -1,4 +1,4 @@
-import { primaryColor } from "#/constants/color";
+import { primaryColor } from "@bookiwi/color";
 
 interface LoadingProps {
   title?: string;

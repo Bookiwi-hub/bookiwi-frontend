@@ -14,6 +14,7 @@ import { Route as rootRoute } from "./routes/__root";
 import { Route as IndexImport } from "./routes/index";
 import { Route as MyPageIndexImport } from "./routes/my-page/index";
 import { Route as MyKiwisIndexImport } from "./routes/my-kiwis/index";
+import { Route as AuthIndexImport } from "./routes/auth/index";
 import { Route as KiwiIdImport } from "./routes/kiwi/$id";
 
 // Create/Update Routes
@@ -33,6 +34,12 @@ const MyPageIndexRoute = MyPageIndexImport.update({
 const MyKiwisIndexRoute = MyKiwisIndexImport.update({
   id: "/my-kiwis/",
   path: "/my-kiwis/",
+  getParentRoute: () => rootRoute,
+} as any);
+
+const AuthIndexRoute = AuthIndexImport.update({
+  id: "/auth/",
+  path: "/auth/",
   getParentRoute: () => rootRoute,
 } as any);
 
@@ -60,6 +67,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof KiwiIdImport;
       parentRoute: typeof rootRoute;
     };
+    "/auth/": {
+      id: "/auth/";
+      path: "/auth";
+      fullPath: "/auth";
+      preLoaderRoute: typeof AuthIndexImport;
+      parentRoute: typeof rootRoute;
+    };
     "/my-kiwis/": {
       id: "/my-kiwis/";
       path: "/my-kiwis";
@@ -82,6 +96,7 @@ declare module "@tanstack/react-router" {
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
   "/kiwi/$id": typeof KiwiIdRoute;
+  "/auth": typeof AuthIndexRoute;
   "/my-kiwis": typeof MyKiwisIndexRoute;
   "/my-page": typeof MyPageIndexRoute;
 }
@@ -89,6 +104,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/kiwi/$id": typeof KiwiIdRoute;
+  "/auth": typeof AuthIndexRoute;
   "/my-kiwis": typeof MyKiwisIndexRoute;
   "/my-page": typeof MyPageIndexRoute;
 }
@@ -97,22 +113,24 @@ export interface FileRoutesById {
   __root__: typeof rootRoute;
   "/": typeof IndexRoute;
   "/kiwi/$id": typeof KiwiIdRoute;
+  "/auth/": typeof AuthIndexRoute;
   "/my-kiwis/": typeof MyKiwisIndexRoute;
   "/my-page/": typeof MyPageIndexRoute;
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/kiwi/$id" | "/my-kiwis" | "/my-page";
+  fullPaths: "/" | "/kiwi/$id" | "/auth" | "/my-kiwis" | "/my-page";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/kiwi/$id" | "/my-kiwis" | "/my-page";
-  id: "__root__" | "/" | "/kiwi/$id" | "/my-kiwis/" | "/my-page/";
+  to: "/" | "/kiwi/$id" | "/auth" | "/my-kiwis" | "/my-page";
+  id: "__root__" | "/" | "/kiwi/$id" | "/auth/" | "/my-kiwis/" | "/my-page/";
   fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   KiwiIdRoute: typeof KiwiIdRoute;
+  AuthIndexRoute: typeof AuthIndexRoute;
   MyKiwisIndexRoute: typeof MyKiwisIndexRoute;
   MyPageIndexRoute: typeof MyPageIndexRoute;
 }
@@ -120,6 +138,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   KiwiIdRoute: KiwiIdRoute,
+  AuthIndexRoute: AuthIndexRoute,
   MyKiwisIndexRoute: MyKiwisIndexRoute,
   MyPageIndexRoute: MyPageIndexRoute,
 };
@@ -136,6 +155,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/kiwi/$id",
+        "/auth/",
         "/my-kiwis/",
         "/my-page/"
       ]
@@ -145,6 +165,9 @@ export const routeTree = rootRoute
     },
     "/kiwi/$id": {
       "filePath": "kiwi/$id.tsx"
+    },
+    "/auth/": {
+      "filePath": "auth/index.tsx"
     },
     "/my-kiwis/": {
       "filePath": "my-kiwis/index.tsx"
