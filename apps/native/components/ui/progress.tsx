@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
+import { MAIN_COLOR } from "@/constants/colors";
 import { cn } from "@/lib/utils/cn";
 
 function Progress({
@@ -71,7 +72,7 @@ function Indicator({
     <ProgressPrimitive.Indicator asChild>
       <Animated.View
         style={indicator}
-        className={cn("h-full bg-foreground", className)}
+        className={cn(`h-full bg-[${MAIN_COLOR}]`, className)}
       />
     </ProgressPrimitive.Indicator>
   );
