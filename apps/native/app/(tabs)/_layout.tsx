@@ -2,8 +2,8 @@ import { Tabs } from "expo-router";
 
 // import { useColorScheme } from "@/hooks/use-color-scheme";
 
-import { MAIN_COLOR } from "@/constants/colors";
 import { Library, UserRound } from "@/lib/icons";
+import { mainColor } from "@bookiwi/color";
 
 export default function TabLayout() {
   // const { isDarkColorScheme } = useColorScheme();
@@ -11,7 +11,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: MAIN_COLOR,
+        tabBarActiveTintColor: mainColor,
         tabBarInactiveTintColor: "#000000",
       }}
     >

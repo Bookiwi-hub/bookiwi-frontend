@@ -43,5 +43,3 @@ export const NAV_THEME = {
     text: "hsl(0 0% 98%)", // foreground
   },
 };
-
-export const MAIN_COLOR = "#10b981";

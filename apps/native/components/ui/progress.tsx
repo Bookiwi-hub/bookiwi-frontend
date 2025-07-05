@@ -9,8 +9,8 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-import { MAIN_COLOR } from "@/constants/colors";
 import { cn } from "@/lib/utils/cn";
+import { mainColor } from "@bookiwi/color";
 
 function Progress({
   className,
@@ -50,6 +50,7 @@ function Indicator({
       `${interpolate(progress.value, [0, 100], [1, 100], Extrapolation.CLAMP)}%`,
       { overshootClamping: true },
     ),
+    backgroundColor: mainColor,
   }));
 
   if (Platform.OS === "web") {
@@ -70,10 +71,7 @@ function Indicator({
 
   return (
     <ProgressPrimitive.Indicator asChild>
-      <Animated.View
-        style={indicator}
-        className={cn(`h-full bg-[${MAIN_COLOR}]`, className)}
-      />
+      <Animated.View style={indicator} className={cn(`h-full`, className)} />
     </ProgressPrimitive.Indicator>
   );
 }

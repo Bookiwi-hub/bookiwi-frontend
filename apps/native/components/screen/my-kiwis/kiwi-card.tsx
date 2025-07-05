@@ -9,8 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { MAIN_COLOR } from "@/constants/colors";
-import { EllipsisVertical } from "@/lib/icons/ellipsis-vertical";
+
+import KiwiCardDropdown from "./kiwi-card-dropdown";
 
 interface KiwiCardProps {
   image: ImageSourcePropType;
@@ -60,13 +60,9 @@ export default function KiwiCard({
           </View>
         </CardContent>
       </Link>
-      <EllipsisVertical
-        color={MAIN_COLOR}
-        className="absolute cursor-pointer top-6 right-4"
-        onPress={() => {
-          console.log("ellipsis");
-        }}
-      />
+      <View className="absolute top-6 right-4">
+        <KiwiCardDropdown />
+      </View>
     </Card>
   );
 }

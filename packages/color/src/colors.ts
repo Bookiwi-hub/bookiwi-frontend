@@ -12,3 +12,4 @@ export const colors = [
 ] as const;
 
 export const primaryColor = colors[0]; // 기본 하이라이트 컬러: 밝은 노랑
+export const mainColor = "#02C73C";

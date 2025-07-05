@@ -2,14 +2,14 @@ import { router } from "expo-router";
 import { View } from "react-native";
 
 import { ThemedText } from "@/components/common/themed-text";
-import { MAIN_COLOR } from "@/constants/colors";
 import { Plus } from "@/lib/icons/plus";
+import { mainColor } from "@bookiwi/color";
 
 export default function Header() {
   return (
     <View className="flex flex-row justify-between items-center">
       <ThemedText type="title">내 키위</ThemedText>
-      <Plus color={MAIN_COLOR} onPress={() => router.push("/my-kiwis/new")} />
+      <Plus color={mainColor} onPress={() => router.push("/my-kiwis/new")} />
     </View>
   );
 }
