@@ -3,6 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { EpubTable, KiwiTable, UserKiwiTable } from "../types/database";
 import { MyKiwi } from "../types/response";
 import { fileToEpubInfo } from "../utils/epubjs";
+import { generateUniqueFileName } from "../utils/file";
 
 interface NewKiwi {
   userId: string;
@@ -22,15 +23,13 @@ class SupabaseKiwi {
   }
 
   async createKiwi(newKiwi: NewKiwi): Promise<MyKiwi> {
-    const epubData = await this.uploadEpub(newKiwi.file);
     const epubInfo = await fileToEpubInfo(newKiwi.file);
-
     const { locations, nav, title, author, publisher, coverImage } = epubInfo;
-
+    const epubUrl = await this.uploadAndGetEpubUrl(newKiwi.file);
     const coverImageUrl = await this.uploadAndGetCoverImageUrl(coverImage);
 
     const epub: EpubTable = await this.postEpub({
-      file: epubData.path,
+      file: epubUrl,
       locations,
       cover_image: coverImageUrl,
       title,
@@ -110,9 +109,10 @@ class SupabaseKiwi {
   }
 
   private async uploadEpub(file: File) {
+    const uniqueFileName = generateUniqueFileName(file.name);
     const { data, error } = await this.supabase.storage
       .from("epub")
-      .upload(file.name, file);
+      .upload(uniqueFileName, file);
     if (error) {
       throw new Error(error.message);
     }
@@ -120,9 +120,10 @@ class SupabaseKiwi {
   }
 
   private async uploadCoverImage(file: File) {
+    const uniqueFileName = generateUniqueFileName(file.name);
     const { data, error } = await this.supabase.storage
       .from("cover")
-      .upload(file.name, file);
+      .upload(uniqueFileName, file);
     if (error) {
       throw new Error(error.message);
     }
@@ -169,19 +170,21 @@ class SupabaseKiwi {
   ): Promise<string | null> {
     if (!coverImage) return null;
 
-    const coverImagePath = (await this.uploadCoverImage(coverImage))?.path;
+    const coverImageData = await this.uploadCoverImage(coverImage);
+    const coverImagePath = coverImageData.path;
 
-    console.log(coverImagePath, "coverImagePath");
-
-    if (!coverImagePath) return null;
-
-    const coverImageUrl = this.supabase.storage
+    const { data } = this.supabase.storage
       .from("cover")
-      .getPublicUrl(coverImagePath).data.publicUrl;
+      .getPublicUrl(coverImagePath);
 
-    console.log(coverImageUrl, "coverImageUrl");
+    return data.publicUrl;
+  }
 
-    return coverImageUrl;
+  private async uploadAndGetEpubUrl(epub: File) {
+    const epubData = await this.uploadEpub(epub);
+    const epubPath = epubData.path;
+    const { data } = this.supabase.storage.from("epub").getPublicUrl(epubPath);
+    return data.publicUrl;
   }
 }
 

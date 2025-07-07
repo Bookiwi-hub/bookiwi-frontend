@@ -5,15 +5,6 @@ export interface User {
   profileImage: string;
 }
 
-// User와 Kiwi 간의 다대다 관계를 위한 중간 테이블 (Junction Table)
-export interface UserKiwi {
-  userId: string; // User.id 참조
-  kiwiId: string; // Kiwi.id 참조
-  role: "admin" | "participant" | "shared";
-  joinedAt: string; // 가입일 - 중요한 추적 정보
-  isActive: boolean;
-}
-
 export interface NavItem {
   label: string;
   subitems?: Array<NavItem>;
