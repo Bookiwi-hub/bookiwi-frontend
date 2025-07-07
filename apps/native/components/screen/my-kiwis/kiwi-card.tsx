@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
+import { Link } from "expo-router";
 import { Image, Text, ImageSourcePropType, View } from "react-native";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -9,7 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils/cn";
+
+import KiwiCardDropdown from "./kiwi-card-dropdown";
 
 interface KiwiCardProps {
   image: ImageSourcePropType;
@@ -19,27 +20,6 @@ interface KiwiCardProps {
   participants: number;
   progress: number;
 }
-
-const mock = [
-  {
-    name: "Aohn Doe",
-    imageUrl: require("../../../assets/images/book-cover-ex.png"),
-    fallback: "bg-red-500",
-    alt: "avatar1",
-  },
-  {
-    name: "Bohn Doe",
-    imageUrl: require("../../../assets/images/book-cover-ex.png"),
-    fallback: "bg-yellow-500",
-    alt: "avatar1",
-  },
-  {
-    name: "Cohn Doe",
-    imageUrl: require("../../../assets/images/book-cover-ex.png"),
-    fallback: "bg-green-500",
-    alt: "avatar1",
-  },
-];
 
 export default function KiwiCard({
   image,
@@ -51,50 +31,38 @@ export default function KiwiCard({
 }: KiwiCardProps) {
   return (
     <Card className="w-full h-60">
-      <CardContent className="flex-row h-full p-6 gap-4">
-        <Image
-          source={image}
-          className="w-2/5 h-full rounded-md"
-          resizeMode="cover"
-        />
-        <View className="flex-1 flex justify-between">
-          <View>
-            <CardTitle>{kiwiTitle}</CardTitle>
-            <CardTitle className="text-md text-gray-500">{bookTitle}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </View>
-          <View>
-            <View className="flex flex-row justify-end mb-3">
-              {mock.map((item, idx) => (
-                <Avatar
-                  key={idx}
-                  alt={item.alt}
-                  className={cn(
-                    "border-2 border-white",
-                    idx !== 0 ? "-ml-3" : "",
-                  )}
-                >
-                  {/* <AvatarImage source={item.imageUrl} /> */}
-                  <AvatarFallback className={item.fallback}>
-                    <Text className="text-white font-semibold">
-                      {item.name.slice(0, 1)}
-                    </Text>
-                  </AvatarFallback>
-                </Avatar>
-              ))}
-              <Avatar
-                className="-ml-3 border-2 border-white bg-blue-500 flex items-center justify-center"
-                alt="avatar"
-              >
-                <Text className="text-white font-semibold">
-                  + {participants}
-                </Text>
-              </Avatar>
+      <Link
+        href={{
+          pathname: "/(tabs)/(my-kiwis)/[kiwi]",
+          params: { kiwi: kiwiTitle },
+        }}
+      >
+        <CardContent className="flex-row h-full p-6 gap-4">
+          <Image
+            source={image}
+            className="w-2/5 h-full rounded-md"
+            resizeMode="cover"
+          />
+          <View className="flex-1 flex justify-between">
+            <View>
+              <CardTitle>{kiwiTitle}</CardTitle>
+              <CardTitle className="text-md text-gray-500">
+                {bookTitle}
+              </CardTitle>
+              <CardDescription>{description}</CardDescription>
             </View>
-            <Progress value={progress} />
+            <View>
+              <View className="flex flex-row justify-end mb-3">
+                <Text>{participants}명 참여</Text>
+              </View>
+              <Progress value={progress} />
+            </View>
           </View>
-        </View>
-      </CardContent>
+        </CardContent>
+      </Link>
+      <View className="absolute top-6 right-4">
+        <KiwiCardDropdown kiwiId={kiwiTitle} />
+      </View>
     </Card>
   );
 }

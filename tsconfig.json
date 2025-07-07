@@ -7,7 +7,8 @@
     "forceConsistentCasingInFileNames": true, // 파일 이름의 대소문자를 일관되게 처리하여 오류를 방지합니다. (Windows/Linux 호환성)
     "inlineSources": false, // 소스 맵에 소스 코드를 인라인으로 포함하지 않습니다. (디버깅 시 별도 소스 파일 참조)
     "isolatedModules": true, // 각 파일을 독립적인 모듈로 간주하여 컴파일합니다. (Babel 등 외부 트랜스파일러 호환성)
-    "moduleResolution": "node", // Node.js 스타일의 모듈 해석 방식을 사용합니다. (node_modules에서 모듈 탐색)
+    "module": "ESNext", // 최신 ES 모듈 시스템을 사용합니다.
+    "moduleResolution": "bundler", // 번들러 환경에서 모듈 해석 방식을 사용합니다. (exports 필드 지원)
     "noUnusedLocals": false, // 사용되지 않은 지역 변수를 허용합니다. (경고 비활성화로 유연성 제공)
     "noUnusedParameters": false, // 사용되지 않은 매개변수를 허용합니다. (경고 비활성화로 유연성 제공)
     "preserveWatchOutput": true, // watch 모드에서 이전 컴파일 출력을 유지합니다. (터미널 로그 유지)

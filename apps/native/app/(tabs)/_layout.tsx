@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 // import { useColorScheme } from "@/hooks/use-color-scheme";
 
 import { Library, UserRound } from "@/lib/icons";
+import { mainColor } from "@bookiwi/color";
 
 export default function TabLayout() {
   // const { isDarkColorScheme } = useColorScheme();
@@ -10,7 +11,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#10b981",
+        tabBarActiveTintColor: mainColor,
         tabBarInactiveTintColor: "#000000",
       }}
     >
@@ -28,6 +29,15 @@ export default function TabLayout() {
           title: "My Page",
           headerShown: false,
           tabBarIcon: ({ color }) => <UserRound color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(my-kiwis)/[kiwi]/index"
+        options={{
+          title: "Kiwi",
+          headerShown: false,
+          tabBarStyle: { display: "none" },
+          href: null,
         }}
       />
     </Tabs>

@@ -10,6 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { cn } from "@/lib/utils/cn";
+import { mainColor } from "@bookiwi/color";
 
 function Progress({
   className,
@@ -49,6 +50,7 @@ function Indicator({
       `${interpolate(progress.value, [0, 100], [1, 100], Extrapolation.CLAMP)}%`,
       { overshootClamping: true },
     ),
+    backgroundColor: mainColor,
   }));
 
   if (Platform.OS === "web") {
@@ -69,10 +71,7 @@ function Indicator({
 
   return (
     <ProgressPrimitive.Indicator asChild>
-      <Animated.View
-        style={indicator}
-        className={cn("h-full bg-foreground", className)}
-      />
+      <Animated.View style={indicator} className={cn(`h-full`, className)} />
     </ProgressPrimitive.Indicator>
   );
 }

@@ -1,32 +1,17 @@
-import { useCallback, useState } from "react";
+import { CreateKiwiModal, DetailKiwiModal } from "../-modals";
 
-import { useKiwis } from "../-context";
-
-import CreateKiwiModal from "./create-kiwi-modal";
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
-import KiwiDetailModal from "./kiwi-detail-modal";
 import KiwiSampleCard from "./kiwi-sample-card";
 
-import tempUser from "#/DB/users";
 import { Kiwi } from "#/types/kiwi";
-import { formatDate } from "#/utils/format-date";
 
-function Kiwis() {
-  const { kiwis } = useKiwis();
-  const [isCreateKiwiModalOpen, setIsCreateKiwiModalOpen] = useState(false);
-  const [isKiwiDetailModalOpen, setIsKiwiDetailModalOpen] = useState(false);
-  const [selectedKiwi, setSelectedKiwi] = useState<Kiwi | null>(null);
-  const handleSetSelectedKiwi = useCallback(
-    (id: string) => {
-      const selectedKiwiData = kiwis.find((kiwi) => kiwi.id === id);
-      setSelectedKiwi(selectedKiwiData || null);
-      setIsKiwiDetailModalOpen(true);
-    },
-    [kiwis],
-  );
+interface KiwisProps {
+  kiwis: Kiwi[];
+}
 
+function Kiwis({ kiwis }: KiwisProps) {
   return (
     <>
       <div className="w-full">
@@ -35,57 +20,23 @@ function Kiwis() {
             <h2 className="text-2xl font-bold">내 키위</h2>
             <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
               <KiwiCodeForm />
-              <CreateKiwiButton setIsModalOpen={setIsCreateKiwiModalOpen} />
+              <CreateKiwiButton />
             </div>
           </div>
         </div>
         <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {kiwis.length === 0 || kiwis.length === 1 ? (
             <>
-              <CreateKiwiCardButton setIsModalOpen={setIsCreateKiwiModalOpen} />
+              <CreateKiwiCardButton />
               <KiwiSampleCard />
             </>
           ) : (
-            kiwis.map((kiwi) => {
-              const { name, description, coverImage, participants, id } = kiwi;
-              const participantsCount = participants.length;
-              const currentParticipant = participants.find(
-                (participant) => participant.userId === tempUser.id,
-              );
-              const progress = currentParticipant?.progress || 0;
-              const lastActivityAt = currentParticipant?.lastActivityAt
-                ? formatDate(currentParticipant.lastActivityAt)
-                : "";
-              return (
-                <KiwiCard
-                  key={id}
-                  id={id}
-                  name={name}
-                  description={description}
-                  coverImage={coverImage || ""}
-                  progress={progress}
-                  participantsCount={participantsCount}
-                  lastActivityAt={lastActivityAt}
-                  handleSetSelectedKiwi={handleSetSelectedKiwi}
-                />
-              );
-            })
+            kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
           )}
         </div>
       </div>
-      {isCreateKiwiModalOpen && (
-        <CreateKiwiModal
-          open={isCreateKiwiModalOpen}
-          setOpen={setIsCreateKiwiModalOpen}
-        />
-      )}
-      {isKiwiDetailModalOpen && selectedKiwi && (
-        <KiwiDetailModal
-          kiwi={selectedKiwi}
-          isOpen={isKiwiDetailModalOpen}
-          onClose={() => setIsKiwiDetailModalOpen(false)}
-        />
-      )}
+      <DetailKiwiModal />
+      <CreateKiwiModal />
     </>
   );
 }

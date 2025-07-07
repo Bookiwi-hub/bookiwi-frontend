@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ReactNode, useEffect, useMemo } from "react";
+import { ReactNode, useEffect } from "react";
 
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
@@ -24,7 +24,6 @@ import {
   highlightClickedAtom,
 } from "../atoms";
 
-import tempUser from "#/DB/users";
 import {
   AnnotationIDBData,
   EpubIDBData,
@@ -34,11 +33,13 @@ import {
 
 interface ReaderProviderProps {
   children: ReactNode;
+  currentParticipant: ParticipantIDBData;
   epubData: EpubIDBData;
   kiwiData: KiwiIDBData;
   participantsData: ParticipantIDBData[];
   annotationsData: AnnotationIDBData[];
 }
+const readerStore = createStore();
 
 function ReaderProvider({
   children,
@@ -46,40 +47,9 @@ function ReaderProvider({
   kiwiData,
   participantsData,
   annotationsData,
+  currentParticipant,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
-
-  // 리더 전용 store 생성
-  const store = useMemo(() => {
-    const readerStore = createStore();
-    const currentParticipant = participantsData.find(
-      (participant) => participant.userId === tempUser.id,
-    );
-    if (!currentParticipant) {
-      throw new Error(`Participant with userId ${tempUser.id} not found`);
-    }
-    // 초기값 설정
-    readerStore.set(bookAtom, null);
-    readerStore.set(isCenterTouchedAtom, false);
-    readerStore.set(kiwiAtom, kiwiData);
-    readerStore.set(participantsAtom, participantsData);
-    readerStore.set(annotationsTotalAtom, annotationsData);
-    readerStore.set(participantAtom, currentParticipant);
-    readerStore.set(currentSectionAtom, undefined);
-    readerStore.set(currentLocationAtom, undefined);
-    readerStore.set(currentViewAtom, undefined);
-    readerStore.set(navAtom, kiwiData.bookMetadata.toc);
-    readerStore.set(sectionsAtom, []);
-    readerStore.set(selectionAtom, null);
-    readerStore.set(
-      initialIsSinglePageAtom,
-      currentParticipant.settings.isSinglePage,
-    );
-    readerStore.set(initialCfiAtom, currentParticipant.record.currentCfi);
-    readerStore.set(selectedAnnotationAtom, null);
-    readerStore.set(highlightClickedAtom, false);
-    return readerStore;
-  }, [kiwiData, participantsData, annotationsData]);
 
   useEffect(() => {
     // Create a new Book instance
@@ -97,9 +67,9 @@ function ReaderProvider({
           section.load(epubBook.load.bind(epubBook));
           sections.push(section);
         });
-        store.set(sectionsAtom, sections);
+        readerStore.set(sectionsAtom, sections);
 
-        store.set(bookAtom, epubBook);
+        readerStore.set(bookAtom, epubBook);
       } catch (error) {
         alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
         navigate({ to: "/my-kiwis" });
@@ -111,9 +81,30 @@ function ReaderProvider({
     return () => {
       epubBook.destroy();
     };
-  }, [navigate, epubData, store]);
+  }, [navigate, epubData, currentParticipant]);
 
-  return <Provider store={store}>{children}</Provider>;
+  readerStore.set(
+    initialIsSinglePageAtom,
+    currentParticipant.settings.isSinglePage,
+  );
+  readerStore.set(initialCfiAtom, currentParticipant.record.currentCfi);
+  readerStore.set(participantsAtom, participantsData);
+  readerStore.set(bookAtom, null);
+  readerStore.set(isCenterTouchedAtom, false);
+  readerStore.set(kiwiAtom, kiwiData);
+
+  readerStore.set(annotationsTotalAtom, annotationsData);
+  readerStore.set(participantAtom, currentParticipant);
+  readerStore.set(currentSectionAtom, undefined);
+  readerStore.set(currentLocationAtom, undefined);
+  readerStore.set(currentViewAtom, undefined);
+  readerStore.set(navAtom, kiwiData.bookMetadata.toc);
+  readerStore.set(sectionsAtom, []);
+  readerStore.set(selectionAtom, null);
+  readerStore.set(selectedAnnotationAtom, null);
+  readerStore.set(highlightClickedAtom, false);
+
+  return <Provider store={readerStore}>{children}</Provider>;
 }
 
 export default ReaderProvider;

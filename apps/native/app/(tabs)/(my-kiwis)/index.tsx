@@ -21,11 +21,11 @@ export default function MyKiwisScreen() {
             bookTitle="운수 나쁜 날"
             description="운수 나쁜 날 책 설명"
             participants={10}
-            progress={50}
+            progress={60}
           />
           <KiwiCard
             image={require("../../../assets/images/book-cover-ex.png")}
-            kiwiTitle="운수가 뭔데"
+            kiwiTitle="운수가 난데"
             bookTitle="운수 나쁜 날"
             description="운수 나쁜 날 책 설명"
             participants={10}
@@ -33,7 +33,7 @@ export default function MyKiwisScreen() {
           />
           <KiwiCard
             image={require("../../../assets/images/book-cover-ex.png")}
-            kiwiTitle="운수가 뭔데"
+            kiwiTitle="운수가 난데스까"
             bookTitle="운수 나쁜 날"
             description="운수 나쁜 날 책 설명"
             participants={10}

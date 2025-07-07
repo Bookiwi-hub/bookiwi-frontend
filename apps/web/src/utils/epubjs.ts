@@ -1,6 +1,6 @@
 import ePub, { Book, NavItem } from "@bookiwi/epubjs";
 
-import { blobToObjectUrl, urlToBlob } from "#/utils/file";
+import { urlToBlob } from "#/utils/file";
 
 /**
  * 파일을 EPUB 객체로 변환하는 함수
@@ -42,14 +42,13 @@ export const fileToBookInfo = async (file: File) => {
 
   const coverUrl = await book.coverUrl();
   const coverImageBlob = coverUrl ? await urlToBlob(coverUrl) : null;
-  const coverImageObjectUrl = coverImageBlob
-    ? await blobToObjectUrl(coverImageBlob)
-    : null;
+  // const coverImageObjectUrl = coverImageBlob
+  //   ? await blobToObjectUrl(coverImageBlob)
+  //   : null;
 
   return {
     file,
     coverImageBlob,
-    coverImageObjectUrl,
     locations,
     toc,
     title: metadata.title,
