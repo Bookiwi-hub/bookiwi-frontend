@@ -2,7 +2,7 @@ export interface UserTable {
   id: string;
   name: string;
   email: string;
-  profile_image: string;
+  profile_image: string | null;
 }
 
 // User와 Kiwi 간의 다대다 관계를 위한 중간 테이블 (Junction Table)
@@ -27,7 +27,7 @@ export interface KiwiTable {
   created_at: string;
 }
 
-export interface NavItem {
+interface NavItem {
   label: string;
   subitems?: Array<NavItem>;
 }
@@ -48,25 +48,31 @@ export interface ParticipantTable {
   kiwi_id: string;
   user_id: string;
   name: string;
-  profile_image: string;
+  profile_image: string | null;
   color: string;
-  settings: {
-    single_page: boolean;
-    font_family: string | null;
-    font_size: number | null;
-    font_weight: number | null;
-    line_height: number | null;
-  };
-  record: {
-    cfi: { start: string; end: string } | null;
-    percentage: number | null;
-    bookmarks: { cfi: { start: string; end: string }; createdAt: string }[];
-  };
-  last_activity_at: string;
+  single_page: boolean;
+  font_family: string | null;
+  font_size: number | null;
+  font_weight: number | null;
+  line_height: number | null;
+  cfi_start: string | null;
+  cfi_end: string | null;
+  percentage: number | null;
+  last_activity_at: string | null;
+}
+
+export interface BookmarkTable {
+  id: string;
+  kiwi_id: string;
+  participant_id: string;
+  cfi_start: string | null;
+  cfi_end: string | null;
+  created_at: string;
 }
 
 export interface HighlightTable {
   id: string;
+  kiwi_id: string;
   participant_id: string;
   cfi: string;
   text: string;

@@ -81,9 +81,23 @@ class SupabaseKiwi {
 
   async getMyKiwis(userId: string): Promise<MyKiwi[]> {
     const { data, error } = await this.supabase
-      .from("get_user_kiwis")
-      .select("*")
-      .eq("userId", userId);
+      .from("my_kiwis_view")
+      .select(
+        `
+        id,
+        name,
+        description,
+        detailDescription,
+        maxParticipants,
+        password,
+        shareCode,
+        createdAt,
+        adminId,
+        bookMetadata,
+        participants
+      `,
+      )
+      .eq("user_id", userId);
 
     if (error) {
       console.error("Error fetching kiwis:", error);

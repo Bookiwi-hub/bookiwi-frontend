@@ -1,0 +1,94 @@
+Project ebook_reader {
+  database_type: "PostgreSQL"
+  note: "Social eBook Reader Schema"
+}
+
+Table users {
+  id uuid [pk, default: "auth.uid()"]
+  name varchar [not null]
+  email varchar [not null, unique]
+  profile_image varchar
+}
+
+Table user_kiwis {
+  user_id uuid [pk, ref: > users.id]
+  kiwi_id uuid [pk, ref: > kiwis.id]
+  admin boolean [default: false]
+  participated boolean [not null, default: false]
+  joined_at timestamptz [not null, default: "now()"]
+  is_active boolean [not null, default: true]
+}
+
+Table kiwis {
+  id uuid [pk, default: "gen_random_uuid()"]
+  epub_id uuid [not null, ref: > epubs.id]
+  name varchar [not null]
+  description varchar [not null, default: ""]
+  max_participants int [not null, default: 10]
+  detail_description text [not null, default: ""]
+  password varchar
+  share_code uuid [not null, unique, default: "gen_random_uuid()"]
+  created_at timestamptz [not null, default: "now()"]
+}
+
+Table participants {
+  id uuid [pk, default: "gen_random_uuid()"]
+  kiwi_id uuid [not null, ref: > kiwis.id]
+  user_id uuid [not null, ref: > users.id]
+  name varchar [not null]
+  profile_image varchar
+  color varchar [not null]
+  single_page boolean [not null, default: false]
+  font_family varchar
+  font_size int
+  font_weight int
+  line_height numeric
+  cfi_start varchar
+  cfi_end varchar
+  percentage int
+  last_activity_at timestamptz
+}
+
+Table epubs {
+  id uuid [pk, default: "gen_random_uuid()"]
+  file varchar [not null]
+  locations text [not null]
+  cover_image varchar
+  title varchar
+  author varchar
+  publisher varchar
+  nav json
+}
+
+Table highlights {
+  id uuid [pk, default: "gen_random_uuid()"]
+  participant_id uuid [not null, ref: > participants.id]
+  cfi varchar [not null]
+  text text [not null]
+  color varchar [not null]
+  section_href varchar [not null]
+  created_at timestamptz [not null, default: "now()"]
+  updated_at timestamptz [not null, default: "now()"]
+  kiwi_id uuid [not null, ref: > kiwis.id]
+}
+
+Table comments {
+  id uuid [pk, default: "gen_random_uuid()"]
+  highlight_id uuid [not null, ref: > highlights.id]
+  participant_id uuid [not null, ref: > participants.id]
+  text text [not null]
+  created_at timestamptz [not null, default: "now()"]
+  updated_at timestamptz [not null, default: "now()"]
+  kiwi_id uuid [not null]
+}
+
+Table bookmarks {
+  id uuid [pk, default: "gen_random_uuid()"]
+  participant_id uuid [not null, ref: > participants.id]
+  cfi_start varchar [not null]
+  cfi_end varchar [not null]
+  created_at timestamptz [not null, default: "now()"]
+  kiwi_id uuid [not null, ref: > kiwis.id]
+}
+
+
