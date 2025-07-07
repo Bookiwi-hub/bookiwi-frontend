@@ -5,7 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { createKiwiAtom, setShareCodeAtom, stepAtom } from "../atoms";
+import {
+  closeCreateKiwiModalAtom,
+  createKiwiAtom,
+  setShareCodeAtom,
+  stepAtom,
+} from "../atoms";
 import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";
@@ -17,6 +22,7 @@ function StepThree() {
   const newKiwi = useAtomValue(createKiwiAtom);
   const setShareCode = useSetAtom(setShareCodeAtom);
   const setStep = useSetAtom(stepAtom);
+  const closeCreateKiwiModal = useSetAtom(closeCreateKiwiModalAtom);
 
   const hasExecutedRef = useRef(false);
   const router = useRouter();
@@ -31,6 +37,7 @@ function StepThree() {
 
     const handleSubmit = async () => {
       try {
+        throw new Error("test");
         const { shareCode } = await supabase.kiwi.createKiwi({
           userId: userManager.userId!,
           name: newKiwi.kiwiName,
@@ -52,7 +59,10 @@ function StepThree() {
   }, []);
 
   return isFailed ? (
-    <FailedKiwi onGoBack={() => setStep(Step.Two)} />
+    <FailedKiwi
+      onGoBack={() => setStep(Step.Two)}
+      onClose={closeCreateKiwiModal}
+    />
   ) : (
     <LoadingKiwi />
   );
@@ -60,38 +70,37 @@ function StepThree() {
 
 function LoadingKiwi() {
   return (
-    <>
-      <div className="flex flex-col items-center justify-center space-y-6 py-10">
-        <div className="flex justify-center">
-          <div
-            className="rounded-full p-4 shadow-sm"
-            style={{ backgroundColor: primaryColor }}
-          >
-            <img
-              src="/images/icon.webp"
-              alt="Bookiwi logo"
-              className="size-16 animate-bounce"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-3 text-center">
-          <h3 className="text-lg font-medium">키위를 만들고 있어요</h3>
-          <p className="text-sm text-muted-foreground">
-            시간이 거릴 수 있어요. 잠시만 기다려주세요.
-          </p>
+    <div className="flex flex-col items-center justify-center space-y-6 py-10">
+      <div className="flex justify-center">
+        <div
+          className="rounded-full p-4 shadow-sm"
+          style={{ backgroundColor: primaryColor }}
+        >
+          <img
+            src="/images/icon.webp"
+            alt="Bookiwi logo"
+            className="size-16 animate-bounce"
+          />
         </div>
       </div>
-      {/* <DialogFooter className="sm:justify-between">
-        <Button onClick={onCancel} className="ml-auto">
-          취소
-        </Button>
-      </DialogFooter> */}
-    </>
+
+      <div className="space-y-3 text-center">
+        <h3 className="text-lg font-medium">키위를 만들고 있어요</h3>
+        <p className="text-sm text-muted-foreground">
+          시간이 거릴 수 있어요. 잠시만 기다려주세요.
+        </p>
+      </div>
+    </div>
   );
 }
 
-function FailedKiwi({ onGoBack }: { onGoBack: () => void }) {
+function FailedKiwi({
+  onGoBack,
+  onClose,
+}: {
+  onGoBack: () => void;
+  onClose: () => void;
+}) {
   return (
     <>
       <div className="flex flex-col items-center justify-center space-y-6 py-10">
@@ -116,7 +125,7 @@ function FailedKiwi({ onGoBack }: { onGoBack: () => void }) {
         <Button onClick={onGoBack} variant="outline">
           이전
         </Button>
-        <Button onClick={onClose} variant="outline">
+        <Button onClick={onClose} variant="default">
           닫기
         </Button>
       </DialogFooter>

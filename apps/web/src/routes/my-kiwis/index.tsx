@@ -22,7 +22,6 @@ export const Route = createFileRoute("/my-kiwis/")({
       throw new Error("User ID is not found");
     }
     const kiwis = await supabase.kiwi.getMyKiwis(userManager.userId);
-    console.log(kiwis, "kiwis");
     return kiwis;
   },
   head: () => ({
