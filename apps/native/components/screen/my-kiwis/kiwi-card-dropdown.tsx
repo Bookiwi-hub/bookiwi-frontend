@@ -1,4 +1,5 @@
-import { Button, Text } from "react-native";
+import { useRouter } from "expo-router";
+import { Text } from "react-native";
 
 import {
   DropdownMenu,
@@ -10,15 +11,23 @@ import {
 import { EllipsisVertical } from "@/lib/icons/ellipsis-vertical";
 import { mainColor } from "@bookiwi/color";
 
-export default function KiwiCardDropdown() {
+interface KiwiCardDropdownProps {
+  kiwiId: string;
+}
+
+export default function KiwiCardDropdown({ kiwiId }: KiwiCardDropdownProps) {
+  const router = useRouter();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <EllipsisVertical color={mainColor} className="" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent overlayStyle={{ left: -25, top: 5 }}>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onPress={() => router.push(`/kiwi-details/${kiwiId}`)}
+          >
             <Text className="text-black">상세보기</Text>
           </DropdownMenuItem>
           <DropdownMenuItem>

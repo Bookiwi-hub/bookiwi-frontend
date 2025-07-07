@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <View className="flex flex-row justify-between items-center">
       <ThemedText type="title">내 키위</ThemedText>
-      <Plus color={mainColor} onPress={() => router.push("/my-kiwis/new")} />
+      <Plus color={mainColor} onPress={() => router.push("/create-kiwi")} />
     </View>
   );
 }

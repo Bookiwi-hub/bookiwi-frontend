@@ -18,6 +18,7 @@ const LIGHT_THEME: Theme = {
   ...DefaultTheme,
   colors: NAV_THEME.light,
 };
+
 const DARK_THEME: Theme = {
   ...DarkTheme,
   colors: NAV_THEME.dark,
@@ -36,9 +37,10 @@ export default function RootLayout() {
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(stacks)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
+          <StatusBar style="auto" />
         </Stack>
-        <StatusBar style="auto" />
       </ThemeProvider>
       <PortalHost />
     </>

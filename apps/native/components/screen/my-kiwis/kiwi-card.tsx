@@ -61,7 +61,7 @@ export default function KiwiCard({
         </CardContent>
       </Link>
       <View className="absolute top-6 right-4">
-        <KiwiCardDropdown />
+        <KiwiCardDropdown kiwiId={kiwiTitle} />
       </View>
     </Card>
   );
