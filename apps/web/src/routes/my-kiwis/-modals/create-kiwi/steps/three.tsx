@@ -31,7 +31,7 @@ function StepThree() {
 
     const handleSubmit = async () => {
       try {
-        const kiwi = await supabase.kiwi.createKiwi({
+        const { shareCode } = await supabase.kiwi.createKiwi({
           userId: userManager.userId!,
           name: newKiwi.kiwiName,
           description: newKiwi.kiwiDescription,
@@ -41,7 +41,7 @@ function StepThree() {
           file: newKiwi.file!,
         });
         await router.invalidate();
-        setShareCode(kiwi.shareCode);
+        setShareCode(shareCode);
         setStep(Step.Four);
       } catch (error) {
         setIsFailed(true);
@@ -115,6 +115,9 @@ function FailedKiwi({ onGoBack }: { onGoBack: () => void }) {
       <DialogFooter className="sm:justify-between">
         <Button onClick={onGoBack} variant="outline">
           이전
+        </Button>
+        <Button onClick={onClose} variant="outline">
+          닫기
         </Button>
       </DialogFooter>
     </>

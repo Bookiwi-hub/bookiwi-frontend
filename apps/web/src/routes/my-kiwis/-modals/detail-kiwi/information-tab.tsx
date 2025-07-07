@@ -12,17 +12,13 @@ interface InformationTabProps {
 
 function InformationTab({ kiwi }: InformationTabProps) {
   const {
-    adminId,
     bookMetadata,
     createdAt,
     detailDescription,
     maxParticipants,
     participants,
+    admin,
   } = kiwi;
-
-  const admin = participants.find(
-    (participant) => participant.userId === adminId,
-  );
 
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
@@ -45,10 +41,6 @@ function InformationTab({ kiwi }: InformationTabProps) {
           <div className="space-y-2">
             <h3 className="font-medium">그룹 정보</h3>
             <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <User size={16} className="text-muted-foreground" />
-                <span>관리자: {admin?.name}</span>
-              </li>
               <li className="flex items-center gap-2">
                 <Users size={16} className="text-muted-foreground" />
                 <span className="flex items-center gap-1">
@@ -78,6 +70,10 @@ function InformationTab({ kiwi }: InformationTabProps) {
                     ? formatDate(currentParticipant.lastActivityAt)
                     : ""}
                 </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <User size={16} className="text-muted-foreground" />
+                <span>관리자: {admin.name}</span>
               </li>
             </ul>
           </div>

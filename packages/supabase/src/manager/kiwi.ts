@@ -22,7 +22,7 @@ class SupabaseKiwi {
     this.supabase = supabase;
   }
 
-  async createKiwi(newKiwi: NewKiwi): Promise<MyKiwi> {
+  async createKiwi(newKiwi: NewKiwi): Promise<{ shareCode: string }> {
     const epubInfo = await fileToEpubInfo(newKiwi.file);
     const { locations, nav, title, author, publisher, coverImage } = epubInfo;
     const epubUrl = await this.uploadAndGetEpubUrl(newKiwi.file);
@@ -55,27 +55,7 @@ class SupabaseKiwi {
       is_active: true,
     });
 
-    const kiwi: MyKiwi = {
-      id: createdKiwi.id,
-      name: createdKiwi.name,
-      description: createdKiwi.description,
-      detailDescription: createdKiwi.detail_description,
-      maxParticipants: createdKiwi.max_participants,
-      password: createdKiwi.password,
-      shareCode: createdKiwi.share_code,
-      createdAt: createdKiwi.created_at,
-      bookMetadata: {
-        coverImage: epub.cover_image,
-        title: epub.title,
-        author: epub.author,
-        publisher: epub.publisher,
-        nav: epub.nav,
-      },
-      adminId: newKiwi.userId,
-      participants: [],
-    };
-
-    return kiwi;
+    return { shareCode: createdKiwi.share_code };
   }
 
   async getMyKiwis(userId: string): Promise<MyKiwi[]> {
@@ -91,7 +71,7 @@ class SupabaseKiwi {
         password,
         shareCode,
         createdAt,
-        adminId,
+        admin,
         bookMetadata,
         participants
       `,

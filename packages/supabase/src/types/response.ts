@@ -26,7 +26,7 @@ export interface MyKiwi {
     nav: NavItem[];
   };
   createdAt: string;
-  adminId: string;
+  admin: User;
   participants: {
     id: string;
     userId: string;
