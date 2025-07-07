@@ -37,7 +37,6 @@ function StepThree() {
 
     const handleSubmit = async () => {
       try {
-        throw new Error("test");
         const { shareCode } = await supabase.kiwi.createKiwi({
           userId: userManager.userId!,
           name: newKiwi.kiwiName,
