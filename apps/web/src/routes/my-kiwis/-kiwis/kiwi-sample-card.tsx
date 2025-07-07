@@ -47,13 +47,13 @@ function KiwiSampleCard() {
   const hasExecutedRef = useRef(false);
 
   const createSampleKiwi = useCallback(async () => {
-    if (!userManager.user) throw redirect({ to: "/auth" });
+    if (!userManager.userId) throw redirect({ to: "/auth" });
 
     setIsLoading(true);
     setHasError(false);
 
     try {
-      await supabase.kiwi.createSampleKiwi(userManager.user);
+      await supabase.kiwi.createSampleKiwi(userManager.userId);
       await router.invalidate();
     } catch (error) {
       setHasError(true);

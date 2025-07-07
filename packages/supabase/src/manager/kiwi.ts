@@ -1,19 +1,13 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
 import {
-  SAMPLE_KIWI_INFO,
-  sampleComments,
-  sampleHighlights,
-  sampleParticipants,
-} from "../constants/sample";
-import {
   KiwiTable,
   UserKiwiTable,
   ParticipantTable,
   HighlightTable,
   CommentTable,
 } from "../types/database";
-import { MyKiwi, User } from "../types/response";
+import { MyKiwi } from "../types/response";
 import { fileToEpubInfo } from "../utils/epubjs";
 import { generateUniqueFileName } from "../utils/file";
 
@@ -107,37 +101,14 @@ class SupabaseKiwi {
     return data as MyKiwi[];
   }
 
-  async createSampleKiwi(user: User): Promise<void> {
-    const createdKiwi: KiwiTable = await this.postKiwi(SAMPLE_KIWI_INFO);
-    await this.postUserKiwi({
-      user_id: user.id,
-      kiwi_id: createdKiwi.id,
-      admin: true,
-      participated: false,
-      is_active: true,
+  async createSampleKiwi(userId: string): Promise<void> {
+    const { error } = await this.supabase.rpc("create_sample_kiwi", {
+      p_user_id: userId,
     });
 
-    const participantsWithKiwiId = sampleParticipants.map((participant) => ({
-      ...participant,
-      kiwi_id: createdKiwi.id,
-    }));
-    const createdParticipants = await this.postParticipants(
-      participantsWithKiwiId,
-    );
-
-    const highlightsWithIds = sampleHighlights.map((highlight, index) => ({
-      ...highlight,
-      kiwi_id: createdKiwi.id,
-      participant_id: createdParticipants[index].id,
-    }));
-    const createdHighlights = await this.postHighlights(highlightsWithIds);
-
-    const commentsWithIds = sampleComments.map((comment, index) => ({
-      ...comment,
-      highlight_id: createdHighlights[Math.floor(index / 2)].id, // 각 highlight당 2개의 댓글
-      participant_id: createdParticipants[index % 2].id, // 교대로 참가자 할당
-    }));
-    await this.postComments(commentsWithIds);
+    if (error) {
+      throw new Error(error.message);
+    }
   }
 
   private async uploadEpub(file: File) {

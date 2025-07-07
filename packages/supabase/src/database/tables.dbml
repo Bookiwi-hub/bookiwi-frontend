@@ -79,7 +79,6 @@ Table comments {
   text text [not null]
   created_at timestamptz [not null, default: "now()"]
   updated_at timestamptz [not null, default: "now()"]
-  kiwi_id uuid [not null]
 }
 
 Table bookmarks {
