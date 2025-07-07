@@ -7,7 +7,6 @@ import {
   sampleParticipants,
 } from "../constants/sample";
 import {
-  EpubTable,
   KiwiTable,
   UserKiwiTable,
   ParticipantTable,
@@ -38,37 +37,44 @@ class SupabaseKiwi {
   async createKiwi(newKiwi: NewKiwi): Promise<{ shareCode: string }> {
     const epubInfo = await fileToEpubInfo(newKiwi.file);
     const { locations, nav, title, author, publisher, coverImage } = epubInfo;
-    const epubUrl = await this.uploadAndGetEpubUrl(newKiwi.file);
-    const coverImageUrl = await this.uploadAndGetCoverImageUrl(coverImage);
+    const { url: epubUrl, path: epubPath } = await this.uploadAndGetEpubUrl(
+      newKiwi.file,
+    );
+    const { url: coverImageUrl, path: coverImagePath } =
+      await this.uploadAndGetCoverImageUrl(coverImage);
 
-    const epub: EpubTable = await this.postEpub({
-      file: epubUrl,
-      locations,
-      cover_image: coverImageUrl,
-      title,
-      author,
-      publisher,
-      nav,
+    const { data, error } = await this.supabase.rpc("create_kiwi", {
+      // Required parameters
+      p_epub_file: epubUrl,
+      p_epub_locations: locations,
+      p_kiwi_name: newKiwi.name,
+      p_user_id: newKiwi.userId,
+      // Optional parameters
+      p_epub_cover_image: coverImageUrl,
+      p_epub_title: title,
+      p_epub_author: author,
+      p_epub_publisher: publisher,
+      p_epub_nav: nav,
+      p_kiwi_description: newKiwi.description,
+      p_kiwi_detail_description: newKiwi.detailDescription,
+      p_kiwi_max_participants: newKiwi.maxParticipants,
+      p_kiwi_password: newKiwi.password,
     });
 
-    const createdKiwi: KiwiTable = await this.postKiwi({
-      name: newKiwi.name,
-      description: newKiwi.description,
-      detail_description: newKiwi.detailDescription,
-      max_participants: newKiwi.maxParticipants,
-      password: newKiwi.password,
-      epub_id: epub.id,
-    });
+    if (error) {
+      try {
+        await this.deleteEpub(epubPath);
+        if (coverImagePath) {
+          await this.deleteCoverImage(coverImagePath);
+        }
+      } catch (deleteError) {
+        console.error("Error deleting files:", deleteError);
+      }
+      throw new Error(error.message);
+    }
 
-    await this.postUserKiwi({
-      user_id: newKiwi.userId,
-      kiwi_id: createdKiwi.id,
-      admin: true,
-      participated: false,
-      is_active: true,
-    });
-
-    return { shareCode: createdKiwi.share_code };
+    const result = data[0];
+    return { shareCode: result.share_code };
   }
 
   async getMyKiwis(userId: string): Promise<MyKiwi[]> {
@@ -156,17 +162,6 @@ class SupabaseKiwi {
     return data;
   }
 
-  private async postEpub(epub: Omit<EpubTable, "id">) {
-    const { data, error } = await this.supabase
-      .from("epubs")
-      .insert(epub)
-      .select();
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data[0];
-  }
-
   private async postKiwi(
     kiwi: Omit<KiwiTable, "id" | "created_at" | "share_code">,
   ) {
@@ -241,9 +236,10 @@ class SupabaseKiwi {
 
   private async uploadAndGetCoverImageUrl(
     coverImage: File | null,
-  ): Promise<string | null> {
-    if (!coverImage) return null;
-
+  ): Promise<{ url: string | null; path: string | null }> {
+    if (!coverImage) {
+      return { url: null, path: null };
+    }
     const coverImageData = await this.uploadCoverImage(coverImage);
     const coverImagePath = coverImageData.path;
 
@@ -251,14 +247,30 @@ class SupabaseKiwi {
       .from("cover")
       .getPublicUrl(coverImagePath);
 
-    return data.publicUrl;
+    return { url: data.publicUrl, path: coverImagePath };
   }
 
-  private async uploadAndGetEpubUrl(epub: File) {
+  private async uploadAndGetEpubUrl(
+    epub: File,
+  ): Promise<{ url: string; path: string }> {
     const epubData = await this.uploadEpub(epub);
     const epubPath = epubData.path;
     const { data } = this.supabase.storage.from("epub").getPublicUrl(epubPath);
-    return data.publicUrl;
+    return { url: data.publicUrl, path: epubPath };
+  }
+
+  private async deleteEpub(path: string) {
+    const { error } = await this.supabase.storage.from("epub").remove([path]);
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  private async deleteCoverImage(path: string) {
+    const { error } = await this.supabase.storage.from("cover").remove([path]);
+    if (error) {
+      throw new Error(error.message);
+    }
   }
 }
 
