@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.2",
-    "@bookiwi/epubjs": "workspace:*"
+    "@bookiwi/epubjs": "workspace:*",
+    "@bookiwi/color": "workspace:*"
   }
 }

@@ -1,7 +1,20 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { EpubTable, KiwiTable, UserKiwiTable } from "../types/database";
-import { MyKiwi } from "../types/response";
+import {
+  SAMPLE_KIWI_INFO,
+  sampleComments,
+  sampleHighlights,
+  sampleParticipants,
+} from "../constants/sample";
+import {
+  EpubTable,
+  KiwiTable,
+  UserKiwiTable,
+  ParticipantTable,
+  HighlightTable,
+  CommentTable,
+} from "../types/database";
+import { MyKiwi, User } from "../types/response";
 import { fileToEpubInfo } from "../utils/epubjs";
 import { generateUniqueFileName } from "../utils/file";
 
@@ -88,6 +101,39 @@ class SupabaseKiwi {
     return data as MyKiwi[];
   }
 
+  async createSampleKiwi(user: User): Promise<void> {
+    const createdKiwi: KiwiTable = await this.postKiwi(SAMPLE_KIWI_INFO);
+    await this.postUserKiwi({
+      user_id: user.id,
+      kiwi_id: createdKiwi.id,
+      admin: true,
+      participated: false,
+      is_active: true,
+    });
+
+    const participantsWithKiwiId = sampleParticipants.map((participant) => ({
+      ...participant,
+      kiwi_id: createdKiwi.id,
+    }));
+    const createdParticipants = await this.postParticipants(
+      participantsWithKiwiId,
+    );
+
+    const highlightsWithIds = sampleHighlights.map((highlight, index) => ({
+      ...highlight,
+      kiwi_id: createdKiwi.id,
+      participant_id: createdParticipants[index].id,
+    }));
+    const createdHighlights = await this.postHighlights(highlightsWithIds);
+
+    const commentsWithIds = sampleComments.map((comment, index) => ({
+      ...comment,
+      highlight_id: createdHighlights[Math.floor(index / 2)].id, // 각 highlight당 2개의 댓글
+      participant_id: createdParticipants[index % 2].id, // 교대로 참가자 할당
+    }));
+    await this.postComments(commentsWithIds);
+  }
+
   private async uploadEpub(file: File) {
     const uniqueFileName = generateUniqueFileName(file.name);
     const { data, error } = await this.supabase.storage
@@ -143,6 +189,54 @@ class SupabaseKiwi {
       throw new Error(error.message);
     }
     return data[0];
+  }
+
+  private async postParticipant(participant: Omit<ParticipantTable, "id">) {
+    const { data, error } = await this.supabase
+      .from("participants")
+      .insert(participant)
+      .select();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data[0];
+  }
+
+  private async postParticipants(participants: Omit<ParticipantTable, "id">[]) {
+    const { data, error } = await this.supabase
+      .from("participants")
+      .insert(participants)
+      .select();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
+
+  private async postHighlights(
+    highlights: Omit<HighlightTable, "id" | "created_at" | "updated_at">[],
+  ) {
+    const { data, error } = await this.supabase
+      .from("highlights")
+      .insert(highlights)
+      .select();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
+
+  private async postComments(
+    comments: Omit<CommentTable, "id" | "created_at" | "updated_at">[],
+  ) {
+    const { data, error } = await this.supabase
+      .from("comments")
+      .insert(comments)
+      .select();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
   }
 
   private async uploadAndGetCoverImageUrl(

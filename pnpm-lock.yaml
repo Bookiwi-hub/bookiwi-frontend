@@ -394,6 +394,9 @@ importers:
 
   packages/supabase:
     dependencies:
+      '@bookiwi/color':
+        specifier: workspace:*
+        version: link:../color
       '@bookiwi/epubjs':
         specifier: workspace:*
         version: link:../epubjs
