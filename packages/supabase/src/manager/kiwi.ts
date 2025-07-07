@@ -1,12 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import {
-  KiwiTable,
-  UserKiwiTable,
-  ParticipantTable,
-  HighlightTable,
-  CommentTable,
-} from "../types/database";
 import { MyKiwi } from "../types/response";
 import { fileToEpubInfo } from "../utils/epubjs";
 import { generateUniqueFileName } from "../utils/file";
@@ -127,78 +120,6 @@ class SupabaseKiwi {
     const { data, error } = await this.supabase.storage
       .from("cover")
       .upload(uniqueFileName, file);
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data;
-  }
-
-  private async postKiwi(
-    kiwi: Omit<KiwiTable, "id" | "created_at" | "share_code">,
-  ) {
-    const { data, error } = await this.supabase
-      .from("kiwis")
-      .insert(kiwi)
-      .select();
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data[0];
-  }
-
-  private async postUserKiwi(userKiwi: Omit<UserKiwiTable, "joined_at">) {
-    const { data, error } = await this.supabase
-      .from("user_kiwis")
-      .insert(userKiwi)
-      .select();
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data[0];
-  }
-
-  private async postParticipant(participant: Omit<ParticipantTable, "id">) {
-    const { data, error } = await this.supabase
-      .from("participants")
-      .insert(participant)
-      .select();
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data[0];
-  }
-
-  private async postParticipants(participants: Omit<ParticipantTable, "id">[]) {
-    const { data, error } = await this.supabase
-      .from("participants")
-      .insert(participants)
-      .select();
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data;
-  }
-
-  private async postHighlights(
-    highlights: Omit<HighlightTable, "id" | "created_at" | "updated_at">[],
-  ) {
-    const { data, error } = await this.supabase
-      .from("highlights")
-      .insert(highlights)
-      .select();
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data;
-  }
-
-  private async postComments(
-    comments: Omit<CommentTable, "id" | "created_at" | "updated_at">[],
-  ) {
-    const { data, error } = await this.supabase
-      .from("comments")
-      .insert(comments)
-      .select();
     if (error) {
       throw new Error(error.message);
     }
