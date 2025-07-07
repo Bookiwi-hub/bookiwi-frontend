@@ -27,14 +27,12 @@ class SupabaseKiwi {
 
     const { locations, nav, title, author, publisher, coverImage } = epubInfo;
 
-    const coverImagePath = coverImage
-      ? (await this.uploadCoverImage(coverImage))?.path
-      : null;
+    const coverImageUrl = await this.uploadAndGetCoverImageUrl(coverImage);
 
     const epub: EpubTable = await this.postEpub({
       file: epubData.path,
       locations,
-      cover_image: coverImagePath,
+      cover_image: coverImageUrl,
       title,
       author,
       publisher,
@@ -150,6 +148,26 @@ class SupabaseKiwi {
       throw new Error(error.message);
     }
     return data[0];
+  }
+
+  private async uploadAndGetCoverImageUrl(
+    coverImage: File | null,
+  ): Promise<string | null> {
+    if (!coverImage) return null;
+
+    const coverImagePath = (await this.uploadCoverImage(coverImage))?.path;
+
+    console.log(coverImagePath, "coverImagePath");
+
+    if (!coverImagePath) return null;
+
+    const coverImageUrl = this.supabase.storage
+      .from("cover")
+      .getPublicUrl(coverImagePath).data.publicUrl;
+
+    console.log(coverImageUrl, "coverImageUrl");
+
+    return coverImageUrl;
   }
 }
 
