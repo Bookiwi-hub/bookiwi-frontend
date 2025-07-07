@@ -3,6 +3,7 @@ import { Clock, Users } from "lucide-react";
 import { memo } from "react";
 
 import { useSetAtom } from "@bookiwi/jotai";
+import { MyKiwi } from "@bookiwi/supabase/types/response";
 
 import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
 
@@ -10,16 +11,15 @@ import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import userManager from "#/managers/user";
-import { Kiwi } from "#/types/kiwi";
 import { formatDate } from "#/utils/format-date";
 
 interface KiwiCardProps {
-  kiwi: Kiwi;
+  kiwi: MyKiwi;
 }
 
 function KiwiCard({ kiwi }: KiwiCardProps) {
   const openKiwiDetailModal = useSetAtom(openKiwiDetailModalAtom);
-  const { name, description, coverImage, participants, id } = kiwi;
+  const { name, description, bookMetadata, participants, id } = kiwi;
   const participantsCount = participants.length;
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
@@ -35,7 +35,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
       id={id}
       name={name}
       description={description}
-      coverImage={coverImage || ""}
+      coverImage={bookMetadata.coverImage || FALLBACK_IMAGE_URL}
       progress={progress}
       participantsCount={participantsCount}
       lastActivityAt={lastActivityAt}
@@ -73,7 +73,7 @@ function CardUI({
       {/* 이미지 영역 */}
       <div className="relative aspect-[3/4] overflow-hidden">
         <img
-          src={coverImage || FALLBACK_IMAGE_URL}
+          src={coverImage}
           alt="Book cover"
           className="size-full object-contain transition-transform duration-300 group-hover:scale-105"
           loading="lazy"

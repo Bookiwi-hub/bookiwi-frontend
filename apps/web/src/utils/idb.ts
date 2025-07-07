@@ -1,8 +1,41 @@
+import { NavItem } from "@bookiwi/epubjs/types/navigation";
+
 import { blobToObjectUrl } from "./file";
 
 import idb, { IDBStore } from "#/managers/idb";
 import { KiwiIDBData, ParticipantIDBData } from "#/types/idb";
-import { Kiwi, Participant } from "#/types/kiwi";
+
+export interface BookMetadata {
+  title: string;
+  author: string;
+  publisher: string;
+  toc: NavItem[];
+}
+
+export interface Participant {
+  id: string;
+  userId: string;
+  name: string;
+  profileImage: string;
+  progress: number;
+  color: string;
+  lastActivityAt: string;
+}
+
+export interface Kiwi {
+  id: string;
+  name: string;
+  description: string;
+  maxParticipants: number | null;
+  detailDescription: string;
+  password: string | null;
+  shareCode: string;
+  bookMetadata: BookMetadata;
+  coverImage: string | null;
+  createdAt: string;
+  adminId: string;
+  participants: Participant[];
+}
 
 export const kiwIDBDataToKiwi = async (
   kiwiIDBData: KiwiIDBData,

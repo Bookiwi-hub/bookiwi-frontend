@@ -1,30 +1,24 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
-import { NavItem } from "@bookiwi/epubjs/types/navigation";
+import { MyKiwi, NavItem } from "@bookiwi/supabase/types/response";
 
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import userManager from "#/managers/user";
-import { Kiwi } from "#/types/kiwi";
 import { formatDate, formatDateOnly } from "#/utils/format-date";
 
 interface InformationTabProps {
-  kiwi: Kiwi;
+  kiwi: MyKiwi;
 }
 
 function InformationTab({ kiwi }: InformationTabProps) {
   const {
-    adminId,
     bookMetadata,
     createdAt,
     detailDescription,
     maxParticipants,
-    coverImage,
     participants,
+    admin,
   } = kiwi;
-
-  const admin = participants.find(
-    (participant) => participant.userId === adminId,
-  );
 
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
@@ -36,7 +30,7 @@ function InformationTab({ kiwi }: InformationTabProps) {
         <div className="col-span-1">
           <div className="aspect-[3/4] overflow-hidden rounded-md">
             <img
-              src={coverImage || FALLBACK_IMAGE_URL}
+              src={bookMetadata.coverImage || FALLBACK_IMAGE_URL}
               alt="Book cover"
               className="size-full object-contain"
             />
@@ -47,10 +41,6 @@ function InformationTab({ kiwi }: InformationTabProps) {
           <div className="space-y-2">
             <h3 className="font-medium">그룹 정보</h3>
             <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <User size={16} className="text-muted-foreground" />
-                <span>관리자: {admin?.name}</span>
-              </li>
               <li className="flex items-center gap-2">
                 <Users size={16} className="text-muted-foreground" />
                 <span className="flex items-center gap-1">
@@ -80,6 +70,10 @@ function InformationTab({ kiwi }: InformationTabProps) {
                     ? formatDate(currentParticipant.lastActivityAt)
                     : ""}
                 </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <User size={16} className="text-muted-foreground" />
+                <span>관리자: {admin.name}</span>
               </li>
             </ul>
           </div>
@@ -111,8 +105,12 @@ function InformationTab({ kiwi }: InformationTabProps) {
       <div className="space-y-3">
         <h3 className="font-medium">목차</h3>
         <ul className="max-h-60 overflow-y-auto pr-1">
-          {bookMetadata.toc.map((item, index) => (
-            <TocItem key={item.id} tocItem={item} numbering={`${index + 1}`} />
+          {bookMetadata.nav.map((item, index) => (
+            <TocItem
+              key={item.label}
+              tocItem={item}
+              numbering={`${index + 1}`}
+            />
           ))}
         </ul>
       </div>
@@ -148,7 +146,7 @@ function TocItem({ tocItem, numbering }: TocItemProps) {
         <ul className="ml-7 mt-1 space-y-0.5 border-l border-muted pl-2">
           {tocItem.subitems.map((subitem, index) => (
             <TocItem
-              key={subitem.id}
+              key={subitem.label}
               tocItem={subitem}
               numbering={`${numbering}.${index + 1}`}
             />

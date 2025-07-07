@@ -4,7 +4,14 @@
   "description": "Supabase client for Bookiwi",
   "type": "module",
   "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types/response": "./src/types/response.ts",
+    "./types/database": "./src/types/database.ts"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.50.2"
+    "@supabase/supabase-js": "^2.50.2",
+    "@bookiwi/epubjs": "workspace:*",
+    "@bookiwi/color": "workspace:*"
   }
 }

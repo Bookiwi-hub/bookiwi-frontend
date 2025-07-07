@@ -1,3 +1,5 @@
+import { MyKiwi } from "@bookiwi/supabase/types/response";
+
 import { CreateKiwiModal, DetailKiwiModal } from "../-modals";
 
 import KiwiCard from "./kiwi-card";
@@ -5,10 +7,8 @@ import KiwiCodeForm from "./kiwi-code-form";
 import { CreateKiwiButton, CreateKiwiCardButton } from "./kiwi-create-buttons";
 import KiwiSampleCard from "./kiwi-sample-card";
 
-import { Kiwi } from "#/types/kiwi";
-
 interface KiwisProps {
-  kiwis: Kiwi[];
+  kiwis: MyKiwi[];
 }
 
 function Kiwis({ kiwis }: KiwisProps) {
@@ -25,20 +25,37 @@ function Kiwis({ kiwis }: KiwisProps) {
           </div>
         </div>
         <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          {kiwis.length === 0 || kiwis.length === 1 ? (
-            <>
-              <CreateKiwiCardButton />
-              <KiwiSampleCard />
-            </>
-          ) : (
-            kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />)
-          )}
+          <KiwiCardGrid kiwis={kiwis} />
         </div>
       </div>
       <DetailKiwiModal />
       <CreateKiwiModal />
     </>
   );
+}
+
+function KiwiCardGrid({ kiwis }: KiwisProps) {
+  if (kiwis.length === 0) {
+    return (
+      <>
+        <CreateKiwiCardButton />
+        <KiwiSampleCard />
+      </>
+    );
+  }
+
+  if (kiwis.length === 1) {
+    return (
+      <>
+        <CreateKiwiCardButton />
+        {kiwis.map((kiwi) => (
+          <KiwiCard key={kiwi.id} kiwi={kiwi} />
+        ))}
+      </>
+    );
+  }
+
+  return kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />);
 }
 
 export default Kiwis;

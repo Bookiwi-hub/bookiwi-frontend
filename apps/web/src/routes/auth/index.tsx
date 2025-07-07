@@ -37,7 +37,11 @@ function AuthPage() {
 
   const handleKakaoLogin = async () => {
     try {
-      await supabaseManager.auth.signInWithKakao();
+      await supabaseManager.auth.signInWithKakao({
+        options: {
+          redirectTo: `${window.location.origin}/my-kiwis`,
+        },
+      });
     } catch {
       setError(new Error("로그인 중 오류가 발생했습니다."));
     }

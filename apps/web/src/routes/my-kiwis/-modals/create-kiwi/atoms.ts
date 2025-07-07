@@ -12,7 +12,7 @@ export const createKiwiAtom = atom<CreateKiwi>({
   maxParticipants: 10,
   password: null,
   file: null,
-  shareCode: "",
+  shareCode: null,
 });
 export const closeCreateKiwiModalAtom = atom(null, (get, set) => {
   set(createKiwiModalOpenAtom, false);
@@ -24,7 +24,7 @@ export const closeCreateKiwiModalAtom = atom(null, (get, set) => {
     maxParticipants: 10,
     password: null,
     file: null,
-    shareCode: "",
+    shareCode: null,
   });
 });
 

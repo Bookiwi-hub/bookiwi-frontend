@@ -2,11 +2,11 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { Provider } from "@bookiwi/jotai";
 
-import getKiwisFromIndexedDB from "./-apis/get-kiwis";
 import Kiwis from "./-kiwis";
 
 import Header from "#/components/header";
 import LoadingPage from "#/components/loading";
+import supabase from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/my-kiwis/")({
@@ -18,8 +18,11 @@ export const Route = createFileRoute("/my-kiwis/")({
   },
 
   loader: async () => {
-    const kiwi = await getKiwisFromIndexedDB();
-    return kiwi;
+    if (!userManager.userId) {
+      throw new Error("User ID is not found");
+    }
+    const kiwis = await supabase.kiwi.getMyKiwis(userManager.userId);
+    return kiwis;
   },
   head: () => ({
     meta: [

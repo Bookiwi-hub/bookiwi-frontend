@@ -403,6 +403,12 @@ importers:
 
   packages/supabase:
     dependencies:
+      '@bookiwi/color':
+        specifier: workspace:*
+        version: link:../color
+      '@bookiwi/epubjs':
+        specifier: workspace:*
+        version: link:../epubjs
       '@supabase/supabase-js':
         specifier: ^2.50.2
         version: 2.50.2
