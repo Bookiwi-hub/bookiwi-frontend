@@ -62,6 +62,7 @@ export interface Epub {
 
 export interface Participant {
   id: string;
+  userId: string;
   name: string;
   profileImage: string | null;
   color: string;

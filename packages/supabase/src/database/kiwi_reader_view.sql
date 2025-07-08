@@ -30,6 +30,7 @@ SELECT
         (SELECT jsonb_agg(
             json_build_object(
                 'id', p.id,
+                'userId', p.user_id,
                 'name', p.name,
                 'profileImage', p.profile_image,
                 'color', p.color,
