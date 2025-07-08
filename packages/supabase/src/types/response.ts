@@ -84,26 +84,6 @@ export interface Bookmark {
   createdAt: string;
 }
 
-export interface Highlight {
-  id: string;
-  participantId: string;
-  color: string;
-  cfi: string;
-  text: string;
-  sectionHref: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Comment {
-  id: string;
-  highlightId: string;
-  participantId: string;
-  text: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Annotation {
   id: string;
   cfi: string;

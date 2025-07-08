@@ -1,6 +1,14 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { GetKiwiReaderResponse } from "../types/response";
+import { Bookmark, GetKiwiReaderResponse } from "../types/response";
+
+interface NewParticipant {
+  kiwiId: string;
+  userId: string;
+  name: string;
+  profileImage: string | null;
+  color: string;
+}
 
 class SupabaseReader {
   private supabase: SupabaseClient;
@@ -9,7 +17,7 @@ class SupabaseReader {
     this.supabase = supabase;
   }
 
-  async getKiwiReader(kiwiId: string): Promise<GetKiwiReaderResponse | null> {
+  async getKiwiReader(kiwiId: string): Promise<GetKiwiReaderResponse> {
     const { data, error } = await this.supabase
       .from("kiwi_reader_view")
       .select("kiwi, epub, participants, annotations")
@@ -26,6 +34,38 @@ class SupabaseReader {
       participants: data.participants,
       annotations: data.annotations,
     };
+  }
+
+  async addParticipant(newParticipant: NewParticipant) {
+    const { kiwiId, userId, name, profileImage, color } = newParticipant;
+    const participant = {
+      kiwi_id: kiwiId,
+      user_id: userId,
+      name,
+      profile_image: profileImage,
+      color,
+    };
+
+    const { error } = await this.supabase
+      .from("participants")
+      .insert(participant);
+
+    if (error) {
+      throw new Error(error?.message || "Failed to post participant");
+    }
+  }
+
+  async getBookmarks(participantId: string): Promise<Bookmark[]> {
+    const { data, error } = await this.supabase
+      .from("bookmarks")
+      .select("*")
+      .eq("participant_id", participantId);
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to get bookmarks");
+    }
+
+    return data;
   }
 }
 
