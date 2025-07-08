@@ -99,7 +99,6 @@ function ReaderProvider({
   readerStore.set(currentLocationAtom, undefined);
   readerStore.set(currentViewAtom, undefined);
   readerStore.set(navAtom, kiwiData.bookMetadata.toc);
-  readerStore.set(sectionsAtom, []);
   readerStore.set(selectionAtom, null);
   readerStore.set(selectedAnnotationAtom, null);
   readerStore.set(highlightClickedAtom, false);
