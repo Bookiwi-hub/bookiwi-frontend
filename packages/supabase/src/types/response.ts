@@ -102,3 +102,28 @@ export interface Comment {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Annotation {
+  id: string;
+  cfi: string;
+  text: string;
+  color: string;
+  participantId: string;
+  createdAt: string;
+  updatedAt: string;
+  sectionHref: string;
+  comments: {
+    id: string;
+    text: string;
+    createdAt: string;
+    updatedAt: string;
+    participantId: string;
+  }[];
+}
+
+export interface GetKiwiReaderResponse {
+  kiwi: Kiwi;
+  epub: Epub;
+  participants: Participant[];
+  annotations: Annotation[];
+}
