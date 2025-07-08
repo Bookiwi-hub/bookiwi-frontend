@@ -1,6 +1,7 @@
 import { memo } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { Annotation } from "@bookiwi/supabase/types/response";
 
 import { setTabToHighlightAtom } from "../../atoms";
 import { useTruncatedText } from "../hooks/use-truncated-text";
@@ -11,12 +12,11 @@ import {
   participantsAtom,
   selectedAnnotationAtom,
 } from "#/routes/kiwi/-reader/atoms";
-import { AnnotationIDBData } from "#/types/idb";
 import { truncate } from "#/utils";
 import { formatDate } from "#/utils/format-date";
 
 interface HighlightItemProps {
-  annotation: AnnotationIDBData;
+  annotation: Annotation;
 }
 
 function HighlightItem({ annotation }: HighlightItemProps) {

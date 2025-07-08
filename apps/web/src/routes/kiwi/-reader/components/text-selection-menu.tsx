@@ -3,6 +3,7 @@ import { KeyboardEvent, useState } from "react";
 import { toast } from "sonner";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { Annotation } from "@bookiwi/supabase/types/response";
 
 import { tabStateAtom, TabType } from "../../-split-view/annotation/atoms";
 import {
@@ -11,25 +12,18 @@ import {
   isAnnotationOpenAtom,
 } from "../../-split-view/atoms";
 import {
-  participantColorAtom,
-  participantIdAtom,
-  participantKiwiIdAtom,
-  addAnnotationAtom,
+  // addAnnotationAtom,
   removeAnnotationAtom,
-  selectedAnnotationAtom,
+  // selectedAnnotationAtom,
+  participantInfoAtom,
+  kiwiIdAtom,
 } from "../atoms";
 import { useSelectionMenu } from "../hooks";
 
 import { Button } from "#/components/ui/button";
 import Overlay from "#/components/ui/overlay";
 import { cn } from "#/lib/utils";
-import { AnnotationIDBData } from "#/types/idb";
 
-const participantInfoAtom = atom((get) => ({
-  participantId: get(participantIdAtom),
-  kiwiId: get(participantKiwiIdAtom),
-  color: get(participantColorAtom),
-}));
 const openHighlightTabAtom = atom(null, (get, set) => {
   const isAnnotationOpen = get(isAnnotationOpenAtom);
   if (!isAnnotationOpen) {
@@ -40,14 +34,15 @@ const openHighlightTabAtom = atom(null, (get, set) => {
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const { participantId, kiwiId, color } = useAtomValue(participantInfoAtom);
+  const participantInfo = useAtomValue(participantInfoAtom);
+  const kiwiId = useAtomValue(kiwiIdAtom);
   const openHighlightTab = useSetAtom(openHighlightTabAtom);
-  const addAnnotation = useSetAtom(addAnnotationAtom);
+  // const addAnnotation = useSetAtom(addAnnotationAtom);
   const removeAnnotation = useSetAtom(removeAnnotationAtom);
-  const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
+  // const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
   const result = useSelectionMenu(width, height);
 
-  if (!result || !kiwiId || !participantId || !color) {
+  if (!result || !participantInfo || !kiwiId) {
     return null;
   }
   const { offsets, selectedText } = result;
@@ -64,20 +59,18 @@ function TextSelectionMenu() {
   };
 
   const addHighlight = async () => {
-    const newAnnotation: AnnotationIDBData = {
-      id: selectedText.id,
-      kiwiId,
+    const newAnnotation: Omit<Annotation, "id"> = {
       text: selectedText.text,
       cfi: selectedText.cfi,
-      color,
-      participantId,
+      color: participantInfo.color,
+      participantId: participantInfo.id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       sectionHref: selectedText.sectionHref,
       comments: [],
     };
     try {
-      await addAnnotation(newAnnotation);
+      // await addAnnotation(newAnnotation);
     } catch (error) {
       toast.error("하이라이트가 저장되지 않았습니다.");
     }
@@ -91,8 +84,8 @@ function TextSelectionMenu() {
 
   const handleComment = async () => {
     if (!selectedText.status.isAlreadyExists) {
-      const newAnnotation = await addHighlight();
-      setSelectedAnnotation(newAnnotation);
+      // const newAnnotation = await addHighlight();
+      // setSelectedAnnotation(newAnnotation);
     }
     openHighlightTab();
     hide();
@@ -146,7 +139,7 @@ function TextSelectionMenu() {
           isMine && <RemoveHighlightButton onClick={handleRemoveHighlight} />
         ) : (
           <AddHighlightButton
-            participantColor={color}
+            participantColor={participantInfo.color}
             onClick={handleAddHighlight}
           />
         )}

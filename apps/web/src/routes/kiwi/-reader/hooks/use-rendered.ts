@@ -32,7 +32,7 @@ const useUpdateCustomStyle = () => {
   useEffect(() => {
     const handleRendered = async () => {
       const contents = book?.rendition.getContents()[0];
-      if (!contents) return;
+      if (!contents || !typography) return;
       await updateCustomStyle(contents, typography);
     };
 

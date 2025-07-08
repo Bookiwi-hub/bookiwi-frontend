@@ -7,9 +7,9 @@ import {
   currentViewAtom,
   highlightClickedAtom,
   participantIdAtom,
-  participantKiwiIdAtom,
   selectedAnnotationAtom,
   selectionAtom,
+  kiwiIdAtom,
 } from "../atoms";
 import {
   AnchorMode,
@@ -45,7 +45,7 @@ export const useSelectedText = (): TextSelection | null => {
   const [highlightClicked, setHighlightClicked] = useAtom(highlightClickedAtom);
   const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
   const participantId = useAtomValue(participantIdAtom);
-  const kiwiId = useAtomValue(participantKiwiIdAtom);
+  const kiwiId = useAtomValue(kiwiIdAtom);
   const currentView = useAtomValue(currentViewAtom);
   const annotations = useAtomValue(annotationsAtom);
   if (!currentSection || !currentView) {

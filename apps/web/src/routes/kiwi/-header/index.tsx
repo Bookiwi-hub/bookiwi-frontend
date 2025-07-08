@@ -5,7 +5,7 @@ import { useAtomValue } from "@bookiwi/jotai";
 import { kiwiAtom } from "../-reader/atoms";
 import AnnotationPaneTrigger from "../-split-view/annotation/trigger";
 
-import BookmarkButton from "./bookmark-button";
+// import BookmarkButton from "./bookmark-button";
 import Profiles from "./profiles";
 import Sidebar from "./sidebar";
 
@@ -30,7 +30,7 @@ function Header() {
           {kiwi?.name}
         </h1>
         <div className="flex items-center gap-4 pr-3">
-          <BookmarkButton />
+          {/* <BookmarkButton /> */}
           <AnnotationPaneTrigger />
           <Profiles />
         </div>

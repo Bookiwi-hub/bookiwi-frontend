@@ -1,6 +1,5 @@
 import { memo, useEffect, useRef } from "react";
 
-import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import CommentForm from "./comment-form";
@@ -10,8 +9,7 @@ import HighlightedText from "./highlighted-text";
 import { ScrollArea } from "#/components/ui/scroll-area";
 import {
   updateAnnotationAtom,
-  participantColorAtom,
-  participantIdAtom,
+  participantInfoAtom,
   participantsAtom,
   navAtom,
 } from "#/routes/kiwi/-reader/atoms";
@@ -24,9 +22,8 @@ function Annotation({ annotation }: CommentProps) {
   const { comments } = annotation;
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
-  const participantColor = useAtomValue(participantColorAtom);
+  const participantInfo = useAtomValue(participantInfoAtom);
   const participants = useAtomValue(participantsAtom);
-  const participantId = useAtomValue(participantIdAtom);
   const updateAnnotation = useSetAtom(updateAnnotationAtom);
   const navItems = useAtomValue(navAtom);
   const annotationNav = navItems?.find(
@@ -49,7 +46,7 @@ function Annotation({ annotation }: CommentProps) {
     prevCommentsLengthRef.current = comments.length;
   }, [comments]);
 
-  if (!participantId) return null;
+  if (!participantInfo) return null;
   const highlighter = participants.find(
     (participant) => participant.id === annotation.participantId,
   );
@@ -61,7 +58,7 @@ function Annotation({ annotation }: CommentProps) {
       text: commentText,
       createdAt: currentDate,
       updatedAt: currentDate,
-      participantId,
+      participantId: participantInfo.id,
     };
     const updatedAnnotation: AnnotationIDBData = {
       ...annotation,
@@ -85,7 +82,7 @@ function Annotation({ annotation }: CommentProps) {
 
       <CommentForm
         onSubmit={handleCommentSubmit}
-        participantColor={participantColor ?? primaryColor}
+        participantColor={participantInfo.color}
       />
     </div>
   );

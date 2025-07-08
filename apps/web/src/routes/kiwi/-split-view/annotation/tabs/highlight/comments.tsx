@@ -1,23 +1,25 @@
 import { memo } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
+import { Annotation } from "@bookiwi/supabase/types/response";
 
 import CommentItem from "./comment-item";
 import EmptyComments from "./empty-comments";
 
 import {
-  participantIdAtom,
+  participantInfoAtom,
   participantsAtom,
-} from "#/routes/kiwi/-reader/atoms/participants";
-import { AnnotationIDBData } from "#/types/idb";
+} from "#/routes/kiwi/-reader/atoms";
 
 interface CommentsProps {
-  comments: AnnotationIDBData["comments"];
+  comments: Annotation["comments"];
 }
 
 function Comments({ comments }: CommentsProps) {
   const participants = useAtomValue(participantsAtom);
-  const participantId = useAtomValue(participantIdAtom);
+  const participantInfo = useAtomValue(participantInfoAtom);
+
+  if (!participantInfo) return null;
 
   return comments.length > 0 ? (
     <div className="flex flex-col gap-4">
@@ -31,7 +33,7 @@ function Comments({ comments }: CommentsProps) {
             key={comment.id}
             text={comment.text}
             date={comment.updatedAt}
-            isMine={comment.participantId === participantId}
+            isMine={comment.participantId === participantInfo.id}
             profileImage={commenter.profileImage}
             name={commenter.name}
             color={commenter.color}

@@ -1,0 +1,48 @@
+import { atom } from "@bookiwi/jotai";
+import { Annotation } from "@bookiwi/supabase/types/response";
+
+import { currentSectionAtom } from "./book";
+
+export const annotationsTotalAtom = atom<Annotation[]>([]);
+
+export const addAnnotationAtom = atom(
+  null,
+  //   async (get, set, annotation: Omit<Annotation, "id">) => {
+  //     const annotations = get(annotationsTotalAtom);
+  //     console.log(annotations);
+
+  //     set(annotationsTotalAtom, [...annotations, annotation]);
+  //     await addIDBAnnotation(annotation);
+  //   },
+);
+
+export const removeAnnotationAtom = atom(null, async (get, set, id: string) => {
+  const annotations = get(annotationsTotalAtom);
+  set(
+    annotationsTotalAtom,
+    annotations.filter((a) => a.id !== id),
+  );
+  // await removeIDBAnnotation(id);
+});
+
+export const annotationsAtom = atom((get) => {
+  const annotations = get(annotationsTotalAtom);
+  const currentSection = get(currentSectionAtom);
+  if (!currentSection) return [];
+  return annotations.filter((a) => a.sectionHref === currentSection.href);
+});
+
+export const selectedAnnotationAtom = atom<Annotation | null>(null);
+
+export const updateAnnotationAtom = atom(
+  null,
+  async (get, set, annotation: Annotation) => {
+    // const id = await updateIDBAnnotation(annotation);
+    const annotations = get(annotationsTotalAtom);
+    set(
+      annotationsTotalAtom,
+      annotations.map((a) => (a.id === annotation.id ? annotation : a)),
+    );
+    set(selectedAnnotationAtom, annotation);
+  },
+);
