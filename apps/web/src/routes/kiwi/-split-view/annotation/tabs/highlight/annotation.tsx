@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { Annotation } from "@bookiwi/supabase/types/response";
 
 import CommentForm from "./comment-form";
 import Comments from "./comments";
@@ -13,12 +14,11 @@ import {
   participantsAtom,
   navAtom,
 } from "#/routes/kiwi/-reader/atoms";
-import { AnnotationIDBData } from "#/types/idb";
 
 interface CommentProps {
-  annotation: AnnotationIDBData;
+  annotation: Annotation;
 }
-function Annotation({ annotation }: CommentProps) {
+function AnnotationTab({ annotation }: CommentProps) {
   const { comments } = annotation;
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
@@ -60,7 +60,7 @@ function Annotation({ annotation }: CommentProps) {
       updatedAt: currentDate,
       participantId: participantInfo.id,
     };
-    const updatedAnnotation: AnnotationIDBData = {
+    const updatedAnnotation: Annotation = {
       ...annotation,
       comments: [...comments, newComment],
     };
@@ -88,4 +88,4 @@ function Annotation({ annotation }: CommentProps) {
   );
 }
 
-export default memo(Annotation);
+export default memo(AnnotationTab);

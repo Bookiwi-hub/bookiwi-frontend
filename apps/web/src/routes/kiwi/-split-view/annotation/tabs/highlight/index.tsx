@@ -4,8 +4,10 @@ import { useAtomValue } from "@bookiwi/jotai";
 import Annotation from "./annotation";
 import NotSelected from "./not-selected";
 
-import { participantInfoAtom } from "#/routes/kiwi/-reader/atoms";
-import { selectedAnnotationAtom } from "#/routes/kiwi/-reader/atoms/annotations";
+import {
+  participantInfoAtom,
+  selectedAnnotationAtom,
+} from "#/routes/kiwi/-reader/atoms";
 
 function Highlight() {
   const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
