@@ -38,12 +38,57 @@ export interface MyKiwi {
   }[];
 }
 
+export interface Kiwi {
+  id: string;
+  name: string;
+  description: string;
+  maxParticipants: number;
+  detailDescription: string;
+  password: string | null;
+  shareCode: string;
+  createdAt: string;
+}
+
+export interface Epub {
+  id: string;
+  file: string;
+  locations: string;
+  coverImage: string | null;
+  title: string;
+  author: string;
+  publisher: string;
+  nav: NavItem[];
+}
+
+export interface Participant {
+  id: string;
+  name: string;
+  profileImage: string | null;
+  color: string;
+  singlePage: boolean;
+  fontFamily: string | null;
+  fontSize: number | null;
+  fontWeight: number | null;
+  lineHeight: number | null;
+  cfiStart: string | null;
+  cfiEnd: string | null;
+  percentage: number | null;
+  lastActivityAt: string | null;
+}
+
+export interface Bookmark {
+  id: string;
+  cfiStart: string | null;
+  cfiEnd: string | null;
+  createdAt: string;
+}
+
 export interface Highlight {
   id: string;
   participantId: string;
+  color: string;
   cfi: string;
   text: string;
-  color: string;
   sectionHref: string;
   createdAt: string;
   updatedAt: string;
