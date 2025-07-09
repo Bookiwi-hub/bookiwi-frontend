@@ -6,27 +6,27 @@ import ParticipantsFilter from "./filter";
 import HighlightItem from "./item";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
-import { annotationsTotalAtom } from "#/routes/kiwi/-reader/atoms";
+import { highlightsAtom } from "#/routes/kiwi/-reader/atoms";
 
 function HighlightList() {
-  const totalAnnotations = useAtomValue(annotationsTotalAtom);
+  const totalHighlights = useAtomValue(highlightsAtom);
   const [selectedParticipantsIds, setSelectedParticipantsIds] = useState<
     string[]
   >([]);
 
-  const filteredAnnotations = useMemo(() => {
-    if (selectedParticipantsIds.length === 0) return totalAnnotations;
-    return totalAnnotations.filter((annotation) =>
-      selectedParticipantsIds.includes(annotation.participantId),
+  const filteredHighlights = useMemo(() => {
+    if (selectedParticipantsIds.length === 0) return totalHighlights;
+    return totalHighlights.filter((highlight) =>
+      selectedParticipantsIds.includes(highlight.participantId),
     );
-  }, [totalAnnotations, selectedParticipantsIds]);
+  }, [totalHighlights, selectedParticipantsIds]);
 
   return (
     <div className="flex size-full flex-col">
       <div className="px-4 pt-4">
         <div className="mb-3 flex items-center justify-between">
           <div className="font-medium">
-            하이라이트 목록 ({filteredAnnotations.length})
+            하이라이트 목록 ({filteredHighlights.length})
           </div>
           <div className="w-1/2">
             <ParticipantsFilter
@@ -37,9 +37,9 @@ function HighlightList() {
         </div>
       </div>
       <ScrollArea className="size-full px-4 pb-4">
-        {filteredAnnotations.length > 0 ? (
-          filteredAnnotations.map((annotation) => (
-            <HighlightItem key={annotation.id} annotation={annotation} />
+        {filteredHighlights.length > 0 ? (
+          filteredHighlights.map((highlight) => (
+            <HighlightItem key={highlight.id} highlight={highlight} />
           ))
         ) : (
           <div className="flex h-full items-center justify-center text-gray-500">

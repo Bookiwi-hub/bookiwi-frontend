@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef } from "react";
 
-import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Annotation, Comment, Highlight } from "@bookiwi/supabase/types";
+import { useAtomValue } from "@bookiwi/jotai";
+import { Comment, Highlight } from "@bookiwi/supabase/types";
 
 import CommentForm from "./comment-form";
 import Comments from "./comments";
@@ -9,7 +9,6 @@ import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
 import {
-  updateAnnotationAtom,
   participantInfoAtom,
   participantsAtom,
   navAtom,
@@ -26,7 +25,7 @@ function AnnotationTab({ highlight }: CommentProps) {
   const prevCommentsLengthRef = useRef<number>(comments.length);
   const participantInfo = useAtomValue(participantInfoAtom);
   const participants = useAtomValue(participantsAtom);
-  const updateAnnotation = useSetAtom(updateAnnotationAtom);
+  // const updateAnnotation = useSetAtom(updateAnnotationAtom);
   const navItems = useAtomValue(navAtom);
   const annotationNav = navItems?.find(
     (item) => item.href === highlight.sectionHref,
@@ -60,19 +59,20 @@ function AnnotationTab({ highlight }: CommentProps) {
   );
 
   const handleCommentSubmit = (commentText: string) => {
-    const currentDate = new Date().toISOString();
-    const newComment = {
-      id: comments.length.toString(),
-      text: commentText,
-      createdAt: currentDate,
-      updatedAt: currentDate,
-      participantId: participantInfo.id,
-    };
-    const updatedAnnotation: Annotation = {
-      ...highlight,
-      comments: [...comments, newComment],
-    };
-    updateAnnotation(updatedAnnotation);
+    // const currentDate = new Date().toISOString();
+    // const newComment = {
+    //   id: comments.length.toString(),
+    //   text: commentText,
+    //   createdAt: currentDate,
+    //   updatedAt: currentDate,
+    //   participantId: participantInfo.id,
+    // };
+    // const updatedAnnotation: Annotation = {
+    //   ...highlight,
+    //   comments: [...comments, newComment],
+    // };
+    // updateAnnotation(updatedAnnotation);
+    console.log(commentText);
   };
 
   return (

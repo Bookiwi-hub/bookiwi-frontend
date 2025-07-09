@@ -2,7 +2,6 @@ import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
 import {
-  annotationsAtom,
   currentSectionAtom,
   currentViewAtom,
   highlightClickedAtom,
@@ -10,6 +9,7 @@ import {
   selectedHighlightAtom,
   selectionAtom,
   kiwiIdAtom,
+  highlightsAtom,
 } from "../atoms";
 import {
   AnchorMode,
@@ -47,7 +47,7 @@ export const useSelectedText = (): TextSelection | null => {
   const participantId = useAtomValue(participantIdAtom);
   const kiwiId = useAtomValue(kiwiIdAtom);
   const currentView = useAtomValue(currentViewAtom);
-  const annotations = useAtomValue(annotationsAtom);
+  const highlights = useAtomValue(highlightsAtom);
   if (!currentSection || !currentView) {
     return null;
   }
@@ -57,9 +57,7 @@ export const useSelectedText = (): TextSelection | null => {
     const text = range.toString();
     const cfi = currentSection.cfiFromRange(range);
     const isForward = isForwardSelection(selection);
-    const existingHighlight = annotations.find(
-      (a) => a.cfi === cfi && a.participantId === participantId,
-    );
+    const existingHighlight = highlights.find((a) => a.cfi === cfi);
     const isMine = existingHighlight?.participantId === participantId;
 
     const remove = () => {

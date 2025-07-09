@@ -22,6 +22,7 @@ import {
   selectedHighlightAtom,
   highlightClickedAtom,
   setParticipantAtom,
+  highlightsAtom,
 } from "../atoms";
 
 interface ReaderProviderProps {
@@ -93,6 +94,7 @@ function ReaderProvider({
   readerStore.set(kiwiAtom, kiwi);
   readerStore.set(participantsAtom, participants);
   readerStore.set(setParticipantAtom, currentParticipant);
+  readerStore.set(highlightsAtom, []);
 
   // reading
   readerStore.set(currentSectionAtom, undefined);
