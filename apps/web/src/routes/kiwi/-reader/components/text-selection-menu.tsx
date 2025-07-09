@@ -89,7 +89,9 @@ function TextSelectionMenu() {
 
   const handleRemoveHighlight = async () => {
     try {
-      await removeHighlight(selectedText.id);
+      if (selectedText.id) {
+        await removeHighlight(selectedText.id);
+      }
     } catch (error) {
       toast.error("하이라이트 정보가 삭제되지 않았습니다.");
     }

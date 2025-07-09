@@ -8,7 +8,6 @@ import {
   participantIdAtom,
   selectedHighlightAtom,
   selectionAtom,
-  kiwiIdAtom,
   highlightsAtom,
 } from "../atoms";
 import {
@@ -19,7 +18,7 @@ import {
 } from "../utils";
 
 interface TextSelection {
-  id: string;
+  id: string | null;
   text: string;
   cfi: string;
   range: Range;
@@ -45,7 +44,6 @@ export const useSelectedText = (): TextSelection | null => {
   const [highlightClicked, setHighlightClicked] = useAtom(highlightClickedAtom);
   const selectedHighlight = useAtomValue(selectedHighlightAtom);
   const participantId = useAtomValue(participantIdAtom);
-  const kiwiId = useAtomValue(kiwiIdAtom);
   const currentView = useAtomValue(currentViewAtom);
   const highlights = useAtomValue(highlightsAtom);
   if (!currentSection || !currentView) {
@@ -67,9 +65,7 @@ export const useSelectedText = (): TextSelection | null => {
     };
 
     return {
-      id: existingHighlight
-        ? existingHighlight.id
-        : `${kiwiId}-${participantId}-${cfi}`,
+      id: existingHighlight ? existingHighlight.id : null,
       text,
       cfi,
       range,
