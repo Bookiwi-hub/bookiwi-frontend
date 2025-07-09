@@ -105,6 +105,7 @@ export interface Comment {
   participantId: string;
   name: string;
   profileImage: string | null;
+  color: string;
   createdAt: string;
   updatedAt: string;
 }

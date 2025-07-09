@@ -42,6 +42,7 @@ View highlight_comments_view {
   participantId uuid [note: "참가자 ID"]
   name varchar [note: "참가자 이름"]
   profileImage varchar [note: "참가자 프로필 이미지 (nullable)"]
+  color: varchar [note: "참가자 색상"]:
   createdAt timestamptz [note: "댓글 생성일"]
   updatedAt timestamptz [note: "댓글 수정일"]
 }

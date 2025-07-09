@@ -1,3 +1,5 @@
+DROP VIEW IF EXISTS highlight_comments_view;
+
 CREATE OR REPLACE VIEW highlight_comments_view AS
 SELECT 
     c.id,
@@ -6,6 +8,7 @@ SELECT
     c.participant_id AS "participantId",
     p.name,
     p.profile_image AS "profileImage",
+    p.color,
     c.created_at AS "createdAt",
     c.updated_at AS "updatedAt"
 FROM comments c

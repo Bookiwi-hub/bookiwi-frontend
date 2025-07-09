@@ -9,7 +9,6 @@ import { useTruncatedText } from "../hooks/use-truncated-text";
 import {
   bookAtom,
   navAtom,
-  participantsAtom,
   selectedHighlightAtom,
 } from "#/routes/kiwi/-reader/atoms";
 import { truncate } from "#/utils";
@@ -20,12 +19,9 @@ interface HighlightItemProps {
 }
 
 function HighlightItem({ highlight }: HighlightItemProps) {
-  const participants = useAtomValue(participantsAtom);
   const navItems = useAtomValue(navAtom);
   const book = useAtomValue(bookAtom);
-  const { text, color, participantId, sectionHref, createdAt, commentCount } =
-    highlight;
-  const participant = participants.find((p) => p.id === participantId);
+  const { text, color, name, sectionHref, createdAt, commentCount } = highlight;
   const sectionLabel = navItems?.find(
     (item) => item.href === sectionHref,
   )?.label;
@@ -59,7 +55,7 @@ function HighlightItem({ highlight }: HighlightItemProps) {
     >
       <div className="mb-2 flex items-center justify-between">
         <div className="text-sm font-medium" style={{ color }}>
-          {participant?.name}
+          {name}
         </div>
         <div className="text-xs text-gray-500">{formatDate(createdAt)}</div>
       </div>

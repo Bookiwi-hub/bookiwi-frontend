@@ -84,6 +84,7 @@ function AnnotationTab({ highlight }: CommentProps) {
         id,
         name: participantInfo.name,
         profileImage: participantInfo.profileImage,
+        color: participantInfo.color,
       };
       setComments([...comments, createdComment]);
     } catch (error) {
