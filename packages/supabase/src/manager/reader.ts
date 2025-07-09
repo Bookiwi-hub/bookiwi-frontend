@@ -7,6 +7,7 @@ import {
   GetKiwiReaderResponse,
   Participant,
   Highlight,
+  Comment,
 } from "../types";
 import { camelToSnakeKeys, snakeToCamelKeys } from "../utils/base";
 
@@ -60,6 +61,19 @@ class SupabaseReader {
 
     if (error || !data) {
       throw new Error(error?.message || "Failed to get highlights");
+    }
+
+    return data;
+  }
+
+  async getHighlightComments(highlightId: string): Promise<Comment[]> {
+    const { data, error } = await this.supabase
+      .from("highlight_comments_view")
+      .select("*")
+      .eq("highlightId", highlightId);
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to get highlight comment");
     }
 
     return data;

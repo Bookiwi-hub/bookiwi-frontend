@@ -100,10 +100,13 @@ export interface Highlight {
 
 export interface Comment {
   id: string;
+  highlightId: string;
   text: string;
+  participantId: string;
+  name: string;
+  profileImage: string | null;
   createdAt: string;
   updatedAt: string;
-  participantId: string;
 }
 
 export interface Annotation {

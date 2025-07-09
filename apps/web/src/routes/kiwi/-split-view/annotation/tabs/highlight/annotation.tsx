@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
 import { Comment, Highlight } from "@bookiwi/supabase/types";
@@ -8,6 +8,7 @@ import Comments from "./comments";
 import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
+import supabaseManager from "#/managers/supabase";
 import {
   participantInfoAtom,
   participantsAtom,
@@ -18,19 +19,34 @@ interface CommentProps {
   highlight: Highlight;
 }
 function AnnotationTab({ highlight }: CommentProps) {
-  // const { comments } = highlight;
-  const comments = [] as Comment[];
-
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
   const participantInfo = useAtomValue(participantInfoAtom);
   const participants = useAtomValue(participantsAtom);
-  // const updateAnnotation = useSetAtom(updateAnnotationAtom);
   const navItems = useAtomValue(navAtom);
   const annotationNav = navItems?.find(
     (item) => item.href === highlight.sectionHref,
   );
   const sectionLabel = annotationNav?.label;
+
+  useEffect(() => {
+    if (!highlight.id) return;
+    const fetchComments = async () => {
+      try {
+        const highlightComments =
+          await supabaseManager.reader.getHighlightComments(highlight.id);
+        setComments(highlightComments);
+      } catch (error) {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchComments();
+  }, [highlight.id]);
 
   useEffect(
     () => {
@@ -48,9 +64,7 @@ function AnnotationTab({ highlight }: CommentProps) {
       prevCommentsLengthRef.current = comments.length;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      // comments
-    ],
+    [comments],
   );
 
   if (!participantInfo) return null;
@@ -85,7 +99,19 @@ function AnnotationTab({ highlight }: CommentProps) {
           creatorName={highlighter?.name ?? ""}
           sectionLabel={sectionLabel}
         />
-        <Comments comments={comments} />
+        {isLoading && (
+          <div className="flex justify-center py-4">
+            <div className="text-sm text-gray-500">댓글을 불러오는 중...</div>
+          </div>
+        )}
+        {isError && (
+          <div className="flex justify-center py-4">
+            <div className="text-sm text-red-500">
+              댓글을 불러오는데 실패했습니다.
+            </div>
+          </div>
+        )}
+        {!isLoading && !isError && <Comments comments={comments} />}
       </ScrollArea>
 
       <CommentForm

@@ -31,6 +31,18 @@ View kiwi_highlights_view {
   profileImage varchar [note: "참가자 프로필 이미지"]
   createdAt timestamptz [note: "생성일"]
   updatedAt timestamptz [note: "수정일"]
-  kiwi_id uuid [note: "키위 ID (필터링용)"]
+  kiwiId uuid [note: "키위 ID (필터링용)"]
   commentCount int [note: "댓글 수"]
 }
+
+View highlight_comments_view {
+  id uuid [note: "댓글 ID"]
+  highlightId uuid [note: "하이라이트 ID (필터링용)"]
+  text text [note: "댓글 내용"]
+  participantId uuid [note: "참가자 ID"]
+  name varchar [note: "참가자 이름"]
+  profileImage varchar [note: "참가자 프로필 이미지 (nullable)"]
+  createdAt timestamptz [note: "댓글 생성일"]
+  updatedAt timestamptz [note: "댓글 수정일"]
+}
+
