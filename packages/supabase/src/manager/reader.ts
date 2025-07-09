@@ -1,11 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { NewParticipant } from "../types/params";
 import {
+  NewHighlight,
+  NewParticipant,
   Bookmark,
   GetKiwiReaderResponse,
   Participant,
-} from "../types/response";
+} from "../types";
 import { camelToSnakeKeys, snakeToCamelKeys } from "../utils/base";
 
 class SupabaseReader {
@@ -91,6 +92,20 @@ class SupabaseReader {
     if (error) {
       throw new Error(error?.message || "Failed to add bookmark");
     }
+  }
+
+  async addHighlight(highlight: NewHighlight): Promise<{ id: string }> {
+    const snakeHighlight = camelToSnakeKeys(highlight);
+    const { data, error } = await this.supabase
+      .from("highlights")
+      .insert(snakeHighlight)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(error?.message || "Failed to add highlight");
+    }
+    return { id: data.id };
   }
 
   async removeBookmark({

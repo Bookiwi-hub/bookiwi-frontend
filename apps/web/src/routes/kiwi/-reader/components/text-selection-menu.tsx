@@ -3,7 +3,7 @@ import { KeyboardEvent, useState } from "react";
 import { toast } from "sonner";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Annotation } from "@bookiwi/supabase/types";
+import { NewHighlight } from "@bookiwi/supabase/types";
 
 import { tabStateAtom, TabType } from "../../-split-view/annotation/atoms";
 import {
@@ -13,7 +13,8 @@ import {
 } from "../../-split-view/atoms";
 import {
   // addAnnotationAtom,
-  removeAnnotationAtom,
+  addHighlightAtom,
+  // removeAnnotationAtom,
   // selectedAnnotationAtom,
   participantInfoAtom,
   kiwiIdAtom,
@@ -37,8 +38,8 @@ function TextSelectionMenu() {
   const participantInfo = useAtomValue(participantInfoAtom);
   const kiwiId = useAtomValue(kiwiIdAtom);
   const openHighlightTab = useSetAtom(openHighlightTabAtom);
-  // const addAnnotation = useSetAtom(addAnnotationAtom);
-  const removeAnnotation = useSetAtom(removeAnnotationAtom);
+  const addHighlight = useSetAtom(addHighlightAtom);
+  // const removeAnnotation = useSetAtom(removeAnnotationAtom);
   // const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
   const result = useSelectionMenu(width, height);
 
@@ -58,8 +59,9 @@ function TextSelectionMenu() {
     el.focus();
   };
 
-  const addHighlight = async () => {
-    const newAnnotation: Omit<Annotation, "id"> = {
+  const addNewHighlight = async () => {
+    const newAnnotation: NewHighlight = {
+      kiwiId,
       text: selectedText.text,
       cfi: selectedText.cfi,
       color: participantInfo.color,
@@ -67,10 +69,9 @@ function TextSelectionMenu() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       sectionHref: selectedText.sectionHref,
-      comments: [],
     };
     try {
-      // await addAnnotation(newAnnotation);
+      await addHighlight(newAnnotation);
     } catch (error) {
       toast.error("하이라이트가 저장되지 않았습니다.");
     }
@@ -78,7 +79,7 @@ function TextSelectionMenu() {
   };
 
   const handleAddHighlight = async () => {
-    await addHighlight();
+    await addNewHighlight();
     hide();
   };
 
@@ -93,7 +94,7 @@ function TextSelectionMenu() {
 
   const handleRemoveHighlight = async () => {
     try {
-      await removeAnnotation(selectedText.id);
+      // await removeAnnotation(selectedText.id);
     } catch (error) {
       toast.error("하이라이트 정보가 삭제되지 않았습니다.");
     }

@@ -1,7 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { NewKiwi } from "../types/params";
-import { MyKiwi } from "../types/response";
+import { NewKiwi, MyKiwi } from "../types";
 import { fileToEpubInfo } from "../utils/epubjs";
 import { generateUniqueFileName } from "../utils/file";
 

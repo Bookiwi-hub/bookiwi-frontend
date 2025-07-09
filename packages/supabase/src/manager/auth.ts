@@ -3,7 +3,7 @@ import {
   SupabaseClient,
 } from "@supabase/supabase-js";
 
-import { User } from "../types/response";
+import { User } from "../types";
 
 class SupabaseAuth {
   private supabase: SupabaseClient;

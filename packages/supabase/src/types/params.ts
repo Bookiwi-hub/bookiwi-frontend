@@ -12,6 +12,9 @@ export interface NewHighlight {
   cfi: string;
   text: string;
   color: string;
+  sectionHref: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface NewKiwi {
