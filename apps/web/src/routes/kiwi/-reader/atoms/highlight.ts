@@ -34,4 +34,5 @@ export const removeHighlightAtom = atom(null, async (get, set, id: string) => {
     highlightsAtom,
     highlights.filter((highlight) => highlight.id !== id),
   );
+  set(selectedHighlightAtom, null);
 });
