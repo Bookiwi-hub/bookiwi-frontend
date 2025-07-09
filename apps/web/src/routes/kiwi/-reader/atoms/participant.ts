@@ -144,12 +144,12 @@ export const participantSettingsAtom = atom<{
   };
 });
 
-interface CurrentCfi {
+export interface Cfi {
   start: string;
   end: string;
 }
 
-export const currentCfiAtom = atom<CurrentCfi | null>((get) => {
+export const currentCfiAtom = atom<Cfi | null>((get) => {
   const cfiStart = get(participantCfiStartAtom);
   const cfiEnd = get(participantCfiEndAtom);
   if (!cfiStart || !cfiEnd) return null;
@@ -165,19 +165,16 @@ export const percentageAtom = atom<number | null>((get) =>
 );
 
 // Action atoms
-export const setCurrentCfiAtom = atom(
-  null,
-  async (get, set, cfi: CurrentCfi) => {
-    const book = get(bookAtom);
-    if (!book) return;
-    const percent = Math.floor(book.locations.percentageFromCfi(cfi.end) * 100);
+export const setCurrentCfiAtom = atom(null, async (get, set, cfi: Cfi) => {
+  const book = get(bookAtom);
+  if (!book) return;
+  const percent = Math.floor(book.locations.percentageFromCfi(cfi.end) * 100);
 
-    set(participantCfiStartAtom, cfi.start);
-    set(participantCfiEndAtom, cfi.end);
-    set(participantPercentageAtom, percent);
-    set(participantLastActivityAtAtom, new Date().toISOString());
-  },
-);
+  set(participantCfiStartAtom, cfi.start);
+  set(participantCfiEndAtom, cfi.end);
+  set(participantPercentageAtom, percent);
+  set(participantLastActivityAtAtom, new Date().toISOString());
+});
 
 export const setSinglePageAtom = atom(
   null,

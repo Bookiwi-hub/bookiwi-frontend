@@ -78,9 +78,9 @@ export interface Participant {
 }
 
 export interface Bookmark {
-  id: string;
-  cfiStart: string | null;
-  cfiEnd: string | null;
+  participantId: string;
+  cfiStart: string;
+  cfiEnd: string;
   createdAt: string;
 }
 

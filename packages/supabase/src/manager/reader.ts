@@ -64,6 +64,9 @@ class SupabaseReader {
     if (error || !data) {
       throw new Error(error?.message || "Failed to get bookmarks");
     }
+    if (data.length === 0) {
+      return [];
+    }
 
     return data;
   }

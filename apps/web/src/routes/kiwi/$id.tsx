@@ -20,9 +20,7 @@ export const Route = createFileRoute("/kiwi/$id")({
   },
 
   loader: async ({ params }) => {
-    // const result = await getBook(params.id);
     const result = await supabaseManager.reader.getKiwiReader(params.id);
-    console.log(result);
     return result;
   },
   head: ({ loaderData }) => ({

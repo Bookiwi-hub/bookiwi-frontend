@@ -2,13 +2,14 @@ import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { Bookmark } from "@bookiwi/supabase/types/response";
 
 import {
   bookAtom,
   bookmarksAtom,
+  Cfi,
   removeBookmarkAtom,
 } from "#/routes/kiwi/-reader/atoms";
-import { ParticipantIDBData } from "#/types/idb";
 import { formatDate } from "#/utils/format-date";
 
 function EmptyBookmarksView() {
@@ -25,10 +26,8 @@ function EmptyBookmarksView() {
   );
 }
 
-type Cfi = ParticipantIDBData["record"]["bookmarks"][number]["cfi"];
-
 interface BookmarkItemProps {
-  bookmark: ParticipantIDBData["record"]["bookmarks"][number];
+  bookmark: Bookmark;
   index: number;
   navItemLabel: string;
   percentage: number;
@@ -48,7 +47,7 @@ function BookmarkItem({
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <li
       className="group relative flex w-full items-start gap-3 rounded-md border border-transparent p-3 text-left transition-all hover:border-border hover:bg-accent/40"
-      onClick={() => onClick(bookmark.cfi.start)}
+      onClick={() => onClick(bookmark.cfiStart)}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
       role="button"
     >
@@ -69,7 +68,10 @@ function BookmarkItem({
         className="absolute right-3 top-3 rounded-full p-1 opacity-0 transition-all hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
         onClick={async (e) => {
           e.stopPropagation();
-          await onRemove(bookmark.cfi);
+          await onRemove({
+            start: bookmark.cfiStart,
+            end: bookmark.cfiEnd,
+          });
         }}
         aria-label="Remove bookmark"
       >
@@ -105,15 +107,15 @@ function BookmarksPanel() {
         <ul className="space-y-2">
           {bookmarks.map((bookmark, index) => {
             if (!book) return null;
-            const spineItem = book.spine.get(bookmark.cfi.start);
+            const spineItem = book.spine.get(bookmark.cfiStart);
             const navItem = book.navigation.get(spineItem?.href || "");
             const percentage = Math.floor(
-              book.locations.percentageFromCfi(bookmark.cfi.start) * 100,
+              book.locations.percentageFromCfi(bookmark.cfiStart) * 100,
             );
 
             return (
               <BookmarkItem
-                key={bookmark.cfi.start}
+                key={bookmark.cfiStart}
                 bookmark={bookmark}
                 index={index}
                 navItemLabel={navItem?.label || ""}

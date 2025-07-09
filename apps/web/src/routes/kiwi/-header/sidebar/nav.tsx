@@ -1,17 +1,11 @@
-import {
-  BookOpen,
-  // Bookmark,
-  Search,
-  Settings,
-  Users,
-} from "lucide-react";
+import { BookOpen, Bookmark, Search, Settings, Users } from "lucide-react";
 import { ReactNode } from "react";
 
 import { cn } from "#/lib/utils";
 
 export type NavType =
   | "toc"
-  // | "bookmark"
+  | "bookmark"
   | "search"
   | "settings"
   | "participants";
@@ -51,7 +45,7 @@ interface SidebarNavProps {
 
 const navItems: Array<{ icon: ReactNode; type: NavType; label: string }> = [
   { icon: <BookOpen size={24} />, type: "toc", label: "목차" },
-  // { icon: <Bookmark size={24} />, type: "bookmark", label: "책갈피" },
+  { icon: <Bookmark size={24} />, type: "bookmark", label: "책갈피" },
   { icon: <Users size={24} />, type: "participants", label: "참가자" },
   { icon: <Search size={24} />, type: "search", label: "검색" },
   { icon: <Settings size={24} />, type: "settings", label: "설정" },
