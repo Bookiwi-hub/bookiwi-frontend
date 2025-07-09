@@ -75,7 +75,6 @@ function TextSelectionMenu() {
     } catch (error) {
       toast.error("하이라이트가 저장되지 않았습니다.");
     }
-    return newAnnotation;
   };
 
   const handleAddHighlight = async () => {
@@ -85,8 +84,7 @@ function TextSelectionMenu() {
 
   const handleComment = async () => {
     if (!selectedText.status.isAlreadyExists) {
-      // const newAnnotation = await addHighlight();
-      // setSelectedAnnotation(newAnnotation);
+      await addNewHighlight();
     }
     openHighlightTab();
     hide();
