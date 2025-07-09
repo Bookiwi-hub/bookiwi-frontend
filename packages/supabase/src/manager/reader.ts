@@ -52,6 +52,19 @@ class SupabaseReader {
     return data;
   }
 
+  async getHighlights(kiwiId: string): Promise<Highlight[]> {
+    const { data, error } = await this.supabase
+      .from("kiwi_highlights_view")
+      .select("*")
+      .eq("kiwiId", kiwiId);
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to get highlights");
+    }
+
+    return data;
+  }
+
   async addParticipant(newParticipant: NewParticipant) {
     const { kiwiId, userId, name, profileImage, color } = newParticipant;
     const participant = {
