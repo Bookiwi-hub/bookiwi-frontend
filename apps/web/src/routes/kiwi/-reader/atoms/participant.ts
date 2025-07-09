@@ -5,6 +5,8 @@ import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
 
+import supabaseManager from "#/managers/supabase";
+
 export const participantsAtom = atom<Participant[]>([]);
 
 // Individual participant property atoms (primitive atoms)
@@ -167,22 +169,33 @@ export const percentageAtom = atom<number | null>((get) =>
 // Action atoms
 export const setCurrentCfiAtom = atom(null, async (get, set, cfi: Cfi) => {
   const book = get(bookAtom);
-  if (!book) return;
+  const participantId = get(participantIdAtom);
+  if (!book || !participantId) return;
   const percent = Math.floor(book.locations.percentageFromCfi(cfi.end) * 100);
-
+  const lastActivityAt = new Date().toISOString();
   set(participantCfiStartAtom, cfi.start);
   set(participantCfiEndAtom, cfi.end);
   set(participantPercentageAtom, percent);
-  set(participantLastActivityAtAtom, new Date().toISOString());
+  set(participantLastActivityAtAtom, lastActivityAt);
+  await supabaseManager.reader.updateParticipant(participantId, {
+    cfiStart: cfi.start,
+    cfiEnd: cfi.end,
+    percentage: percent,
+    lastActivityAt,
+  });
 });
 
 export const setSinglePageAtom = atom(
   null,
   async (get, set, singlePage: boolean) => {
     const book = get(bookAtom);
-    if (!book) return;
+    const participantId = get(participantIdAtom);
+    if (!book || !participantId) return;
     book.rendition.spread(singlePage ? "none" : "auto");
     set(participantSinglePageAtom, singlePage);
+    await supabaseManager.reader.updateParticipant(participantId, {
+      singlePage,
+    });
   },
 );
 
@@ -190,7 +203,8 @@ export const setFontFamilyAtom = atom(
   null,
   async (get, set, fontFamily: string | null) => {
     const book = get(bookAtom);
-    if (!book) return;
+    const participantId = get(participantIdAtom);
+    if (!book || !participantId) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
 
@@ -205,6 +219,9 @@ export const setFontFamilyAtom = atom(
       lineHeight,
     });
     set(participantFontFamilyAtom, fontFamily);
+    await supabaseManager.reader.updateParticipant(participantId, {
+      fontFamily,
+    });
   },
 );
 
@@ -212,7 +229,8 @@ export const setFontSizeAtom = atom(
   null,
   async (get, set, fontSize: number | null) => {
     const book = get(bookAtom);
-    if (!book) return;
+    const participantId = get(participantIdAtom);
+    if (!book || !participantId) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
 
@@ -227,6 +245,9 @@ export const setFontSizeAtom = atom(
       lineHeight,
     });
     set(participantFontSizeAtom, fontSize);
+    await supabaseManager.reader.updateParticipant(participantId, {
+      fontSize,
+    });
   },
 );
 
@@ -234,7 +255,8 @@ export const setFontWeightAtom = atom(
   null,
   async (get, set, fontWeight: number | null) => {
     const book = get(bookAtom);
-    if (!book) return;
+    const participantId = get(participantIdAtom);
+    if (!book || !participantId) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
 
@@ -249,6 +271,9 @@ export const setFontWeightAtom = atom(
       lineHeight,
     });
     set(participantFontWeightAtom, fontWeight);
+    await supabaseManager.reader.updateParticipant(participantId, {
+      fontWeight,
+    });
   },
 );
 
@@ -258,7 +283,8 @@ export const setLineHeightAtom = atom(
     const formattedLineHeight =
       lineHeight !== null ? Number(lineHeight.toFixed(1)) : null;
     const book = get(bookAtom);
-    if (!book) return;
+    const participantId = get(participantIdAtom);
+    if (!book || !participantId) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
 
@@ -273,5 +299,8 @@ export const setLineHeightAtom = atom(
       lineHeight: formattedLineHeight,
     });
     set(participantLineHeightAtom, formattedLineHeight);
+    await supabaseManager.reader.updateParticipant(participantId, {
+      lineHeight: formattedLineHeight,
+    });
   },
 );

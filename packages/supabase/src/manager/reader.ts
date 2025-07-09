@@ -1,6 +1,11 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { Bookmark, GetKiwiReaderResponse } from "../types/response";
+import {
+  Bookmark,
+  GetKiwiReaderResponse,
+  Participant,
+} from "../types/response";
+import { camelToSnakeKeys } from "../utils/base";
 
 interface NewParticipant {
   kiwiId: string;
@@ -69,6 +74,18 @@ class SupabaseReader {
     }
 
     return data;
+  }
+
+  async updateParticipant(participantId: string, fields: Partial<Participant>) {
+    const snakeFields = camelToSnakeKeys(fields);
+    const { error } = await this.supabase
+      .from("participants")
+      .update(snakeFields)
+      .eq("id", participantId);
+
+    if (error) {
+      throw new Error(error?.message || "Failed to update participant");
+    }
   }
 }
 
