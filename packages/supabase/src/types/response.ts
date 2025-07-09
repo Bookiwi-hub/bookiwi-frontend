@@ -31,10 +31,10 @@ export interface MyKiwi {
     id: string;
     userId: string;
     name: string;
-    profileImage: string;
-    progress: number;
+    profileImage: string | null;
+    percentage: number | null;
     color: string;
-    lastActivityAt: string;
+    lastActivityAt: string | null;
   }[];
 }
 

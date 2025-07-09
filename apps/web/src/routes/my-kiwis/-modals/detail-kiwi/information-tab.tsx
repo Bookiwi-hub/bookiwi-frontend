@@ -83,8 +83,8 @@ function InformationTab({ kiwi }: InformationTabProps) {
             <div className="mt-2">
               <div className="flex justify-between text-xs">
                 <span>
-                  {currentParticipant?.progress
-                    ? `${currentParticipant?.progress}% 완료`
+                  {currentParticipant?.percentage
+                    ? `${currentParticipant?.percentage}% 완료`
                     : "0% 완료"}
                 </span>
               </div>
@@ -92,8 +92,8 @@ function InformationTab({ kiwi }: InformationTabProps) {
                 <div
                   className="h-full rounded-full bg-primary"
                   style={{
-                    width: currentParticipant
-                      ? `${currentParticipant?.progress}%`
+                    width: currentParticipant?.percentage
+                      ? `${currentParticipant.percentage}%`
                       : "0%",
                   }}
                 />

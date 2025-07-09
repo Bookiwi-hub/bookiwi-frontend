@@ -19,7 +19,7 @@ function ActivitiesTab({ kiwi }: ActivitiesTabProps) {
           {participants.map((participant) => (
             <div key={participant.userId} className="flex items-center gap-3">
               <Avatar className="size-8">
-                <AvatarImage src={participant.profileImage} />
+                <AvatarImage src={participant.profileImage || undefined} />
                 <AvatarFallback>{participant.name[0]}</AvatarFallback>
               </Avatar>
               <div className="flex flex-1 items-center gap-3">
@@ -28,12 +28,14 @@ function ActivitiesTab({ kiwi }: ActivitiesTabProps) {
                   <div className="h-2 overflow-hidden rounded-full bg-muted">
                     <div
                       className="h-full rounded-full bg-primary transition-all"
-                      style={{ width: `${participant.progress}%` }}
+                      style={{
+                        width: `${participant.percentage || 0}%`,
+                      }}
                     />
                   </div>
                 </div>
                 <span className="min-w-12 text-right text-sm tabular-nums text-muted-foreground">
-                  {participant.progress}%
+                  {participant.percentage || 0}%
                 </span>
               </div>
             </div>
