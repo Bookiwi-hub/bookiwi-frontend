@@ -5,7 +5,7 @@ import {
   GetKiwiReaderResponse,
   Participant,
 } from "../types/response";
-import { camelToSnakeKeys } from "../utils/base";
+import { camelToSnakeKeys, snakeToCamelKeys } from "../utils/base";
 
 interface NewParticipant {
   kiwiId: string;
@@ -73,7 +73,8 @@ class SupabaseReader {
       return [];
     }
 
-    return data;
+    const bookmarks = data.map((bookmark) => snakeToCamelKeys(bookmark));
+    return bookmarks as Bookmark[];
   }
 
   async updateParticipant(participantId: string, fields: Partial<Participant>) {
@@ -85,6 +86,38 @@ class SupabaseReader {
 
     if (error) {
       throw new Error(error?.message || "Failed to update participant");
+    }
+  }
+
+  async addBookmark(bookmark: Bookmark) {
+    const snakeBookmark = camelToSnakeKeys(bookmark);
+    const { error } = await this.supabase
+      .from("bookmarks")
+      .insert(snakeBookmark);
+
+    if (error) {
+      throw new Error(error?.message || "Failed to add bookmark");
+    }
+  }
+
+  async removeBookmark({
+    participantId,
+    cfiStart,
+    cfiEnd,
+  }: {
+    participantId: string;
+    cfiStart: string;
+    cfiEnd: string;
+  }) {
+    const { error } = await this.supabase
+      .from("bookmarks")
+      .delete()
+      .eq("participant_id", participantId)
+      .eq("cfi_start", cfiStart)
+      .eq("cfi_end", cfiEnd);
+
+    if (error) {
+      throw new Error(error?.message || "Failed to remove bookmark");
     }
   }
 }
