@@ -131,7 +131,7 @@ BEGIN
     v_participant_1_id,
     'epubcfi(/30/4!/4/2/8,/1:101,/1:141)',
     '다섯 푼이 찰깍하고 손바닥에 떨어질 제 거의 눈물을 흘릴 만큼 기뻤었다.',
-    'hsl(var(--chart-1))',
+    '#FFF176',
     'c0_unsu_joh_eun_nal.xhtml'
   )
   RETURNING h.id INTO v_highlight_1_id;
@@ -148,7 +148,7 @@ BEGIN
     v_participant_2_id,
     'epubcfi(/30/4!/4/2/14,/1:0,/1:139)',
     '"에이, 오라질 년, 조롱복은 할 수가 없어, 못 먹어 병, 먹어서 병, 어쩌란 말이야! 왜 눈을 바루 뜨지 못해!"하고 김 첨지는 앓는 이의 뺨을 한 번 후려갈겼다. 홉뜬 눈은 조금 바루어졌건만 이슬이 맺히었다. 김 첨지의 눈시울도 뜨끈뜨끈하였다.',
-    'hsl(var(--chart-2))',
+    '#80DEEA',
     'c0_unsu_joh_eun_nal.xhtml'
   )
   RETURNING h.id INTO v_highlight_2_id;
