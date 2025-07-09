@@ -45,7 +45,7 @@ function Highlights() {
 
     return () => {
       highlights.forEach((highlight) => {
-        book.rendition.annotations.remove(highlight.cfi, "highlight");
+        book.rendition?.annotations.remove(highlight.cfi, "highlight");
       });
     };
   }, [
