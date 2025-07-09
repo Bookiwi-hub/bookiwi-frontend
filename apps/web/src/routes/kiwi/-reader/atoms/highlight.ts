@@ -28,6 +28,7 @@ export const addHighlightAtom = atom(
 );
 
 export const removeHighlightAtom = atom(null, async (get, set, id: string) => {
+  await supabaseManager.reader.removeHighlight(id);
   const highlights = get(highlightsAtom);
   set(
     highlightsAtom,

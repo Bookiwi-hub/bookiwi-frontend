@@ -125,6 +125,17 @@ class SupabaseReader {
     return { id: data.id };
   }
 
+  async removeHighlight(id: string) {
+    const { error } = await this.supabase
+      .from("highlights")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      throw new Error(error?.message || "Failed to remove highlight");
+    }
+  }
+
   async removeBookmark({
     participantId,
     cfiStart,

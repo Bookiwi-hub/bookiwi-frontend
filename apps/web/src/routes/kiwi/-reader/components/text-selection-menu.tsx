@@ -12,12 +12,10 @@ import {
   isAnnotationOpenAtom,
 } from "../../-split-view/atoms";
 import {
-  // addAnnotationAtom,
   addHighlightAtom,
-  // removeAnnotationAtom,
-  // selectedAnnotationAtom,
   participantInfoAtom,
   kiwiIdAtom,
+  removeHighlightAtom,
 } from "../atoms";
 import { useSelectionMenu } from "../hooks";
 
@@ -39,8 +37,7 @@ function TextSelectionMenu() {
   const kiwiId = useAtomValue(kiwiIdAtom);
   const openHighlightTab = useSetAtom(openHighlightTabAtom);
   const addHighlight = useSetAtom(addHighlightAtom);
-  // const removeAnnotation = useSetAtom(removeAnnotationAtom);
-  // const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
+  const removeHighlight = useSetAtom(removeHighlightAtom);
   const result = useSelectionMenu(width, height);
 
   if (!result || !participantInfo || !kiwiId) {
@@ -92,7 +89,7 @@ function TextSelectionMenu() {
 
   const handleRemoveHighlight = async () => {
     try {
-      // await removeAnnotation(selectedText.id);
+      await removeHighlight(selectedText.id);
     } catch (error) {
       toast.error("하이라이트 정보가 삭제되지 않았습니다.");
     }
