@@ -31,22 +31,23 @@ function HighlightList() {
     fetchHighlights();
   }, [kiwiId]);
 
-  return (
-    <>
-      {isLoading ? (
-        <div className="flex h-full items-center justify-center text-gray-500">
-          하이라이트 목록을 불러오는 중입니다...
-        </div>
-      ) : (
-        <HighlightListContent totalHighlights={totalHighlights} />
-      )}
-      {isError && (
-        <div className="flex h-full items-center justify-center text-red-500">
-          하이라이트 목록을 불러오는 중 오류가 발생했습니다.
-        </div>
-      )}
-    </>
-  );
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center text-gray-500">
+        하이라이트 목록을 불러오는 중입니다...
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex h-full items-center justify-center text-red-500">
+        하이라이트 목록을 불러오는 중 오류가 발생했습니다.
+      </div>
+    );
+  }
+
+  return <HighlightListContent totalHighlights={totalHighlights} />;
 }
 
 function HighlightListContent({
