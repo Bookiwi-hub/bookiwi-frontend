@@ -7,7 +7,7 @@ import {
   currentViewAtom,
   highlightClickedAtom,
   participantIdAtom,
-  selectedAnnotationAtom,
+  selectedHighlightAtom,
   selectionAtom,
   kiwiIdAtom,
 } from "../atoms";
@@ -43,7 +43,7 @@ export const useSelectedText = (): TextSelection | null => {
   const currentSection = useAtomValue(currentSectionAtom);
   const [selection, setSelection] = useAtom(selectionAtom);
   const [highlightClicked, setHighlightClicked] = useAtom(highlightClickedAtom);
-  const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
+  const selectedHighlight = useAtomValue(selectedHighlightAtom);
   const participantId = useAtomValue(participantIdAtom);
   const kiwiId = useAtomValue(kiwiIdAtom);
   const currentView = useAtomValue(currentViewAtom);
@@ -85,22 +85,22 @@ export const useSelectedText = (): TextSelection | null => {
     };
   }
 
-  if (highlightClicked && selectedAnnotation) {
+  if (highlightClicked && selectedHighlight) {
     const remove = () => {
       setHighlightClicked(false);
     };
 
     return {
-      id: selectedAnnotation.id,
-      text: selectedAnnotation.text,
-      cfi: selectedAnnotation.cfi,
-      range: currentView.contents.range(selectedAnnotation.cfi),
+      id: selectedHighlight.id,
+      text: selectedHighlight.text,
+      cfi: selectedHighlight.cfi,
+      range: currentView.contents.range(selectedHighlight.cfi),
       isForward: true,
       status: {
         isAlreadyExists: true,
-        isMine: selectedAnnotation.participantId === participantId,
+        isMine: selectedHighlight.participantId === participantId,
       },
-      sectionHref: selectedAnnotation.sectionHref,
+      sectionHref: selectedHighlight.sectionHref,
       remove,
     };
   }

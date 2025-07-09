@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Annotation } from "@bookiwi/supabase/types";
+import { Annotation, Comment, Highlight } from "@bookiwi/supabase/types";
 
 import CommentForm from "./comment-form";
 import Comments from "./comments";
@@ -16,10 +16,12 @@ import {
 } from "#/routes/kiwi/-reader/atoms";
 
 interface CommentProps {
-  annotation: Annotation;
+  highlight: Highlight;
 }
-function AnnotationTab({ annotation }: CommentProps) {
-  const { comments } = annotation;
+function AnnotationTab({ highlight }: CommentProps) {
+  // const { comments } = highlight;
+  const comments = [] as Comment[];
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
   const participantInfo = useAtomValue(participantInfoAtom);
@@ -27,28 +29,34 @@ function AnnotationTab({ annotation }: CommentProps) {
   const updateAnnotation = useSetAtom(updateAnnotationAtom);
   const navItems = useAtomValue(navAtom);
   const annotationNav = navItems?.find(
-    (item) => item.href === annotation.sectionHref,
+    (item) => item.href === highlight.sectionHref,
   );
   const sectionLabel = annotationNav?.label;
 
-  useEffect(() => {
-    // 새 코멘트가 추가되었을 때만 스크롤을 맨 아래로 이동
-    if (comments.length > prevCommentsLengthRef.current) {
-      if (scrollAreaRef.current) {
-        const scrollContainer = scrollAreaRef.current.querySelector(
-          "[data-radix-scroll-area-viewport]",
-        );
-        if (scrollContainer) {
-          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+  useEffect(
+    () => {
+      // 새 코멘트가 추가되었을 때만 스크롤을 맨 아래로 이동
+      if (comments.length > prevCommentsLengthRef.current) {
+        if (scrollAreaRef.current) {
+          const scrollContainer = scrollAreaRef.current.querySelector(
+            "[data-radix-scroll-area-viewport]",
+          );
+          if (scrollContainer) {
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          }
         }
       }
-    }
-    prevCommentsLengthRef.current = comments.length;
-  }, [comments]);
+      prevCommentsLengthRef.current = comments.length;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      // comments
+    ],
+  );
 
   if (!participantInfo) return null;
   const highlighter = participants.find(
-    (participant) => participant.id === annotation.participantId,
+    (participant) => participant.id === highlight.participantId,
   );
 
   const handleCommentSubmit = (commentText: string) => {
@@ -61,7 +69,7 @@ function AnnotationTab({ annotation }: CommentProps) {
       participantId: participantInfo.id,
     };
     const updatedAnnotation: Annotation = {
-      ...annotation,
+      ...highlight,
       comments: [...comments, newComment],
     };
     updateAnnotation(updatedAnnotation);
@@ -71,9 +79,9 @@ function AnnotationTab({ annotation }: CommentProps) {
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
         <HighlightedText
-          color={annotation.color}
-          text={annotation.text}
-          date={annotation.updatedAt}
+          color={highlight.color}
+          text={highlight.text}
+          date={highlight.updatedAt}
           creatorName={highlighter?.name ?? ""}
           sectionLabel={sectionLabel}
         />

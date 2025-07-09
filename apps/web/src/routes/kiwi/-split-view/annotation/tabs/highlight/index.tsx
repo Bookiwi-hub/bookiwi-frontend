@@ -6,17 +6,17 @@ import NotSelected from "./not-selected";
 
 import {
   participantColorAtom,
-  selectedAnnotationAtom,
+  selectedHighlightAtom,
 } from "#/routes/kiwi/-reader/atoms";
 
 function Highlight() {
-  const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
+  const selectedHighlight = useAtomValue(selectedHighlightAtom);
   const participantColor = useAtomValue(participantColorAtom);
 
-  if (!selectedAnnotation)
+  if (!selectedHighlight)
     return <NotSelected color={participantColor ?? primaryColor} />;
 
-  return <Annotation annotation={selectedAnnotation} />;
+  return <Annotation highlight={selectedHighlight} />;
 }
 
 export default Highlight;

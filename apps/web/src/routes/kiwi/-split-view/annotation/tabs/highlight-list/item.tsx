@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Annotation } from "@bookiwi/supabase/types";
+import { Highlight } from "@bookiwi/supabase/types";
 
 import { setTabToHighlightAtom } from "../../atoms";
 import { useTruncatedText } from "../hooks/use-truncated-text";
@@ -10,21 +10,21 @@ import {
   bookAtom,
   navAtom,
   participantsAtom,
-  selectedAnnotationAtom,
+  selectedHighlightAtom,
 } from "#/routes/kiwi/-reader/atoms";
 import { truncate } from "#/utils";
 import { formatDate } from "#/utils/format-date";
 
 interface HighlightItemProps {
-  annotation: Annotation;
+  highlight: Highlight;
 }
 
-function HighlightItem({ annotation }: HighlightItemProps) {
+function HighlightItem({ highlight }: HighlightItemProps) {
   const participants = useAtomValue(participantsAtom);
   const navItems = useAtomValue(navAtom);
   const book = useAtomValue(bookAtom);
-  const { text, color, participantId, sectionHref, createdAt, comments } =
-    annotation;
+  const { text, color, participantId, sectionHref, createdAt, commentCount } =
+    highlight;
   const participant = participants.find((p) => p.id === participantId);
   const sectionLabel = navItems?.find(
     (item) => item.href === sectionHref,
@@ -37,12 +37,12 @@ function HighlightItem({ annotation }: HighlightItemProps) {
     });
 
   const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
-  const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
+  const setSelectedHighlight = useSetAtom(selectedHighlightAtom);
 
   const handleClick = () => {
     setTabToHighlight();
-    setSelectedAnnotation(annotation);
-    book?.rendition.display(annotation.cfi);
+    setSelectedHighlight(highlight);
+    book?.rendition.display(highlight.cfi);
   };
 
   return (
@@ -80,7 +80,7 @@ function HighlightItem({ annotation }: HighlightItemProps) {
       </div>
       <div className="flex items-center justify-between text-xs text-gray-500">
         <div>{sectionLabel && truncate(sectionLabel, 20)}</div>
-        <div>{`댓글 ${comments.length}개`}</div>
+        <div>{`댓글 ${commentCount}개`}</div>
       </div>
     </div>
   );

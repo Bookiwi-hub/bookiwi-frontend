@@ -1,4 +1,7 @@
-CREATE OR REPLACE VIEW kiwi_reader_view AS
+-- Drop existing view first (to allow column removal)
+DROP VIEW IF EXISTS kiwi_reader_view;
+
+CREATE VIEW kiwi_reader_view AS
 SELECT 
     k.id as kiwi_id,
     -- Kiwi object
@@ -48,40 +51,7 @@ SELECT
         FROM participants p 
         WHERE p.kiwi_id = k.id
         ), '[]'::jsonb
-    ) as participants,
-    
-    -- Annotations array (highlights with comments)
-    COALESCE(
-        (SELECT jsonb_agg(
-            json_build_object(
-                'id', h.id,
-                'cfi', h.cfi,
-                'text', h.text,
-                'color', h.color,
-                'participantId', h.participant_id,
-                'createdAt', h.created_at,
-                'updatedAt', h.updated_at,
-                'sectionHref', h.section_href,
-                'comments', COALESCE(
-                    (SELECT jsonb_agg(
-                        json_build_object(
-                            'id', c.id,
-                            'text', c.text,
-                            'createdAt', c.created_at,
-                            'updatedAt', c.updated_at,
-                            'participantId', c.participant_id
-                        )
-                    )
-                    FROM comments c 
-                    WHERE c.highlight_id = h.id
-                    ), '[]'::jsonb
-                )
-            )
-        )
-        FROM highlights h
-        WHERE h.kiwi_id = k.id
-        ), '[]'::jsonb
-    ) as annotations
+    ) as participants
 
 FROM kiwis k
 JOIN epubs e ON k.epub_id = e.id;

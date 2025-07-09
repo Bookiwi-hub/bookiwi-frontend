@@ -40,7 +40,7 @@ export const Route = createFileRoute("/kiwi/$id")({
 });
 
 function Kiwi() {
-  const { epub, kiwi, participants, annotations } = Route.useLoaderData();
+  const { epub, kiwi, participants } = Route.useLoaderData();
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
   );
@@ -60,7 +60,6 @@ function Kiwi() {
       epub={epub}
       kiwi={kiwi}
       participants={participants}
-      annotations={annotations}
       currentParticipant={currentParticipant}
     >
       <KiwiContent />

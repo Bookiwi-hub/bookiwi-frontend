@@ -12,3 +12,25 @@ View my_kiwis_view {
   bookMetadata json [note: "책 메타데이터 (coverImage, title, author, publisher, nav)"]
   participants json [note: "참가자 목록 배열 (id, userId, name, profileImage, progress, color, lastActivityAt)"]
 }
+
+View kiwi_reader_view {
+  kiwi_id uuid [note: "키위 ID (필터링용)"]
+  kiwi json [note: "키위 정보 (id, name, description, maxParticipants, detailDescription, password, shareCode, createdAt)"]
+  epub json [note: "EPUB 정보 (id, file, locations, coverImage, title, author, publisher, nav)"]
+  participants jsonb [note: "참가자 목록 배열 (id, userId, name, profileImage, color, singlePage, fontFamily, fontSize, fontWeight, lineHeight, cfiStart, cfiEnd, percentage, lastActivityAt)"]
+}
+
+View kiwi_highlights_view {
+  id uuid [note: "하이라이트 ID"]
+  cfi varchar [note: "하이라이트 CFI"]
+  sectionHref varchar [note: "섹션 href"]
+  text text [note: "하이라이트된 텍스트"]
+  color varchar [note: "하이라이트 색상"]
+  participantId uuid [note: "참가자 ID"]
+  name varchar [note: "참가자 이름"]
+  profileImage varchar [note: "참가자 프로필 이미지"]
+  createdAt timestamptz [note: "생성일"]
+  updatedAt timestamptz [note: "수정일"]
+  kiwi_id uuid [note: "키위 ID (필터링용)"]
+  commentCount int [note: "댓글 수"]
+}

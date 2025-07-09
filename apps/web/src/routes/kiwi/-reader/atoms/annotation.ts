@@ -1,23 +1,9 @@
 import { atom } from "@bookiwi/jotai";
-import { NewHighlight, Annotation } from "@bookiwi/supabase/types";
+import { Annotation } from "@bookiwi/supabase/types";
 
 import { currentSectionAtom } from "./book";
 
-import supabaseManager from "#/managers/supabase";
-
 export const annotationsTotalAtom = atom<Annotation[]>([]);
-
-export const addHighlightAtom = atom(
-  null,
-  async (get, set, highlight: NewHighlight) => {
-    const { id } = await supabaseManager.reader.addHighlight(highlight);
-    console.log(id);
-    // set(annotationsTotalAtom, [...get(annotationsTotalAtom), { ...highlight, id }]);
-    // const annotations = get(annotationsTotalAtom);
-
-    // set(annotationsTotalAtom, [...annotations, annotation]);
-  },
-);
 
 export const removeAnnotationAtom = atom(null, async (get, set, id: string) => {
   const annotations = get(annotationsTotalAtom);

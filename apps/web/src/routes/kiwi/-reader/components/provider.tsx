@@ -4,7 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
 import { Provider, createStore } from "@bookiwi/jotai";
-import { Annotation, Epub, Kiwi, Participant } from "@bookiwi/supabase/types";
+import { Epub, Kiwi, Participant } from "@bookiwi/supabase/types";
 
 import {
   bookAtom,
@@ -19,8 +19,7 @@ import {
   initialCfiAtom,
   initialIsSinglePageAtom,
   participantsAtom,
-  annotationsTotalAtom,
-  selectedAnnotationAtom,
+  selectedHighlightAtom,
   highlightClickedAtom,
   setParticipantAtom,
 } from "../atoms";
@@ -31,7 +30,6 @@ interface ReaderProviderProps {
   epub: Epub;
   kiwi: Kiwi;
   participants: Participant[];
-  annotations: Annotation[];
 }
 const readerStore = createStore();
 
@@ -40,7 +38,6 @@ function ReaderProvider({
   epub,
   kiwi,
   participants,
-  annotations,
   currentParticipant,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
@@ -97,8 +94,6 @@ function ReaderProvider({
   readerStore.set(participantsAtom, participants);
   readerStore.set(setParticipantAtom, currentParticipant);
 
-  readerStore.set(annotationsTotalAtom, annotations);
-
   // reading
   readerStore.set(currentSectionAtom, undefined);
   readerStore.set(currentLocationAtom, undefined);
@@ -107,7 +102,7 @@ function ReaderProvider({
   // interaction
   readerStore.set(isCenterTouchedAtom, false);
   readerStore.set(selectionAtom, null);
-  readerStore.set(selectedAnnotationAtom, null);
+  readerStore.set(selectedHighlightAtom, null);
   readerStore.set(highlightClickedAtom, false);
 
   return <Provider store={readerStore}>{children}</Provider>;

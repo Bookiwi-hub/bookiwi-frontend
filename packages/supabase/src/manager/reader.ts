@@ -6,6 +6,7 @@ import {
   Bookmark,
   GetKiwiReaderResponse,
   Participant,
+  Highlight,
 } from "../types";
 import { camelToSnakeKeys, snakeToCamelKeys } from "../utils/base";
 
@@ -19,7 +20,7 @@ class SupabaseReader {
   async getKiwiReader(kiwiId: string): Promise<GetKiwiReaderResponse> {
     const { data, error } = await this.supabase
       .from("kiwi_reader_view")
-      .select("kiwi, epub, participants, annotations")
+      .select("kiwi, epub, participants")
       .eq("kiwi_id", kiwiId)
       .single();
 
@@ -31,8 +32,24 @@ class SupabaseReader {
       kiwi: data.kiwi,
       epub: data.epub,
       participants: data.participants,
-      annotations: data.annotations,
     };
+  }
+
+  async getSectionHighlights(
+    kiwiId: string,
+    sectionHref: string,
+  ): Promise<Highlight[]> {
+    const { data, error } = await this.supabase
+      .from("kiwi_highlights_view")
+      .select("*")
+      .eq("kiwiId", kiwiId)
+      .eq("sectionHref", sectionHref);
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to get section highlights");
+    }
+
+    return data;
   }
 
   async addParticipant(newParticipant: NewParticipant) {

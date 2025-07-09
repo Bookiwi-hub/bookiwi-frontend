@@ -84,6 +84,28 @@ export interface Bookmark {
   createdAt: string;
 }
 
+export interface Highlight {
+  id: string;
+  cfi: string;
+  sectionHref: string;
+  text: string;
+  color: string;
+  participantId: string;
+  name: string;
+  profileImage: string | null;
+  createdAt: string;
+  updatedAt: string;
+  commentCount: number;
+}
+
+export interface Comment {
+  id: string;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
+  participantId: string;
+}
+
 export interface Annotation {
   id: string;
   cfi: string;
@@ -106,5 +128,4 @@ export interface GetKiwiReaderResponse {
   kiwi: Kiwi;
   epub: Epub;
   participants: Participant[];
-  annotations: Annotation[];
 }

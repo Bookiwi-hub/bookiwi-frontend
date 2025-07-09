@@ -5,4 +5,5 @@ export { default as useRendered } from "./use-rendered";
 export { default as useRender } from "./use-render";
 export { default as usePage } from "./use-page";
 export { default as useBookmark } from "./use-bookmark";
+export { default as useHighlight } from "./use-highlight";
 export * from "./use-selection-menu";
