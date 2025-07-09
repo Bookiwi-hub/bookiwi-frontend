@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Annotation } from "@bookiwi/supabase/types/response";
+import { Annotation } from "@bookiwi/supabase/types";
 
 import CommentForm from "./comment-form";
 import Comments from "./comments";

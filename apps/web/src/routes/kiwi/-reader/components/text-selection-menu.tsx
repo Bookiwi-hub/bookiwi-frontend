@@ -3,7 +3,7 @@ import { KeyboardEvent, useState } from "react";
 import { toast } from "sonner";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Annotation } from "@bookiwi/supabase/types/response";
+import { Annotation } from "@bookiwi/supabase/types";
 
 import { tabStateAtom, TabType } from "../../-split-view/annotation/atoms";
 import {

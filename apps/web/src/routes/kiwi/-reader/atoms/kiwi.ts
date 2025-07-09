@@ -1,5 +1,5 @@
 import { atom } from "@bookiwi/jotai";
-import { Kiwi } from "@bookiwi/supabase/types/response";
+import { Kiwi } from "@bookiwi/supabase/types";
 
 export const kiwiAtom = atom<Kiwi | null>(null);
 export const kiwiIdAtom = atom<string | null>((get) => {

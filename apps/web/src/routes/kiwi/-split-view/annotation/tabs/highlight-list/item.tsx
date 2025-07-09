@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Annotation } from "@bookiwi/supabase/types/response";
+import { Annotation } from "@bookiwi/supabase/types";
 
 import { setTabToHighlightAtom } from "../../atoms";
 import { useTruncatedText } from "../hooks/use-truncated-text";

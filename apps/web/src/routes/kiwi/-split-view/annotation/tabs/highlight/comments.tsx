@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
-import { Annotation } from "@bookiwi/supabase/types/response";
+import { Annotation } from "@bookiwi/supabase/types";
 
 import CommentItem from "./comment-item";
 import EmptyComments from "./empty-comments";

@@ -1,5 +1,5 @@
 import { atom } from "@bookiwi/jotai";
-import { Participant } from "@bookiwi/supabase/types/response";
+import { Participant } from "@bookiwi/supabase/types";
 
 import { updateCustomStyle } from "../utils";
 

@@ -3,7 +3,7 @@ import { Clock, Users } from "lucide-react";
 import { memo } from "react";
 
 import { useSetAtom } from "@bookiwi/jotai";
-import { MyKiwi } from "@bookiwi/supabase/types/response";
+import { MyKiwi } from "@bookiwi/supabase/types";
 
 import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
 

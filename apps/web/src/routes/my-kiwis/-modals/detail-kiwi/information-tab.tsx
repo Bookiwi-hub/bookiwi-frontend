@@ -1,6 +1,6 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
-import { MyKiwi, NavItem } from "@bookiwi/supabase/types/response";
+import { MyKiwi, NavItem } from "@bookiwi/supabase/types";
 
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import userManager from "#/managers/user";

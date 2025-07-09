@@ -1,4 +1,4 @@
-import { MyKiwi } from "@bookiwi/supabase/types/response";
+import { MyKiwi } from "@bookiwi/supabase/types";
 
 import { CreateKiwiModal, DetailKiwiModal } from "../-modals";
 

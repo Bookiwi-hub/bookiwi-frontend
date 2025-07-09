@@ -4,12 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
 import { Provider, createStore } from "@bookiwi/jotai";
-import {
-  Annotation,
-  Epub,
-  Kiwi,
-  Participant,
-} from "@bookiwi/supabase/types/response";
+import { Annotation, Epub, Kiwi, Participant } from "@bookiwi/supabase/types";
 
 import {
   bookAtom,

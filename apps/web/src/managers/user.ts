@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { User } from "@bookiwi/supabase/types/response";
+import { User } from "@bookiwi/supabase/types";
 
 import supabaseManager from "./supabase";
 

@@ -1,19 +1,12 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
+import { NewParticipant } from "../types/params";
 import {
   Bookmark,
   GetKiwiReaderResponse,
   Participant,
 } from "../types/response";
 import { camelToSnakeKeys, snakeToCamelKeys } from "../utils/base";
-
-interface NewParticipant {
-  kiwiId: string;
-  userId: string;
-  name: string;
-  profileImage: string | null;
-  color: string;
-}
 
 class SupabaseReader {
   private supabase: SupabaseClient;

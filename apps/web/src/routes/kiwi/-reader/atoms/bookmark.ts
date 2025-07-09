@@ -1,5 +1,5 @@
 import { atom } from "@bookiwi/jotai";
-import { Bookmark } from "@bookiwi/supabase/types/response";
+import { Bookmark } from "@bookiwi/supabase/types";
 
 import { participantIdAtom } from "./participant";
 

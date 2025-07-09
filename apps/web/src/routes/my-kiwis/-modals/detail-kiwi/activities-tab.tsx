@@ -1,4 +1,4 @@
-import { MyKiwi } from "@bookiwi/supabase/types/response";
+import { MyKiwi } from "@bookiwi/supabase/types";
 
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import { Separator } from "#/components/ui/separator";

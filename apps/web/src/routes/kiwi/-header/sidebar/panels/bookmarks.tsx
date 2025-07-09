@@ -2,7 +2,7 @@ import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Bookmark } from "@bookiwi/supabase/types/response";
+import { Bookmark } from "@bookiwi/supabase/types";
 
 import {
   bookAtom,

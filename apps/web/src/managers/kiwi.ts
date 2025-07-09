@@ -1,6 +1,6 @@
 import { Book, NavItem } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
-import { Epub, Kiwi, Participant } from "@bookiwi/supabase/types/response";
+import { Epub, Kiwi, Participant } from "@bookiwi/supabase/types";
 
 import { defer, Deferred } from "#/utils/defer";
 
