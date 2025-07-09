@@ -5,16 +5,16 @@ import Annotation from "./annotation";
 import NotSelected from "./not-selected";
 
 import {
-  participantInfoAtom,
+  participantColorAtom,
   selectedAnnotationAtom,
 } from "#/routes/kiwi/-reader/atoms";
 
 function Highlight() {
   const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
-  const participantInfo = useAtomValue(participantInfoAtom);
+  const participantColor = useAtomValue(participantColorAtom);
 
-  if (!selectedAnnotation || !participantInfo)
-    return <NotSelected color={participantInfo?.color ?? primaryColor} />;
+  if (!selectedAnnotation)
+    return <NotSelected color={participantColor ?? primaryColor} />;
 
   return <Annotation annotation={selectedAnnotation} />;
 }

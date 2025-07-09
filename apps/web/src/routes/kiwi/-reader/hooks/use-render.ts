@@ -4,13 +4,13 @@ import { useAtomValue } from "@bookiwi/jotai";
 import {
   initialCfiAtom,
   initialIsSinglePageAtom,
-  participantInfoAtom,
+  participantColorAtom,
 } from "../atoms";
 
 const useRender = () => {
   const initialIsSinglePage = useAtomValue(initialIsSinglePageAtom);
   const initialCfi = useAtomValue(initialCfiAtom);
-  const participantInfo = useAtomValue(participantInfoAtom);
+  const participantColor = useAtomValue(participantColorAtom);
 
   const render = (node: HTMLDivElement, book: Book) => {
     // rendition 객체 생성
@@ -33,7 +33,7 @@ const useRender = () => {
         "text-decoration": "none !important", // 링크의 밑줄을 제거
       },
       "::selection": {
-        "background-color": `${`${participantInfo?.color}4D`} !important`,
+        "background-color": `${`${participantColor}4D`} !important`,
       },
     });
     // 책 렌더링

@@ -5,14 +5,82 @@ import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
 
-export const participantAtom = atom<Participant | null>(null);
 export const participantsAtom = atom<Participant[]>([]);
 
-export const participantIdAtom = atom<string | null>((get) => {
-  const participant = get(participantAtom);
-  if (!participant) return null;
-  return participant.id;
+// Individual participant property atoms (primitive atoms)
+export const participantIdAtom = atom<string | null>(null);
+export const participantUserIdAtom = atom<string | null>(null);
+export const participantNameAtom = atom<string | null>(null);
+export const participantProfileImageAtom = atom<string | null>(null);
+export const participantColorAtom = atom<string | null>(null);
+export const participantSinglePageAtom = atom<boolean>(false);
+export const participantFontFamilyAtom = atom<string | null>(null);
+export const participantFontSizeAtom = atom<number | null>(null);
+export const participantFontWeightAtom = atom<number | null>(null);
+export const participantLineHeightAtom = atom<number | null>(null);
+export const participantCfiStartAtom = atom<string | null>(null);
+export const participantCfiEndAtom = atom<string | null>(null);
+export const participantPercentageAtom = atom<number | null>(null);
+export const participantLastActivityAtAtom = atom<string | null>(null);
+
+// Combined participant atom
+export const participantAtom = atom<Participant | null>((get) => {
+  const id = get(participantIdAtom);
+  const userId = get(participantUserIdAtom);
+  const name = get(participantNameAtom);
+  const profileImage = get(participantProfileImageAtom);
+  const color = get(participantColorAtom);
+  const singlePage = get(participantSinglePageAtom);
+  const fontFamily = get(participantFontFamilyAtom);
+  const fontSize = get(participantFontSizeAtom);
+  const fontWeight = get(participantFontWeightAtom);
+  const lineHeight = get(participantLineHeightAtom);
+  const cfiStart = get(participantCfiStartAtom);
+  const cfiEnd = get(participantCfiEndAtom);
+  const percentage = get(participantPercentageAtom);
+  const lastActivityAt = get(participantLastActivityAtAtom);
+
+  // Return null if essential fields are missing
+  if (!id || !userId || !name || !color) return null;
+
+  return {
+    id,
+    userId,
+    name,
+    profileImage,
+    color,
+    singlePage,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    cfiStart,
+    cfiEnd,
+    percentage,
+    lastActivityAt,
+  };
 });
+
+// Setter atom to update all participant properties at once
+export const setParticipantAtom = atom(
+  null,
+  (get, set, participant: Participant) => {
+    set(participantIdAtom, participant.id);
+    set(participantUserIdAtom, participant.userId);
+    set(participantNameAtom, participant.name);
+    set(participantProfileImageAtom, participant.profileImage);
+    set(participantColorAtom, participant.color);
+    set(participantSinglePageAtom, participant.singlePage);
+    set(participantFontFamilyAtom, participant.fontFamily);
+    set(participantFontSizeAtom, participant.fontSize);
+    set(participantFontWeightAtom, participant.fontWeight);
+    set(participantLineHeightAtom, participant.lineHeight);
+    set(participantCfiStartAtom, participant.cfiStart);
+    set(participantCfiEndAtom, participant.cfiEnd);
+    set(participantPercentageAtom, participant.percentage);
+    set(participantLastActivityAtAtom, participant.lastActivityAt);
+  },
+);
 
 export const participantInfoAtom = atom<{
   id: string;
@@ -20,13 +88,37 @@ export const participantInfoAtom = atom<{
   profileImage: string | null;
   color: string;
 } | null>((get) => {
-  const participant = get(participantAtom);
-  if (!participant) return null;
+  const id = get(participantIdAtom);
+  const name = get(participantNameAtom);
+  const profileImage = get(participantProfileImageAtom);
+  const color = get(participantColorAtom);
+
+  if (!id || !name || !color) return null;
+
   return {
-    id: participant.id,
-    name: participant.name,
-    profileImage: participant.profileImage,
-    color: participant.color,
+    id,
+    name,
+    profileImage,
+    color,
+  };
+});
+
+export const typographyAtom = atom<{
+  fontFamily: string | null;
+  fontSize: number | null;
+  lineHeight: number | null;
+  fontWeight: number | null;
+} | null>((get) => {
+  const fontFamily = get(participantFontFamilyAtom);
+  const fontSize = get(participantFontSizeAtom);
+  const lineHeight = get(participantLineHeightAtom);
+  const fontWeight = get(participantFontWeightAtom);
+
+  return {
+    fontFamily,
+    fontSize,
+    lineHeight,
+    fontWeight,
   };
 });
 
@@ -37,30 +129,18 @@ export const participantSettingsAtom = atom<{
   lineHeight: number | null;
   fontWeight: number | null;
 } | null>((get) => {
-  const participant = get(participantAtom);
-  if (!participant) return null;
-  return {
-    singlePage: participant.singlePage,
-    fontFamily: participant.fontFamily,
-    fontSize: participant.fontSize,
-    lineHeight: participant.lineHeight,
-    fontWeight: participant.fontWeight,
-  };
-});
+  const singlePage = get(participantSinglePageAtom);
+  const fontFamily = get(participantFontFamilyAtom);
+  const fontSize = get(participantFontSizeAtom);
+  const lineHeight = get(participantLineHeightAtom);
+  const fontWeight = get(participantFontWeightAtom);
 
-export const typographyAtom = atom<{
-  fontFamily: string | null;
-  fontSize: number | null;
-  lineHeight: number | null;
-  fontWeight: number | null;
-} | null>((get) => {
-  const participant = get(participantAtom);
-  if (!participant) return null;
   return {
-    fontFamily: participant.fontFamily,
-    fontSize: participant.fontSize,
-    lineHeight: participant.lineHeight,
-    fontWeight: participant.fontWeight,
+    singlePage,
+    fontFamily,
+    fontSize,
+    lineHeight,
+    fontWeight,
   };
 });
 
@@ -70,36 +150,32 @@ interface CurrentCfi {
 }
 
 export const currentCfiAtom = atom<CurrentCfi | null>((get) => {
-  const participant = get(participantAtom);
-  if (!participant) return null;
-  if (!participant.cfiStart || !participant.cfiEnd) return null;
+  const cfiStart = get(participantCfiStartAtom);
+  const cfiEnd = get(participantCfiEndAtom);
+  if (!cfiStart || !cfiEnd) return null;
   return {
-    start: participant.cfiStart,
-    end: participant.cfiEnd,
+    start: cfiStart,
+    end: cfiEnd,
   };
 });
 
-export const percentageAtom = atom<number | null>((get) => {
-  const participant = get(participantAtom);
-  if (!participant) return null;
-  return participant.percentage;
-});
+// Legacy atom for backward compatibility
+export const percentageAtom = atom<number | null>((get) =>
+  get(participantPercentageAtom),
+);
 
+// Action atoms
 export const setCurrentCfiAtom = atom(
   null,
   async (get, set, cfi: CurrentCfi) => {
     const book = get(bookAtom);
-    const participant = get(participantAtom);
-    if (!book || !participant) return;
+    if (!book) return;
     const percent = Math.floor(book.locations.percentageFromCfi(cfi.end) * 100);
-    const updatedParticipant = {
-      ...participant,
-      cfiStart: cfi.start,
-      cfiEnd: cfi.end,
-      lastActivityAt: new Date().toISOString(),
-      percentage: percent,
-    };
-    set(participantAtom, updatedParticipant);
+
+    set(participantCfiStartAtom, cfi.start);
+    set(participantCfiEndAtom, cfi.end);
+    set(participantPercentageAtom, percent);
+    set(participantLastActivityAtAtom, new Date().toISOString());
   },
 );
 
@@ -109,9 +185,7 @@ export const setSinglePageAtom = atom(
     const book = get(bookAtom);
     if (!book) return;
     book.rendition.spread(singlePage ? "none" : "auto");
-    const participant = get(participantAtom);
-    if (!participant) return;
-    set(participantAtom, { ...participant, singlePage });
+    set(participantSinglePageAtom, singlePage);
   },
 );
 
@@ -119,17 +193,21 @@ export const setFontFamilyAtom = atom(
   null,
   async (get, set, fontFamily: string | null) => {
     const book = get(bookAtom);
-    const participant = get(participantAtom);
-    if (!book || !participant) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
+
+    const fontSize = get(participantFontSizeAtom);
+    const fontWeight = get(participantFontWeightAtom);
+    const lineHeight = get(participantLineHeightAtom);
+
     await updateCustomStyle(contents, {
       fontFamily,
-      fontSize: participant.fontSize,
-      fontWeight: participant.fontWeight,
-      lineHeight: participant.lineHeight,
+      fontSize,
+      fontWeight,
+      lineHeight,
     });
-    set(participantAtom, { ...participant, fontFamily });
+    set(participantFontFamilyAtom, fontFamily);
   },
 );
 
@@ -137,17 +215,21 @@ export const setFontSizeAtom = atom(
   null,
   async (get, set, fontSize: number | null) => {
     const book = get(bookAtom);
-    const participant = get(participantAtom);
-    if (!book || !participant) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
+
+    const fontFamily = get(participantFontFamilyAtom);
+    const fontWeight = get(participantFontWeightAtom);
+    const lineHeight = get(participantLineHeightAtom);
+
     await updateCustomStyle(contents, {
-      fontFamily: participant.fontFamily,
+      fontFamily,
       fontSize,
-      fontWeight: participant.fontWeight,
-      lineHeight: participant.lineHeight,
+      fontWeight,
+      lineHeight,
     });
-    set(participantAtom, { ...participant, fontSize });
+    set(participantFontSizeAtom, fontSize);
   },
 );
 
@@ -155,17 +237,21 @@ export const setFontWeightAtom = atom(
   null,
   async (get, set, fontWeight: number | null) => {
     const book = get(bookAtom);
-    const participant = get(participantAtom);
-    if (!book || !participant) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
+
+    const fontFamily = get(participantFontFamilyAtom);
+    const fontSize = get(participantFontSizeAtom);
+    const lineHeight = get(participantLineHeightAtom);
+
     await updateCustomStyle(contents, {
-      fontFamily: participant.fontFamily,
-      fontSize: participant.fontSize,
+      fontFamily,
+      fontSize,
       fontWeight,
-      lineHeight: participant.lineHeight,
+      lineHeight,
     });
-    set(participantAtom, { ...participant, fontWeight });
+    set(participantFontWeightAtom, fontWeight);
   },
 );
 
@@ -175,16 +261,20 @@ export const setLineHeightAtom = atom(
     const formattedLineHeight =
       lineHeight !== null ? Number(lineHeight.toFixed(1)) : null;
     const book = get(bookAtom);
-    const participant = get(participantAtom);
-    if (!book || !participant) return;
+    if (!book) return;
     const contents = book.rendition.getContents()[0];
     if (!contents) return;
+
+    const fontFamily = get(participantFontFamilyAtom);
+    const fontSize = get(participantFontSizeAtom);
+    const fontWeight = get(participantFontWeightAtom);
+
     await updateCustomStyle(contents, {
-      fontFamily: participant.fontFamily,
-      fontSize: participant.fontSize,
-      fontWeight: participant.fontWeight,
+      fontFamily,
+      fontSize,
+      fontWeight,
       lineHeight: formattedLineHeight,
     });
-    set(participantAtom, { ...participant, lineHeight: formattedLineHeight });
+    set(participantLineHeightAtom, formattedLineHeight);
   },
 );

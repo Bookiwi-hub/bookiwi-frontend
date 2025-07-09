@@ -7,7 +7,7 @@ import CommentItem from "./comment-item";
 import EmptyComments from "./empty-comments";
 
 import {
-  participantInfoAtom,
+  participantIdAtom,
   participantsAtom,
 } from "#/routes/kiwi/-reader/atoms";
 
@@ -17,9 +17,9 @@ interface CommentsProps {
 
 function Comments({ comments }: CommentsProps) {
   const participants = useAtomValue(participantsAtom);
-  const participantInfo = useAtomValue(participantInfoAtom);
+  const participantId = useAtomValue(participantIdAtom);
 
-  if (!participantInfo) return null;
+  if (!participantId) return null;
 
   return comments.length > 0 ? (
     <div className="flex flex-col gap-4">
@@ -33,7 +33,7 @@ function Comments({ comments }: CommentsProps) {
             key={comment.id}
             text={comment.text}
             date={comment.updatedAt}
-            isMine={comment.participantId === participantInfo.id}
+            isMine={comment.participantId === participantId}
             profileImage={commenter.profileImage}
             name={commenter.name}
             color={commenter.color}

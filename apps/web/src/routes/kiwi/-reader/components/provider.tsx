@@ -16,7 +16,6 @@ import {
   currentSectionAtom,
   currentLocationAtom,
   isCenterTouchedAtom,
-  participantAtom,
   kiwiAtom,
   navAtom,
   sectionsAtom,
@@ -28,6 +27,7 @@ import {
   annotationsTotalAtom,
   selectedAnnotationAtom,
   highlightClickedAtom,
+  setParticipantAtom,
 } from "../atoms";
 
 interface ReaderProviderProps {
@@ -100,7 +100,7 @@ function ReaderProvider({
   // kiwi
   readerStore.set(kiwiAtom, kiwi);
   readerStore.set(participantsAtom, participants);
-  readerStore.set(participantAtom, currentParticipant);
+  readerStore.set(setParticipantAtom, currentParticipant);
 
   readerStore.set(annotationsTotalAtom, annotations);
 
