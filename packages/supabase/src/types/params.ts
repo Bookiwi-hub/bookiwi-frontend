@@ -26,3 +26,11 @@ export interface NewKiwi {
   password: string | null;
   file: File;
 }
+
+export interface NewComment {
+  highlightId: string;
+  participantId: string;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
+}

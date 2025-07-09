@@ -1,7 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { useAtomValue } from "@bookiwi/jotai";
-import { Comment, Highlight } from "@bookiwi/supabase/types";
+import { Comment, Highlight, NewComment } from "@bookiwi/supabase/types";
 
 import CommentForm from "./comment-form";
 import Comments from "./comments";
@@ -9,11 +10,7 @@ import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
 import supabaseManager from "#/managers/supabase";
-import {
-  participantInfoAtom,
-  participantsAtom,
-  navAtom,
-} from "#/routes/kiwi/-reader/atoms";
+import { participantInfoAtom, navAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface CommentProps {
   highlight: Highlight;
@@ -25,7 +22,6 @@ function AnnotationTab({ highlight }: CommentProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
   const participantInfo = useAtomValue(participantInfoAtom);
-  const participants = useAtomValue(participantsAtom);
   const navItems = useAtomValue(navAtom);
   const annotationNav = navItems?.find(
     (item) => item.href === highlight.sectionHref,
@@ -68,25 +64,31 @@ function AnnotationTab({ highlight }: CommentProps) {
   );
 
   if (!participantInfo) return null;
-  const highlighter = participants.find(
-    (participant) => participant.id === highlight.participantId,
-  );
 
-  const handleCommentSubmit = (commentText: string) => {
-    // const currentDate = new Date().toISOString();
-    // const newComment = {
-    //   id: comments.length.toString(),
-    //   text: commentText,
-    //   createdAt: currentDate,
-    //   updatedAt: currentDate,
-    //   participantId: participantInfo.id,
-    // };
-    // const updatedAnnotation: Annotation = {
-    //   ...highlight,
-    //   comments: [...comments, newComment],
-    // };
-    // updateAnnotation(updatedAnnotation);
-    console.log(commentText);
+  const handleCommentSubmit = async (commentText: string) => {
+    const currentDate = new Date().toISOString();
+    const newComment: NewComment = {
+      highlightId: highlight.id,
+      text: commentText,
+      createdAt: currentDate,
+      updatedAt: currentDate,
+      participantId: participantInfo.id,
+    };
+
+    try {
+      const { id } =
+        await supabaseManager.reader.addHighlightComment(newComment);
+
+      const createdComment: Comment = {
+        ...newComment,
+        id,
+        name: participantInfo.name,
+        profileImage: participantInfo.profileImage,
+      };
+      setComments([...comments, createdComment]);
+    } catch (error) {
+      toast.error("댓글 작성에 실패했습니다.");
+    }
   };
 
   return (
@@ -96,7 +98,7 @@ function AnnotationTab({ highlight }: CommentProps) {
           color={highlight.color}
           text={highlight.text}
           date={highlight.updatedAt}
-          creatorName={highlighter?.name ?? ""}
+          creatorName={highlight.name}
           sectionLabel={sectionLabel}
         />
         {isLoading && (
