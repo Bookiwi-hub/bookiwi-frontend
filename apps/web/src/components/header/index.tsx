@@ -31,7 +31,7 @@ function Header() {
             aria-label="Profile"
           >
             <Avatar className="size-10 mobile:size-8">
-              <AvatarImage src={userManager.user?.profileImage} />
+              <AvatarImage src={userManager.user?.profileImage ?? undefined} />
               <AvatarFallback>
                 {userManager.user?.name?.slice(0, 2).toUpperCase()}
               </AvatarFallback>

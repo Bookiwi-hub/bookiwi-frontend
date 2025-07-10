@@ -57,7 +57,7 @@ function MyPage() {
             <CardHeader className="bg-white py-8">
               <div className="flex flex-col items-center text-center">
                 <Avatar className="size-20 border-4 border-gray-200 shadow-lg">
-                  <AvatarImage src={profileImage} alt={name} />
+                  <AvatarImage src={profileImage ?? undefined} alt={name} />
                   <AvatarFallback className="bg-gray-100 text-2xl font-bold text-gray-700">
                     {name ? getInitials(name) : "U"}
                   </AvatarFallback>
