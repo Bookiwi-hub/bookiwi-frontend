@@ -15,8 +15,8 @@ import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
-import supabase from "#/managers/supabase";
 import userManager from "#/managers/user";
+import { createKiwi } from "#/routes/my-kiwis/-api";
 
 function StepThree() {
   const newKiwi = useAtomValue(createKiwiAtom);
@@ -37,7 +37,7 @@ function StepThree() {
 
     const handleSubmit = async () => {
       try {
-        const { shareCode } = await supabase.kiwi.createKiwi({
+        const { shareCode } = await createKiwi({
           userId: userManager.userId!,
           name: newKiwi.kiwiName,
           description: newKiwi.kiwiDescription,

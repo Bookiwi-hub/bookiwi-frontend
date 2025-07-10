@@ -1,10 +1,11 @@
 import { redirect, useRouter } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { createSampleKiwi } from "../-api";
+
 import { Button } from "#/components/ui/button";
 import { Card } from "#/components/ui/card";
 import Spinner from "#/components/ui/spinner";
-import supabase from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 function KiwiSampleCardLoading() {
@@ -46,14 +47,14 @@ function KiwiSampleCard() {
   const [hasError, setHasError] = useState(false);
   const hasExecutedRef = useRef(false);
 
-  const createSampleKiwi = useCallback(async () => {
+  const createSample = useCallback(async () => {
     if (!userManager.userId) throw redirect({ to: "/auth" });
 
     setIsLoading(true);
     setHasError(false);
 
     try {
-      await supabase.kiwi.createSampleKiwi(userManager.userId);
+      await createSampleKiwi(userManager.userId);
       await router.invalidate();
     } catch (error) {
       setHasError(true);
@@ -67,11 +68,11 @@ function KiwiSampleCard() {
     if (hasExecutedRef.current) return;
     hasExecutedRef.current = true;
 
-    createSampleKiwi();
-  }, [createSampleKiwi]);
+    createSample();
+  }, [createSample]);
 
   const handleRetry = () => {
-    createSampleKiwi();
+    createSample();
   };
 
   if (hasError) {
