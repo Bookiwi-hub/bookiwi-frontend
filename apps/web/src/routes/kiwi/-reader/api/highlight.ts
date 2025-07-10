@@ -30,17 +30,12 @@ export const getSectionHighlights = async (
 };
 
 export const getHighlights = async (kiwiId: string) => {
-  try {
-    const highlights = await supabaseManager.reader.getHighlights(kiwiId);
-    if (userManager.isGuest) {
-      const userHighlights = userManager.getGuestHighlights();
-      return [...highlights, ...userHighlights];
-    }
-    return highlights;
-  } catch (error) {
-    toast.error("하이라이트 정보를 불러오는데 실패했습니다.");
-    return [];
+  const highlights = await supabaseManager.reader.getHighlights(kiwiId);
+  if (userManager.isGuest) {
+    const userHighlights = userManager.getGuestHighlights();
+    return [...highlights, ...userHighlights];
   }
+  return highlights;
 };
 
 export const addHighlight = async (newHighlight: NewHighlight) => {
@@ -74,10 +69,11 @@ export const removeHighlight = async (id: string) => {
       userManager.setGuestHighlights(
         userManager.getGuestHighlights().filter((h) => h.id !== id),
       );
-      return;
+      return { id };
     }
-    await supabaseManager.reader.removeHighlight(id);
+    return await supabaseManager.reader.removeHighlight(id);
   } catch (error) {
     toast.error("하이라이트 삭제에 실패했습니다.");
+    return { id: null };
   }
 };

@@ -29,11 +29,12 @@ export const addHighlightAtom = atom(
 );
 
 export const removeHighlightAtom = atom(null, async (get, set, id: string) => {
-  await removeHighlight(id);
+  const { id: removedId } = await removeHighlight(id);
+  if (!removedId) return;
   const highlights = get(highlightsAtom);
   set(
     highlightsAtom,
-    highlights.filter((highlight) => highlight.id !== id),
+    highlights.filter((highlight) => highlight.id !== removedId),
   );
   set(selectedHighlightAtom, null);
 });
