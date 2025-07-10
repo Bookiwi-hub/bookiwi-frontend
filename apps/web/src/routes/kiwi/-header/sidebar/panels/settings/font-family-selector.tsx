@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { toast } from "sonner";
 
 import {
   Select,
@@ -36,14 +35,10 @@ function FontFamilySelector({
   setFontFamily,
 }: FontFamilySelectorProps) {
   const handleFontFamilyChange = async (value: string) => {
-    try {
-      if (value === "original") {
-        await setFontFamily(null);
-      } else {
-        await setFontFamily(value);
-      }
-    } catch (error) {
-      toast.error("설정 정보가 저장되지 않았습니다.");
+    if (value === "original") {
+      await setFontFamily(null);
+    } else {
+      await setFontFamily(value);
     }
   };
 

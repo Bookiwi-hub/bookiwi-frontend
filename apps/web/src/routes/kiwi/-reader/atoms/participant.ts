@@ -1,12 +1,17 @@
 import { atom } from "@bookiwi/jotai";
 import { Participant } from "@bookiwi/supabase/types";
 
-import { updateCfi } from "../api";
+import {
+  updateCfi,
+  updateFontFamily,
+  updateFontSize,
+  updateFontWeight,
+  updateLineHeight,
+  updateSinglePage,
+} from "../api";
 import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
-
-import supabaseManager from "#/managers/supabase";
 
 export const participantsAtom = atom<Participant[]>([]);
 
@@ -189,9 +194,7 @@ export const setSinglePageAtom = atom(
     if (!book || !participantId) return;
     book.rendition.spread(singlePage ? "none" : "auto");
     set(participantSinglePageAtom, singlePage);
-    await supabaseManager.reader.updateParticipant(participantId, {
-      singlePage,
-    });
+    await updateSinglePage(participantId, singlePage);
   },
 );
 
@@ -215,9 +218,7 @@ export const setFontFamilyAtom = atom(
       lineHeight,
     });
     set(participantFontFamilyAtom, fontFamily);
-    await supabaseManager.reader.updateParticipant(participantId, {
-      fontFamily,
-    });
+    await updateFontFamily(participantId, fontFamily);
   },
 );
 
@@ -241,9 +242,7 @@ export const setFontSizeAtom = atom(
       lineHeight,
     });
     set(participantFontSizeAtom, fontSize);
-    await supabaseManager.reader.updateParticipant(participantId, {
-      fontSize,
-    });
+    await updateFontSize(participantId, fontSize);
   },
 );
 
@@ -267,9 +266,7 @@ export const setFontWeightAtom = atom(
       lineHeight,
     });
     set(participantFontWeightAtom, fontWeight);
-    await supabaseManager.reader.updateParticipant(participantId, {
-      fontWeight,
-    });
+    await updateFontWeight(participantId, fontWeight);
   },
 );
 
@@ -295,8 +292,6 @@ export const setLineHeightAtom = atom(
       lineHeight: formattedLineHeight,
     });
     set(participantLineHeightAtom, formattedLineHeight);
-    await supabaseManager.reader.updateParticipant(participantId, {
-      lineHeight: formattedLineHeight,
-    });
+    await updateLineHeight(participantId, formattedLineHeight);
   },
 );
