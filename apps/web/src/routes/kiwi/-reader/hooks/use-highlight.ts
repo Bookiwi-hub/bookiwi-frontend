@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
-import { getSectionHighlights } from "../api";
+import { getSectionHighlights } from "../apis";
 import { currentSectionAtom, highlightsAtom, kiwiIdAtom } from "../atoms";
 
 const useHighlight = () => {

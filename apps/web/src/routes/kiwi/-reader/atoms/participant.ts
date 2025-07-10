@@ -8,7 +8,7 @@ import {
   updateFontWeight,
   updateLineHeight,
   updateSinglePage,
-} from "../api";
+} from "../apis";
 import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";

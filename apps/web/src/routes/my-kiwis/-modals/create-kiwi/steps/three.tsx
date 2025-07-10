@@ -16,7 +16,7 @@ import { Step } from "../types";
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
 import userManager from "#/managers/user";
-import { createKiwi } from "#/routes/my-kiwis/-api";
+import { createKiwi } from "#/routes/my-kiwis/-apis";
 
 function StepThree() {
   const newKiwi = useAtomValue(createKiwiAtom);

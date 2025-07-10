@@ -1,7 +1,7 @@
 import { atom } from "@bookiwi/jotai";
 import { Bookmark } from "@bookiwi/supabase/types";
 
-import { addBookmark, removeBookmark } from "../api";
+import { addBookmark, removeBookmark } from "../apis";
 
 import { participantIdAtom } from "./participant";
 

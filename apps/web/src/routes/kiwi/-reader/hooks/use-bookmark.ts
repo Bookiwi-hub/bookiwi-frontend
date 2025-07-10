@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { getBookmarks } from "../api";
+import { getBookmarks } from "../apis";
 import { bookmarksAtom, participantIdAtom } from "../atoms";
 
 const useBookmark = () => {

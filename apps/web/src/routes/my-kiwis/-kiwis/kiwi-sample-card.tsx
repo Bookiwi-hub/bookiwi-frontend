@@ -1,7 +1,7 @@
 import { redirect, useRouter } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { createSampleKiwi } from "../-api";
+import { createSampleKiwi } from "../-apis";
 
 import { Button } from "#/components/ui/button";
 import { Card } from "#/components/ui/card";

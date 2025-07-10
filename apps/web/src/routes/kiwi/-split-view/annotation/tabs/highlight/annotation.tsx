@@ -11,7 +11,7 @@ import { ScrollArea } from "#/components/ui/scroll-area";
 import {
   addComment,
   getHighlightComments,
-} from "#/routes/kiwi/-reader/api/comment";
+} from "#/routes/kiwi/-reader/apis/comment";
 import { participantInfoAtom, navAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface CommentProps {

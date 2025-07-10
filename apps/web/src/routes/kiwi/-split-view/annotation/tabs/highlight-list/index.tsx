@@ -7,7 +7,7 @@ import ParticipantsFilter from "./filter";
 import HighlightItem from "./item";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
-import { getHighlights } from "#/routes/kiwi/-reader/api";
+import { getHighlights } from "#/routes/kiwi/-reader/apis";
 import { kiwiIdAtom } from "#/routes/kiwi/-reader/atoms";
 
 function HighlightList() {

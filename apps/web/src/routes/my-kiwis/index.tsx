@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { Provider } from "@bookiwi/jotai";
 
-import { getMyKiwis } from "./-api";
+import { getMyKiwis } from "./-apis";
 import Kiwis from "./-kiwis";
 
 import Header from "#/components/header";

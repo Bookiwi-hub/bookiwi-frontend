@@ -1,7 +1,7 @@
 import { atom } from "@bookiwi/jotai";
 import { Highlight, NewHighlight } from "@bookiwi/supabase/types";
 
-import { addHighlight, removeHighlight } from "../api";
+import { addHighlight, removeHighlight } from "../apis";
 
 import { participantInfoAtom } from "./participant";
 
