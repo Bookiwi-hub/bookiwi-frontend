@@ -30,6 +30,10 @@ class UserManager {
   logoutAsGuestMode() {
     this.isGuestMode = false;
     this.currentUser = null;
+    this.guestParticipant = null;
+    this.guestBookmarks = [];
+    this.guestHighlights = [];
+    this.guestComments = [];
   }
 
   setGuestParticipant(participant: Participant) {
