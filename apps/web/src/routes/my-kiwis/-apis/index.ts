@@ -33,7 +33,8 @@ export const getMyKiwis = async (userId: string) => {
 
 export const createKiwi = async (newKiwi: NewKiwi) => {
   try {
-    return await supabaseManager.kiwi.createKiwi(newKiwi);
+    const result = await supabaseManager.kiwi.createKiwi(newKiwi);
+    return result;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error creating kiwi:", error);
@@ -43,7 +44,7 @@ export const createKiwi = async (newKiwi: NewKiwi) => {
 
 export const createSampleKiwi = async (userId: string) => {
   try {
-    return await supabaseManager.kiwi.createSampleKiwi(userId);
+    await supabaseManager.kiwi.createSampleKiwi(userId);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error creating sample kiwi:", error);

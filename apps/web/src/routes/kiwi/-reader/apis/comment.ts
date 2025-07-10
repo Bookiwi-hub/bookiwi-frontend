@@ -1,6 +1,8 @@
 import { toast } from "sonner";
 
-import { Comment, NewComment } from "@bookiwi/supabase/types";
+import { NewComment } from "@bookiwi/supabase/types";
+
+import { addGuestComment, getGuestHighlightComments } from "./guest";
 
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
@@ -8,21 +10,11 @@ import userManager from "#/managers/user";
 export const addComment = async (newComment: NewComment) => {
   try {
     if (userManager.isGuest) {
-      const userComments = userManager.getGuestComments();
-      const participant = userManager.getGuestParticipant();
-      if (!participant) throw new Error("Guest participant not found");
-      const commentId = `${newComment.highlightId}-${newComment.createdAt}`;
-      const createdComment: Comment = {
-        ...newComment,
-        id: commentId,
-        name: participant.name,
-        profileImage: participant.profileImage,
-        color: participant.color,
-      };
-      userManager.setGuestComments([...userComments, createdComment]);
-      return { id: commentId };
+      const result = addGuestComment(newComment);
+      return result;
     }
-    return await supabaseManager.reader.addHighlightComment(newComment);
+    const result = await supabaseManager.reader.addHighlightComment(newComment);
+    return result;
   } catch (error) {
     toast.error("댓글 작성에 실패했습니다.");
     return { id: null };
@@ -31,20 +23,10 @@ export const addComment = async (newComment: NewComment) => {
 
 export const getHighlightComments = async (highlightId: string) => {
   if (userManager.isGuest) {
-    const guestUserHighlights = userManager.getGuestHighlights();
-    const guestUserHighlight = guestUserHighlights.find(
-      (highlight) => highlight.id === highlightId,
-    );
-    const userComments = userManager.getGuestComments();
-    const guestHighlightComments = userComments.filter(
-      (comment) => comment.highlightId === highlightId,
-    );
-    if (guestUserHighlight) {
-      return guestHighlightComments;
-    }
-    const highlightComments =
-      await supabaseManager.reader.getHighlightComments(highlightId);
-    return [...highlightComments, ...guestHighlightComments];
+    const comments = await getGuestHighlightComments(highlightId);
+    return comments;
   }
-  return supabaseManager.reader.getHighlightComments(highlightId);
+  const comments =
+    await supabaseManager.reader.getHighlightComments(highlightId);
+  return comments;
 };

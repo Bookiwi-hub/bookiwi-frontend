@@ -2,6 +2,8 @@ import { toast } from "sonner";
 
 import { Participant } from "@bookiwi/supabase/types";
 
+import { updateGuestParticipant } from "./guest";
+
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
@@ -10,14 +12,7 @@ export const updateParticipant = async (
   fields: Partial<Participant>,
 ) => {
   if (userManager.isGuest) {
-    const guestParticipant = userManager.getGuestParticipant();
-    if (!guestParticipant) {
-      throw new Error("Guest participant not found");
-    }
-    userManager.setGuestParticipant({
-      ...guestParticipant,
-      ...fields,
-    });
+    updateGuestParticipant(fields);
     return;
   }
   await supabaseManager.reader.updateParticipant(participantId, fields);

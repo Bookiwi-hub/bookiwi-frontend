@@ -1,6 +1,13 @@
 import { toast } from "sonner";
 
-import { Highlight, NewHighlight } from "@bookiwi/supabase/types";
+import { NewHighlight } from "@bookiwi/supabase/types";
+
+import {
+  addGuestHighlight,
+  getGuestHighlights,
+  getGuestSectionHighlights,
+  removeGuestHighlight,
+} from "./guest";
 
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
@@ -10,17 +17,18 @@ export const getSectionHighlights = async (
   sectionHref: string,
 ) => {
   try {
+    if (userManager.isGuest) {
+      const sectionHighlights = await getGuestSectionHighlights(
+        kiwiId,
+        sectionHref,
+      );
+      return sectionHighlights;
+    }
+
     const sectionHighlights = await supabaseManager.reader.getSectionHighlights(
       kiwiId,
       sectionHref,
     );
-    if (userManager.isGuest) {
-      const userHighlights = userManager.getGuestHighlights();
-      const guestSectionHighlights = userHighlights.filter(
-        (h) => h.sectionHref === sectionHref,
-      );
-      return [...sectionHighlights, ...guestSectionHighlights];
-    }
 
     return sectionHighlights;
   } catch (error) {
@@ -30,33 +38,22 @@ export const getSectionHighlights = async (
 };
 
 export const getHighlights = async (kiwiId: string) => {
-  const highlights = await supabaseManager.reader.getHighlights(kiwiId);
   if (userManager.isGuest) {
-    const userHighlights = userManager.getGuestHighlights();
-    return [...highlights, ...userHighlights];
+    const highlights = await getGuestHighlights(kiwiId);
+    return highlights;
   }
+  const highlights = await supabaseManager.reader.getHighlights(kiwiId);
   return highlights;
 };
 
 export const addHighlight = async (newHighlight: NewHighlight) => {
   try {
     if (userManager.isGuest) {
-      const participant = userManager.getGuestParticipant();
-      const userHighlights = userManager.getGuestHighlights();
-      if (!participant) throw new Error("Guest participant not found");
-      const highlightId = `${newHighlight.participantId}-${newHighlight.cfi}-${newHighlight.createdAt}`;
-      const addedHighlight: Highlight = {
-        ...newHighlight,
-        id: highlightId,
-        commentCount: 0,
-        name: participant.name,
-        profileImage: participant.profileImage,
-      };
-      userManager.setGuestHighlights([...userHighlights, addedHighlight]);
-      return { id: highlightId };
+      const result = addGuestHighlight(newHighlight);
+      return result;
     }
-    const { id } = await supabaseManager.reader.addHighlight(newHighlight);
-    return { id };
+    const result = await supabaseManager.reader.addHighlight(newHighlight);
+    return result;
   } catch (error) {
     toast.error("하이라이트 추가에 실패했습니다.");
     return { id: null };
@@ -66,12 +63,11 @@ export const addHighlight = async (newHighlight: NewHighlight) => {
 export const removeHighlight = async (id: string) => {
   try {
     if (userManager.isGuest) {
-      userManager.setGuestHighlights(
-        userManager.getGuestHighlights().filter((h) => h.id !== id),
-      );
-      return { id };
+      const result = await removeGuestHighlight(id);
+      return result;
     }
-    return await supabaseManager.reader.removeHighlight(id);
+    const result = await supabaseManager.reader.removeHighlight(id);
+    return result;
   } catch (error) {
     toast.error("하이라이트 삭제에 실패했습니다.");
     return { id: null };
