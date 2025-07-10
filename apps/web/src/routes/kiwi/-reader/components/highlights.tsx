@@ -3,39 +3,39 @@ import { useEffect } from "react";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import {
-  annotationsAtom,
   bookAtom,
   currentViewAtom,
-  selectedAnnotationAtom,
+  selectedHighlightAtom,
   setHighlightClickedAtom,
   typographyAtom,
 } from "../atoms";
+import { useHighlight } from "../hooks";
 
 function Highlights() {
   const book = useAtomValue(bookAtom);
-  const annotations = useAtomValue(annotationsAtom);
-  const setSelectedAnnotation = useSetAtom(selectedAnnotationAtom);
+  const highlights = useHighlight();
+  const setSelectedHighlight = useSetAtom(selectedHighlightAtom);
   const setHighlightClicked = useSetAtom(setHighlightClickedAtom);
   const currentView = useAtomValue(currentViewAtom);
   const typography = useAtomValue(typographyAtom);
 
   useEffect(() => {
     if (!currentView?.contents || !book) return () => {};
-    annotations.forEach((annotation) => {
-      const highlight = book.rendition.annotations.highlight(
-        annotation.cfi,
+    highlights.forEach((highlight) => {
+      const highlightItem = book.rendition.annotations.highlight(
+        highlight.cfi,
         undefined,
         undefined,
         undefined,
         {
-          fill: annotation.color,
+          fill: highlight.color,
         },
       );
 
-      const highlightElement = highlight?.mark?.element;
+      const highlightElement = highlightItem?.mark?.element;
 
       const handleClick = () => {
-        setSelectedAnnotation(annotation);
+        setSelectedHighlight(highlight);
         setHighlightClicked(true);
       };
       if (highlightElement) {
@@ -44,16 +44,16 @@ function Highlights() {
     });
 
     return () => {
-      annotations.forEach((annotation) => {
-        book.rendition.annotations.remove(annotation.cfi, "highlight");
+      highlights.forEach((highlight) => {
+        book.rendition?.annotations.remove(highlight.cfi, "highlight");
       });
     };
   }, [
     currentView,
-    annotations,
+    highlights,
     book,
+    setSelectedHighlight,
     setHighlightClicked,
-    setSelectedAnnotation,
     typography,
   ]);
 

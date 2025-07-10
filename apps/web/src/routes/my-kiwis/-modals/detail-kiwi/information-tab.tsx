@@ -1,6 +1,6 @@
 import { Book, Calendar, Clock, User, Users } from "lucide-react";
 
-import { MyKiwi, NavItem } from "@bookiwi/supabase/types/response";
+import { MyKiwi, NavItem } from "@bookiwi/supabase/types";
 
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import userManager from "#/managers/user";
@@ -83,8 +83,8 @@ function InformationTab({ kiwi }: InformationTabProps) {
             <div className="mt-2">
               <div className="flex justify-between text-xs">
                 <span>
-                  {currentParticipant?.progress
-                    ? `${currentParticipant?.progress}% 완료`
+                  {currentParticipant?.percentage
+                    ? `${currentParticipant?.percentage}% 완료`
                     : "0% 완료"}
                 </span>
               </div>
@@ -92,8 +92,8 @@ function InformationTab({ kiwi }: InformationTabProps) {
                 <div
                   className="h-full rounded-full bg-primary"
                   style={{
-                    width: currentParticipant
-                      ? `${currentParticipant?.progress}%`
+                    width: currentParticipant?.percentage
+                      ? `${currentParticipant.percentage}%`
                       : "0%",
                   }}
                 />

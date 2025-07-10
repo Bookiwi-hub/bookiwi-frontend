@@ -1,18 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { MyKiwi } from "../types/response";
+import { NewKiwi, MyKiwi } from "../types";
 import { fileToEpubInfo } from "../utils/epubjs";
 import { generateUniqueFileName } from "../utils/file";
-
-interface NewKiwi {
-  userId: string;
-  name: string;
-  description: string;
-  detailDescription: string;
-  maxParticipants: number;
-  password: string | null;
-  file: File;
-}
 
 class SupabaseKiwi {
   private supabase: SupabaseClient;

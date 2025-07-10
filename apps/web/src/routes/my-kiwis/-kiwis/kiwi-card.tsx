@@ -3,7 +3,7 @@ import { Clock, Users } from "lucide-react";
 import { memo } from "react";
 
 import { useSetAtom } from "@bookiwi/jotai";
-import { MyKiwi } from "@bookiwi/supabase/types/response";
+import { MyKiwi } from "@bookiwi/supabase/types";
 
 import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
 
@@ -24,7 +24,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
   );
-  const progress = currentParticipant?.progress || 0;
+  const percentage = currentParticipant?.percentage || 0;
   const lastActivityAt = currentParticipant?.lastActivityAt
     ? formatDate(currentParticipant.lastActivityAt)
     : "";
@@ -36,7 +36,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
       name={name}
       description={description}
       coverImage={bookMetadata.coverImage || FALLBACK_IMAGE_URL}
-      progress={progress}
+      percentage={percentage}
       participantsCount={participantsCount}
       lastActivityAt={lastActivityAt}
       onClick={() => openKiwiDetailModal(kiwi)}
@@ -48,7 +48,7 @@ interface CardUIProps {
   name: string;
   description: string;
   coverImage: string;
-  progress: number;
+  percentage: number;
   participantsCount: number;
   lastActivityAt: string;
   id: string;
@@ -59,7 +59,7 @@ function CardUI({
   name,
   description,
   coverImage,
-  progress,
+  percentage,
   participantsCount,
   lastActivityAt,
   id,
@@ -85,7 +85,7 @@ function CardUI({
         <div className="absolute inset-x-0 bottom-0 p-3 text-xs font-medium">
           <div className="flex items-center justify-between pb-2">
             <span className="text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
-              {progress}% 읽음
+              {percentage}% 읽음
             </span>
             <div className="flex items-center gap-1 text-white [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_0_0_8px_rgba(0,0,0,0.5)]">
               <Users size={12} />
@@ -95,7 +95,7 @@ function CardUI({
           <div className="h-1 overflow-hidden rounded-full bg-white/20 backdrop-blur-sm">
             <div
               className="h-full rounded-full bg-primary shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-              style={{ width: `${progress}%` }}
+              style={{ width: `${percentage}%` }}
             />
           </div>
         </div>

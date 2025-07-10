@@ -8,34 +8,30 @@ import { Separator } from "#/components/ui/separator";
 import {
   setFontWeightAtom,
   setFontFamilyAtom,
-  setIsSinglePageAtom,
+  setSinglePageAtom,
   setLineHeightAtom,
   setFontSizeAtom,
-  fontWeightAtom,
-  lineHeightAtom,
-  fontSizeAtom,
-  fontFamilyAtom,
-  isSinglePageAtom,
+  participantSettingsAtom,
 } from "#/routes/kiwi/-reader/atoms";
 
 function SettingsPanel() {
-  const isSinglePage = useAtomValue(isSinglePageAtom);
-  const fontFamily = useAtomValue(fontFamilyAtom);
-  const fontSize = useAtomValue(fontSizeAtom);
-  const fontWeight = useAtomValue(fontWeightAtom);
-  const lineHeight = useAtomValue(lineHeightAtom);
-  const setIsSinglePage = useSetAtom(setIsSinglePageAtom);
+  const participantSettings = useAtomValue(participantSettingsAtom);
+  const setIsSinglePage = useSetAtom(setSinglePageAtom);
   const setFontFamily = useSetAtom(setFontFamilyAtom);
   const setFontSize = useSetAtom(setFontSizeAtom);
   const setFontWeight = useSetAtom(setFontWeightAtom);
   const setLineHeight = useSetAtom(setLineHeightAtom);
+
+  if (!participantSettings) return null;
+  const { singlePage, fontFamily, fontSize, fontWeight, lineHeight } =
+    participantSettings;
 
   return (
     <div>
       <h3 className="mb-8 text-lg font-medium">설정</h3>
       <div className="flex flex-col gap-6">
         <SinglePageToggler
-          isSinglePage={isSinglePage}
+          isSinglePage={singlePage}
           handleCheckedChange={setIsSinglePage}
         />
         <Separator />

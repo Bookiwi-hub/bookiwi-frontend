@@ -62,11 +62,9 @@ export interface ParticipantTable {
 }
 
 export interface BookmarkTable {
-  id: string;
-  kiwi_id: string;
   participant_id: string;
-  cfi_start: string | null;
-  cfi_end: string | null;
+  cfi_start: string;
+  cfi_end: string;
   created_at: string;
 }
 
