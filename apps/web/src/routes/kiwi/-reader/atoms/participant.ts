@@ -1,6 +1,7 @@
 import { atom } from "@bookiwi/jotai";
 import { Participant } from "@bookiwi/supabase/types";
 
+import { updateCfi } from "../api";
 import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
@@ -177,12 +178,7 @@ export const setCurrentCfiAtom = atom(null, async (get, set, cfi: Cfi) => {
   set(participantCfiEndAtom, cfi.end);
   set(participantPercentageAtom, percent);
   set(participantLastActivityAtAtom, lastActivityAt);
-  await supabaseManager.reader.updateParticipant(participantId, {
-    cfiStart: cfi.start,
-    cfiEnd: cfi.end,
-    percentage: percent,
-    lastActivityAt,
-  });
+  await updateCfi(participantId, cfi, percent, lastActivityAt);
 });
 
 export const setSinglePageAtom = atom(

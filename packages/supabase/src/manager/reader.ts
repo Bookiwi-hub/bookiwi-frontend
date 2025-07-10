@@ -119,7 +119,9 @@ class SupabaseReader {
 
     const { error } = await this.supabase
       .from("participants")
-      .insert(participant);
+      .insert(participant)
+      .select()
+      .single();
 
     if (error) {
       throw new Error(error?.message || "Failed to post participant");

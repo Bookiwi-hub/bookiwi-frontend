@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { User } from "@bookiwi/supabase/types";
+import { Participant, User } from "@bookiwi/supabase/types";
 
 import supabaseManager from "./supabase";
 
@@ -7,6 +7,8 @@ class UserManager {
   private currentUser: User | null = null;
 
   private isGuestMode: boolean = false;
+
+  private guestParticipant: Participant | null = null;
 
   loginAsGuestMode(user: User) {
     this.isGuestMode = true;
@@ -16,6 +18,14 @@ class UserManager {
   logoutAsGuestMode() {
     this.isGuestMode = false;
     this.currentUser = null;
+  }
+
+  setGuestParticipant(participant: Participant) {
+    this.guestParticipant = participant;
+  }
+
+  getGuestParticipant() {
+    return this.guestParticipant;
   }
 
   async isLoggedIn() {
@@ -36,6 +46,10 @@ class UserManager {
 
   get userId() {
     return this.currentUser?.id;
+  }
+
+  get isGuest() {
+    return this.isGuestMode;
   }
 
   async logout() {
