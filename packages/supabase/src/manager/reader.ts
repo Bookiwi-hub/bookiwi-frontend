@@ -92,6 +92,7 @@ class SupabaseReader {
     if (error) {
       throw new Error(error?.message || "Failed to remove highlight");
     }
+    return { id };
   }
 
   // 참가자 작업

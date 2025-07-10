@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
   Bookmark,
+  Comment,
   Highlight,
   Participant,
   User,
@@ -18,6 +19,8 @@ class UserManager {
   private guestBookmarks: Bookmark[] = [];
 
   private guestHighlights: Highlight[] = [];
+
+  private guestComments: Comment[] = [];
 
   loginAsGuestMode(user: User) {
     this.isGuestMode = true;
@@ -51,6 +54,14 @@ class UserManager {
 
   getGuestHighlights() {
     return this.guestHighlights;
+  }
+
+  setGuestComments(comments: Comment[]) {
+    this.guestComments = comments;
+  }
+
+  getGuestComments() {
+    return this.guestComments;
   }
 
   async isLoggedIn() {
