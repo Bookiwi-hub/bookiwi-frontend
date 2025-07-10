@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { primaryColor } from "@bookiwi/color";
 
 import ErrorPage from "#/components/error";
+import { GUEST_USER } from "#/constants/guest";
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
@@ -48,12 +49,7 @@ function AuthPage() {
   };
 
   const handleGuestMode = () => {
-    userManager.loginAsTempUser({
-      id: "temp",
-      name: "Guest",
-      email: "guest@bookiwi.com",
-      profileImage: "",
-    });
+    userManager.loginAsGuestMode(GUEST_USER);
     navigate({ to: "/my-kiwis" });
   };
 

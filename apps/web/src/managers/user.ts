@@ -6,20 +6,20 @@ import supabaseManager from "./supabase";
 class UserManager {
   private currentUser: User | null = null;
 
-  private isTempUser: boolean = false;
+  private isGuestMode: boolean = false;
 
-  loginAsTempUser(user: User) {
-    this.isTempUser = true;
+  loginAsGuestMode(user: User) {
+    this.isGuestMode = true;
     this.currentUser = user;
   }
 
-  logoutAsTempUser() {
-    this.isTempUser = false;
+  logoutAsGuestMode() {
+    this.isGuestMode = false;
     this.currentUser = null;
   }
 
   async isLoggedIn() {
-    if (this.isTempUser) {
+    if (this.isGuestMode) {
       return true;
     }
     try {
@@ -39,8 +39,8 @@ class UserManager {
   }
 
   async logout() {
-    if (this.isTempUser) {
-      this.logoutAsTempUser();
+    if (this.isGuestMode) {
+      this.logoutAsGuestMode();
     } else {
       await supabaseManager.auth.signOut();
       this.currentUser = null;
