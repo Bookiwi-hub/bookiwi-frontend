@@ -1,10 +1,6 @@
 import { useAtomValue } from "@bookiwi/jotai";
 
-import {
-  participantColorAtom,
-  participantProfileImageAtom,
-  participantsAtom,
-} from "../-reader/atoms";
+import { participantInfoAtom, participantsAtom } from "../-reader/atoms";
 
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import Dot from "#/components/ui/dot";
@@ -39,7 +35,7 @@ function ProfileButton({ profileImage, color }: ProfileButtonProps) {
 
 interface ParticipantProfileProps {
   name: string;
-  profileImage?: string;
+  profileImage?: string | null;
   color: string;
 }
 
@@ -52,7 +48,7 @@ function ParticipantProfile({
     <div className="flex items-center gap-3 p-3 hover:bg-gray-50">
       <div className="relative">
         <Avatar className="size-8">
-          <AvatarImage src={profileImage} />
+          <AvatarImage src={profileImage ?? undefined} />
           <AvatarFallback>{name[0]}</AvatarFallback>
         </Avatar>
         <Dot
@@ -68,13 +64,16 @@ function ParticipantProfile({
 
 function Profiles() {
   const participants = useAtomValue(participantsAtom);
-  const profileImage = useAtomValue(participantProfileImageAtom);
-  const color = useAtomValue(participantColorAtom);
+  const participantInfo = useAtomValue(participantInfoAtom);
+  if (!participantInfo) return null;
 
   return (
     <Popover>
       <PopoverTrigger tabIndex={-1} onMouseDown={(e) => e.preventDefault()}>
-        <ProfileButton profileImage={profileImage} color={color} />
+        <ProfileButton
+          profileImage={participantInfo.profileImage}
+          color={participantInfo.color}
+        />
       </PopoverTrigger>
       <PopoverContent className="w-64 p-0">
         <div className="border-b px-4 py-3">

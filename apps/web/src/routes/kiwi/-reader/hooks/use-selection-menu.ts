@@ -2,14 +2,13 @@ import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
 import {
-  annotationsAtom,
   currentSectionAtom,
   currentViewAtom,
   highlightClickedAtom,
   participantIdAtom,
-  participantKiwiIdAtom,
-  selectedAnnotationAtom,
+  selectedHighlightAtom,
   selectionAtom,
+  highlightsAtom,
 } from "../atoms";
 import {
   AnchorMode,
@@ -19,7 +18,7 @@ import {
 } from "../utils";
 
 interface TextSelection {
-  id: string;
+  id: string | null;
   text: string;
   cfi: string;
   range: Range;
@@ -43,11 +42,10 @@ export const useSelectedText = (): TextSelection | null => {
   const currentSection = useAtomValue(currentSectionAtom);
   const [selection, setSelection] = useAtom(selectionAtom);
   const [highlightClicked, setHighlightClicked] = useAtom(highlightClickedAtom);
-  const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
+  const selectedHighlight = useAtomValue(selectedHighlightAtom);
   const participantId = useAtomValue(participantIdAtom);
-  const kiwiId = useAtomValue(participantKiwiIdAtom);
   const currentView = useAtomValue(currentViewAtom);
-  const annotations = useAtomValue(annotationsAtom);
+  const highlights = useAtomValue(highlightsAtom);
   if (!currentSection || !currentView) {
     return null;
   }
@@ -57,9 +55,7 @@ export const useSelectedText = (): TextSelection | null => {
     const text = range.toString();
     const cfi = currentSection.cfiFromRange(range);
     const isForward = isForwardSelection(selection);
-    const existingHighlight = annotations.find(
-      (a) => a.cfi === cfi && a.participantId === participantId,
-    );
+    const existingHighlight = highlights.find((a) => a.cfi === cfi);
     const isMine = existingHighlight?.participantId === participantId;
 
     const remove = () => {
@@ -69,9 +65,7 @@ export const useSelectedText = (): TextSelection | null => {
     };
 
     return {
-      id: existingHighlight
-        ? existingHighlight.id
-        : `${kiwiId}-${participantId}-${cfi}`,
+      id: existingHighlight ? existingHighlight.id : null,
       text,
       cfi,
       range,
@@ -85,22 +79,22 @@ export const useSelectedText = (): TextSelection | null => {
     };
   }
 
-  if (highlightClicked && selectedAnnotation) {
+  if (highlightClicked && selectedHighlight) {
     const remove = () => {
       setHighlightClicked(false);
     };
 
     return {
-      id: selectedAnnotation.id,
-      text: selectedAnnotation.text,
-      cfi: selectedAnnotation.cfi,
-      range: currentView.contents.range(selectedAnnotation.cfi),
+      id: selectedHighlight.id,
+      text: selectedHighlight.text,
+      cfi: selectedHighlight.cfi,
+      range: currentView.contents.range(selectedHighlight.cfi),
       isForward: true,
       status: {
         isAlreadyExists: true,
-        isMine: selectedAnnotation.participantId === participantId,
+        isMine: selectedHighlight.participantId === participantId,
       },
-      sectionHref: selectedAnnotation.sectionHref,
+      sectionHref: selectedHighlight.sectionHref,
       remove,
     };
   }

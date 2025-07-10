@@ -4,13 +4,13 @@ import { ReactNode, useEffect } from "react";
 import { Book } from "@bookiwi/epubjs";
 import Section from "@bookiwi/epubjs/types/section";
 import { Provider, createStore } from "@bookiwi/jotai";
+import { Epub, Kiwi, Participant } from "@bookiwi/supabase/types";
 
 import {
   bookAtom,
   currentSectionAtom,
   currentLocationAtom,
   isCenterTouchedAtom,
-  participantAtom,
   kiwiAtom,
   navAtom,
   sectionsAtom,
@@ -19,41 +19,33 @@ import {
   initialCfiAtom,
   initialIsSinglePageAtom,
   participantsAtom,
-  annotationsTotalAtom,
-  selectedAnnotationAtom,
+  selectedHighlightAtom,
   highlightClickedAtom,
+  setParticipantAtom,
+  highlightsAtom,
 } from "../atoms";
-
-import {
-  AnnotationIDBData,
-  EpubIDBData,
-  KiwiIDBData,
-  ParticipantIDBData,
-} from "#/types/idb";
 
 interface ReaderProviderProps {
   children: ReactNode;
-  currentParticipant: ParticipantIDBData;
-  epubData: EpubIDBData;
-  kiwiData: KiwiIDBData;
-  participantsData: ParticipantIDBData[];
-  annotationsData: AnnotationIDBData[];
+  currentParticipant: Participant;
+  epub: Epub;
+  kiwi: Kiwi;
+  participants: Participant[];
 }
 const readerStore = createStore();
 
 function ReaderProvider({
   children,
-  epubData,
-  kiwiData,
-  participantsData,
-  annotationsData,
+  epub,
+  kiwi,
+  participants,
   currentParticipant,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
     // Create a new Book instance
-    const epubBook = new Book(epubData.file);
+    const epubBook = new Book(epub.file);
 
     // Wait for the book to be fully loaded before setting it
     const loadBook = async () => {
@@ -61,14 +53,15 @@ function ReaderProvider({
         await epubBook.ready;
 
         // 책 내용 검색 기능을 위한 코드
-        epubBook.locations.load(epubData.locations);
+        epubBook.locations.load(epub.locations);
         const sections: Section[] = [];
         epubBook.spine.each((section: Section) => {
           section.load(epubBook.load.bind(epubBook));
           sections.push(section);
         });
+        const navigation = await epubBook.loaded.navigation;
         readerStore.set(sectionsAtom, sections);
-
+        readerStore.set(navAtom, navigation.toc);
         readerStore.set(bookAtom, epubBook);
       } catch (error) {
         alert("책을 가져오는데 실패했습니다. 다시 시도해주세요");
@@ -81,27 +74,37 @@ function ReaderProvider({
     return () => {
       epubBook.destroy();
     };
-  }, [navigate, epubData, currentParticipant]);
+  }, [navigate, epub, currentParticipant]);
 
-  readerStore.set(
-    initialIsSinglePageAtom,
-    currentParticipant.settings.isSinglePage,
-  );
-  readerStore.set(initialCfiAtom, currentParticipant.record.currentCfi);
-  readerStore.set(participantsAtom, participantsData);
+  // initial values
+  readerStore.set(initialIsSinglePageAtom, currentParticipant.singlePage);
+  if (currentParticipant.cfiStart && currentParticipant.cfiEnd) {
+    readerStore.set(initialCfiAtom, {
+      start: currentParticipant.cfiStart,
+      end: currentParticipant.cfiEnd,
+    });
+  } else {
+    readerStore.set(initialCfiAtom, null);
+  }
+
+  // book
   readerStore.set(bookAtom, null);
-  readerStore.set(isCenterTouchedAtom, false);
-  readerStore.set(kiwiAtom, kiwiData);
 
-  readerStore.set(annotationsTotalAtom, annotationsData);
-  readerStore.set(participantAtom, currentParticipant);
+  // kiwi
+  readerStore.set(kiwiAtom, kiwi);
+  readerStore.set(participantsAtom, participants);
+  readerStore.set(setParticipantAtom, currentParticipant);
+  readerStore.set(highlightsAtom, []);
+
+  // reading
   readerStore.set(currentSectionAtom, undefined);
   readerStore.set(currentLocationAtom, undefined);
   readerStore.set(currentViewAtom, undefined);
-  readerStore.set(navAtom, kiwiData.bookMetadata.toc);
-  readerStore.set(sectionsAtom, []);
+
+  // interaction
+  readerStore.set(isCenterTouchedAtom, false);
   readerStore.set(selectionAtom, null);
-  readerStore.set(selectedAnnotationAtom, null);
+  readerStore.set(selectedHighlightAtom, null);
   readerStore.set(highlightClickedAtom, false);
 
   return <Provider store={readerStore}>{children}</Provider>;

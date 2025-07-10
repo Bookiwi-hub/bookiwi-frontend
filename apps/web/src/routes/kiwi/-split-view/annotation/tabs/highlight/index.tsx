@@ -4,17 +4,19 @@ import { useAtomValue } from "@bookiwi/jotai";
 import Annotation from "./annotation";
 import NotSelected from "./not-selected";
 
-import { selectedAnnotationAtom } from "#/routes/kiwi/-reader/atoms/annotations";
-import { participantColorAtom } from "#/routes/kiwi/-reader/atoms/participants";
+import {
+  participantColorAtom,
+  selectedHighlightAtom,
+} from "#/routes/kiwi/-reader/atoms";
 
 function Highlight() {
-  const selectedAnnotation = useAtomValue(selectedAnnotationAtom);
+  const selectedHighlight = useAtomValue(selectedHighlightAtom);
   const participantColor = useAtomValue(participantColorAtom);
 
-  if (!selectedAnnotation)
+  if (!selectedHighlight)
     return <NotSelected color={participantColor ?? primaryColor} />;
 
-  return <Annotation annotation={selectedAnnotation} />;
+  return <Annotation highlight={selectedHighlight} />;
 }
 
 export default Highlight;

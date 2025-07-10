@@ -82,12 +82,10 @@ Table comments {
 }
 
 Table bookmarks {
-  id uuid [pk, default: "gen_random_uuid()"]
-  participant_id uuid [not null, ref: > participants.id]
-  cfi_start varchar [not null]
-  cfi_end varchar [not null]
+  participant_id uuid [pk,not null, ref: > participants.id]
+  cfi_start varchar [pk,not null]
+  cfi_end varchar [pk,not null]
   created_at timestamptz [not null, default: "now()"]
-  kiwi_id uuid [not null, ref: > kiwis.id]
 }
 
 

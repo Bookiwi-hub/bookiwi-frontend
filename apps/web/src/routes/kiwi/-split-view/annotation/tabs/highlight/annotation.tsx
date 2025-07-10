@@ -1,94 +1,128 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
-import { primaryColor } from "@bookiwi/color";
-import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
+import { Comment, Highlight, NewComment } from "@bookiwi/supabase/types";
 
 import CommentForm from "./comment-form";
 import Comments from "./comments";
 import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
-import {
-  updateAnnotationAtom,
-  participantColorAtom,
-  participantIdAtom,
-  participantsAtom,
-  navAtom,
-} from "#/routes/kiwi/-reader/atoms";
-import { AnnotationIDBData } from "#/types/idb";
+import supabaseManager from "#/managers/supabase";
+import { participantInfoAtom, navAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface CommentProps {
-  annotation: AnnotationIDBData;
+  highlight: Highlight;
 }
-function Annotation({ annotation }: CommentProps) {
-  const { comments } = annotation;
+function AnnotationTab({ highlight }: CommentProps) {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
-  const participantColor = useAtomValue(participantColorAtom);
-  const participants = useAtomValue(participantsAtom);
-  const participantId = useAtomValue(participantIdAtom);
-  const updateAnnotation = useSetAtom(updateAnnotationAtom);
+  const participantInfo = useAtomValue(participantInfoAtom);
   const navItems = useAtomValue(navAtom);
   const annotationNav = navItems?.find(
-    (item) => item.href === annotation.sectionHref,
+    (item) => item.href === highlight.sectionHref,
   );
   const sectionLabel = annotationNav?.label;
 
   useEffect(() => {
-    // 새 코멘트가 추가되었을 때만 스크롤을 맨 아래로 이동
-    if (comments.length > prevCommentsLengthRef.current) {
-      if (scrollAreaRef.current) {
-        const scrollContainer = scrollAreaRef.current.querySelector(
-          "[data-radix-scroll-area-viewport]",
-        );
-        if (scrollContainer) {
-          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    if (!highlight.id) return;
+    const fetchComments = async () => {
+      try {
+        const highlightComments =
+          await supabaseManager.reader.getHighlightComments(highlight.id);
+        setComments(highlightComments);
+      } catch (error) {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchComments();
+  }, [highlight.id]);
+
+  useEffect(
+    () => {
+      // 새 코멘트가 추가되었을 때만 스크롤을 맨 아래로 이동
+      if (comments.length > prevCommentsLengthRef.current) {
+        if (scrollAreaRef.current) {
+          const scrollContainer = scrollAreaRef.current.querySelector(
+            "[data-radix-scroll-area-viewport]",
+          );
+          if (scrollContainer) {
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          }
         }
       }
-    }
-    prevCommentsLengthRef.current = comments.length;
-  }, [comments]);
-
-  if (!participantId) return null;
-  const highlighter = participants.find(
-    (participant) => participant.id === annotation.participantId,
+      prevCommentsLengthRef.current = comments.length;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [comments],
   );
 
-  const handleCommentSubmit = (commentText: string) => {
+  if (!participantInfo) return null;
+
+  const handleCommentSubmit = async (commentText: string) => {
     const currentDate = new Date().toISOString();
-    const newComment = {
-      id: comments.length.toString(),
+    const newComment: NewComment = {
+      highlightId: highlight.id,
       text: commentText,
       createdAt: currentDate,
       updatedAt: currentDate,
-      participantId,
+      participantId: participantInfo.id,
     };
-    const updatedAnnotation: AnnotationIDBData = {
-      ...annotation,
-      comments: [...comments, newComment],
-    };
-    updateAnnotation(updatedAnnotation);
+
+    try {
+      const { id } =
+        await supabaseManager.reader.addHighlightComment(newComment);
+
+      const createdComment: Comment = {
+        ...newComment,
+        id,
+        name: participantInfo.name,
+        profileImage: participantInfo.profileImage,
+        color: participantInfo.color,
+      };
+      setComments([...comments, createdComment]);
+    } catch (error) {
+      toast.error("댓글 작성에 실패했습니다.");
+    }
   };
 
   return (
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
         <HighlightedText
-          color={annotation.color}
-          text={annotation.text}
-          date={annotation.updatedAt}
-          creatorName={highlighter?.name ?? ""}
+          color={highlight.color}
+          text={highlight.text}
+          date={highlight.updatedAt}
+          creatorName={highlight.name}
           sectionLabel={sectionLabel}
         />
-        <Comments comments={comments} />
+        {isLoading && (
+          <div className="flex justify-center py-4">
+            <div className="text-sm text-gray-500">댓글을 불러오는 중...</div>
+          </div>
+        )}
+        {isError && (
+          <div className="flex justify-center py-4">
+            <div className="text-sm text-red-500">
+              댓글을 불러오는데 실패했습니다.
+            </div>
+          </div>
+        )}
+        {!isLoading && !isError && <Comments comments={comments} />}
       </ScrollArea>
 
       <CommentForm
         onSubmit={handleCommentSubmit}
-        participantColor={participantColor ?? primaryColor}
+        participantColor={participantInfo.color}
       />
     </div>
   );
 }
 
-export default memo(Annotation);
+export default memo(AnnotationTab);

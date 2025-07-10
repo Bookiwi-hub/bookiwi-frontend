@@ -6,16 +6,12 @@ import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import {
   bookmarksAtom,
+  Cfi,
   currentCfiAtom,
   currentLocationAtom,
   removeBookmarkAtom,
-  setBookmarkAtom,
+  addBookmarkAtom,
 } from "../-reader/atoms";
-
-interface Cfi {
-  start: string;
-  end: string;
-}
 
 const isCfiInRange = (cfi: Cfi, currentCfi: Cfi): boolean => {
   const cfiInstance = new EpubCFI();
@@ -32,15 +28,18 @@ function BookmarkButton() {
   const currentCfi = useAtomValue(currentCfiAtom);
   const currentLocation = useAtomValue(currentLocationAtom);
   const bookmarks = useAtomValue(bookmarksAtom);
-  const setBookmark = useSetAtom(setBookmarkAtom);
+  const addBookmark = useSetAtom(addBookmarkAtom);
   const removeBookmark = useSetAtom(removeBookmarkAtom);
 
   const isBookmarked = currentLocation
     ? bookmarks.some((bookmark) =>
-        isCfiInRange(bookmark.cfi, {
-          start: currentLocation.start.cfi,
-          end: currentLocation.end.cfi,
-        }),
+        isCfiInRange(
+          { start: bookmark.cfiStart, end: bookmark.cfiEnd },
+          {
+            start: currentLocation.start.cfi,
+            end: currentLocation.end.cfi,
+          },
+        ),
       )
     : false;
 
@@ -50,7 +49,7 @@ function BookmarkButton() {
       if (isBookmarked) {
         await removeBookmark(currentCfi);
       } else {
-        await setBookmark(currentCfi);
+        await addBookmark(currentCfi);
       }
     } catch (error) {
       toast.error("북마크 정보가 저장되지 않았습니다.");

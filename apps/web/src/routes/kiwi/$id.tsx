@@ -1,6 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import getBook from "./-apis/get-book";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
 import AddParticipantModal from "./-modals/add-participant";
@@ -9,6 +8,7 @@ import SplitView from "./-split-view";
 
 import LoadingPage from "#/components/loading";
 import { isDesktop } from "#/constants/device-type";
+import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/kiwi/$id")({
@@ -20,13 +20,13 @@ export const Route = createFileRoute("/kiwi/$id")({
   },
 
   loader: async ({ params }) => {
-    const result = await getBook(params.id);
+    const result = await supabaseManager.reader.getKiwiReader(params.id);
     return result;
   },
   head: ({ loaderData }) => ({
     meta: [
       {
-        title: `Kiwi | ${loaderData.kiwiData.name}`,
+        title: `Kiwi | ${loaderData?.kiwi.name}`,
       },
     ],
   }),
@@ -40,33 +40,33 @@ export const Route = createFileRoute("/kiwi/$id")({
 });
 
 function Kiwi() {
-  const { epubData, kiwiData, participantsData, annotationsData } =
-    Route.useLoaderData();
-  const currentParticipant = participantsData.find(
+  const { epub, kiwi, participants } = Route.useLoaderData();
+  const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
   );
 
   if (!currentParticipant) {
     return (
       <AddParticipantModal
-        kiwiName={kiwiData.name}
-        kiwiId={kiwiData.id}
-        takenColors={participantsData.map((participant) => participant.color)}
+        kiwiName={kiwi.name}
+        kiwiId={kiwi.id}
+        takenColors={participants.map((participant) => participant.color)}
       />
     );
   }
 
   return (
     <ReaderProvider
-      epubData={epubData}
-      kiwiData={kiwiData}
+      epub={epub}
+      kiwi={kiwi}
+      participants={participants}
       currentParticipant={currentParticipant}
-      participantsData={participantsData}
-      annotationsData={annotationsData}
     >
       <KiwiContent />
     </ReaderProvider>
   );
+
+  // return null;
 }
 
 function KiwiContent() {

@@ -1,25 +1,9 @@
 import { atom } from "@bookiwi/jotai";
-
-import {
-  addIDBAnnotation,
-  removeIDBAnnotation,
-  updateIDBAnnotation,
-} from "../api/idb";
+import { Annotation } from "@bookiwi/supabase/types";
 
 import { currentSectionAtom } from "./book";
 
-import { AnnotationIDBData } from "#/types/idb";
-
-export const annotationsTotalAtom = atom<AnnotationIDBData[]>([]);
-
-export const addAnnotationAtom = atom(
-  null,
-  async (get, set, annotation: AnnotationIDBData) => {
-    const annotations = get(annotationsTotalAtom);
-    set(annotationsTotalAtom, [...annotations, annotation]);
-    await addIDBAnnotation(annotation);
-  },
-);
+export const annotationsTotalAtom = atom<Annotation[]>([]);
 
 export const removeAnnotationAtom = atom(null, async (get, set, id: string) => {
   const annotations = get(annotationsTotalAtom);
@@ -27,7 +11,7 @@ export const removeAnnotationAtom = atom(null, async (get, set, id: string) => {
     annotationsTotalAtom,
     annotations.filter((a) => a.id !== id),
   );
-  await removeIDBAnnotation(id);
+  // await removeIDBAnnotation(id);
 });
 
 export const annotationsAtom = atom((get) => {
@@ -37,16 +21,16 @@ export const annotationsAtom = atom((get) => {
   return annotations.filter((a) => a.sectionHref === currentSection.href);
 });
 
-export const selectedAnnotationAtom = atom<AnnotationIDBData | null>(null);
+export const selectedAnnotationAtom = atom<Annotation | null>(null);
 
 export const updateAnnotationAtom = atom(
   null,
-  async (get, set, annotation: AnnotationIDBData) => {
-    const id = await updateIDBAnnotation(annotation);
+  async (get, set, annotation: Annotation) => {
+    // const id = await updateIDBAnnotation(annotation);
     const annotations = get(annotationsTotalAtom);
     set(
       annotationsTotalAtom,
-      annotations.map((a) => (a.id === id ? annotation : a)),
+      annotations.map((a) => (a.id === annotation.id ? annotation : a)),
     );
     set(selectedAnnotationAtom, annotation);
   },

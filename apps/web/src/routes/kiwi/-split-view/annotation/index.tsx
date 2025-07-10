@@ -22,12 +22,14 @@ function Annotation() {
       <TabsContent
         value={TabType.HIGHLIGHT}
         className="relative min-h-0 w-full flex-1"
+        onMouseDown={(e) => e.preventDefault()}
       >
         <Highlight />
       </TabsContent>
       <TabsContent
         value={TabType.HIGHLIGHT_LIST}
         className="relative min-h-0 w-full flex-1"
+        onMouseDown={(e) => e.preventDefault()}
       >
         <HighlightList />
       </TabsContent>

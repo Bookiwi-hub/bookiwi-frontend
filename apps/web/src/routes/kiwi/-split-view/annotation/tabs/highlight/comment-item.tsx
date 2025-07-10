@@ -8,7 +8,7 @@ interface CommentItemProps {
   text: string;
   date: string;
   isMine: boolean;
-  profileImage: string;
+  profileImage: string | null;
   name: string;
   color: string;
 }
@@ -27,7 +27,7 @@ function CommentItem({
         {!isMine && (
           <div className="mr-2 shrink-0">
             <Avatar className="size-7">
-              <AvatarImage src={profileImage} />
+              <AvatarImage src={profileImage ?? undefined} />
               <AvatarFallback className="text-xs">
                 {name.charAt(0)}
               </AvatarFallback>
@@ -62,7 +62,7 @@ function CommentItem({
         {isMine && (
           <div className="ml-2 shrink-0">
             <Avatar className="size-7">
-              <AvatarImage src={profileImage} />
+              <AvatarImage src={profileImage ?? undefined} />
               <AvatarFallback>{name.charAt(0)}</AvatarFallback>
             </Avatar>
           </div>

@@ -17,7 +17,7 @@ function ParticipantsPanel() {
           profileImage={participant.profileImage}
           name={participant.name}
           color={participant.color}
-          progress={participant.record.percentage || 0}
+          progress={participant.percentage || 0}
         />
       ))}
     </div>
@@ -25,7 +25,7 @@ function ParticipantsPanel() {
 }
 
 interface ParticipantProps {
-  profileImage: string;
+  profileImage: string | null;
   name: string;
   color: string;
   progress: number;
@@ -44,7 +44,7 @@ function Participant({
           className="size-10 ring-2 ring-offset-2 ring-offset-background"
           style={{ "--tw-ring-color": color } as React.CSSProperties}
         >
-          <AvatarImage src={profileImage} alt={name} />
+          <AvatarImage src={profileImage ?? undefined} alt={name} />
           <AvatarFallback
             className="text-sm font-medium text-white"
             style={{ backgroundColor: color }}

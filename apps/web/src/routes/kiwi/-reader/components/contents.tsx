@@ -9,6 +9,7 @@ import {
   useRendered,
   useRelocated,
   useRender,
+  useBookmark,
 } from "../hooks";
 
 import Highlights from "./highlights";
@@ -21,6 +22,7 @@ function ReaderContents() {
   const handleRelocated = useRelocated();
   const handleKeyDown = useKeydown();
   const observer = useObserver();
+  useBookmark();
 
   const setViewerRef = useCallback(
     (node: HTMLDivElement | null) => {
