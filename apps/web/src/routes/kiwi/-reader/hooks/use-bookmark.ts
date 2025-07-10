@@ -2,9 +2,8 @@ import { useEffect } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
+import { getBookmarks } from "../api";
 import { bookmarksAtom, participantIdAtom } from "../atoms";
-
-import supabaseManager from "#/managers/supabase";
 
 const useBookmark = () => {
   const participantId = useAtomValue(participantIdAtom);
@@ -13,8 +12,7 @@ const useBookmark = () => {
   useEffect(() => {
     const fetchBookmarks = async () => {
       if (!participantId) return;
-      const bookmarks =
-        await supabaseManager.reader.getBookmarks(participantId);
+      const bookmarks = await getBookmarks(participantId);
       setBookmarks(bookmarks);
     };
     fetchBookmarks();
