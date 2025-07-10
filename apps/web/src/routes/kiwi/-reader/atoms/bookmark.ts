@@ -1,9 +1,9 @@
 import { atom } from "@bookiwi/jotai";
 import { Bookmark } from "@bookiwi/supabase/types";
 
-import { participantIdAtom } from "./participant";
+import { addBookmark, removeBookmark } from "../api";
 
-import supabaseManager from "#/managers/supabase";
+import { participantIdAtom } from "./participant";
 
 export const bookmarksAtom = atom<Bookmark[]>([]);
 
@@ -19,7 +19,7 @@ export const addBookmarkAtom = atom(
       createdAt: new Date().toISOString(),
     };
     set(bookmarksAtom, [...get(bookmarksAtom), newBookmark]);
-    await supabaseManager.reader.addBookmark(newBookmark);
+    await addBookmark(newBookmark);
   },
 );
 
@@ -34,7 +34,7 @@ export const removeBookmarkAtom = atom(
         (bookmark) => bookmark.cfiStart !== start && bookmark.cfiEnd !== end,
       ),
     );
-    await supabaseManager.reader.removeBookmark({
+    await removeBookmark({
       participantId,
       cfiStart: start,
       cfiEnd: end,

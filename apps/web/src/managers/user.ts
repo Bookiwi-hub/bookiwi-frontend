@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Participant, User } from "@bookiwi/supabase/types";
+import { Bookmark, Participant, User } from "@bookiwi/supabase/types";
 
 import supabaseManager from "./supabase";
 
@@ -9,6 +9,8 @@ class UserManager {
   private isGuestMode: boolean = false;
 
   private guestParticipant: Participant | null = null;
+
+  private guestBookmarks: Bookmark[] = [];
 
   loginAsGuestMode(user: User) {
     this.isGuestMode = true;
@@ -26,6 +28,14 @@ class UserManager {
 
   getGuestParticipant() {
     return this.guestParticipant;
+  }
+
+  setGuestBookmarks(bookmarks: Bookmark[]) {
+    this.guestBookmarks = bookmarks;
+  }
+
+  getGuestBookmarks() {
+    return this.guestBookmarks;
   }
 
   async isLoggedIn() {
