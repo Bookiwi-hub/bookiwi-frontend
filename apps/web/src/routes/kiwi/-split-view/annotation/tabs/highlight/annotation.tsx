@@ -98,11 +98,7 @@ function AnnotationTab({ highlight }: CommentProps) {
           creatorName={highlight.name}
           sectionLabel={sectionLabel}
         />
-        {isLoading && (
-          <div className="flex justify-center py-4">
-            <div className="text-sm text-gray-500">댓글을 불러오는 중...</div>
-          </div>
-        )}
+        {isLoading && null}
         {isError && (
           <div className="flex justify-center py-4">
             <div className="text-sm text-red-500">
@@ -112,12 +108,10 @@ function AnnotationTab({ highlight }: CommentProps) {
         )}
         {!isLoading && !isError && <Comments comments={comments} />}
       </ScrollArea>
-      {!isLoading && !isError && (
-        <CommentForm
-          onSubmit={handleCommentSubmit}
-          participantColor={participantInfo.color}
-        />
-      )}
+      <CommentForm
+        onSubmit={handleCommentSubmit}
+        participantColor={participantInfo.color}
+      />
     </div>
   );
 }

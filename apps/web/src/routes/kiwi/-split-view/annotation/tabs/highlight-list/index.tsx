@@ -8,11 +8,12 @@ import HighlightItem from "./item";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
 import { getHighlights } from "#/routes/kiwi/-reader/apis";
-import { kiwiIdAtom } from "#/routes/kiwi/-reader/atoms";
+import { highlightsAtom, kiwiIdAtom } from "#/routes/kiwi/-reader/atoms";
 
 function HighlightList() {
   const kiwiId = useAtomValue(kiwiIdAtom);
   const [totalHighlights, setTotalHighlights] = useState<Highlight[]>([]);
+  const currentHighlights = useAtomValue(highlightsAtom);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -29,14 +30,10 @@ function HighlightList() {
       }
     };
     fetchHighlights();
-  }, [kiwiId]);
+  }, [kiwiId, currentHighlights]);
 
   if (isLoading) {
-    return (
-      <div className="flex h-full items-center justify-center text-gray-500">
-        하이라이트 목록을 불러오는 중입니다...
-      </div>
-    );
+    return null;
   }
 
   if (isError) {
