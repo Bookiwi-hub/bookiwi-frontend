@@ -7,7 +7,7 @@ import ParticipantsFilter from "./filter";
 import HighlightItem from "./item";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
-import supabaseManager from "#/managers/supabase";
+import { getHighlights } from "#/routes/kiwi/-reader/api";
 import { kiwiIdAtom } from "#/routes/kiwi/-reader/atoms";
 
 function HighlightList() {
@@ -20,7 +20,7 @@ function HighlightList() {
     if (!kiwiId) return;
     const fetchHighlights = async () => {
       try {
-        const highlights = await supabaseManager.reader.getHighlights(kiwiId);
+        const highlights = await getHighlights(kiwiId);
         setTotalHighlights(highlights);
       } catch (error) {
         setIsError(true);

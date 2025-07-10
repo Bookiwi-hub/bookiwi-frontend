@@ -1,9 +1,9 @@
 import { atom } from "@bookiwi/jotai";
 import { Highlight, NewHighlight } from "@bookiwi/supabase/types";
 
-import { participantInfoAtom } from "./participant";
+import { addHighlight, removeHighlight } from "../api";
 
-import supabaseManager from "#/managers/supabase";
+import { participantInfoAtom } from "./participant";
 
 export const highlightsAtom = atom<Highlight[]>([]);
 
@@ -14,7 +14,8 @@ export const addHighlightAtom = atom(
   async (get, set, highlight: NewHighlight) => {
     const participant = get(participantInfoAtom);
     if (!participant) return;
-    const { id } = await supabaseManager.reader.addHighlight(highlight);
+    const { id } = await addHighlight(highlight);
+    if (!id) return;
     const newHighlight: Highlight = {
       ...highlight,
       id,
@@ -28,7 +29,7 @@ export const addHighlightAtom = atom(
 );
 
 export const removeHighlightAtom = atom(null, async (get, set, id: string) => {
-  await supabaseManager.reader.removeHighlight(id);
+  await removeHighlight(id);
   const highlights = get(highlightsAtom);
   set(
     highlightsAtom,
