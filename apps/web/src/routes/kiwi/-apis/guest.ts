@@ -6,7 +6,11 @@ import {
   ParticipantTable,
 } from "@bookiwi/supabase/types";
 
-import { SAMPLE_EPUB_ID, SAMPLE_KIWI_ID } from "#/constants/guest";
+import {
+  GUEST_PARTICIPANT_ID,
+  SAMPLE_EPUB_ID,
+  SAMPLE_KIWI_ID,
+} from "#/constants/guest";
 import idb, { IDBStore } from "#/managers/idb";
 
 export const getGuestKiwiReader = async (): Promise<GetKiwiReaderResponse> => {
@@ -75,7 +79,7 @@ export const getGuestKiwiReader = async (): Promise<GetKiwiReaderResponse> => {
 
 export const addGuestParticipant = async (newParticipant: NewParticipant) => {
   const guestParticipant: ParticipantTable = {
-    id: "guest",
+    id: GUEST_PARTICIPANT_ID,
     user_id: newParticipant.userId,
     kiwi_id: SAMPLE_KIWI_ID,
     name: newParticipant.name,

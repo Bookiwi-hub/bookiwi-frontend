@@ -5,20 +5,65 @@ import {
   NewComment,
   NewHighlight,
   Participant,
+  ParticipantTable,
 } from "@bookiwi/supabase/types";
 
+import { GUEST_PARTICIPANT_ID } from "#/constants/guest";
+import idb, { IDBStore } from "#/managers/idb";
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
-export const updateGuestParticipant = (fields: Partial<Participant>) => {
-  const guestParticipant = userManager.getGuestParticipant();
-  if (!guestParticipant) {
-    throw new Error("Guest participant not found");
-  }
-  userManager.setGuestParticipant({
-    ...guestParticipant,
-    ...fields,
+// 타입 변환 헬퍼 함수
+const convertParticipantToTableFields = (
+  fields: Partial<Participant>,
+): Partial<ParticipantTable> => {
+  const fieldMapping: Record<keyof Participant, keyof ParticipantTable> = {
+    id: "id",
+    userId: "user_id",
+    name: "name",
+    profileImage: "profile_image",
+    color: "color",
+    singlePage: "single_page",
+    fontFamily: "font_family",
+    fontSize: "font_size",
+    fontWeight: "font_weight",
+    lineHeight: "line_height",
+    cfiStart: "cfi_start",
+    cfiEnd: "cfi_end",
+    percentage: "percentage",
+    lastActivityAt: "last_activity_at",
+  };
+
+  const updateFields: Partial<ParticipantTable> = {};
+
+  Object.entries(fields).forEach(([key, value]) => {
+    if (value !== undefined) {
+      const dbField = fieldMapping[key as keyof Participant];
+      if (dbField) {
+        (updateFields as any)[dbField] = value;
+      }
+    }
   });
+
+  return updateFields;
+};
+
+export const updateGuestParticipant = async (fields: Partial<Participant>) => {
+  // Participant 타입의 필드를 ParticipantTable 타입의 필드로 변환
+  const updateFields = convertParticipantToTableFields(fields);
+
+  // IndexedDB에서 참가자 정보 업데이트
+  const updatedParticipant = await idb.update(
+    IDBStore.Participants,
+    GUEST_PARTICIPANT_ID,
+    updateFields,
+  );
+
+  if (!updatedParticipant) {
+    throw new Error("Failed to update guest participant");
+  }
+
+  return updatedParticipant;
 };
 
 export const addGuestHighlight = (newHighlight: NewHighlight) => {

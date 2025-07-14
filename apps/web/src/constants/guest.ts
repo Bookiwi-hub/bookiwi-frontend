@@ -59,6 +59,8 @@ export const sampleIDBEpubs = {
   nav: SAMPLE_EPUB_NAV,
 };
 
+export const GUEST_PARTICIPANT_ID = "guest";
+
 // 참가자 데이터
 export const sampleIDBParticipants = [
   {

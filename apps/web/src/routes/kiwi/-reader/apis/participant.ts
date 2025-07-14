@@ -12,7 +12,7 @@ export const updateParticipant = async (
   fields: Partial<Participant>,
 ) => {
   if (userManager.isGuest) {
-    updateGuestParticipant(fields);
+    await updateGuestParticipant(fields);
     return;
   }
   await supabaseManager.reader.updateParticipant(participantId, fields);
