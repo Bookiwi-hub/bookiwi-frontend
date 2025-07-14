@@ -49,7 +49,7 @@ export const getHighlights = async (kiwiId: string) => {
 export const addHighlight = async (newHighlight: NewHighlight) => {
   try {
     if (userManager.isGuest) {
-      const result = addGuestHighlight(newHighlight);
+      const result = await addGuestHighlight(newHighlight);
       return result;
     }
     const result = await supabaseManager.reader.addHighlight(newHighlight);

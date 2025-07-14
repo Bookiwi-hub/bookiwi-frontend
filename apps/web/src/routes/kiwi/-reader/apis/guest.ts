@@ -1,7 +1,9 @@
 import {
   Bookmark,
   Comment,
+  CommentTable,
   Highlight,
+  HighlightTable,
   NewComment,
   NewHighlight,
   Participant,
@@ -62,46 +64,89 @@ export const updateGuestParticipant = async (fields: Partial<Participant>) => {
   if (!updatedParticipant) {
     throw new Error("Failed to update guest participant");
   }
-
-  return updatedParticipant;
 };
 
-export const addGuestHighlight = (newHighlight: NewHighlight) => {
-  const participant = userManager.getGuestParticipant();
-  const userHighlights = userManager.getGuestHighlights();
-  if (!participant) throw new Error("Guest participant not found");
+export const addGuestHighlight = async (
+  newHighlight: NewHighlight,
+): Promise<{ id: string }> => {
+  // 고유한 ID 생성 (participantId-cfi-createdAt 조합)
   const highlightId = `${newHighlight.participantId}-${newHighlight.cfi}-${newHighlight.createdAt}`;
-  const addedHighlight: Highlight = {
-    ...newHighlight,
+
+  // NewHighlight를 HighlightTable 타입으로 변환
+  const highlightData: HighlightTable = {
     id: highlightId,
-    commentCount: 0,
-    name: participant.name,
-    profileImage: participant.profileImage,
+    kiwi_id: newHighlight.kiwiId,
+    participant_id: newHighlight.participantId,
+    cfi: newHighlight.cfi,
+    text: newHighlight.text,
+    color: newHighlight.color,
+    section_href: newHighlight.sectionHref,
+    created_at: newHighlight.createdAt,
+    updated_at: newHighlight.updatedAt,
   };
-  userManager.setGuestHighlights([...userHighlights, addedHighlight]);
+
+  // IndexedDB에 하이라이트 추가
+  await idb.add(IDBStore.Highlights, highlightData);
+
   return { id: highlightId };
 };
 
-export const removeGuestHighlight = (id: string) => {
-  userManager.setGuestHighlights(
-    userManager.getGuestHighlights().filter((h) => h.id !== id),
-  );
+export const removeGuestHighlight = async (
+  id: string,
+): Promise<{ id: string }> => {
+  // IndexedDB에서 하이라이트 삭제
+  await idb.remove(IDBStore.Highlights, id);
+
   return { id };
 };
 
 export const getGuestSectionHighlights = async (
   kiwiId: string,
   sectionHref: string,
-) => {
-  const sectionHighlights = await supabaseManager.reader.getSectionHighlights(
-    kiwiId,
+): Promise<Highlight[]> => {
+  // section_href 인덱스를 사용하여 해당 섹션의 하이라이트 조회
+  const highlightTables = await idb.getByIndex<HighlightTable>(
+    IDBStore.Highlights,
+    "section_href",
     sectionHref,
   );
-  const userHighlights = userManager.getGuestHighlights();
-  const guestSectionHighlights = userHighlights.filter(
-    (h) => h.sectionHref === sectionHref,
+
+  // 각 하이라이트에 대해 participant 정보와 댓글 개수를 가져와서 Highlight 타입으로 변환
+  const highlights = await Promise.all(
+    highlightTables.map(async (highlightTable) => {
+      // participant 정보 가져오기
+      const participant = await idb.get<ParticipantTable>(
+        IDBStore.Participants,
+        highlightTable.participant_id,
+      );
+
+      // 댓글 개수 가져오기
+      const comments = await idb.getByIndex<CommentTable>(
+        IDBStore.Comments,
+        "highlight_id",
+        highlightTable.id,
+      );
+
+      // HighlightTable을 Highlight 타입으로 변환
+      const highlight: Highlight = {
+        id: highlightTable.id,
+        cfi: highlightTable.cfi,
+        sectionHref: highlightTable.section_href,
+        text: highlightTable.text,
+        color: highlightTable.color,
+        participantId: highlightTable.participant_id,
+        name: participant?.name || "Unknown",
+        profileImage: participant?.profile_image || null,
+        createdAt: highlightTable.created_at,
+        updatedAt: highlightTable.updated_at,
+        commentCount: comments.length,
+      };
+
+      return highlight;
+    }),
   );
-  return [...sectionHighlights, ...guestSectionHighlights];
+
+  return highlights;
 };
 
 export const getGuestHighlights = async (kiwiId: string) => {
