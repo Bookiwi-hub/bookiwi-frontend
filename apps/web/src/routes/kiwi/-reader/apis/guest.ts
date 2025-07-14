@@ -1,5 +1,6 @@
 import {
   Bookmark,
+  BookmarkTable,
   Comment,
   CommentTable,
   Highlight,
@@ -12,7 +13,6 @@ import {
 
 import { GUEST_PARTICIPANT_ID } from "#/constants/guest";
 import idb, { IDBStore } from "#/managers/idb";
-import userManager from "#/managers/user";
 
 // 타입 변환 헬퍼 함수
 const convertParticipantToTableFields = (
@@ -267,28 +267,46 @@ export const getGuestHighlightComments = async (
   return comments;
 };
 
-export const addGuestBookmark = (newBookmark: Bookmark) => {
-  userManager.setGuestBookmarks([
-    ...userManager.getGuestBookmarks(),
-    newBookmark,
-  ]);
+export const addGuestBookmark = async (
+  newBookmark: Bookmark,
+): Promise<void> => {
+  // Bookmark를 BookmarkTable 타입으로 변환
+  const bookmarkData: BookmarkTable = {
+    participant_id: newBookmark.participantId,
+    cfi_start: newBookmark.cfiStart,
+    cfi_end: newBookmark.cfiEnd,
+    created_at: newBookmark.createdAt,
+  };
+
+  // IndexedDB에 북마크 추가
+  await idb.add(IDBStore.Bookmarks, bookmarkData);
 };
 
-export const removeGuestBookmark = ({
+export const removeGuestBookmark = async ({
   cfiStart,
   cfiEnd,
 }: {
   cfiStart: string;
   cfiEnd: string;
-}) => {
-  userManager.setGuestBookmarks(
-    userManager
-      .getGuestBookmarks()
-      .filter((b) => b.cfiStart !== cfiStart || b.cfiEnd !== cfiEnd),
-  );
+}): Promise<void> => {
+  // 복합 키 [participant_id, cfi_start, cfi_end]로 북마크 삭제
+  const compositeKey = [GUEST_PARTICIPANT_ID, cfiStart, cfiEnd];
+
+  // IndexedDB에서 북마크 삭제
+  await idb.remove(IDBStore.Bookmarks, compositeKey);
 };
 
-export const getGuestBookmarks = () => {
-  const userBookmarks = userManager.getGuestBookmarks();
-  return userBookmarks;
+export const getGuestBookmarks = async (): Promise<Bookmark[]> => {
+  // participant_id 인덱스를 사용하여 게스트 참가자의 모든 북마크 조회
+  const bookmarkTables = await idb.getAll<BookmarkTable>(IDBStore.Bookmarks);
+
+  // BookmarkTable을 Bookmark 타입으로 변환
+  const bookmarks: Bookmark[] = bookmarkTables.map((bookmarkTable) => ({
+    participantId: bookmarkTable.participant_id,
+    cfiStart: bookmarkTable.cfi_start,
+    cfiEnd: bookmarkTable.cfi_end,
+    createdAt: bookmarkTable.created_at,
+  }));
+
+  return bookmarks;
 };

@@ -14,7 +14,7 @@ import userManager from "#/managers/user";
 export const addBookmark = async (newBookmark: Bookmark) => {
   try {
     if (userManager.isGuest) {
-      addGuestBookmark(newBookmark);
+      await addGuestBookmark(newBookmark);
       return;
     }
     await supabaseManager.reader.addBookmark(newBookmark);
@@ -34,7 +34,7 @@ export const removeBookmark = async ({
 }) => {
   try {
     if (userManager.isGuest) {
-      removeGuestBookmark({ cfiStart, cfiEnd });
+      await removeGuestBookmark({ cfiStart, cfiEnd });
       return;
     }
     await supabaseManager.reader.removeBookmark({
@@ -50,7 +50,7 @@ export const removeBookmark = async ({
 export const getBookmarks = async (participantId: string) => {
   try {
     if (userManager.isGuest) {
-      const bookmarks = getGuestBookmarks();
+      const bookmarks = await getGuestBookmarks();
       return bookmarks;
     }
     const bookmarks = await supabaseManager.reader.getBookmarks(participantId);
