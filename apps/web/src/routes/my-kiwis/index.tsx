@@ -4,6 +4,7 @@ import { Provider } from "@bookiwi/jotai";
 
 import { getMyKiwis } from "./-apis";
 import Kiwis from "./-kiwis";
+import { CreateKiwiModal, DetailKiwiModal } from "./-modals";
 
 import Header from "#/components/header";
 import LoadingPage from "#/components/loading";
@@ -51,6 +52,8 @@ function MyKiwis() {
           <Kiwis kiwis={kiwis} />
         </main>
       </div>
+      <DetailKiwiModal />
+      <CreateKiwiModal />
     </Provider>
   );
 }
