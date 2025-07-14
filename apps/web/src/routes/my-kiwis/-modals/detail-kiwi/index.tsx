@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 
-import { useAtom } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import KebabMenu from "../../-components/kebab-menu";
+import { closeKiwiDetailModalAtom, ModalState, modalStateAtom } from "../atoms";
 
 import ActivitiesTab from "./activities-tab";
-import { kiwiDetailModalOpenAtom, selectedKiwiAtom } from "./atoms";
+import { selectedKiwiAtom } from "./atoms";
 import InformationTab from "./information-tab";
 
 import { Badge } from "#/components/ui/badge";
@@ -22,13 +23,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#/components/ui/tabs";
 
 function DetailKiwiModal() {
-  const [kiwi, setKiwi] = useAtom(selectedKiwiAtom);
-  const [kiwiDetailModalOpen, setKiwiDetailModalOpen] = useAtom(
-    kiwiDetailModalOpenAtom,
-  );
+  const kiwi = useAtomValue(selectedKiwiAtom);
+  const modalState = useAtomValue(modalStateAtom);
+  const isOpen = modalState === ModalState.DetailKiwi;
+  const closeKiwiDetailModal = useSetAtom(closeKiwiDetailModalAtom);
+
   const handleClose = () => {
-    setKiwi(null);
-    setKiwiDetailModalOpen(false);
+    closeKiwiDetailModal();
   };
 
   const handleDelete = () => {
@@ -37,7 +38,7 @@ function DetailKiwiModal() {
     handleClose();
   };
 
-  if (!kiwi || !kiwiDetailModalOpen) return null;
+  if (!kiwi || !isOpen) return null;
 
   const { id, name, description, password } = kiwi;
 

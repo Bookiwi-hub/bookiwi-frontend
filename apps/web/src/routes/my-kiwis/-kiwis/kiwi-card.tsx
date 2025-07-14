@@ -6,7 +6,7 @@ import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
 
 import KebabMenu from "../-components/kebab-menu";
-import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
+import { openKiwiDetailModalAtom } from "../-modals/atoms";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
