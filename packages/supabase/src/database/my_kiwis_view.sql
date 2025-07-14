@@ -58,4 +58,5 @@ FROM kiwis k
     JOIN user_kiwis uk ON k.id = uk.kiwi_id
     LEFT JOIN user_kiwis admin_uk ON k.id = admin_uk.kiwi_id AND admin_uk.admin = true
     LEFT JOIN users admin_user ON admin_uk.user_id = admin_user.id
-WHERE uk.is_active = true; 
+WHERE uk.is_active = true
+ORDER BY k.created_at DESC; 
