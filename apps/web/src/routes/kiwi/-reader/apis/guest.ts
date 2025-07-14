@@ -118,6 +118,9 @@ export const getGuestSectionHighlights = async (
         IDBStore.Participants,
         highlightTable.participant_id,
       );
+      if (!participant) {
+        throw new Error("Participant not found");
+      }
 
       // 댓글 개수 가져오기
       const comments = await idb.getByIndex<CommentTable>(
@@ -134,8 +137,8 @@ export const getGuestSectionHighlights = async (
         text: highlightTable.text,
         color: highlightTable.color,
         participantId: highlightTable.participant_id,
-        name: participant?.name || "Unknown",
-        profileImage: participant?.profile_image || null,
+        name: participant.name,
+        profileImage: participant.profile_image,
         createdAt: highlightTable.created_at,
         updatedAt: highlightTable.updated_at,
         commentCount: comments.length,
@@ -166,6 +169,9 @@ export const getGuestHighlights = async (
         IDBStore.Participants,
         highlightTable.participant_id,
       );
+      if (!participant) {
+        throw new Error("Participant not found");
+      }
 
       // 댓글 개수 가져오기
       const comments = await idb.getByIndex<CommentTable>(
@@ -182,8 +188,8 @@ export const getGuestHighlights = async (
         text: highlightTable.text,
         color: highlightTable.color,
         participantId: highlightTable.participant_id,
-        name: participant?.name || "Unknown",
-        profileImage: participant?.profile_image || null,
+        name: participant.name,
+        profileImage: participant.profile_image,
         createdAt: highlightTable.created_at,
         updatedAt: highlightTable.updated_at,
         commentCount: comments.length,
@@ -237,15 +243,19 @@ export const getGuestHighlightComments = async (
         commentTable.participant_id,
       );
 
+      if (!participant) {
+        throw new Error("Participant not found");
+      }
+
       // CommentTable을 Comment 타입으로 변환
       const comment: Comment = {
         id: commentTable.id,
         highlightId: commentTable.highlight_id,
         text: commentTable.text,
         participantId: commentTable.participant_id,
-        name: participant?.name || "Unknown",
-        profileImage: participant?.profile_image || null,
-        color: participant?.color || "#000000",
+        name: participant.name,
+        profileImage: participant.profile_image,
+        color: participant.color,
         createdAt: commentTable.created_at,
         updatedAt: commentTable.updated_at,
       };
