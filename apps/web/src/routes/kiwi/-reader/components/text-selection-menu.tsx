@@ -1,6 +1,5 @@
 import { Highlighter, MessageSquare, Trash2 } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
-import { toast } from "sonner";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { NewHighlight } from "@bookiwi/supabase/types";
@@ -57,7 +56,7 @@ function TextSelectionMenu() {
   };
 
   const addNewHighlight = async () => {
-    const newAnnotation: NewHighlight = {
+    const newHighlight: NewHighlight = {
       kiwiId,
       text: selectedText.text,
       cfi: selectedText.cfi,
@@ -67,11 +66,7 @@ function TextSelectionMenu() {
       updatedAt: new Date().toISOString(),
       sectionHref: selectedText.sectionHref,
     };
-    try {
-      await addHighlight(newAnnotation);
-    } catch (error) {
-      toast.error("하이라이트가 저장되지 않았습니다.");
-    }
+    await addHighlight(newHighlight);
   };
 
   const handleAddHighlight = async () => {
@@ -88,12 +83,8 @@ function TextSelectionMenu() {
   };
 
   const handleRemoveHighlight = async () => {
-    try {
-      if (selectedText.id) {
-        await removeHighlight(selectedText.id);
-      }
-    } catch (error) {
-      toast.error("하이라이트 정보가 삭제되지 않았습니다.");
+    if (selectedText.id) {
+      await removeHighlight(selectedText.id);
     }
     hide();
   };

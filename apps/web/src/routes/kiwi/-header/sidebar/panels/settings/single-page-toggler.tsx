@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { toast } from "sonner";
 
 import { Switch } from "#/components/ui/switch";
 
@@ -13,11 +12,7 @@ function SinglePageToggler({
   handleCheckedChange,
 }: SinglePageToggleProps) {
   const handleChecked = async (checked: boolean) => {
-    try {
-      await handleCheckedChange(checked);
-    } catch (error) {
-      toast.error("설정 정보가 저장되지 않았습니다.");
-    }
+    await handleCheckedChange(checked);
   };
 
   return (

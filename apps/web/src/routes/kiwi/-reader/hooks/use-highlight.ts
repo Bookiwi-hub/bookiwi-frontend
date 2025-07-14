@@ -1,11 +1,9 @@
 import { useEffect } from "react";
-import { toast } from "sonner";
 
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
+import { getSectionHighlights } from "../apis";
 import { currentSectionAtom, highlightsAtom, kiwiIdAtom } from "../atoms";
-
-import supabaseManager from "#/managers/supabase";
 
 const useHighlight = () => {
   const [highlights, setHighlights] = useAtom(highlightsAtom);
@@ -14,19 +12,14 @@ const useHighlight = () => {
 
   useEffect(() => {
     if (!kiwiId || !currentSection) return;
-    const getSectionHighlights = async () => {
-      try {
-        const sectionHighlights =
-          await supabaseManager.reader.getSectionHighlights(
-            kiwiId,
-            currentSection.href,
-          );
-        setHighlights(sectionHighlights);
-      } catch (error) {
-        toast.error("하이라이트 정보를 불러오는데 실패했습니다.");
-      }
+    const fetchSectionHighlights = async () => {
+      const sectionHighlights = await getSectionHighlights(
+        kiwiId,
+        currentSection.href,
+      );
+      setHighlights(sectionHighlights);
     };
-    getSectionHighlights();
+    fetchSectionHighlights();
   }, [kiwiId, currentSection, setHighlights]);
 
   return highlights;
