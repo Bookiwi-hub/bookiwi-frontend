@@ -149,11 +149,52 @@ export const getGuestSectionHighlights = async (
   return highlights;
 };
 
-export const getGuestHighlights = async (kiwiId: string) => {
-  const highlights = await supabaseManager.reader.getHighlights(kiwiId);
+export const getGuestHighlights = async (
+  kiwiId: string,
+): Promise<Highlight[]> => {
+  // kiwi_id 인덱스를 사용하여 해당 키위의 모든 하이라이트 조회
+  const highlightTables = await idb.getByIndex<HighlightTable>(
+    IDBStore.Highlights,
+    "kiwi_id",
+    kiwiId,
+  );
 
-  const userHighlights = userManager.getGuestHighlights();
-  return [...highlights, ...userHighlights];
+  // 각 하이라이트에 대해 participant 정보와 댓글 개수를 가져와서 Highlight 타입으로 변환
+  const highlights = await Promise.all(
+    highlightTables.map(async (highlightTable) => {
+      // participant 정보 가져오기
+      const participant = await idb.get<ParticipantTable>(
+        IDBStore.Participants,
+        highlightTable.participant_id,
+      );
+
+      // 댓글 개수 가져오기
+      const comments = await idb.getByIndex<CommentTable>(
+        IDBStore.Comments,
+        "highlight_id",
+        highlightTable.id,
+      );
+
+      // HighlightTable을 Highlight 타입으로 변환
+      const highlight: Highlight = {
+        id: highlightTable.id,
+        cfi: highlightTable.cfi,
+        sectionHref: highlightTable.section_href,
+        text: highlightTable.text,
+        color: highlightTable.color,
+        participantId: highlightTable.participant_id,
+        name: participant?.name || "Unknown",
+        profileImage: participant?.profile_image || null,
+        createdAt: highlightTable.created_at,
+        updatedAt: highlightTable.updated_at,
+        commentCount: comments.length,
+      };
+
+      return highlight;
+    }),
+  );
+
+  return highlights;
 };
 
 export const addGuestComment = (newComment: NewComment) => {
