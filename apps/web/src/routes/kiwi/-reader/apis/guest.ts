@@ -12,7 +12,6 @@ import {
 
 import { GUEST_PARTICIPANT_ID } from "#/constants/guest";
 import idb, { IDBStore } from "#/managers/idb";
-import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 // 타입 변환 헬퍼 함수
@@ -197,37 +196,65 @@ export const getGuestHighlights = async (
   return highlights;
 };
 
-export const addGuestComment = (newComment: NewComment) => {
-  const userComments = userManager.getGuestComments();
-  const participant = userManager.getGuestParticipant();
-  if (!participant) throw new Error("Guest participant not found");
+export const addGuestComment = async (
+  newComment: NewComment,
+): Promise<{ id: string }> => {
+  // 고유한 ID 생성 (highlightId-createdAt 조합)
   const commentId = `${newComment.highlightId}-${newComment.createdAt}`;
-  const createdComment: Comment = {
-    ...newComment,
+
+  // NewComment를 CommentTable 타입으로 변환
+  const commentData: CommentTable = {
     id: commentId,
-    name: participant.name,
-    profileImage: participant.profileImage,
-    color: participant.color,
+    highlight_id: newComment.highlightId,
+    participant_id: newComment.participantId,
+    text: newComment.text,
+    created_at: newComment.createdAt,
+    updated_at: newComment.updatedAt,
   };
-  userManager.setGuestComments([...userComments, createdComment]);
+
+  // IndexedDB에 댓글 추가
+  await idb.add(IDBStore.Comments, commentData);
+
   return { id: commentId };
 };
 
-export const getGuestHighlightComments = async (highlightId: string) => {
-  const guestUserHighlights = userManager.getGuestHighlights();
-  const guestUserHighlight = guestUserHighlights.find(
-    (highlight) => highlight.id === highlightId,
+export const getGuestHighlightComments = async (
+  highlightId: string,
+): Promise<Comment[]> => {
+  // highlight_id 인덱스를 사용하여 해당 하이라이트의 모든 댓글 조회
+  const commentTables = await idb.getByIndex<CommentTable>(
+    IDBStore.Comments,
+    "highlight_id",
+    highlightId,
   );
-  const userComments = userManager.getGuestComments();
-  const guestHighlightComments = userComments.filter(
-    (comment) => comment.highlightId === highlightId,
+
+  // 각 댓글에 대해 participant 정보를 가져와서 Comment 타입으로 변환
+  const comments = await Promise.all(
+    commentTables.map(async (commentTable) => {
+      // participant 정보 가져오기
+      const participant = await idb.get<ParticipantTable>(
+        IDBStore.Participants,
+        commentTable.participant_id,
+      );
+
+      // CommentTable을 Comment 타입으로 변환
+      const comment: Comment = {
+        id: commentTable.id,
+        highlightId: commentTable.highlight_id,
+        text: commentTable.text,
+        participantId: commentTable.participant_id,
+        name: participant?.name || "Unknown",
+        profileImage: participant?.profile_image || null,
+        color: participant?.color || "#000000",
+        createdAt: commentTable.created_at,
+        updatedAt: commentTable.updated_at,
+      };
+
+      return comment;
+    }),
   );
-  if (guestUserHighlight) {
-    return guestHighlightComments;
-  }
-  const highlightComments =
-    await supabaseManager.reader.getHighlightComments(highlightId);
-  return [...highlightComments, ...guestHighlightComments];
+
+  return comments;
 };
 
 export const addGuestBookmark = (newBookmark: Bookmark) => {

@@ -10,7 +10,7 @@ import userManager from "#/managers/user";
 export const addComment = async (newComment: NewComment) => {
   try {
     if (userManager.isGuest) {
-      const result = addGuestComment(newComment);
+      const result = await addGuestComment(newComment);
       return result;
     }
     const result = await supabaseManager.reader.addHighlightComment(newComment);
