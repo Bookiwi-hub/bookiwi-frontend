@@ -35,6 +35,7 @@ export const createSampleKiwi = async (userId: string) => {
   try {
     if (userManager.isGuest) {
       await createGuestSampleKiwi();
+      return;
     }
     await supabaseManager.kiwi.createSampleKiwi(userId);
   } catch (error) {
