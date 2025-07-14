@@ -10,7 +10,7 @@ import {
 
 interface KebabMenuProps {
   align?: "start" | "center" | "end";
-  onDelete: () => Promise<void>;
+  onDelete: () => Promise<void> | void;
 }
 
 function KebabMenu({ onDelete, align = "center" }: KebabMenuProps) {

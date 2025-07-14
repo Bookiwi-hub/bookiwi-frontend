@@ -5,6 +5,7 @@ import { memo } from "react";
 import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
 
+import KebabMenu from "../-components/kebab-menu";
 import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
 
 import { Button } from "#/components/ui/button";
@@ -29,6 +30,10 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
     ? formatDate(currentParticipant.lastActivityAt)
     : "";
 
+  const handleDelete = () => {
+    console.log("delete", id);
+  };
+
   return (
     <CardUI
       key={id}
@@ -40,6 +45,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
       participantsCount={participantsCount}
       lastActivityAt={lastActivityAt}
       onClick={() => openKiwiDetailModal(kiwi)}
+      onDelete={handleDelete}
     />
   );
 }
@@ -53,6 +59,7 @@ interface CardUIProps {
   lastActivityAt: string;
   id: string;
   onClick: () => void;
+  onDelete: () => void;
 }
 
 function CardUI({
@@ -64,12 +71,18 @@ function CardUI({
   lastActivityAt,
   id,
   onClick,
+  onDelete,
 }: CardUIProps) {
   return (
     <Card
       className="group relative flex h-96 w-full max-w-72 cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
       onClick={onClick}
     >
+      {/* 케밥 메뉴 */}
+      <div className="absolute right-2 top-2 z-10">
+        <KebabMenu onDelete={onDelete} />
+      </div>
+
       {/* 이미지 영역 */}
       <div className="relative aspect-[3/4] overflow-hidden">
         <img

@@ -3,6 +3,8 @@ import { ChevronRight } from "lucide-react";
 
 import { useAtom } from "@bookiwi/jotai";
 
+import KebabMenu from "../../-components/kebab-menu";
+
 import ActivitiesTab from "./activities-tab";
 import { kiwiDetailModalOpenAtom, selectedKiwiAtom } from "./atoms";
 import InformationTab from "./information-tab";
@@ -28,6 +30,13 @@ function DetailKiwiModal() {
     setKiwi(null);
     setKiwiDetailModalOpen(false);
   };
+
+  const handleDelete = () => {
+    console.log("키위 삭제:", kiwi?.id);
+    // TODO: 실제 삭제 API 호출 구현
+    handleClose();
+  };
+
   if (!kiwi || !kiwiDetailModalOpen) return null;
 
   const { id, name, description, password } = kiwi;
@@ -36,11 +45,14 @@ function DetailKiwiModal() {
     <Dialog open onOpenChange={handleClose}>
       <DialogContent className="fixed left-1/2 top-1/2 z-50 grid w-full max-w-[800px] -translate-x-2/4 -translate-y-2/4 gap-0 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg">
         <DialogHeader className="border-b pb-4">
-          <div className="flex items-center gap-2">
-            <DialogTitle className="text-xl">{name}</DialogTitle>
-            <Badge variant="outline" className="text-xs font-normal">
-              {password && "비공개 키위"}
-            </Badge>
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2">
+              <DialogTitle className="text-xl">{name}</DialogTitle>
+              <Badge variant="outline" className="text-xs font-normal">
+                {password && "비공개 키위"}
+              </Badge>
+            </div>
+            <KebabMenu onDelete={handleDelete} />
           </div>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
