@@ -2,7 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  profileImage: string;
+  profileImage: string | null;
 }
 
 export interface NavItem {

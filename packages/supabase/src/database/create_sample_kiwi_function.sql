@@ -16,7 +16,7 @@ DECLARE
   v_participant_2_id UUID;
   v_highlight_1_id UUID;
   v_highlight_2_id UUID;
-  v_sample_epub_id UUID := 'ce6e5d90-ae97-4d99-8302-fa292b693b3e'::UUID;
+  v_sample_epub_id UUID := '91d33a38-d4b8-47eb-ac06-23bbe3b2413d'::UUID;
 BEGIN
   -- Insert sample kiwi
   INSERT INTO kiwis AS k (

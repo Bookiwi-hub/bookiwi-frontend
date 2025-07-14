@@ -1,5 +1,4 @@
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
-import { toast } from "sonner";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { Bookmark } from "@bookiwi/supabase/types";
@@ -91,11 +90,7 @@ function BookmarksPanel() {
     book.rendition.display(cfi);
   };
   const handleRemove = async (cfi: Cfi) => {
-    try {
-      await removeBookmark(cfi);
-    } catch (error) {
-      toast.error("북마크 정보가 저장되지 않았습니다.");
-    }
+    await removeBookmark(cfi);
   };
 
   return (

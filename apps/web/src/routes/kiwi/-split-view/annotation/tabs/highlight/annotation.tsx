@@ -1,5 +1,4 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 
 import { useAtomValue } from "@bookiwi/jotai";
 import { Comment, Highlight, NewComment } from "@bookiwi/supabase/types";
@@ -9,7 +8,10 @@ import Comments from "./comments";
 import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
-import supabaseManager from "#/managers/supabase";
+import {
+  addComment,
+  getHighlightComments,
+} from "#/routes/kiwi/-reader/apis/comment";
 import { participantInfoAtom, navAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface CommentProps {
@@ -32,8 +34,7 @@ function AnnotationTab({ highlight }: CommentProps) {
     if (!highlight.id) return;
     const fetchComments = async () => {
       try {
-        const highlightComments =
-          await supabaseManager.reader.getHighlightComments(highlight.id);
+        const highlightComments = await getHighlightComments(highlight.id);
         setComments(highlightComments);
       } catch (error) {
         setIsError(true);
@@ -75,21 +76,16 @@ function AnnotationTab({ highlight }: CommentProps) {
       participantId: participantInfo.id,
     };
 
-    try {
-      const { id } =
-        await supabaseManager.reader.addHighlightComment(newComment);
-
-      const createdComment: Comment = {
-        ...newComment,
-        id,
-        name: participantInfo.name,
-        profileImage: participantInfo.profileImage,
-        color: participantInfo.color,
-      };
-      setComments([...comments, createdComment]);
-    } catch (error) {
-      toast.error("댓글 작성에 실패했습니다.");
-    }
+    const { id } = await addComment(newComment);
+    if (!id) return;
+    const createdComment: Comment = {
+      ...newComment,
+      id,
+      name: participantInfo.name,
+      profileImage: participantInfo.profileImage,
+      color: participantInfo.color,
+    };
+    setComments([...comments, createdComment]);
   };
 
   return (
@@ -102,11 +98,7 @@ function AnnotationTab({ highlight }: CommentProps) {
           creatorName={highlight.name}
           sectionLabel={sectionLabel}
         />
-        {isLoading && (
-          <div className="flex justify-center py-4">
-            <div className="text-sm text-gray-500">댓글을 불러오는 중...</div>
-          </div>
-        )}
+        {isLoading && null}
         {isError && (
           <div className="flex justify-center py-4">
             <div className="text-sm text-red-500">
@@ -116,7 +108,6 @@ function AnnotationTab({ highlight }: CommentProps) {
         )}
         {!isLoading && !isError && <Comments comments={comments} />}
       </ScrollArea>
-
       <CommentForm
         onSubmit={handleCommentSubmit}
         participantColor={participantInfo.color}

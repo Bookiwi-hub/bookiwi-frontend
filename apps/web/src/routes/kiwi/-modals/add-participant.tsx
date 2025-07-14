@@ -3,6 +3,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { colors } from "@bookiwi/color";
+import { NewParticipant } from "@bookiwi/supabase/types";
+
+import { addParticipant } from "../-apis";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -15,7 +18,6 @@ import {
 } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
-import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 interface AddParticipantModalProps {
@@ -51,13 +53,14 @@ function AddParticipantModal({
 
   const handleAddParticipant = async () => {
     try {
-      await supabaseManager.reader.addParticipant({
+      const newParticipant: NewParticipant = {
         kiwiId,
         userId: user.id,
         name: nickname.trim(),
         profileImage: user.profileImage,
         color: selectedColor,
-      });
+      };
+      await addParticipant(newParticipant);
       toast.success(`${kiwiName}에 오신 것을 환영합니다!`);
       navigate({ to: `/kiwi/${kiwiId}` });
     } catch (error) {

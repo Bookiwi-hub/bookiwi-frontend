@@ -28,6 +28,5 @@ export * from "./debounce";
 export * from "./epubjs";
 export * from "./file";
 export * from "./format-date";
-export * from "./idb";
 export * from "./throttle";
 export { default as truncate } from "./truncate";

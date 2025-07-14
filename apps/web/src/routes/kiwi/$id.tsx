@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
+import { getKiwiReader } from "./-apis";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
 import AddParticipantModal from "./-modals/add-participant";
@@ -8,7 +9,6 @@ import SplitView from "./-split-view";
 
 import LoadingPage from "#/components/loading";
 import { isDesktop } from "#/constants/device-type";
-import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/kiwi/$id")({
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/kiwi/$id")({
   },
 
   loader: async ({ params }) => {
-    const result = await supabaseManager.reader.getKiwiReader(params.id);
+    const result = await getKiwiReader(params.id);
     return result;
   },
   head: ({ loaderData }) => ({

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { primaryColor } from "@bookiwi/color";
 
 import ErrorPage from "#/components/error";
+import { GUEST_USER } from "#/constants/guest";
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
@@ -48,12 +49,7 @@ function AuthPage() {
   };
 
   const handleGuestMode = () => {
-    userManager.loginAsTempUser({
-      id: "temp",
-      name: "Guest",
-      email: "guest@bookiwi.com",
-      profileImage: "",
-    });
+    userManager.loginAsGuestMode(GUEST_USER);
     navigate({ to: "/my-kiwis" });
   };
 
@@ -68,7 +64,7 @@ function AuthPage() {
             <button
               type="button"
               onClick={handleGuestMode}
-              className="peer relative mx-auto flex size-24 items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-200 active:scale-95"
+              className="peer relative mx-auto flex size-24 items-center justify-center rounded-full shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
               style={{
                 background: primaryColor,
               }}
@@ -86,7 +82,7 @@ function AuthPage() {
               <button
                 type="button"
                 onClick={handleGuestMode}
-                className="group relative rounded-2xl bg-gradient-to-r from-green-100 to-emerald-100 px-4 py-3 text-sm font-medium text-green-700 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-200 active:scale-95"
+                className="group relative rounded-2xl bg-gradient-to-r from-green-100 to-emerald-100 px-4 py-3 text-sm font-medium text-green-700 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
                 aria-label="로그인 없이 체험해보기"
               >
                 {/* 말풍선 꼬리 (아래쪽으로) */}
