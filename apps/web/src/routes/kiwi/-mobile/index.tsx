@@ -52,8 +52,16 @@
 //   );
 // }
 
+import ErrorPage from "../../../components/error";
+
 function MobileKiwi() {
-  return <div>MobileKiwi</div>;
+  return (
+    <ErrorPage
+      title="모바일 버전 개발 중 🚧"
+      message="죄송합니다! 현재 모바일 버전은 개발 중입니다. 더 나은 경험을 위해 데스크톱이나 노트북으로 접속해 주세요."
+      showHomeButton
+    />
+  );
 }
 
 export default MobileKiwi;
