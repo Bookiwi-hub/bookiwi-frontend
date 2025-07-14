@@ -1,10 +1,12 @@
 import { IndexDBError } from "#/errors";
 
 export enum IDBStore {
-  KiwiStore = "kiwiStore",
-  EpubStore = "epubStore",
-  ParticipantStore = "participantStore",
-  AnnotationStore = "annotationStore",
+  Kiwis = "kiwis",
+  Participants = "participants",
+  Epubs = "epubs",
+  Highlights = "highlights",
+  Comments = "comments",
+  Bookmarks = "bookmarks",
 }
 
 class IndexedDBManager {
@@ -631,97 +633,128 @@ interface DBConfig {
 
 interface StoreConfig {
   name: string;
-  keyPath: string;
+  keyPath: string | string[];
   indices?: IndexConfig[];
   autoIncrement?: boolean;
 }
 
 interface IndexConfig {
   name: string;
-  keyPath: string;
+  keyPath: string | string[];
   options?: IDBIndexParameters;
 }
 
 const config: DBConfig = {
-  name: "bookiwi-idb",
-  version: 2,
+  name: "bookiwi",
+  version: 1,
   stores: [
+    // 키위 정보 저장소
     {
-      name: IDBStore.KiwiStore,
+      name: IDBStore.Kiwis,
       keyPath: "id",
-      autoIncrement: false,
       indices: [
         {
-          name: "shareCode",
-          keyPath: "shareCode",
+          name: "epub_id",
+          keyPath: "epub_id",
+          options: { unique: false },
+        },
+        {
+          name: "share_code",
+          keyPath: "share_code",
           options: { unique: true },
         },
         {
-          name: "adminId",
-          keyPath: "adminId",
+          name: "created_at",
+          keyPath: "created_at",
+          options: { unique: false },
         },
       ],
     },
+    // 참가자 정보 저장소
     {
-      name: IDBStore.EpubStore,
+      name: IDBStore.Participants,
       keyPath: "id",
-      autoIncrement: false,
       indices: [
         {
-          name: "kiwiId",
-          keyPath: "kiwiId",
-          options: { unique: true },
+          name: "kiwi_id",
+          keyPath: "kiwi_id",
+          options: { unique: false },
+        },
+        {
+          name: "user_id",
+          keyPath: "user_id",
+          options: { unique: false },
         },
       ],
     },
+    // 전자책 정보 저장소
     {
-      name: IDBStore.ParticipantStore,
+      name: IDBStore.Epubs,
       keyPath: "id",
-      autoIncrement: false,
+      indices: [],
+    },
+    // 하이라이트 정보 저장소
+    {
+      name: IDBStore.Highlights,
+      keyPath: "id",
       indices: [
         {
-          name: "kiwiId",
-          keyPath: "kiwiId",
+          name: "participant_id",
+          keyPath: "participant_id",
           options: { unique: false },
         },
         {
-          name: "userId",
-          keyPath: "userId",
+          name: "kiwi_id",
+          keyPath: "kiwi_id",
+          options: { unique: false },
+        },
+        {
+          name: "section_href",
+          keyPath: "section_href",
+          options: { unique: false },
+        },
+        {
+          name: "created_at",
+          keyPath: "created_at",
+          options: { unique: false },
         },
       ],
     },
+    // 댓글 정보 저장소
     {
-      name: IDBStore.AnnotationStore,
+      name: IDBStore.Comments,
       keyPath: "id",
-      autoIncrement: false,
       indices: [
         {
-          name: "kiwiId",
-          keyPath: "kiwiId",
+          name: "highlight_id",
+          keyPath: "highlight_id",
           options: { unique: false },
         },
         {
-          name: "userId",
-          keyPath: "userId",
-        },
-        {
-          name: "cfi",
-          keyPath: "cfi",
+          name: "participant_id",
+          keyPath: "participant_id",
           options: { unique: false },
         },
         {
-          name: "participantId",
-          keyPath: "participantId",
+          name: "created_at",
+          keyPath: "created_at",
+          options: { unique: false },
+        },
+      ],
+    },
+    // 북마크 정보 저장소
+    {
+      name: IDBStore.Bookmarks,
+      keyPath: ["participant_id", "cfi_start", "cfi_end"],
+      indices: [
+        {
+          name: "participant_id",
+          keyPath: "participant_id",
           options: { unique: false },
         },
         {
-          name: "sectionIndex",
-          keyPath: "sectionIndex",
-          options: { unique: false },
-        },
-        {
-          name: "color",
-          keyPath: "color",
+          name: "created_at",
+          keyPath: "created_at",
           options: { unique: false },
         },
       ],
