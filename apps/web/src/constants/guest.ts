@@ -30,7 +30,7 @@ export const SAMPLE_EPUB_NAV = [
 ];
 export const SAMPLE_EPUB_TITLE = "운수 좋은 날";
 export const SAMPLE_EPUB_AUTHOR = "현진건";
-export const SAMPLE_EPUB_PUBLISHER = "북이위";
+export const SAMPLE_EPUB_PUBLISHER = "wikipedia";
 export const SAMPLE_KIWI_NAME = "운수 좋은 날";
 export const SAMPLE_KIWI_DESCRIPTION = "예시 키위로 체험해 보세요.";
 export const SAMPLE_KIWI_DETAIL_DESCRIPTION =
