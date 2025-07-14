@@ -68,8 +68,8 @@ export const updateCustomStyle = async (
 };
 
 interface Settings {
-  fontFamily: string;
-  fontSize: number;
-  lineHeight: number;
-  fontWeight: number;
+  fontFamily: string | null;
+  fontSize: number | null;
+  lineHeight: number | null;
+  fontWeight: number | null;
 }
