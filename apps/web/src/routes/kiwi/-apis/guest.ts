@@ -15,15 +15,9 @@ import idb, { IDBStore } from "#/managers/idb";
 
 export const getGuestKiwiReader = async (): Promise<GetKiwiReaderResponse> => {
   // IndexedDB에서 sample 데이터 조회
-  const kiwi: KiwiTable | undefined = await idb.get(
-    IDBStore.Kiwis,
-    SAMPLE_KIWI_ID,
-  );
-  const epub: EpubTable | undefined = await idb.get(
-    IDBStore.Epubs,
-    SAMPLE_EPUB_ID,
-  );
-  const participants: ParticipantTable[] = await idb.getByIndex(
+  const kiwi = await idb.get<KiwiTable>(IDBStore.Kiwis, SAMPLE_KIWI_ID);
+  const epub = await idb.get<EpubTable>(IDBStore.Epubs, SAMPLE_EPUB_ID);
+  const participants = await idb.getByIndex<ParticipantTable>(
     IDBStore.Participants,
     "kiwi_id",
     SAMPLE_KIWI_ID,

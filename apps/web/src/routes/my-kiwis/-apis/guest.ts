@@ -66,15 +66,9 @@ export const createGuestSampleKiwi = async () => {
 export const getGuestSampleKiwi = async (): Promise<MyKiwi[]> => {
   try {
     // IndexedDB에서 sample 데이터 조회
-    const kiwi: KiwiTable | undefined = await idb.get(
-      IDBStore.Kiwis,
-      SAMPLE_KIWI_ID,
-    );
-    const epub: EpubTable | undefined = await idb.get(
-      IDBStore.Epubs,
-      SAMPLE_EPUB_ID,
-    );
-    const participants: ParticipantTable[] = await idb.getByIndex(
+    const kiwi = await idb.get<KiwiTable>(IDBStore.Kiwis, SAMPLE_KIWI_ID);
+    const epub = await idb.get<EpubTable>(IDBStore.Epubs, SAMPLE_EPUB_ID);
+    const participants = await idb.getByIndex<ParticipantTable>(
       IDBStore.Participants,
       "kiwi_id",
       SAMPLE_KIWI_ID,
@@ -122,72 +116,6 @@ export const getGuestSampleKiwi = async (): Promise<MyKiwi[]> => {
     return [myKiwi];
   } catch (error) {
     console.error("Error getting guest sample kiwi:", error);
-    throw error;
-  }
-};
-
-/**
- * 특정 키위의 모든 관련 데이터 조회
- */
-export const getKiwiData = async (kiwiId: string) => {
-  try {
-    const kiwi = await idb.get(IDBStore.Kiwis, kiwiId);
-    if (!kiwi) {
-      throw new Error(`Kiwi with id ${kiwiId} not found`);
-    }
-
-    const participants = await idb.getByIndex(
-      IDBStore.Participants,
-      "kiwi_id",
-      kiwiId,
-    );
-    const highlights = await idb.getByIndex(
-      IDBStore.Highlights,
-      "kiwi_id",
-      kiwiId,
-    );
-    const epub = await idb.get(IDBStore.Epubs, (kiwi as any).epub_id);
-
-    // 각 하이라이트의 댓글 조회
-    const highlightIds = (highlights as any[]).map((h: any) => h.id);
-    const allComments = [];
-    const commentPromises = highlightIds.map(async (highlightId: string) => {
-      const comments = await idb.getByIndex(
-        IDBStore.Comments,
-        "highlight_id",
-        highlightId,
-      );
-      return comments;
-    });
-    const commentResults = await Promise.all(commentPromises);
-    allComments.push(...commentResults.flat());
-
-    // 각 참가자의 북마크 조회
-    const participantIds = (participants as any[]).map((p: any) => p.id);
-    const allBookmarks = [];
-    const bookmarkPromises = participantIds.map(
-      async (participantId: string) => {
-        const bookmarks = await idb.getByIndex(
-          IDBStore.Bookmarks,
-          "participant_id",
-          participantId,
-        );
-        return bookmarks;
-      },
-    );
-    const bookmarkResults = await Promise.all(bookmarkPromises);
-    allBookmarks.push(...bookmarkResults.flat());
-
-    return {
-      kiwi,
-      epub,
-      participants,
-      highlights,
-      comments: allComments,
-      bookmarks: allBookmarks,
-    };
-  } catch (error) {
-    console.error("Error getting kiwi data:", error);
     throw error;
   }
 };

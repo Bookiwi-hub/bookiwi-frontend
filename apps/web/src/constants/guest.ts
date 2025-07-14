@@ -1,4 +1,11 @@
 import { colors } from "@bookiwi/color";
+import {
+  CommentTable,
+  EpubTable,
+  HighlightTable,
+  KiwiTable,
+  ParticipantTable,
+} from "@bookiwi/supabase/types";
 
 export const GUEST_USER = {
   id: "0a27cb71-9195-4cd6-8347-e579d709b054",
@@ -35,7 +42,7 @@ export const SAMPLE_PARTICIPANT_IDS = [
 ] as const;
 
 // 키위 데이터
-export const sampleIDBKiwis = {
+export const sampleIDBKiwis: KiwiTable = {
   id: SAMPLE_KIWI_ID,
   epub_id: SAMPLE_EPUB_ID,
   name: SAMPLE_KIWI_NAME,
@@ -48,7 +55,7 @@ export const sampleIDBKiwis = {
 };
 
 // 전자책 데이터
-export const sampleIDBEpubs = {
+export const sampleIDBEpubs: EpubTable = {
   id: SAMPLE_EPUB_ID,
   file: SAMPLE_EPUB_URL,
   locations: SAMPLE_EPUB_LOCATIONS,
@@ -62,7 +69,7 @@ export const sampleIDBEpubs = {
 export const GUEST_PARTICIPANT_ID = "guest";
 
 // 참가자 데이터
-export const sampleIDBParticipants = [
+export const sampleIDBParticipants: ParticipantTable[] = [
   {
     id: SAMPLE_PARTICIPANT_IDS[0],
     kiwi_id: SAMPLE_KIWI_ID,
@@ -100,7 +107,7 @@ export const sampleIDBParticipants = [
 ];
 
 // 하이라이트 데이터
-export const sampleIDBHighlights = [
+export const sampleIDBHighlights: HighlightTable[] = [
   {
     id: "sample-kiwi-highlight-0",
     participant_id: SAMPLE_PARTICIPANT_IDS[0],
@@ -126,7 +133,7 @@ export const sampleIDBHighlights = [
 ];
 
 // 댓글 데이터
-export const sampleIDBComments = [
+export const sampleIDBComments: CommentTable[] = [
   {
     id: "sample-kiwi-comment-0",
     highlight_id: "sample-kiwi-highlight-0",
