@@ -2,7 +2,6 @@ import { CSSProperties } from "react";
 
 import Contents from "@bookiwi/epubjs/types/contents";
 
-import { ParticipantIDBData } from "#/types/idb";
 import { getKeys } from "#/utils";
 
 // 커스텀 스타일을 식별하기 위한 열거형
@@ -52,7 +51,7 @@ const mapToCss = (o: CSSProperties) =>
  */
 export const updateCustomStyle = async (
   contents: Contents,
-  settings: Omit<ParticipantIDBData["settings"], "isSinglePage">,
+  settings: Partial<Settings>,
 ) => {
   if (!contents) return Promise.resolve(false);
   const newSettings = {
@@ -67,3 +66,10 @@ export const updateCustomStyle = async (
 
   return contents.addStylesheetCss(css, Style.Custom);
 };
+
+interface Settings {
+  fontFamily: string;
+  fontSize: number;
+  lineHeight: number;
+  fontWeight: number;
+}
