@@ -27,6 +27,11 @@ function DeleteKiwiModal() {
     }
   };
 
+  const handleDelete = () => {
+    console.log("delete");
+    closeDeleteKiwiModal();
+  };
+
   const kiwi = useAtomValue(targetKiwiAtom);
 
   if (!isOpen || !kiwi) return null;
@@ -55,7 +60,9 @@ function DeleteKiwiModal() {
           >
             취소
           </Button>
-          <Button variant="destructive">삭제</Button>
+          <Button variant="destructive" onClick={handleDelete}>
+            삭제
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
