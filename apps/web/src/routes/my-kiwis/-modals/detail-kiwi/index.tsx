@@ -80,7 +80,11 @@ function DetailKiwiModal() {
 
           <div className="flex-1 overflow-y-auto">
             {/* 기본 정보 탭 */}
-            <TabsContent value="info" className="data-[state=inactive]:hidden">
+            <TabsContent
+              value="info"
+              className="data-[state=inactive]:hidden"
+              onFocus={(e) => e.target.blur()}
+            >
               <InformationTab kiwi={kiwi} />
             </TabsContent>
 
@@ -95,7 +99,12 @@ function DetailKiwiModal() {
         </Tabs>
 
         <DialogFooter className="border-t pt-4">
-          <Button variant="outline" onClick={handleClose}>
+          <Button
+            variant="outline"
+            onClick={handleClose}
+            autoFocus={false}
+            onFocus={(e) => e.target.blur()}
+          >
             닫기
           </Button>
           <Link to="/kiwi/$id" params={{ id }} className="w-full sm:w-auto">
