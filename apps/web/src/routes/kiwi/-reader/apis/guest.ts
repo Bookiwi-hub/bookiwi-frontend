@@ -79,7 +79,19 @@ export const addGuestHighlight = async (
 export const removeGuestHighlight = async (
   id: string,
 ): Promise<{ id: string }> => {
-  // IndexedDB에서 하이라이트 삭제
+  // 먼저 해당 하이라이트에 달린 모든 댓글 조회
+  const comments = await idb.getByIndex<CommentTable>(
+    IDBStore.Comments,
+    "highlight_id",
+    id,
+  );
+
+  // 연관된 모든 댓글 삭제
+  await Promise.all(
+    comments.map((comment) => idb.remove(IDBStore.Comments, comment.id)),
+  );
+
+  // 하이라이트 삭제
   await idb.remove(IDBStore.Highlights, id);
 
   return { id };
