@@ -14,44 +14,30 @@ import {
 import { GUEST_PARTICIPANT_ID } from "#/constants/guest";
 import idb, { IDBStore } from "#/managers/idb";
 
-// 타입 변환 헬퍼 함수
-const convertParticipantToTableFields = (
-  fields: Partial<Participant>,
-): Partial<ParticipantTable> => {
-  const fieldMapping: Record<keyof Participant, keyof ParticipantTable> = {
-    id: "id",
-    userId: "user_id",
-    name: "name",
-    profileImage: "profile_image",
-    color: "color",
-    singlePage: "single_page",
-    fontFamily: "font_family",
-    fontSize: "font_size",
-    fontWeight: "font_weight",
-    lineHeight: "line_height",
-    cfiStart: "cfi_start",
-    cfiEnd: "cfi_end",
-    percentage: "percentage",
-    lastActivityAt: "last_activity_at",
-  };
-
-  const updateFields: Partial<ParticipantTable> = {};
-
-  Object.entries(fields).forEach(([key, value]) => {
-    if (value !== undefined) {
-      const dbField = fieldMapping[key as keyof Participant];
-      if (dbField) {
-        (updateFields as any)[dbField] = value;
-      }
-    }
-  });
-
-  return updateFields;
-};
-
 export const updateGuestParticipant = async (fields: Partial<Participant>) => {
   // Participant 타입의 필드를 ParticipantTable 타입의 필드로 변환
-  const updateFields = convertParticipantToTableFields(fields);
+  const updateFields: Partial<ParticipantTable> = {};
+
+  if (fields.userId !== undefined) updateFields.user_id = fields.userId;
+  if (fields.name !== undefined) updateFields.name = fields.name;
+  if (fields.profileImage !== undefined)
+    updateFields.profile_image = fields.profileImage;
+  if (fields.color !== undefined) updateFields.color = fields.color;
+  if (fields.singlePage !== undefined)
+    updateFields.single_page = fields.singlePage;
+  if (fields.fontFamily !== undefined)
+    updateFields.font_family = fields.fontFamily;
+  if (fields.fontSize !== undefined) updateFields.font_size = fields.fontSize;
+  if (fields.fontWeight !== undefined)
+    updateFields.font_weight = fields.fontWeight;
+  if (fields.lineHeight !== undefined)
+    updateFields.line_height = fields.lineHeight;
+  if (fields.cfiStart !== undefined) updateFields.cfi_start = fields.cfiStart;
+  if (fields.cfiEnd !== undefined) updateFields.cfi_end = fields.cfiEnd;
+  if (fields.percentage !== undefined)
+    updateFields.percentage = fields.percentage;
+  if (fields.lastActivityAt !== undefined)
+    updateFields.last_activity_at = fields.lastActivityAt;
 
   // IndexedDB에서 참가자 정보 업데이트
   const updatedParticipant = await idb.update(
