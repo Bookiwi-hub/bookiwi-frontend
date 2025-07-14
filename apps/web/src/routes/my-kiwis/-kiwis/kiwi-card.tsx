@@ -30,10 +30,6 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
     ? formatDate(currentParticipant.lastActivityAt)
     : "";
 
-  const handleDelete = () => {
-    console.log("delete", id);
-  };
-
   return (
     <CardUI
       key={id}
@@ -45,7 +41,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
       participantsCount={participantsCount}
       lastActivityAt={lastActivityAt}
       onClick={() => openKiwiDetailModal(kiwi)}
-      onDelete={handleDelete}
+      kiwi={kiwi}
     />
   );
 }
@@ -58,8 +54,8 @@ interface CardUIProps {
   participantsCount: number;
   lastActivityAt: string;
   id: string;
+  kiwi: MyKiwi;
   onClick: () => void;
-  onDelete: () => void;
 }
 
 function CardUI({
@@ -70,8 +66,8 @@ function CardUI({
   participantsCount,
   lastActivityAt,
   id,
+  kiwi,
   onClick,
-  onDelete,
 }: CardUIProps) {
   return (
     <Card
@@ -80,7 +76,7 @@ function CardUI({
     >
       {/* 케밥 메뉴 */}
       <div className="absolute right-2 top-2 z-10">
-        <KebabMenu onDelete={onDelete} />
+        <KebabMenu kiwi={kiwi} />
       </div>
 
       {/* 이미지 영역 */}

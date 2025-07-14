@@ -1,5 +1,10 @@
 import { MoreVertical, Trash2 } from "lucide-react";
 
+import { useSetAtom } from "@bookiwi/jotai";
+import { MyKiwi } from "@bookiwi/supabase/types";
+
+import { openDeleteKiwiModalAtom } from "../-modals/atoms";
+
 import { Button } from "#/components/ui/button";
 import {
   DropdownMenu,
@@ -10,10 +15,11 @@ import {
 
 interface KebabMenuProps {
   align?: "start" | "center" | "end";
-  onDelete: () => Promise<void> | void;
+  kiwi: MyKiwi;
 }
 
-function KebabMenu({ onDelete, align = "center" }: KebabMenuProps) {
+function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
+  const openDeleteKiwiModal = useSetAtom(openDeleteKiwiModalAtom);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -34,7 +40,7 @@ function KebabMenu({ onDelete, align = "center" }: KebabMenuProps) {
           className="text-red-600 focus:text-red-600"
           onClick={(e) => {
             e.stopPropagation();
-            onDelete();
+            openDeleteKiwiModal(kiwi);
           }}
         >
           <Trash2 className="mr-2 size-4" />

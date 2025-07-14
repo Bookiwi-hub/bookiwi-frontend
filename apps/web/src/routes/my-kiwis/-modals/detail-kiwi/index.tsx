@@ -32,12 +32,6 @@ function DetailKiwiModal() {
     closeKiwiDetailModal();
   };
 
-  const handleDelete = () => {
-    console.log("키위 삭제:", kiwi?.id);
-    // TODO: 실제 삭제 API 호출 구현
-    handleClose();
-  };
-
   if (!kiwi || !isOpen) return null;
 
   const { id, name, description, password } = kiwi;
@@ -53,7 +47,7 @@ function DetailKiwiModal() {
                 {password && "비공개 키위"}
               </Badge>
             </div>
-            <KebabMenu onDelete={handleDelete} />
+            <KebabMenu kiwi={kiwi} />
           </div>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
