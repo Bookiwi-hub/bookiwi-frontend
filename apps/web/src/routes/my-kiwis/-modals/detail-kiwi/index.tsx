@@ -62,10 +62,18 @@ function DetailKiwiModal() {
           className="flex h-[calc(85vh-180px)] flex-col pt-4"
         >
           <TabsList className="mb-4 flex w-full gap-2">
-            <TabsTrigger className="w-1/2" value="info">
+            <TabsTrigger
+              className="w-1/2"
+              value="info"
+              onFocus={(e) => e.target.blur()}
+            >
               기본 정보
             </TabsTrigger>
-            <TabsTrigger className="w-1/2" value="activities">
+            <TabsTrigger
+              className="w-1/2"
+              value="activities"
+              onFocus={(e) => e.target.blur()}
+            >
               활동 내역
             </TabsTrigger>
           </TabsList>

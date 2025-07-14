@@ -21,7 +21,10 @@ function KebabMenu({ onDelete, align = "center" }: KebabMenuProps) {
           variant="ghost"
           size="sm"
           className="size-8 rounded-full bg-black/20 p-0 backdrop-blur-sm hover:bg-black/30"
-          onClick={(e) => e.stopPropagation()}
+          tabIndex={-1}
+          autoFocus={false}
+          onFocus={(e) => e.target.blur()}
+          onMouseDown={(e) => e.preventDefault()}
         >
           <MoreVertical className="size-4 text-white" />
         </Button>
