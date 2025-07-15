@@ -115,20 +115,20 @@ class SupabaseKiwi {
     }
 
     // epub이 삭제되었다면 관련 파일들도 삭제
-    if (data.epub_deleted) {
+    if (data.deleted_epub) {
       try {
         // epub 파일 삭제
-        if (data.epub_file_path) {
-          const epubPath = extractFilePathFromUrl(data.epub_file_path, "epub");
+        if (data.epub_file_url) {
+          const epubPath = extractFilePathFromUrl(data.epub_file_url, "epub");
           if (epubPath) {
             await this.deleteEpub(epubPath);
           }
         }
 
         // cover image 파일 삭제
-        if (data.cover_image_path) {
+        if (data.cover_image_url) {
           const coverImagePath = extractFilePathFromUrl(
-            data.cover_image_path,
+            data.cover_image_url,
             "cover",
           );
           if (coverImagePath) {

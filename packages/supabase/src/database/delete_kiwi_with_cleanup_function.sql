@@ -34,17 +34,17 @@ BEGIN
     -- 삭제할 파일 경로들 반환
     result := json_build_object(
       'success', true,
-      'epub_deleted', true,
-      'epub_file_path', epub_info.file,
-      'cover_image_path', epub_info.cover_image
+      'deleted_epub', true,
+      'epub_file_url', epub_info.file,
+      'cover_image_url', epub_info.cover_image
     );
   ELSE
     -- epub은 유지, 파일 삭제 불필요
     result := json_build_object(
       'success', true,
-      'epub_deleted', false,
-      'epub_file_path', null,
-      'cover_image_path', null
+      'deleted_epub', false,
+      'epub_file_url', null,
+      'cover_image_url', null
     );
   END IF;
   
