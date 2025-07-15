@@ -8,6 +8,7 @@ import {
   CreateKiwiModal,
   DeleteKiwiModal,
   DetailKiwiModal,
+  JoinKiwiModal,
   LeaveKiwiModal,
 } from "./-modals";
 
@@ -61,6 +62,7 @@ function MyKiwis() {
       <CreateKiwiModal />
       <DeleteKiwiModal />
       <LeaveKiwiModal />
+      <JoinKiwiModal />
     </Provider>
   );
 }

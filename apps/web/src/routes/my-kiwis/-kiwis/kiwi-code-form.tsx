@@ -2,9 +2,11 @@ import { BookDown } from "lucide-react";
 import { FormEvent, memo } from "react";
 import { toast } from "sonner";
 
+import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
 
 import { getKiwiByShareCode } from "../-apis";
+import { openJoinKiwiModalAtom } from "../-modals/atoms";
 
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
@@ -17,6 +19,7 @@ interface KiwiCodeFormProps {
 
 function KiwiCodeForm({ myKiwis }: KiwiCodeFormProps) {
   const [isLoading, getKiwi] = useLoading(getKiwiByShareCode);
+  const openJoinKiwiModal = useSetAtom(openJoinKiwiModalAtom);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,9 +42,8 @@ function KiwiCodeForm({ myKiwis }: KiwiCodeFormProps) {
     }
 
     try {
-      const result = await getKiwi(shareCode);
-      // TODO: 성공 시 키위 목록 업데이트 또는 해당 키위로 이동
-      console.log("키위 가져오기 성공:", result);
+      const kiwi = await getKiwi(shareCode);
+      openJoinKiwiModal(kiwi);
     } catch (error) {
       toast.error("키위를 가져오지 못했습니다.");
     }
