@@ -11,6 +11,7 @@ import {
 
 import { MyKiwi, NavItem } from "@bookiwi/supabase/types";
 
+import { SAMPLE_EPUB_ID } from "#/constants/guest";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
 import { useCopy } from "#/hooks";
 import userManager from "#/managers/user";
@@ -29,9 +30,12 @@ function InformationTab({ kiwi }: InformationTabProps) {
     participants,
     admin,
     shareCode,
+    epubId,
   } = kiwi;
 
   const { copied, copy } = useCopy();
+
+  const isExampleKiwi = epubId === SAMPLE_EPUB_ID;
 
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
@@ -96,17 +100,23 @@ function InformationTab({ kiwi }: InformationTabProps) {
                 <BookDown size={16} className="text-muted-foreground" />
                 <span>공유 코드:</span>
                 <div className="flex items-center gap-2">
-                  <code className="rounded bg-muted px-2 py-1 font-mono text-xs">
-                    {shareCode}
-                  </code>
-                  <button
-                    type="button"
-                    onClick={handleCopyShareCode}
-                    className="flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors hover:bg-muted"
-                    title="공유 코드 복사"
-                  >
-                    {copied ? <Check size={12} /> : <Copy size={12} />}
-                  </button>
+                  {isExampleKiwi ? (
+                    <span>예시 키위는 공유할 수 없습니다.</span>
+                  ) : (
+                    <>
+                      <code className="rounded bg-muted px-2 py-1 font-mono text-xs">
+                        {shareCode}
+                      </code>
+                      <button
+                        type="button"
+                        onClick={handleCopyShareCode}
+                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors hover:bg-muted"
+                        title="공유 코드 복사"
+                      >
+                        {copied ? <Check size={12} /> : <Copy size={12} />}
+                      </button>
+                    </>
+                  )}
                 </div>
               </li>
             </ul>

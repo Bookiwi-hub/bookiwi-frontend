@@ -11,6 +11,7 @@ SELECT
     k.max_participants as "maxParticipants",
     k.password,
     k.share_code as "shareCode",
+    k.epub_id as "epubId",
     k.created_at as "createdAt",
     
     -- 관리자 정보

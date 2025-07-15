@@ -72,7 +72,8 @@ class SupabaseKiwi {
         createdAt,
         admin,
         bookMetadata,
-        participants
+        participants,
+        epubId
       `,
       )
       .eq("user_id", userId);
@@ -84,7 +85,7 @@ class SupabaseKiwi {
 
     if (!data) return [];
 
-    return data as MyKiwi[];
+    return data;
   }
 
   async createSampleKiwi(userId: string): Promise<void> {
