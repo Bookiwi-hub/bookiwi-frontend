@@ -49,12 +49,6 @@ function InfoCard({ kiwi }: { kiwi: MyKiwi }) {
               </div>
 
               <div className="flex items-center gap-2">
-                <Avatar className="size-6">
-                  <AvatarImage src={admin.profileImage || undefined} />
-                  <AvatarFallback className="text-xs">
-                    {admin.name[0]}
-                  </AvatarFallback>
-                </Avatar>
                 <span className="text-muted-foreground">
                   관리자: {admin.name}
                 </span>
@@ -69,7 +63,7 @@ function InfoCard({ kiwi }: { kiwi: MyKiwi }) {
                   {participants.map((participant) => (
                     <Avatar
                       key={participant.userId}
-                      className="size-6 border-2 border-white"
+                      className="size-6 border-2 border-white bg-slate-400"
                     >
                       <AvatarImage
                         src={participant.profileImage || undefined}
