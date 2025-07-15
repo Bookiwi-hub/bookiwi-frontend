@@ -16,7 +16,7 @@ function Message({ isAdmin }: MessageProps) {
             </>
           ) : (
             <>
-              키위에서 나가면 <strong>독서 기록이 모두 사라지며</strong>
+              키위를 삭제하면 <strong>기록이 모두 사라지며</strong>
               <strong className="text-destructive"> 복구할 수 없습니다</strong>.
             </>
           )}

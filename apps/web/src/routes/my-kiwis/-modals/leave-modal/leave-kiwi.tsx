@@ -7,8 +7,8 @@ import { MyKiwi } from "@bookiwi/supabase/types";
 import { deleteParticipant } from "../../-apis";
 import { closeDeleteKiwiModalAtom } from "../atoms";
 
-import InfoCard from "./info-card";
-import Message from "./message";
+// import InfoCard from "./info-card";
+// import Message from "./message";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -69,10 +69,10 @@ function LeaveKiwi({ kiwi }: { kiwi: MyKiwi }) {
         </DialogHeader>
 
         {/* 키위 정보 카드 */}
-        <InfoCard kiwi={kiwi} />
+        {/* <InfoCard kiwi={kiwi} /> */}
 
         {/* 경고 메시지 */}
-        <Message isAdmin={false} />
+        {/* <Message isAdmin={false} /> */}
 
         <DialogFooter className="border-t pt-4">
           <Button

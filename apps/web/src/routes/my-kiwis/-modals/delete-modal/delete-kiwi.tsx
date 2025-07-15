@@ -4,10 +4,9 @@ import { toast } from "sonner";
 import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
 
-import { deleteKiwi } from "../../-apis";
+import InfoCard from "../../-components/info-card";
 import { closeDeleteKiwiModalAtom } from "../atoms";
 
-import InfoCard from "./info-card";
 import Message from "./message";
 
 import { Button } from "#/components/ui/button";
@@ -21,12 +20,16 @@ import {
 } from "#/components/ui/dialog";
 import { useLoading } from "#/hooks";
 
-function DeleteKiwi({ kiwi }: { kiwi: MyKiwi }) {
-  const closeDeleteKiwiModal = useSetAtom(closeDeleteKiwiModalAtom);
-  const [isDeleting, executeDelete] = useLoading(deleteKiwi);
-  const router = useRouter();
+interface DeleteKiwiProps {
+  kiwi: MyKiwi;
+  onDelete: () => Promise<void>;
+  isAdmin: boolean;
+}
 
-  const kiwiId = kiwi.id;
+function DeleteKiwi({ kiwi, onDelete, isAdmin }: DeleteKiwiProps) {
+  const closeDeleteKiwiModal = useSetAtom(closeDeleteKiwiModalAtom);
+  const [isDeleting, executeDelete] = useLoading(onDelete);
+  const router = useRouter();
 
   const handleOpenChange = (newOpen: boolean) => {
     // 삭제 중일 때는 모달을 닫지 못하도록 처리
@@ -39,7 +42,7 @@ function DeleteKiwi({ kiwi }: { kiwi: MyKiwi }) {
     if (isDeleting) return; // 중복 클릭 방지
 
     try {
-      await executeDelete(kiwiId);
+      await executeDelete();
       toast.success("키위가 삭제되었습니다.");
       await router.invalidate();
       closeDeleteKiwiModal();
@@ -65,7 +68,7 @@ function DeleteKiwi({ kiwi }: { kiwi: MyKiwi }) {
         <InfoCard kiwi={kiwi} />
 
         {/* 경고 메시지 */}
-        <Message isAdmin />
+        <Message isAdmin={isAdmin} />
 
         <DialogFooter className="border-t pt-4">
           <Button

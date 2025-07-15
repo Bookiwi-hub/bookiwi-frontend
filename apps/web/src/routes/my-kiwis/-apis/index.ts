@@ -64,3 +64,13 @@ export const deleteParticipant = async (participantId: string) => {
     throw error;
   }
 };
+
+export const deleteUserKiwi = async (userId: string, kiwiId: string) => {
+  try {
+    await supabaseManager.kiwi.deleteUserKiwi(userId, kiwiId);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error deleting user kiwi:", error);
+    throw error;
+  }
+};
