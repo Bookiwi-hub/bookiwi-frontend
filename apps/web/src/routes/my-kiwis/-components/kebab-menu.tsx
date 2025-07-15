@@ -28,6 +28,9 @@ function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
   const isParticipant = kiwi.participants.some(
     (participant) => participant.userId === userManager.userId,
   );
+  const isGuestMode = userManager.isGuest;
+
+  if (isGuestMode && !isParticipant) return null;
 
   return (
     <DropdownMenu>
@@ -45,15 +48,17 @@ function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} className="w-48">
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            openDeleteKiwiModal(kiwi);
-          }}
-        >
-          <Trash2 className="mr-2 size-4" />
-          삭제하기
-        </DropdownMenuItem>
+        {!isGuestMode && (
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              openDeleteKiwiModal(kiwi);
+            }}
+          >
+            <Trash2 className="mr-2 size-4" />
+            삭제하기
+          </DropdownMenuItem>
+        )}
         {isParticipant && (
           <DropdownMenuItem
             onClick={(e) => {

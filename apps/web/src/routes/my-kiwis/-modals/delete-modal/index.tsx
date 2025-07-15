@@ -15,7 +15,7 @@ function DeleteKiwiModal() {
 
   if (!isOpen || !kiwi || !userId) return null;
 
-  const isAdmin = kiwi.admin.id !== userId;
+  const isAdmin = kiwi.admin.id === userId;
   const participantId = kiwi.participants.find(
     (participant) => participant.userId === userId,
   )?.id;

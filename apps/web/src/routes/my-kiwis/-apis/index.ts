@@ -1,6 +1,10 @@
 import { NewKiwi } from "@bookiwi/supabase/types";
 
-import { createGuestSampleKiwi, getGuestSampleKiwi } from "./guest";
+import {
+  clearGuestSampleKiwi,
+  createGuestSampleKiwi,
+  getGuestSampleKiwi,
+} from "./guest";
 
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
@@ -57,6 +61,10 @@ export const deleteKiwi = async (kiwiId: string) => {
 
 export const deleteParticipant = async (participantId: string) => {
   try {
+    if (userManager.isGuest) {
+      await clearGuestSampleKiwi();
+      return;
+    }
     await supabaseManager.kiwi.deleteParticipant(participantId);
   } catch (error) {
     // eslint-disable-next-line no-console
