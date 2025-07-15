@@ -18,18 +18,18 @@ import {
   DialogTitle,
 } from "#/components/ui/dialog";
 
-function JoinKiwiModal() {
+function SharedKiwiModal() {
   const modalState = useAtomValue(modalStateAtom);
-  const isOpen = modalState === ModalState.JoinKiwi;
+  const isOpen = modalState === ModalState.SharedKiwi;
   const kiwi = useAtomValue(selectedKiwiAtom);
-  const closeJoinKiwiModal = useSetAtom(closeModalAtom);
+  const closeSharedKiwiModal = useSetAtom(closeModalAtom);
 
   if (!isOpen || !kiwi) return null;
 
   const handleOpenChange = (newOpen: boolean) => {
     // 나가는 중일 때는 모달을 닫지 못하도록 처리
     if (!newOpen) {
-      closeJoinKiwiModal();
+      closeSharedKiwiModal();
     }
   };
 
@@ -54,7 +54,7 @@ function JoinKiwiModal() {
         <DialogFooter className="border-t pt-4">
           <Button
             variant="outline"
-            onClick={closeJoinKiwiModal}
+            onClick={closeSharedKiwiModal}
             onFocus={(e) => e.target.blur()}
           >
             취소
@@ -68,4 +68,4 @@ function JoinKiwiModal() {
   );
 }
 
-export default JoinKiwiModal;
+export default SharedKiwiModal;

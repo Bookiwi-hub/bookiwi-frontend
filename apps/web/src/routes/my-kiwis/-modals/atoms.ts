@@ -9,7 +9,7 @@ export enum ModalState {
   DetailKiwi,
   DeleteKiwi,
   LeaveKiwi,
-  JoinKiwi,
+  SharedKiwi,
   Closed,
 }
 
@@ -59,7 +59,7 @@ export const openLeaveKiwiModalAtom = atom(null, (get, set, kiwi: MyKiwi) => {
   set(modalStateAtom, ModalState.LeaveKiwi);
 });
 
-export const openJoinKiwiModalAtom = atom(null, (get, set, kiwi: MyKiwi) => {
+export const openSharedKiwiModalAtom = atom(null, (get, set, kiwi: MyKiwi) => {
   set(selectedKiwiAtom, kiwi);
-  set(modalStateAtom, ModalState.JoinKiwi);
+  set(modalStateAtom, ModalState.SharedKiwi);
 });

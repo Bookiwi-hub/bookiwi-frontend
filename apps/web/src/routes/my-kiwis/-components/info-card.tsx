@@ -52,7 +52,7 @@ function InfoCard({ kiwi }: { kiwi: MyKiwi }) {
                 <Avatar className="size-6">
                   <AvatarImage src={admin.profileImage || undefined} />
                   <AvatarFallback className="text-xs">
-                    {admin.name.slice(0, 2)}
+                    {admin.name[0]}
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-muted-foreground">

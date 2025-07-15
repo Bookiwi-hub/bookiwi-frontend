@@ -1,8 +1,8 @@
 import CreateKiwiModal from "./create-kiwi";
 import DeleteKiwiModal from "./delete-kiwi";
 import DetailKiwiModal from "./detail-kiwi";
-import JoinKiwiModal from "./join-kiwi";
 import LeaveKiwiModal from "./leave-kiwi";
+import SharedKiwiModal from "./shared-kiwi";
 
 function Modals() {
   return (
@@ -11,7 +11,7 @@ function Modals() {
       <CreateKiwiModal />
       <DeleteKiwiModal />
       <LeaveKiwiModal />
-      <JoinKiwiModal />
+      <SharedKiwiModal />
     </>
   );
 }
