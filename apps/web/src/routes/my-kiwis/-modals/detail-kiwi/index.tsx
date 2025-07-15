@@ -4,10 +4,14 @@ import { ChevronRight } from "lucide-react";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import KebabMenu from "../../-components/kebab-menu";
-import { closeKiwiDetailModalAtom, ModalState, modalStateAtom } from "../atoms";
+import {
+  closeKiwiDetailModalAtom,
+  ModalState,
+  modalStateAtom,
+  selectedKiwiAtom,
+} from "../atoms";
 
 import ActivitiesTab from "./activities-tab";
-import { selectedKiwiAtom } from "./atoms";
 import InformationTab from "./information-tab";
 
 import { Badge } from "#/components/ui/badge";

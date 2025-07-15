@@ -3,8 +3,6 @@ import { MyKiwi } from "@bookiwi/supabase/types";
 
 import { createKiwiAtom, stepAtom } from "./create-kiwi/atoms";
 import { Step } from "./create-kiwi/types";
-import { targetKiwiAtom } from "./delete-modal/atoms";
-import { selectedKiwiAtom } from "./detail-kiwi/atoms";
 
 export enum ModalState {
   CreateKiwi,
@@ -14,6 +12,7 @@ export enum ModalState {
 }
 
 export const modalStateAtom = atom<ModalState>(ModalState.Closed);
+export const selectedKiwiAtom = atom<MyKiwi | null>(null);
 
 export const openCreateKiwiModalAtom = atom(null, (get, set) => {
   set(modalStateAtom, ModalState.CreateKiwi);
@@ -44,11 +43,11 @@ export const closeKiwiDetailModalAtom = atom(null, (get, set) => {
 });
 
 export const openDeleteKiwiModalAtom = atom(null, (get, set, kiwi: MyKiwi) => {
-  set(targetKiwiAtom, kiwi);
+  set(selectedKiwiAtom, kiwi);
   set(modalStateAtom, ModalState.DeleteKiwi);
 });
 
 export const closeDeleteKiwiModalAtom = atom(null, (get, set) => {
   set(modalStateAtom, ModalState.Closed);
-  set(targetKiwiAtom, null);
+  set(selectedKiwiAtom, null);
 });
