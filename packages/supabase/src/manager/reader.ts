@@ -10,7 +10,7 @@ import {
   Comment,
   NewComment,
 } from "../types";
-import { camelToSnakeKeys, snakeToCamelKeys } from "../utils/base";
+import { camelToSnakeKeys, snakeToCamelKeys } from "../utils";
 
 class SupabaseReader {
   private supabase: SupabaseClient;
