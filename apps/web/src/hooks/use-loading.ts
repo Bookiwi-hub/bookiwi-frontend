@@ -43,7 +43,7 @@ type LoadingHookReturn<T> = [
  *   return <button onClick={handleClick}>데이터 로드</button>;
  * };
  */
-const useLoading = <T>(
+export const useLoading = <T>(
   getData: (...args: any[]) => Promise<T>,
 ): LoadingHookReturn<T> => {
   const [isLoading, setIsLoading] = useState(false);
@@ -65,5 +65,3 @@ const useLoading = <T>(
 
   return [isLoading, loadingError, handleLoad];
 };
-
-export default useLoading;

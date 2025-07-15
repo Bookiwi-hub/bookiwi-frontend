@@ -1,3 +1,6 @@
+import { useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
+
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import { deleteKiwi } from "../../-apis";
@@ -16,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "#/components/ui/dialog";
+import { useLoading } from "#/hooks";
 import userManager from "#/managers/user";
 
 function DeleteKiwiModal() {
@@ -23,17 +27,28 @@ function DeleteKiwiModal() {
   const isOpen = modalState === ModalState.DeleteKiwi;
   const closeDeleteKiwiModal = useSetAtom(closeDeleteKiwiModalAtom);
   const kiwi = useAtomValue(targetKiwiAtom);
+  const [isDeleting, , executeDelete] = useLoading(deleteKiwi);
+  const router = useRouter();
   if (!isOpen || !kiwi) return null;
 
   const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
+    // 삭제 중일 때는 모달을 닫지 못하도록 처리
+    if (!newOpen && !isDeleting) {
       closeDeleteKiwiModal();
     }
   };
 
   const handleDelete = async () => {
-    await deleteKiwi(kiwi.id);
-    closeDeleteKiwiModal();
+    if (isDeleting) return; // 중복 클릭 방지
+
+    try {
+      await executeDelete(kiwi.id);
+      toast.success("키위가 삭제되었습니다.");
+      await router.invalidate();
+      closeDeleteKiwiModal();
+    } catch (error) {
+      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   const isAdmin = kiwi.admin.id === userManager.userId;
@@ -61,11 +76,16 @@ function DeleteKiwiModal() {
             variant="outline"
             onClick={closeDeleteKiwiModal}
             onFocus={(e) => e.target.blur()}
+            disabled={isDeleting}
           >
             취소
           </Button>
-          <Button variant="destructive" onClick={handleDelete}>
-            삭제
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "삭제 중..." : "삭제"}
           </Button>
         </DialogFooter>
       </DialogContent>
