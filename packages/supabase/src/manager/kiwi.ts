@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { NewKiwi, MyKiwi, Kiwi } from "../types";
+import { NewKiwi, MyKiwi } from "../types";
 import {
   extractFilePathFromUrl,
   fileToEpubInfo,
@@ -164,22 +164,11 @@ class SupabaseKiwi {
     }
   }
 
-  async getKiwiByShareCode(shareCode: string): Promise<Kiwi> {
+  async getKiwiByShareCode(shareCode: string): Promise<MyKiwi> {
     const { data, error } = await this.supabase
-      .from("kiwis")
-      .select(
-        `
-        id,
-        name,
-        description,
-        max_participants,
-        detail_description,
-        password,
-        share_code,
-        created_at
-      `,
-      )
-      .eq("share_code", shareCode)
+      .from("kiwis_info_view")
+      .select("*")
+      .eq("shareCode", shareCode)
       .single();
 
     if (error) {
@@ -190,18 +179,7 @@ class SupabaseKiwi {
       throw new Error("키위를 찾을 수 없습니다.");
     }
 
-    const kiwi: Kiwi = {
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      maxParticipants: data.max_participants,
-      detailDescription: data.detail_description,
-      password: data.password,
-      shareCode: data.share_code,
-      createdAt: data.created_at,
-    };
-
-    return kiwi;
+    return data as MyKiwi;
   }
 
   private async uploadEpub(file: File) {
