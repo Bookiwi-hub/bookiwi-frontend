@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from "#/components/ui/dialog";
 
-function LeaveKiwi() {
+function JoinKiwiModal() {
   const modalState = useAtomValue(modalStateAtom);
   const isOpen = modalState === ModalState.JoinKiwi;
   const kiwi = useAtomValue(selectedKiwiAtom);
@@ -68,4 +68,4 @@ function LeaveKiwi() {
   );
 }
 
-export default LeaveKiwi;
+export default JoinKiwiModal;

@@ -26,7 +26,7 @@ import {
 import { useLoading } from "#/hooks";
 import userManager from "#/managers/user";
 
-function LeaveKiwi() {
+function LeaveKiwiModal() {
   const modalState = useAtomValue(modalStateAtom);
   const isOpen = modalState === ModalState.LeaveKiwi;
   const kiwi = useAtomValue(selectedKiwiAtom);
@@ -105,4 +105,4 @@ function LeaveKiwi() {
   );
 }
 
-export default LeaveKiwi;
+export default LeaveKiwiModal;
