@@ -5,7 +5,7 @@ import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
 
 import InfoCard from "../../-components/info-card";
-import { closeDeleteKiwiModalAtom } from "../atoms";
+import { closeModalAtom } from "../atoms";
 
 import Message from "./message";
 
@@ -27,7 +27,7 @@ interface DeleteKiwiProps {
 }
 
 function DeleteKiwi({ kiwi, onDelete, isAdmin }: DeleteKiwiProps) {
-  const closeDeleteKiwiModal = useSetAtom(closeDeleteKiwiModalAtom);
+  const closeDeleteKiwiModal = useSetAtom(closeModalAtom);
   const [isDeleting, executeDelete] = useLoading(onDelete);
   const router = useRouter();
 

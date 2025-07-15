@@ -8,6 +8,7 @@ export enum ModalState {
   CreateKiwi,
   DetailKiwi,
   DeleteKiwi,
+  LeaveKiwi,
   Closed,
 }
 
@@ -47,7 +48,12 @@ export const openDeleteKiwiModalAtom = atom(null, (get, set, kiwi: MyKiwi) => {
   set(modalStateAtom, ModalState.DeleteKiwi);
 });
 
-export const closeDeleteKiwiModalAtom = atom(null, (get, set) => {
+export const closeModalAtom = atom(null, (get, set) => {
   set(modalStateAtom, ModalState.Closed);
   set(selectedKiwiAtom, null);
+});
+
+export const openLeaveKiwiModalAtom = atom(null, (get, set, kiwi: MyKiwi) => {
+  set(selectedKiwiAtom, kiwi);
+  set(modalStateAtom, ModalState.LeaveKiwi);
 });

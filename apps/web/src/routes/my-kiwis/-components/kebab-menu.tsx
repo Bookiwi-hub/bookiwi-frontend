@@ -3,7 +3,10 @@ import { LogOut, MoreVertical, Trash2 } from "lucide-react";
 import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
 
-import { openDeleteKiwiModalAtom } from "../-modals/atoms";
+import {
+  openDeleteKiwiModalAtom,
+  openLeaveKiwiModalAtom,
+} from "../-modals/atoms";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -21,7 +24,11 @@ interface KebabMenuProps {
 
 function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
   const openDeleteKiwiModal = useSetAtom(openDeleteKiwiModalAtom);
-  const isAdmin = kiwi.admin.id === userManager.userId;
+  const openLeaveKiwiModal = useSetAtom(openLeaveKiwiModalAtom);
+  const isParticipant = kiwi.participants.some(
+    (participant) => participant.userId === userManager.userId,
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -45,18 +52,21 @@ function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
             openDeleteKiwiModal(kiwi);
           }}
         >
-          {isAdmin ? (
-            <>
-              <Trash2 className="mr-2 size-4" />
-              키위 삭제하기
-            </>
-          ) : (
-            <>
-              <LogOut className="mr-2 size-4" />
-              키위 나가기
-            </>
-          )}
+          <Trash2 className="mr-2 size-4" />
+          키위 삭제하기
         </DropdownMenuItem>
+        {isParticipant && (
+          <DropdownMenuItem
+            className="text-red-600 focus:text-red-600"
+            onClick={(e) => {
+              e.stopPropagation();
+              openLeaveKiwiModal(kiwi);
+            }}
+          >
+            <LogOut className="mr-2 size-4" />
+            키위 나가기
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
