@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-import { NewKiwi, MyKiwi } from "../types";
+import { NewKiwi, MyKiwi, Kiwi } from "../types";
 import {
   extractFilePathFromUrl,
   fileToEpubInfo,
@@ -162,6 +162,46 @@ class SupabaseKiwi {
     if (error) {
       throw new Error(error.message);
     }
+  }
+
+  async getKiwiByShareCode(shareCode: string): Promise<Kiwi> {
+    const { data, error } = await this.supabase
+      .from("kiwis")
+      .select(
+        `
+        id,
+        name,
+        description,
+        max_participants,
+        detail_description,
+        password,
+        share_code,
+        created_at
+      `,
+      )
+      .eq("share_code", shareCode)
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (!data) {
+      throw new Error("키위를 찾을 수 없습니다.");
+    }
+
+    const kiwi: Kiwi = {
+      id: data.id,
+      name: data.name,
+      description: data.description,
+      maxParticipants: data.max_participants,
+      detailDescription: data.detail_description,
+      password: data.password,
+      shareCode: data.share_code,
+      createdAt: data.created_at,
+    };
+
+    return kiwi;
   }
 
   private async uploadEpub(file: File) {

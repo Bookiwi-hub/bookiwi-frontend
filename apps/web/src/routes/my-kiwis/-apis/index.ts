@@ -82,3 +82,14 @@ export const deleteUserKiwi = async (userId: string, kiwiId: string) => {
     throw error;
   }
 };
+
+export const getKiwiByShareCode = async (shareCode: string) => {
+  try {
+    const kiwi = await supabaseManager.kiwi.getKiwiByShareCode(shareCode);
+    return kiwi;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error getting kiwi by share code:", error);
+    throw error;
+  }
+};
