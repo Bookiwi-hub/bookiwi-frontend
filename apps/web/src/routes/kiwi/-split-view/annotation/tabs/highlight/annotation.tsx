@@ -8,6 +8,7 @@ import Comments from "./comments";
 import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
+import { useLoadingError } from "#/hooks";
 import {
   addComment,
   getHighlightComments,
@@ -19,8 +20,8 @@ interface CommentProps {
 }
 function AnnotationTab({ highlight }: CommentProps) {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [isLoading, isError, fetchComments] =
+    useLoadingError(getHighlightComments);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
   const participantInfo = useAtomValue(participantInfoAtom);
@@ -32,18 +33,13 @@ function AnnotationTab({ highlight }: CommentProps) {
 
   useEffect(() => {
     if (!highlight.id) return;
-    const fetchComments = async () => {
-      try {
-        const highlightComments = await getHighlightComments(highlight.id);
-        setComments(highlightComments);
-      } catch (error) {
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
+    const fetchData = async () => {
+      const highlightComments = await fetchComments(highlight.id);
+      if (!highlightComments) return;
+      setComments(highlightComments);
     };
-    fetchComments();
-  }, [highlight.id]);
+    fetchData();
+  }, [highlight.id, fetchComments]);
 
   useEffect(
     () => {

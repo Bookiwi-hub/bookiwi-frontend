@@ -1,6 +1,6 @@
 import { useRouter } from "@tanstack/react-router";
 import { AlertTriangle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
@@ -11,6 +11,7 @@ import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
+import { useLoadingError } from "#/hooks/use-loading";
 import userManager from "#/managers/user";
 import { createKiwi } from "#/routes/my-kiwis/-apis";
 
@@ -20,9 +21,10 @@ function StepThree() {
   const setStep = useSetAtom(stepAtom);
   const closeCreateKiwiModal = useSetAtom(closeCreateKiwiModalAtom);
 
-  const hasExecutedRef = useRef(false);
   const router = useRouter();
-  const [isFailed, setIsFailed] = useState(false);
+  const hasExecutedRef = useRef(false);
+
+  const [isLoading, isError, handleCreateKiwi] = useLoadingError(createKiwi);
 
   useEffect(() => {
     // Strict Mode에서 중복 실행 방지
@@ -31,36 +33,42 @@ function StepThree() {
     }
     hasExecutedRef.current = true;
 
-    const handleSubmit = async () => {
-      try {
-        const { shareCode } = await createKiwi({
-          userId: userManager.userId!,
-          name: newKiwi.kiwiName,
-          description: newKiwi.kiwiDescription,
-          detailDescription: newKiwi.kiwiDetailDescription,
-          maxParticipants: newKiwi.maxParticipants,
-          password: newKiwi.password,
-          file: newKiwi.file!,
-        });
-        await router.invalidate();
-        setShareCode(shareCode);
-        setStep(Step.Four);
-      } catch (error) {
-        setIsFailed(true);
-      }
+    const handleCreate = async () => {
+      const result = await handleCreateKiwi({
+        userId: userManager.userId!,
+        name: newKiwi.kiwiName,
+        description: newKiwi.kiwiDescription,
+        detailDescription: newKiwi.kiwiDetailDescription,
+        maxParticipants: newKiwi.maxParticipants,
+        password: newKiwi.password,
+        file: newKiwi.file!,
+      });
+      if (!result) return;
+      const { shareCode } = result;
+      await router.invalidate();
+      setShareCode(shareCode);
+      setStep(Step.Four);
     };
-    handleSubmit();
+
+    handleCreate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return isFailed ? (
-    <FailedKiwi
-      onGoBack={() => setStep(Step.Two)}
-      onClose={closeCreateKiwiModal}
-    />
-  ) : (
-    <LoadingKiwi />
-  );
+  if (isError) {
+    return (
+      <FailedKiwi
+        onGoBack={() => setStep(Step.Two)}
+        onClose={closeCreateKiwiModal}
+      />
+    );
+  }
+
+  if (isLoading) {
+    return <LoadingKiwi />;
+  }
+
+  // 성공한 경우 Step.Four로 자동 이동되므로 이 부분은 실행되지 않음
+  return null;
 }
 
 function LoadingKiwi() {

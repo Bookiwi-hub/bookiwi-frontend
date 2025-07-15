@@ -7,6 +7,7 @@ import ParticipantsFilter from "./filter";
 import HighlightItem from "./item";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
+import { useLoadingError } from "#/hooks";
 import { getHighlights } from "#/routes/kiwi/-reader/apis";
 import { highlightsAtom, kiwiIdAtom } from "#/routes/kiwi/-reader/atoms";
 
@@ -14,23 +15,17 @@ function HighlightList() {
   const kiwiId = useAtomValue(kiwiIdAtom);
   const [totalHighlights, setTotalHighlights] = useState<Highlight[]>([]);
   const currentHighlights = useAtomValue(highlightsAtom);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [isLoading, isError, fetchHighlights] = useLoadingError(getHighlights);
 
   useEffect(() => {
     if (!kiwiId) return;
-    const fetchHighlights = async () => {
-      try {
-        const highlights = await getHighlights(kiwiId);
-        setTotalHighlights(highlights);
-      } catch (error) {
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
+    const fetchData = async () => {
+      const highlights = await fetchHighlights(kiwiId);
+      if (!highlights) return;
+      setTotalHighlights(highlights);
     };
-    fetchHighlights();
-  }, [kiwiId, currentHighlights]);
+    fetchData();
+  }, [kiwiId, currentHighlights, fetchHighlights]);
 
   if (isLoading) {
     return null;

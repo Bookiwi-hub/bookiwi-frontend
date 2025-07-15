@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 /**
  * 비동기 함수의 로딩 상태를 관리하는 훅
@@ -26,15 +26,18 @@ export const useLoading = <T extends (...args: any[]) => Promise<any>>(
 ) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoad = async (...args: Parameters<T>): Promise<ReturnType<T>> => {
-    try {
-      setIsLoading(true);
-      const result = await func(...args);
-      return result;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleLoad = useCallback(
+    async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+      try {
+        setIsLoading(true);
+        const result = await func(...args);
+        return result;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [func],
+  );
 
   return [isLoading, handleLoad] as const;
 };
@@ -73,21 +76,22 @@ export const useLoadingError = <T extends (...args: any[]) => Promise<any>>(
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const handleLoad = async (
-    ...args: Parameters<T>
-  ): Promise<ReturnType<T> | null> => {
-    try {
-      setIsLoading(true);
-      setIsError(false);
-      const result = await func(...args);
-      return result;
-    } catch (error) {
-      setIsError(true);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleLoad = useCallback(
+    async (...args: Parameters<T>): Promise<ReturnType<T> | null> => {
+      try {
+        setIsLoading(true);
+        setIsError(false);
+        const result = await func(...args);
+        return result;
+      } catch (error) {
+        setIsError(true);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [func],
+  );
 
   return [isLoading, isError, handleLoad] as const;
 };
