@@ -1,4 +1,4 @@
-import { MoreVertical, Trash2 } from "lucide-react";
+import { LogOut, MoreVertical, Trash2 } from "lucide-react";
 
 import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "#/components/ui/dropdown-menu";
+import userManager from "#/managers/user";
 
 interface KebabMenuProps {
   align?: "start" | "center" | "end";
@@ -20,6 +21,7 @@ interface KebabMenuProps {
 
 function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
   const openDeleteKiwiModal = useSetAtom(openDeleteKiwiModalAtom);
+  const isAdmin = kiwi.admin.id === userManager.userId;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -43,8 +45,17 @@ function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
             openDeleteKiwiModal(kiwi);
           }}
         >
-          <Trash2 className="mr-2 size-4" />
-          키위 삭제하기
+          {isAdmin ? (
+            <>
+              <Trash2 className="mr-2 size-4" />
+              키위 삭제하기
+            </>
+          ) : (
+            <>
+              <LogOut className="mr-2 size-4" />
+              키위 나가기
+            </>
+          )}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

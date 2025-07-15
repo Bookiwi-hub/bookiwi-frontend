@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "#/components/ui/dialog";
+import userManager from "#/managers/user";
 
 function DeleteKiwiModal() {
   const modalState = useAtomValue(modalStateAtom);
@@ -36,21 +37,25 @@ function DeleteKiwiModal() {
 
   if (!isOpen || !kiwi) return null;
 
+  const isAdmin = kiwi.admin.id === userManager.userId;
+
   return (
     <Dialog open onOpenChange={handleOpenChange}>
       <DialogContent className="min-w-[500px] mobile:min-w-full">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            키위 삭제
+            {isAdmin ? "키위 삭제" : "키위 나가기"}
           </DialogTitle>
-          <DialogDescription>키위를 삭제하시겠습니까?</DialogDescription>
+          <DialogDescription>
+            {isAdmin ? "키위를 삭제하시겠습니까?" : "키위를 탈퇴하시겠습니까?"}
+          </DialogDescription>
         </DialogHeader>
 
         {/* 키위 정보 카드 */}
         <InfoCard kiwi={kiwi} />
 
         {/* 경고 메시지 */}
-        <Message />
+        <Message isAdmin={isAdmin} />
 
         <DialogFooter className="border-t pt-4">
           <Button
