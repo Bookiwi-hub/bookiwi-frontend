@@ -44,3 +44,13 @@ export const createSampleKiwi = async (userId: string) => {
     throw error;
   }
 };
+
+export const deleteKiwi = async (kiwiId: string) => {
+  try {
+    await supabaseManager.kiwi.deleteKiwi(kiwiId);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error deleting kiwi:", error);
+    throw error;
+  }
+};

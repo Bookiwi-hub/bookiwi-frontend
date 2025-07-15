@@ -1,5 +1,6 @@
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
+import { deleteKiwi } from "../../-apis";
 import { closeDeleteKiwiModalAtom, ModalState, modalStateAtom } from "../atoms";
 
 import { targetKiwiAtom } from "./atoms";
@@ -21,6 +22,8 @@ function DeleteKiwiModal() {
   const modalState = useAtomValue(modalStateAtom);
   const isOpen = modalState === ModalState.DeleteKiwi;
   const closeDeleteKiwiModal = useSetAtom(closeDeleteKiwiModalAtom);
+  const kiwi = useAtomValue(targetKiwiAtom);
+  if (!isOpen || !kiwi) return null;
 
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
@@ -28,14 +31,10 @@ function DeleteKiwiModal() {
     }
   };
 
-  const handleDelete = () => {
-    console.log("delete");
+  const handleDelete = async () => {
+    await deleteKiwi(kiwi.id);
     closeDeleteKiwiModal();
   };
-
-  const kiwi = useAtomValue(targetKiwiAtom);
-
-  if (!isOpen || !kiwi) return null;
 
   const isAdmin = kiwi.admin.id === userManager.userId;
 
