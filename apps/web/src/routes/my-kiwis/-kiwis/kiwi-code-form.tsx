@@ -13,13 +13,13 @@ function KiwiCodeForm() {
       <div className="flex items-center gap-2 rounded-md border bg-white px-2 mobile:w-full">
         <BookDown size={16} className="text-muted-foreground" />
         <Input
-          type="url"
-          placeholder="참여 코드 입력하기"
+          type="text"
+          placeholder="공유 코드를 입력하세요"
           className="w-[240px] border-0 bg-transparent p-2 focus-visible:ring-0 mobile:w-full"
         />
       </div>
       <Button type="submit" variant="default" size="default">
-        참여
+        키위 가져오기
       </Button>
     </form>
   );
