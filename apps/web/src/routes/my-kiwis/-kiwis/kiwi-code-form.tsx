@@ -1,17 +1,23 @@
 import { BookDown } from "lucide-react";
 import { FormEvent, memo } from "react";
+import { toast } from "sonner";
 
 import { getKiwiByShareCode } from "../-apis";
 
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
 import { useLoading } from "#/hooks";
+import userManager from "#/managers/user";
 
 function KiwiCodeForm() {
   const [isLoading, getKiwi] = useLoading(getKiwiByShareCode);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (userManager.isGuest) {
+      toast.error("게스트는 사용할 수 없습니다.");
+      return;
+    }
     const formData = new FormData(e.target as HTMLFormElement);
     const shareCode = formData.get("shareCode") as string;
 
