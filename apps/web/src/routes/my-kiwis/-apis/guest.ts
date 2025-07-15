@@ -125,36 +125,11 @@ export const getGuestSampleKiwi = async (): Promise<MyKiwi[]> => {
  */
 export const clearGuestSampleKiwi = async () => {
   try {
-    // 역순으로 삭제 (참조 무결성 고려)
-
-    // 1. 댓글 삭제
     await Promise.all(
-      sampleIDBComments.map(async (comment) => {
-        await idb.remove(IDBStore.Comments, comment.id);
+      Object.values(IDBStore).map(async (store) => {
+        await idb.clear(store);
       }),
     );
-
-    // 2. 하이라이트 삭제
-    await Promise.all(
-      sampleIDBHighlights.map(async (highlight) => {
-        await idb.remove(IDBStore.Highlights, highlight.id);
-      }),
-    );
-
-    // 3. 참가자 삭제
-    await Promise.all(
-      sampleIDBParticipants.map(async (participant) => {
-        await idb.remove(IDBStore.Participants, participant.id);
-      }),
-    );
-
-    // 4. 키위 삭제
-    await idb.remove(IDBStore.Kiwis, SAMPLE_KIWI_ID);
-
-    // 5. 전자책 삭제
-    await idb.remove(IDBStore.Epubs, SAMPLE_EPUB_ID);
-
-    console.log("Sample kiwi cleared successfully!");
   } catch (error) {
     console.error("Error clearing sample kiwi:", error);
     throw error;

@@ -1,6 +1,6 @@
-import { MyKiwi } from "@bookiwi/supabase/types";
+import { memo } from "react";
 
-import { CreateKiwiModal, DetailKiwiModal } from "../-modals";
+import { MyKiwi } from "@bookiwi/supabase/types";
 
 import KiwiCard from "./kiwi-card";
 import KiwiCodeForm from "./kiwi-code-form";
@@ -13,24 +13,20 @@ interface KiwisProps {
 
 function Kiwis({ kiwis }: KiwisProps) {
   return (
-    <>
-      <div className="w-full">
-        <div className="mb-8 space-y-6">
-          <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
-            <h2 className="text-2xl font-bold">내 키위</h2>
-            <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
-              <KiwiCodeForm />
-              <CreateKiwiButton />
-            </div>
+    <div className="w-full">
+      <div className="mb-8 space-y-6">
+        <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
+          <h2 className="text-2xl font-bold">내 키위</h2>
+          <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
+            <KiwiCodeForm />
+            <CreateKiwiButton />
           </div>
         </div>
-        <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          <KiwiCardGrid kiwis={kiwis} />
-        </div>
       </div>
-      <DetailKiwiModal />
-      <CreateKiwiModal />
-    </>
+      <div className="grid grid-cols-1 justify-items-center gap-4 px-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+        <KiwiCardGrid kiwis={kiwis} />
+      </div>
+    </div>
   );
 }
 
@@ -58,4 +54,4 @@ function KiwiCardGrid({ kiwis }: KiwisProps) {
   return kiwis.map((kiwi) => <KiwiCard key={kiwi.id} kiwi={kiwi} />);
 }
 
-export default Kiwis;
+export default memo(Kiwis);

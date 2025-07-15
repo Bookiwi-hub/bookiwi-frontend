@@ -1,6 +1,10 @@
 import { NewKiwi } from "@bookiwi/supabase/types";
 
-import { createGuestSampleKiwi, getGuestSampleKiwi } from "./guest";
+import {
+  clearGuestSampleKiwi,
+  createGuestSampleKiwi,
+  getGuestSampleKiwi,
+} from "./guest";
 
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
@@ -41,6 +45,40 @@ export const createSampleKiwi = async (userId: string) => {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error creating sample kiwi:", error);
+    throw error;
+  }
+};
+
+export const deleteKiwi = async (kiwiId: string) => {
+  try {
+    await supabaseManager.kiwi.deleteKiwi(kiwiId);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error deleting kiwi:", error);
+    throw error;
+  }
+};
+
+export const deleteParticipant = async (participantId: string) => {
+  try {
+    if (userManager.isGuest) {
+      await clearGuestSampleKiwi();
+      return;
+    }
+    await supabaseManager.kiwi.deleteParticipant(participantId);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error deleting participant:", error);
+    throw error;
+  }
+};
+
+export const deleteUserKiwi = async (userId: string, kiwiId: string) => {
+  try {
+    await supabaseManager.kiwi.deleteUserKiwi(userId, kiwiId);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error deleting user kiwi:", error);
     throw error;
   }
 };
