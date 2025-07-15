@@ -5,12 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import {
-  closeCreateKiwiModalAtom,
-  createKiwiAtom,
-  setShareCodeAtom,
-  stepAtom,
-} from "../atoms";
+import { closeCreateKiwiModalAtom } from "../../atoms";
+import { createKiwiAtom, setShareCodeAtom, stepAtom } from "../atoms";
 import { Step } from "../types";
 
 import { Button } from "#/components/ui/button";

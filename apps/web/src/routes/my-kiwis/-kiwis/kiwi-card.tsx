@@ -5,7 +5,8 @@ import { memo } from "react";
 import { useSetAtom } from "@bookiwi/jotai";
 import { MyKiwi } from "@bookiwi/supabase/types";
 
-import { openKiwiDetailModalAtom } from "../-modals/detail-kiwi/atoms";
+import KebabMenu from "../-components/kebab-menu";
+import { openKiwiDetailModalAtom } from "../-modals/atoms";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardTitle, CardDescription } from "#/components/ui/card";
@@ -40,6 +41,7 @@ function KiwiCard({ kiwi }: KiwiCardProps) {
       participantsCount={participantsCount}
       lastActivityAt={lastActivityAt}
       onClick={() => openKiwiDetailModal(kiwi)}
+      kiwi={kiwi}
     />
   );
 }
@@ -52,6 +54,7 @@ interface CardUIProps {
   participantsCount: number;
   lastActivityAt: string;
   id: string;
+  kiwi: MyKiwi;
   onClick: () => void;
 }
 
@@ -63,6 +66,7 @@ function CardUI({
   participantsCount,
   lastActivityAt,
   id,
+  kiwi,
   onClick,
 }: CardUIProps) {
   return (
@@ -70,6 +74,11 @@ function CardUI({
       className="group relative flex h-96 w-full max-w-72 cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/50 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all hover:border-slate-300 hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)]"
       onClick={onClick}
     >
+      {/* 케밥 메뉴 */}
+      <div className="absolute right-2 top-2 z-10">
+        <KebabMenu kiwi={kiwi} />
+      </div>
+
       {/* 이미지 영역 */}
       <div className="relative aspect-[3/4] overflow-hidden">
         <img

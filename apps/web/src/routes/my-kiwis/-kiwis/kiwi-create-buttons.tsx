@@ -3,17 +3,17 @@ import { memo } from "react";
 
 import { useSetAtom } from "@bookiwi/jotai";
 
-import { createKiwiModalOpenAtom } from "../-modals/create-kiwi/atoms";
+import { openCreateKiwiModalAtom } from "../-modals/atoms";
 
 import { Button } from "#/components/ui/button";
 import { Card, CardContent } from "#/components/ui/card";
 
 function CreateKiwiCardButton() {
-  const setIsModalOpen = useSetAtom(createKiwiModalOpenAtom);
+  const setIsModalOpen = useSetAtom(openCreateKiwiModalAtom);
   return (
     <Card
       className="group h-96 w-full max-w-72 cursor-pointer border border-dashed bg-card/50 transition-all duration-300 hover:border-primary/70 hover:bg-primary/5 hover:shadow-md hover:shadow-primary/20"
-      onClick={() => setIsModalOpen(true)}
+      onClick={() => setIsModalOpen()}
     >
       <CardContent className="flex h-full flex-col items-center justify-center gap-6 p-8">
         <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110">
@@ -33,12 +33,12 @@ function CreateKiwiCardButton() {
 }
 
 function CreateKiwiButton() {
-  const setIsModalOpen = useSetAtom(createKiwiModalOpenAtom);
+  const setIsModalOpen = useSetAtom(openCreateKiwiModalAtom);
   return (
     <Button
       variant="outline"
       className="flex items-center gap-2 mobile:w-full"
-      onClick={() => setIsModalOpen(true)}
+      onClick={() => setIsModalOpen()}
     >
       <Plus size={16} />새 키위 만들기
     </Button>

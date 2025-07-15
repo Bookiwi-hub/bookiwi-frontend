@@ -1,10 +1,8 @@
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import {
-  closeCreateKiwiModalAtom,
-  createKiwiModalOpenAtom,
-  stepAtom,
-} from "./atoms";
+import { closeCreateKiwiModalAtom, ModalState, modalStateAtom } from "../atoms";
+
+import { stepAtom } from "./atoms";
 import { Descriptions, Titles } from "./constants";
 import Steps from "./steps";
 import { Step } from "./types";
@@ -19,7 +17,8 @@ import {
 
 function CreateKiwiModal() {
   const step = useAtomValue(stepAtom);
-  const open = useAtomValue(createKiwiModalOpenAtom);
+  const modalState = useAtomValue(modalStateAtom);
+  const isOpen = modalState === ModalState.CreateKiwi;
   const closeCreateKiwiModal = useSetAtom(closeCreateKiwiModalAtom);
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -30,7 +29,7 @@ function CreateKiwiModal() {
     closeCreateKiwiModal();
   };
 
-  if (!open) return null;
+  if (!isOpen) return null;
   return (
     <Dialog open onOpenChange={handleOpenChange}>
       <DialogContent className="min-w-[450px] mobile:min-w-full">

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { closeCreateKiwiModalAtom, createKiwiAtom } from "../atoms";
+import { closeCreateKiwiModalAtom } from "../../atoms";
+import { createKiwiAtom } from "../atoms";
 
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
