@@ -46,25 +46,23 @@ function KebabMenu({ align = "center", kiwi }: KebabMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} className="w-48">
         <DropdownMenuItem
-          className="text-red-600 focus:text-red-600"
           onClick={(e) => {
             e.stopPropagation();
             openDeleteKiwiModal(kiwi);
           }}
         >
           <Trash2 className="mr-2 size-4" />
-          키위 삭제하기
+          삭제하기
         </DropdownMenuItem>
         {isParticipant && (
           <DropdownMenuItem
-            className="text-red-600 focus:text-red-600"
             onClick={(e) => {
               e.stopPropagation();
               openLeaveKiwiModal(kiwi);
             }}
           >
             <LogOut className="mr-2 size-4" />
-            키위 나가기
+            나가기
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
