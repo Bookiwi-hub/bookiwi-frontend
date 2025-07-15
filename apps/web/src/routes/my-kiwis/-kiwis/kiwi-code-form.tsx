@@ -2,6 +2,8 @@ import { BookDown } from "lucide-react";
 import { FormEvent, memo } from "react";
 import { toast } from "sonner";
 
+import { MyKiwi } from "@bookiwi/supabase/types";
+
 import { getKiwiByShareCode } from "../-apis";
 
 import { Button } from "#/components/ui/button";
@@ -9,7 +11,11 @@ import { Input } from "#/components/ui/input";
 import { useLoading } from "#/hooks";
 import userManager from "#/managers/user";
 
-function KiwiCodeForm() {
+interface KiwiCodeFormProps {
+  myKiwis: MyKiwi[];
+}
+
+function KiwiCodeForm({ myKiwis }: KiwiCodeFormProps) {
   const [isLoading, getKiwi] = useLoading(getKiwiByShareCode);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,7 +28,13 @@ function KiwiCodeForm() {
     const shareCode = formData.get("shareCode") as string;
 
     if (!shareCode?.trim()) {
-      // TODO: 공유 코드 입력 필수 알림
+      toast.error("공유 코드를 입력해주세요.");
+      return;
+    }
+
+    const isExist = myKiwis.some((kiwi) => kiwi.shareCode === shareCode);
+    if (isExist) {
+      toast.error("이미 존재하는 키위입니다.");
       return;
     }
 
@@ -31,8 +43,7 @@ function KiwiCodeForm() {
       // TODO: 성공 시 키위 목록 업데이트 또는 해당 키위로 이동
       console.log("키위 가져오기 성공:", result);
     } catch (error) {
-      // TODO: 에러 토스트 메시지 표시
-      console.error("키위 가져오기 실패:", error);
+      toast.error("키위를 가져오지 못했습니다.");
     }
   };
 
