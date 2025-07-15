@@ -93,3 +93,13 @@ export const getKiwiByShareCode = async (shareCode: string) => {
     throw error;
   }
 };
+
+export const addUserKiwi = async (userId: string, kiwiId: string) => {
+  try {
+    await supabaseManager.kiwi.addUserKiwi(userId, kiwiId);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error adding user kiwi:", error);
+    throw error;
+  }
+};

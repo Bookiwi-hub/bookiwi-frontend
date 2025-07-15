@@ -182,6 +182,16 @@ class SupabaseKiwi {
     return data as MyKiwi;
   }
 
+  async addUserKiwi(userId: string, kiwiId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from("user_kiwis")
+      .insert({ user_id: userId, kiwi_id: kiwiId });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
+
   private async uploadEpub(file: File) {
     const uniqueFileName = generateUniqueFileName(file.name);
     const { data, error } = await this.supabase.storage

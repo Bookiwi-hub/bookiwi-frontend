@@ -1,7 +1,10 @@
+import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
+import { addUserKiwi } from "../../-apis";
 import InfoCard from "../../-components/info-card";
 import {
   closeModalAtom,
@@ -21,16 +24,19 @@ import {
 } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
+import { useLoading } from "#/hooks";
+import userManager from "#/managers/user";
 
 function SharedKiwiModal() {
   const modalState = useAtomValue(modalStateAtom);
   const isOpen = modalState === ModalState.SharedKiwi;
   const kiwi = useAtomValue(selectedKiwiAtom);
   const closeSharedKiwiModal = useSetAtom(closeModalAtom);
+  const router = useRouter();
 
   const [inputPassword, setInputPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, handleLoad] = useLoading(addUserKiwi);
 
   if (!isOpen || !kiwi) return null;
 
@@ -58,25 +64,17 @@ function SharedKiwiModal() {
       }
     }
 
-    setIsLoading(true);
     setPasswordError("");
 
     try {
-      // TODO: Implement actual kiwi joining logic here
-      console.log("키위 가져오기:", kiwi.id);
+      if (!userManager.userId) throw new Error("User ID is not found");
 
-      // Simulate API call
-      await new Promise<void>((resolve) => {
-        setTimeout(() => resolve(), 1000);
-      });
-
-      // Close modal on success
+      await handleLoad(userManager.userId, kiwi.id);
       closeSharedKiwiModal();
+      toast.success("키위를 가져왔습니다.");
+      await router.invalidate();
     } catch (error) {
-      console.error("키위 가져오기 실패:", error);
-      setPasswordError("키위를 가져오는 중 오류가 발생했습니다.");
-    } finally {
-      setIsLoading(false);
+      toast.error("오류가 발생했습니다.");
     }
   };
 
