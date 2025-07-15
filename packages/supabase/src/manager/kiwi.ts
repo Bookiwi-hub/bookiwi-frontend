@@ -1,8 +1,11 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
 import { NewKiwi, MyKiwi } from "../types";
-import { fileToEpubInfo } from "../utils/epubjs";
-import { generateUniqueFileName } from "../utils/file";
+import {
+  extractFilePathFromUrl,
+  fileToEpubInfo,
+  generateUniqueFileName,
+} from "../utils";
 
 class SupabaseKiwi {
   private supabase: SupabaseClient;
@@ -91,6 +94,51 @@ class SupabaseKiwi {
 
     if (error) {
       throw new Error(error.message);
+    }
+  }
+
+  async deleteKiwi(kiwiId: string): Promise<void> {
+    // 키위 삭제와 epub 정리를 안전하게 처리하는 함수 호출
+    const { data, error } = await this.supabase.rpc(
+      "delete_kiwi_with_cleanup",
+      {
+        p_kiwi_id: kiwiId,
+      },
+    );
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (!data || !data.success) {
+      throw new Error("키위 삭제에 실패했습니다.");
+    }
+
+    // epub이 삭제되었다면 관련 파일들도 삭제
+    if (data.epub_deleted) {
+      try {
+        // epub 파일 삭제
+        if (data.epub_file_path) {
+          const epubPath = extractFilePathFromUrl(data.epub_file_path, "epub");
+          if (epubPath) {
+            await this.deleteEpub(epubPath);
+          }
+        }
+
+        // cover image 파일 삭제
+        if (data.cover_image_path) {
+          const coverImagePath = extractFilePathFromUrl(
+            data.cover_image_path,
+            "cover",
+          );
+          if (coverImagePath) {
+            await this.deleteCoverImage(coverImagePath);
+          }
+        }
+      } catch (fileDeleteError) {
+        console.error("파일 삭제 중 오류 발생:", fileDeleteError);
+        // 파일 삭제 실패는 키위 삭제 성공을 막지 않음
+      }
     }
   }
 
