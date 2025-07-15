@@ -142,6 +142,16 @@ class SupabaseKiwi {
     }
   }
 
+  async deleteParticipant(participantId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from("participants")
+      .delete()
+      .eq("id", participantId);
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
+
   private async uploadEpub(file: File) {
     const uniqueFileName = generateUniqueFileName(file.name);
     const { data, error } = await this.supabase.storage
