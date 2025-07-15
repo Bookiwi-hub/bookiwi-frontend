@@ -11,7 +11,6 @@ import { openSharedKiwiModalAtom } from "../-modals/atoms";
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
 import { useLoading } from "#/hooks";
-import userManager from "#/managers/user";
 
 interface KiwiCodeFormProps {
   myKiwis: MyKiwi[];
@@ -23,10 +22,7 @@ function KiwiCodeForm({ myKiwis }: KiwiCodeFormProps) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (userManager.isGuest) {
-      toast.error("게스트는 사용할 수 없습니다.");
-      return;
-    }
+
     const formData = new FormData(e.target as HTMLFormElement);
     const shareCode = formData.get("shareCode") as string;
 

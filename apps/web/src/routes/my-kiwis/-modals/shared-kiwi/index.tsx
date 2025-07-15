@@ -52,6 +52,11 @@ function SharedKiwiModal() {
   };
 
   const handleJoinKiwi = async () => {
+    if (userManager.isGuest) {
+      toast.error("게스트는 사용할 수 없습니다.");
+      return;
+    }
+
     if (hasPassword) {
       if (!inputPassword.trim()) {
         setPasswordError("비밀번호를 입력해주세요.");
