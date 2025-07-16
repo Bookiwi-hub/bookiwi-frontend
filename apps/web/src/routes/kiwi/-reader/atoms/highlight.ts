@@ -1,6 +1,7 @@
 import { atom } from "@bookiwi/jotai";
 import { Highlight, NewHighlight } from "@bookiwi/supabase/types";
 
+import { tabStateAtom, TabType } from "../../-split-view/annotation/atoms";
 import { addHighlight, removeHighlight } from "../apis";
 
 import { participantInfoAtom } from "./participant";
@@ -8,6 +9,14 @@ import { participantInfoAtom } from "./participant";
 export const highlightsAtom = atom<Highlight[]>([]);
 
 export const selectedHighlightAtom = atom<Highlight | null>(null);
+
+export const setSelectedHighlightAtom = atom(
+  null,
+  (get, set, highlight: Highlight | null) => {
+    set(tabStateAtom, TabType.HIGHLIGHT);
+    set(selectedHighlightAtom, highlight);
+  },
+);
 
 export const addHighlightAtom = atom(
   null,
@@ -24,7 +33,7 @@ export const addHighlightAtom = atom(
       profileImage: participant.profileImage,
     };
     set(highlightsAtom, [...get(highlightsAtom), newHighlight]);
-    set(selectedHighlightAtom, newHighlight);
+    set(setSelectedHighlightAtom, newHighlight);
   },
 );
 
@@ -36,5 +45,5 @@ export const removeHighlightAtom = atom(null, async (get, set, id: string) => {
     highlightsAtom,
     highlights.filter((highlight) => highlight.id !== removedId),
   );
-  set(selectedHighlightAtom, null);
+  set(setSelectedHighlightAtom, null);
 });
