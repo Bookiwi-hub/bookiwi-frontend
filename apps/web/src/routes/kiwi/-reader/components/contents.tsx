@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
 
@@ -15,6 +15,8 @@ import {
 import Highlights from "./highlights";
 import TextSelectionMenu from "./text-selection-menu";
 
+import Spinner from "#/components/ui/spinner";
+
 function ReaderContents() {
   const book = useAtomValue(bookAtom);
   const render = useRender();
@@ -23,6 +25,7 @@ function ReaderContents() {
   const handleKeyDown = useKeydown();
   const observer = useObserver();
   useBookmark();
+  const [isRendered, setIsRendered] = useState<boolean>(false);
 
   const setViewerRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -42,6 +45,8 @@ function ReaderContents() {
       // 책 크기 변경 시 이벤트 등록(책 크기 재조정)
       observer.observe(node);
 
+      setIsRendered(true);
+
       return () => {
         observer.disconnect();
         globalThis.removeEventListener("keydown", handleKeyDown);
@@ -53,6 +58,7 @@ function ReaderContents() {
 
   return (
     <div id="reader-contents" ref={setViewerRef} className="relative size-full">
+      {!isRendered && <Spinner size="xl" className="absolute inset-0" />}
       <TextSelectionMenu />
       <Highlights />
     </div>
