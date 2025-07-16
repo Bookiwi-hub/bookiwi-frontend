@@ -18,6 +18,7 @@ export interface MyKiwi {
   maxParticipants: number | null;
   password: string | null;
   shareCode: string;
+  epubId: string;
   bookMetadata: {
     coverImage: string | null;
     title: string;

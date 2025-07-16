@@ -26,7 +26,7 @@ interface DeleteKiwiProps {
   isAdmin: boolean;
 }
 
-function DeleteKiwi({ kiwi, onDelete, isAdmin }: DeleteKiwiProps) {
+function DeleteModal({ kiwi, onDelete, isAdmin }: DeleteKiwiProps) {
   const closeDeleteKiwiModal = useSetAtom(closeModalAtom);
   const [isDeleting, executeDelete] = useLoading(onDelete);
   const router = useRouter();
@@ -92,4 +92,4 @@ function DeleteKiwi({ kiwi, onDelete, isAdmin }: DeleteKiwiProps) {
   );
 }
 
-export default DeleteKiwi;
+export default DeleteModal;

@@ -1,5 +1,4 @@
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
 
 import { primaryColor } from "@bookiwi/color";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
@@ -10,17 +9,15 @@ import { createKiwiAtom } from "../atoms";
 import { Button } from "#/components/ui/button";
 import { DialogFooter } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
+import { useCopy } from "#/hooks/use-copy";
 
 function StepFour() {
   const newKiwi = useAtomValue(createKiwiAtom);
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopy();
   const closeCreateKiwiModal = useSetAtom(closeCreateKiwiModalAtom);
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(newKiwi.shareCode || "").then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    copy(newKiwi.shareCode || "");
   };
 
   return (

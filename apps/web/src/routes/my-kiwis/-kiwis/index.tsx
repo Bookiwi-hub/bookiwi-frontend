@@ -18,7 +18,7 @@ function Kiwis({ kiwis }: KiwisProps) {
         <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-4">
           <h2 className="text-2xl font-bold">내 키위</h2>
           <div className="flex items-center gap-2 mobile:w-full mobile:flex-col mobile:items-start">
-            <KiwiCodeForm />
+            <KiwiCodeForm myKiwis={kiwis} />
             <CreateKiwiButton />
           </div>
         </div>

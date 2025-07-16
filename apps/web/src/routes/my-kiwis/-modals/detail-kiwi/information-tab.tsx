@@ -1,8 +1,19 @@
-import { Book, Calendar, Clock, User, Users } from "lucide-react";
+import {
+  Book,
+  Calendar,
+  Clock,
+  Copy,
+  User,
+  Users,
+  Check,
+  BookDown,
+} from "lucide-react";
 
 import { MyKiwi, NavItem } from "@bookiwi/supabase/types";
 
+import { SAMPLE_EPUB_ID } from "#/constants/guest";
 import { FALLBACK_IMAGE_URL } from "#/constants/kiwi";
+import { useCopy } from "#/hooks";
 import userManager from "#/managers/user";
 import { formatDate, formatDateOnly } from "#/utils/format-date";
 
@@ -18,11 +29,21 @@ function InformationTab({ kiwi }: InformationTabProps) {
     maxParticipants,
     participants,
     admin,
+    shareCode,
+    epubId,
   } = kiwi;
+
+  const { copied, copy } = useCopy();
+
+  const isExampleKiwi = epubId === SAMPLE_EPUB_ID;
 
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
   );
+
+  const handleCopyShareCode = () => {
+    copy(shareCode);
+  };
 
   return (
     <div className="mb-10 space-y-6">
@@ -74,6 +95,29 @@ function InformationTab({ kiwi }: InformationTabProps) {
               <li className="flex items-center gap-2">
                 <User size={16} className="text-muted-foreground" />
                 <span>관리자: {admin.name}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <BookDown size={16} className="text-muted-foreground" />
+                <span>공유 코드:</span>
+                <div className="flex items-center gap-2">
+                  {isExampleKiwi ? (
+                    <span>예시 키위는 공유할 수 없습니다.</span>
+                  ) : (
+                    <>
+                      <code className="rounded bg-muted px-2 py-1 font-mono text-xs">
+                        {shareCode}
+                      </code>
+                      <button
+                        type="button"
+                        onClick={handleCopyShareCode}
+                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-colors hover:bg-muted"
+                        title="공유 코드 복사"
+                      >
+                        {copied ? <Check size={12} /> : <Copy size={12} />}
+                      </button>
+                    </>
+                  )}
+                </div>
               </li>
             </ul>
           </div>
