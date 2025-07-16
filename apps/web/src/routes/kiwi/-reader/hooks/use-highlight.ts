@@ -11,7 +11,8 @@ const useHighlight = () => {
   const kiwiId = useAtomValue(kiwiIdAtom);
 
   useEffect(() => {
-    if (!kiwiId || !currentSection) return;
+    if (!kiwiId || !currentSection) return () => {};
+
     const fetchSectionHighlights = async () => {
       const sectionHighlights = await getSectionHighlights(
         kiwiId,
@@ -19,7 +20,12 @@ const useHighlight = () => {
       );
       setHighlights(sectionHighlights);
     };
+
     fetchSectionHighlights();
+
+    const interval = setInterval(fetchSectionHighlights, 1 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, [kiwiId, currentSection, setHighlights]);
 
   return highlights;
