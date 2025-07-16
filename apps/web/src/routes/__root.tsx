@@ -29,7 +29,7 @@ export const Route = createRootRoute({
       {/* <TanStackRouterDevtools /> */}
     </>
   ),
-  errorComponent: () => <ErrorPage />,
+  errorComponent: ({ error }) => <ErrorPage error={error} />,
   notFoundComponent: () => (
     <ErrorPage
       title="페이지를 찾을 수 없어요"
