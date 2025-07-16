@@ -56,7 +56,7 @@ function SplitView() {
   return (
     <div ref={callbackRef} className="relative flex min-h-0 flex-1 justify-end">
       <div
-        className="absolute inset-0 z-0 transition-all duration-200"
+        className="absolute inset-0 transition-all duration-200"
         style={{
           width: bookPaneSize,
         }}
