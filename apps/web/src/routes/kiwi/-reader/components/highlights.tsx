@@ -5,7 +5,7 @@ import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import {
   bookAtom,
   currentViewAtom,
-  selectedHighlightAtom,
+  setSelectedHighlightAtom,
   setHighlightClickedAtom,
   typographyAtom,
 } from "../atoms";
@@ -14,7 +14,7 @@ import { useHighlight } from "../hooks";
 function Highlights() {
   const book = useAtomValue(bookAtom);
   const highlights = useHighlight();
-  const setSelectedHighlight = useSetAtom(selectedHighlightAtom);
+  const setSelectedHighlight = useSetAtom(setSelectedHighlightAtom);
   const setHighlightClicked = useSetAtom(setHighlightClickedAtom);
   const currentView = useAtomValue(currentViewAtom);
   const typography = useAtomValue(typographyAtom);
