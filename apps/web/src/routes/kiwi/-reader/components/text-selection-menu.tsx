@@ -108,13 +108,13 @@ function TextSelectionMenu() {
   const { isAlreadyExists, isMine } = selectedText.status;
   return (
     <>
-      <Overlay className="!z-20 !bg-transparent" onClick={hide} />
+      <Overlay className="!z-40 !bg-transparent" onClick={hide} />
 
       <div
         role="toolbar"
         ref={refFunc}
         className={cn(
-          "absolute z-30 flex flex-col items-stretch gap-1 rounded-lg border border-border/50 bg-background/95 p-1 shadow-xl backdrop-blur-md",
+          "absolute z-50 flex flex-col items-stretch gap-1 rounded-lg border border-border/50 bg-background/95 p-1 shadow-xl backdrop-blur-md",
           "animate-in fade-in-0 zoom-in-95 duration-150 focus:outline-none",
         )}
         style={{
