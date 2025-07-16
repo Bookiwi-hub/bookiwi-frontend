@@ -1,5 +1,7 @@
-import { Link } from "@tanstack/react-router";
+import * as Sentry from "@sentry/react";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, RotateCcw } from "lucide-react";
+import { useEffect } from "react";
 
 import { primaryColor } from "@bookiwi/color";
 
@@ -10,6 +12,7 @@ interface ErrorProps {
   message?: string;
   onRetry?: () => void;
   showHomeButton?: boolean;
+  error?: Error;
 }
 
 function ErrorPage({
@@ -17,7 +20,26 @@ function ErrorPage({
   message = "잠깐만요... 다시 한번 시도해볼까요? 🤔",
   onRetry,
   showHomeButton = true,
+  error,
 }: ErrorProps) {
+  const routerState = useRouterState();
+
+  useEffect(() => {
+    // props로 전달된 error가 있는 경우 Sentry로 전송
+    if (error) {
+      Sentry.captureException(error, {
+        tags: {
+          component: "ErrorPage",
+          source: "error-boundary",
+        },
+        extra: {
+          routerLocation: routerState.location.pathname,
+          errorBoundary: true,
+        },
+      });
+    }
+  }, [error, routerState.location.pathname]);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
       <div className="max-w-sm space-y-8 text-center">
