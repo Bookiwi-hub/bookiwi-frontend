@@ -16,6 +16,7 @@ export const getMyKiwis = async (userId: string) => {
       return guestSampleKiwi;
     }
     const myKiwis = await supabaseManager.kiwi.getMyKiwis(userId);
+
     return myKiwis;
   } catch (error) {
     // eslint-disable-next-line no-console
