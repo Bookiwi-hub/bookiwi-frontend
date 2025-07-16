@@ -47,3 +47,17 @@ View highlight_comments_view {
   updatedAt timestamptz [note: "댓글 수정일"]
 }
 
+View kiwis_info_view {
+  id uuid [note: "키위 ID"]
+  name varchar [note: "키위 이름"]
+  description varchar [note: "키위 설명"]
+  detailDescription text [note: "키위 상세 설명"]
+  maxParticipants int [note: "최대 참가자 수"]
+  password varchar [note: "키위 비밀번호 (nullable)"]
+  shareCode uuid [note: "키위 공유 코드"]
+  epubId uuid [note: "EPUB ID"]
+  createdAt timestamptz [note: "키위 생성일"]
+  admin json [note: "관리자 정보 (id, name, email, profileImage)"]
+  bookMetadata json [note: "책 메타데이터 (coverImage, title, author, publisher, nav)"]
+  participants json [note: "참가자 목록 배열 (id, userId, name, profileImage, percentage, color, lastActivityAt)"]
+}

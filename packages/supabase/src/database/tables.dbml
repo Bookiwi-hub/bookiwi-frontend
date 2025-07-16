@@ -15,7 +15,7 @@ Table user_kiwis {
   kiwi_id uuid [pk, ref: > kiwis.id]
   admin boolean [default: false]
   participated boolean [not null, default: false]
-  joined_at timestamptz [not null, default: "now()"]
+  has_at timestamptz [not null, default: "now()"]
   is_active boolean [not null, default: true]
 }
 

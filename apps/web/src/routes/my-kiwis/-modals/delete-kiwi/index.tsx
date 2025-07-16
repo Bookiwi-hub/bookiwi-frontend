@@ -3,7 +3,7 @@ import { useAtomValue } from "@bookiwi/jotai";
 import { deleteKiwi, deleteParticipant, deleteUserKiwi } from "../../-apis";
 import { ModalState, modalStateAtom, selectedKiwiAtom } from "../atoms";
 
-import DeleteKiwi from "./delete-kiwi";
+import DeleteKiwi from "./delete-modal";
 
 import userManager from "#/managers/user";
 

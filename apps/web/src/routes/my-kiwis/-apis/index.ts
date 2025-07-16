@@ -16,6 +16,7 @@ export const getMyKiwis = async (userId: string) => {
       return guestSampleKiwi;
     }
     const myKiwis = await supabaseManager.kiwi.getMyKiwis(userId);
+
     return myKiwis;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -79,6 +80,27 @@ export const deleteUserKiwi = async (userId: string, kiwiId: string) => {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error deleting user kiwi:", error);
+    throw error;
+  }
+};
+
+export const getKiwiByShareCode = async (shareCode: string) => {
+  try {
+    const kiwi = await supabaseManager.kiwi.getKiwiByShareCode(shareCode);
+    return kiwi;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error getting kiwi by share code:", error);
+    throw error;
+  }
+};
+
+export const addUserKiwi = async (userId: string, kiwiId: string) => {
+  try {
+    await supabaseManager.kiwi.addUserKiwi(userId, kiwiId);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error adding user kiwi:", error);
     throw error;
   }
 };

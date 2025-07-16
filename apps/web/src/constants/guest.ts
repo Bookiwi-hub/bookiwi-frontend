@@ -19,7 +19,7 @@ export const SAMPLE_KIWI_ID = "sample-kiwi";
 export const SAMPLE_EPUB_URL =
   "https://pbuelbzwhrjnsjwevqgx.supabase.co/storage/v1/object/public/epub//sample.epub";
 
-export const SAMPLE_EPUB_ID = "sample-epub-data";
+export const SAMPLE_EPUB_ID = "91d33a38-d4b8-47eb-ac06-23bbe3b2413d";
 export const SAMPLE_EPUB_COVER_IMAGE =
   "https://pbuelbzwhrjnsjwevqgx.supabase.co/storage/v1/object/public/cover//sample.webp";
 export const SAMPLE_EPUB_LOCATIONS = `["epubcfi(/30/4!/4/2,/2/1:0,/12/1:222)","epubcfi(/30/4!/4/2,/12/1:223,/26/1:214)","epubcfi(/30/4!/4/2,/26/1:215,/40/1:109)","epubcfi(/30/4!/4/2,/40/1:110,/52/1:104)","epubcfi(/30/4!/4/2,/52/1:105,/66/1:133)","epubcfi(/30/4!/4/2,/66/1:134,/82/1:60)","epubcfi(/30/4!/4/2,/82/1:61,/100/1:233)","epubcfi(/30/4!/4/2,/100/1:234,/116/1:27)","epubcfi(/30/4!/4/2,/116/1:28,/148/1:91)","epubcfi(/30/4!/4/2,/148/1:92,/170/1:59)","epubcfi(/30/4!/4,/2/170/1:60,/4/4/4/2/8/1:5)","epubcfi(/30/6!/4/4,/2[About_this_digital_edition]/1:0,/12[ws-contributor]/2/44/1:7)","epubcfi(/30/6!/4/4,/12[ws-contributor]/2/44/1:8,/18/8[cite_note-4]/4/1:50)"]`;

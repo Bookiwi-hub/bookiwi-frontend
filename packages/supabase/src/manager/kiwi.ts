@@ -72,7 +72,8 @@ class SupabaseKiwi {
         createdAt,
         admin,
         bookMetadata,
-        participants
+        participants,
+        epubId
       `,
       )
       .eq("user_id", userId);
@@ -84,7 +85,7 @@ class SupabaseKiwi {
 
     if (!data) return [];
 
-    return data as MyKiwi[];
+    return data;
   }
 
   async createSampleKiwi(userId: string): Promise<void> {
@@ -158,6 +159,34 @@ class SupabaseKiwi {
       .delete()
       .eq("user_id", userId)
       .eq("kiwi_id", kiwiId);
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async getKiwiByShareCode(shareCode: string): Promise<MyKiwi> {
+    const { data, error } = await this.supabase
+      .from("kiwis_info_view")
+      .select("*")
+      .eq("shareCode", shareCode)
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (!data) {
+      throw new Error("키위를 찾을 수 없습니다.");
+    }
+
+    return data as MyKiwi;
+  }
+
+  async addUserKiwi(userId: string, kiwiId: string): Promise<void> {
+    const { error } = await this.supabase
+      .from("user_kiwis")
+      .insert({ user_id: userId, kiwi_id: kiwiId });
+
     if (error) {
       throw new Error(error.message);
     }

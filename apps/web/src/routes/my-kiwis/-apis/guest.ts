@@ -88,6 +88,7 @@ export const getGuestSampleKiwi = async (): Promise<MyKiwi[]> => {
       maxParticipants: kiwi.max_participants,
       password: kiwi.password,
       shareCode: kiwi.share_code,
+      epubId: kiwi.epub_id,
       bookMetadata: {
         coverImage: epub.cover_image,
         title: epub.title,
