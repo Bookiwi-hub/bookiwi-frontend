@@ -30,10 +30,6 @@ bookiwi-frontend/
 
 ### 🌐 [Web](/apps/web/README.md)
 
-[supabase](/packages/supabase/README.md)  
-[epubjs](/packages/epubjs/README.md)  
-[color](/packages/color/README.md)
-
 ## 📑💦 Tech Blog
 
 ### ✨Feat
