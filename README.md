@@ -6,7 +6,7 @@
 
 Bookiwi는 소셜 이북 리더기 앱입니다. 여러 사용자가 하나의 E-Book(epyb)을 읽으며 하이라이트와 메모를 공유합니다.
 
-### 키위(이북 리더 방)
+#### 키위(이북 리더 방)
 
 **키위는 여러 유저가 책을 읽는 방을 의미합니다.**  
 함께 같은 영상을 보는 넷플릭스 파티 또는 단톡방과 같은 개념입니다.  
@@ -53,7 +53,7 @@ bookiwi-frontend/
 
 ### **State Management**
 
-![Jotai](https://img.shields.io/badge/Jotai-Atomic_State-000000?style=flat&logo=react&logoColor=white)
+![Jotai](https://img.shields.io/badge/Jotai-06B6D4?style=flat&logo=react&logoColor=white)
 
 Bottom-up, 분산형 atom 기반의 상태 관리를 위해 Jotai 사용
 
@@ -66,13 +66,13 @@ Bottom-up, 분산형 atom 기반의 상태 관리를 위해 Jotai 사용
 ### **Design & UI**
 
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
-![Shadcn/ui](https://img.shields.io/badge/Shadcn/ui-Component_Library-000000?style=flat&logo=shadcnui&logoColor=white)
+![Shadcn/ui](https://img.shields.io/badge/Shadcn/ui-000000?style=flat&logo=shadcnui&logoColor=white)
 
 - 기획자와 디자이너가 없는 상황이기 때문에 TailwindCSS와 Shadcn으로 빠르게 예쁜 디자인 구현
 
 ### **Backend & Database**
 
-![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat&logo=supabase&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
 
 - 빠른 MVP 구현을 위해 BaaS 사용
 - BaaS 중 가장 저렴
@@ -81,7 +81,7 @@ Bottom-up, 분산형 atom 기반의 상태 관리를 위해 Jotai 사용
 - 카카오톡 소셜 로그인 지원
 - (추후 백앤드도 개발해 보고 싶음)
 
-![IndexedDB](https://img.shields.io/badge/IndexedDB-Local_Storage-FFA500?style=flat&logo=html5&logoColor=white)
+![IndexedDB](https://img.shields.io/badge/IndexedDB-FFA500?style=flat&logo=html5&logoColor=white)
 
 - 비로그인 사용자의 데이터를 저장하기 위해 IndexedDB 사용
 
