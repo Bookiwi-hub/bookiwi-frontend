@@ -4,7 +4,7 @@
 
 ## 📖 Social E-book Reader
 
-Bookiwi는 소셜 이북 리더기 앱입니다. 여러 사용자가 하나의 E-Book(epyb)을 읽으며 하이라이트와 메모를 공유합니다.
+Bookiwi는 소셜 이북 리더기 앱입니다. 여러 사용자가 하나의 E-Book(epub)을 읽으며 하이라이트와 메모를 공유합니다.
 
 #### 키위(이북 리더 방)
 
@@ -30,13 +30,13 @@ bookiwi-frontend/
 └── pnpm-workspace.yaml  # 모노레포 설정
 ```
 
-<img width="50%" height="" alt="bookiwi-erd" src="https://github.com/user-attachments/assets/91092eed-2c92-4180-a845-1f4681e4c739" />
+<img width="100%" height="" alt="bookiwi-erd" src="https://github.com/user-attachments/assets/91092eed-2c92-4180-a845-1f4681e4c739" />
 
 ## README
 
 ### 🌐 [Web](/apps/web/README.md)
 
-#### Packages
+### Packages
 
 - [supabase](/packages/supabase/README.md)
 - [color](/packages/color/README.md)
