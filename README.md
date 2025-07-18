@@ -2,6 +2,11 @@
 
 [북키위 웹 링크](https://app-bookiwi.netlify.app)
 
+**예시 공유 코드**: 아래 코드로 키위에 참가해 보세요
+
+카라마조프가의 형제들: `ce4e3a94-7f7a-4247-b627-c1f5c1f3e71f`  
+위대한 개츠비: `474a6506-ae1a-4861-a5be-b171b241e9c6`
+
 ## 📖 Social E-book Reader
 
 Bookiwi는 소셜 이북 리더기 앱입니다. 여러 사용자가 하나의 E-Book(epub)을 읽으며 하이라이트와 메모를 공유합니다.
