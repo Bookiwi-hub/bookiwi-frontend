@@ -30,7 +30,7 @@ bookiwi-frontend/
 └── pnpm-workspace.yaml  # 모노레포 설정
 ```
 
-<img width="100%" height="" alt="bookiwi-erd" src="https://github.com/user-attachments/assets/91092eed-2c92-4180-a845-1f4681e4c739" />
+<img width="50%" height="" alt="bookiwi-erd" src="https://github.com/user-attachments/assets/91092eed-2c92-4180-a845-1f4681e4c739" />
 
 ## README
 
