@@ -6,11 +6,7 @@
 
 Bookiwi는 소셜 이북 리더기 앱입니다. 여러 사용자가 하나의 E-Book(epub)을 읽으며 하이라이트와 메모를 공유합니다.
 
-#### 키위(이북 리더 방)
-
-**키위는 여러 유저가 함께 책을 읽는 방을 의미합니다.**  
-함께 같은 영상을 보는 넷플릭스 파티 또는 단톡방과 같은 개념입니다.  
-키위에서 함께 책을 보며 하이라이트와 코멘트를 공유합니다.
+**키위(이북 리더 방): 키위는 여러 유저가 함께 책을 읽는 방을 의미합니다.**
 
 ## 🔲 Architecture
 
@@ -30,17 +26,13 @@ bookiwi-frontend/
 └── pnpm-workspace.yaml  # 모노레포 설정
 ```
 
-<img width="100%" height="" alt="bookiwi-erd" src="https://github.com/user-attachments/assets/91092eed-2c92-4180-a845-1f4681e4c739" />
-
 ## README
 
 ### 🌐 [Web](/apps/web/README.md)
 
-### Packages
-
-- [supabase](/packages/supabase/README.md)
-- [epubjs](/packages/epubjs/README.md)
-- [color](/packages/color/README.md)
+[supabase](/packages/supabase/README.md)  
+[epubjs](/packages/epubjs/README.md)  
+[color](/packages/color/README.md)
 
 ## 📑💦 Tech Blog
 
@@ -84,3 +76,7 @@ bookiwi-frontend/
 - [Generate js file during build Issue](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/noEmit).
 - [tsconfig in monorepo](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/tsconfig-monorepo).
 - [Build Internal Package in Turborepo](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/internal-packages).
+
+## 데이터베이스 ERD
+
+<img width="" height="" alt="ERD" src="https://github.com/user-attachments/assets/586248b4-7a91-4008-8119-ef7fd2c169c1" />
