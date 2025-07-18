@@ -82,13 +82,6 @@ const { shareCode } = await supabase.kiwi.createKiwi({
   password: "선택적-비밀번호",
 });
 
-// 키위 참가
-await supabase.kiwi.joinKiwi({
-  shareCode: "kiwi-share-code",
-  userId: user.id,
-  participantName: "독자 이름",
-});
-
 // 사용자의 키위 목록 가져오기
 const myKiwis = await supabase.kiwi.getMyKiwis(user.id);
 ```
@@ -113,13 +106,5 @@ await supabase.reader.createHighlightComment({
   highlightId,
   participantId,
   content: "좋은 지적이에요!",
-});
-
-// 읽기 진도 업데이트
-await supabase.reader.updateProgress({
-  participantId,
-  cfiStart: "epubcfi(...)",
-  cfiEnd: "epubcfi(...)",
-  percentage: 45,
 });
 ```

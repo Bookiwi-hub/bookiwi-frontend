@@ -1,6 +1,6 @@
 # 📚 Bookiwi
 
-[북키위 웹앱 링크](https://app-bookiwi.netlify.app)
+[북키위 웹 링크](https://app-bookiwi.netlify.app)
 
 ## 📖 Social E-book Reader
 
@@ -39,8 +39,8 @@ bookiwi-frontend/
 ### Packages
 
 - [supabase](/packages/supabase/README.md)
-- [color](/packages/color/README.md)
 - [epubjs](/packages/epubjs/README.md)
+- [color](/packages/color/README.md)
 
 ## 📑💦 Tech Blog
 
