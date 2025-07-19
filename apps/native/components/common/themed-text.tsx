@@ -13,7 +13,7 @@ const typeClassMap = {
   defaultSemiBold: "text-base leading-6 font-semibold",
   title: "text-3xl font-bold leading-8 py-4",
   subtitle: "text-xl font-bold",
-  link: "text-base leading-7 text-[#0a7ea4]",
+  link: "text-base leading-7",
 };
 
 export function ThemedText({

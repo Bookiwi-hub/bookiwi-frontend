@@ -4,7 +4,6 @@
     "slug": "native",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "native",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -32,6 +31,34 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/NanumSquareR.ttf",
+            "./assets/fonts/NanumSquareL.ttf",
+            "./assets/fonts/NanumSquareB.ttf",
+            "./assets/fonts/NanumSquareEB.ttf",
+            "./assets/fonts/NanumSquare_acR.ttf",
+            "./assets/fonts/NanumSquare_acL.ttf",
+            "./assets/fonts/NanumSquare_acB.ttf",
+            "./assets/fonts/NanumSquare_acEB.ttf"
+          ],
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "NanumSquare",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/NanumSquareR.ttf",
+                    "weight": 400
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     ],
