@@ -43,7 +43,7 @@ SELECT
                     'userId', p.user_id,
                     'name', p.name,
                     'profileImage', p.profile_image,
-                    'progress', p.percentage,
+                    'percentage', p.percentage,
                     'color', p.color,
                     'lastActivityAt', p.last_activity_at
                 )

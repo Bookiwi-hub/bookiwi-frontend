@@ -1,5 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
+import { Participant } from "@bookiwi/supabase/types";
+
 import { getKiwiReader } from "./-apis";
 import Header from "./-header";
 import MobileKiwi from "./-mobile";
@@ -54,25 +56,26 @@ function Kiwi() {
       />
     );
   }
+  const otherParticipants = participants.filter(
+    (participant) => participant.userId !== userManager.userId,
+  );
 
   return (
     <ReaderProvider
       epub={epub}
       kiwi={kiwi}
-      participants={participants}
+      otherParticipants={otherParticipants}
       currentParticipant={currentParticipant}
     >
-      <KiwiContent />
+      <KiwiContent participants={participants} />
     </ReaderProvider>
   );
-
-  // return null;
 }
 
-function KiwiContent() {
+function KiwiContent({ participants }: { participants: Participant[] }) {
   return (
     <main className="flex size-full select-none flex-col overflow-hidden">
-      <Header />
+      <Header participants={participants} />
       <SplitView />
     </main>
   );

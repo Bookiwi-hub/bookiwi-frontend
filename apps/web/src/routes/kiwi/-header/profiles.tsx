@@ -1,6 +1,4 @@
-import { useAtomValue } from "@bookiwi/jotai";
-
-import { participantInfoAtom, participantsAtom } from "../-reader/atoms";
+import { Participant } from "@bookiwi/supabase/types";
 
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar";
 import Dot from "#/components/ui/dot";
@@ -9,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "#/components/ui/popover";
+import userManager from "#/managers/user";
 
 interface ProfileButtonProps {
   profileImage?: string | null;
@@ -62,17 +61,18 @@ function ParticipantProfile({
   );
 }
 
-function Profiles() {
-  const participants = useAtomValue(participantsAtom);
-  const participantInfo = useAtomValue(participantInfoAtom);
-  if (!participantInfo) return null;
+function Profiles({ participants }: { participants: Participant[] }) {
+  const currentParticipant = participants.find(
+    (participant) => participant.userId === userManager.userId,
+  );
+  if (!currentParticipant) return null;
 
   return (
     <Popover>
       <PopoverTrigger tabIndex={-1} onMouseDown={(e) => e.preventDefault()}>
         <ProfileButton
-          profileImage={participantInfo.profileImage}
-          color={participantInfo.color}
+          profileImage={currentParticipant.profileImage}
+          color={currentParticipant.color}
         />
       </PopoverTrigger>
       <PopoverContent className="w-64 p-0">

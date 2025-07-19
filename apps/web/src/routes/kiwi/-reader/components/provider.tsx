@@ -18,11 +18,11 @@ import {
   selectionAtom,
   initialCfiAtom,
   initialIsSinglePageAtom,
-  participantsAtom,
   selectedHighlightAtom,
   highlightClickedAtom,
   setParticipantAtom,
   highlightsAtom,
+  otherParticipantsAtom,
 } from "../atoms";
 
 interface ReaderProviderProps {
@@ -30,7 +30,7 @@ interface ReaderProviderProps {
   currentParticipant: Participant;
   epub: Epub;
   kiwi: Kiwi;
-  participants: Participant[];
+  otherParticipants: Participant[];
 }
 const readerStore = createStore();
 
@@ -38,7 +38,7 @@ function ReaderProvider({
   children,
   epub,
   kiwi,
-  participants,
+  otherParticipants,
   currentParticipant,
 }: ReaderProviderProps) {
   const navigate = useNavigate();
@@ -92,8 +92,8 @@ function ReaderProvider({
 
   // kiwi
   readerStore.set(kiwiAtom, kiwi);
-  readerStore.set(participantsAtom, participants);
   readerStore.set(setParticipantAtom, currentParticipant);
+  readerStore.set(otherParticipantsAtom, otherParticipants);
   readerStore.set(highlightsAtom, []);
 
   // reading
