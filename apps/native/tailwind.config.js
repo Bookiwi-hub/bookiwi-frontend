@@ -8,6 +8,19 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        kakao: "#FEE500",
+        kiwi: {
+          100: "#a5f5b6",
+          200: "#6ce88e",
+          300: "#35dc64",
+          400: "#1cd24d",
+          500: "#02c73c",
+          600: "#02b037",
+          700: "#01922c",
+          800: "#007a25",
+          900: "#005f1a",
+        },
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -44,6 +57,10 @@ module.exports = {
       },
       borderWidth: {
         hairline: hairlineWidth(),
+      },
+      fontFamily: {
+        apple: ["Apple SD Gothic Neo", "Noto Sans KR", "sans-serif"],
+        nanum: ["NanumSquare", "sans-serif"],
       },
     },
   },

@@ -16,7 +16,7 @@ export default function MyKiwisScreen() {
       <ScrollView>
         <View className="flex flex-col gap-4">
           <KiwiCard
-            image={require("../../../assets/images/book-cover-ex.png")}
+            image={require("../../../../assets/images/book-cover-ex.png")}
             kiwiTitle="운수가 뭔데"
             bookTitle="운수 나쁜 날"
             description="운수 나쁜 날 책 설명"
@@ -24,7 +24,7 @@ export default function MyKiwisScreen() {
             progress={60}
           />
           <KiwiCard
-            image={require("../../../assets/images/book-cover-ex.png")}
+            image={require("../../../../assets/images/book-cover-ex.png")}
             kiwiTitle="운수가 난데"
             bookTitle="운수 나쁜 날"
             description="운수 나쁜 날 책 설명"
@@ -32,7 +32,7 @@ export default function MyKiwisScreen() {
             progress={50}
           />
           <KiwiCard
-            image={require("../../../assets/images/book-cover-ex.png")}
+            image={require("../../../../assets/images/book-cover-ex.png")}
             kiwiTitle="운수가 난데스까"
             bookTitle="운수 나쁜 날"
             description="운수 나쁜 날 책 설명"
