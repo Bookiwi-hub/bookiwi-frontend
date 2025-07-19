@@ -40,6 +40,7 @@ function KiwiCodeForm({ myKiwis }: KiwiCodeFormProps) {
     try {
       const kiwi = await getKiwi(shareCode);
       openSharedKiwiModal(kiwi);
+      (e.target as HTMLFormElement).reset();
     } catch (error) {
       toast.error("키위를 가져오지 못했습니다.");
     }
