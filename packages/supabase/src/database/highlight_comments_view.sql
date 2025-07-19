@@ -12,8 +12,7 @@ SELECT
     c.created_at AS "createdAt",
     c.updated_at AS "updatedAt"
 FROM comments c
-JOIN participants p ON c.participant_id = p.id
-ORDER BY c.created_at DESC; 
+JOIN participants p ON c.participant_id = p.id; 
 
 
 -- Primary index for filtering by highlight_id (most common query pattern)

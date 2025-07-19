@@ -135,7 +135,8 @@ class SupabaseReader {
     const { data, error } = await this.supabase
       .from("highlight_comments_view")
       .select("*")
-      .eq("highlightId", highlightId);
+      .eq("highlightId", highlightId)
+      .order("createdAt", { ascending: true });
 
     if (error || !data) {
       throw new Error(error?.message || "Failed to get highlight comment");
