@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { useAtomValue } from "@bookiwi/jotai";
+import { Participant } from "@bookiwi/supabase/types";
 
 import { kiwiAtom } from "../-reader/atoms";
 import AnnotationPaneTrigger from "../-split-view/annotation/trigger";
@@ -11,7 +12,7 @@ import Sidebar from "./sidebar";
 
 import { Separator } from "#/components/ui/separator";
 
-function Header() {
+function Header({ participants }: { participants: Participant[] }) {
   const kiwi = useAtomValue(kiwiAtom);
   return (
     <header className="relative">
@@ -32,7 +33,7 @@ function Header() {
         <div className="flex items-center gap-4 pr-3">
           <BookmarkButton />
           <AnnotationPaneTrigger />
-          <Profiles />
+          <Profiles participants={participants} />
         </div>
       </div>
       <Separator />

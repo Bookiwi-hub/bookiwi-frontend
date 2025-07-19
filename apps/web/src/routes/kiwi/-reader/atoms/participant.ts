@@ -13,7 +13,20 @@ import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
 
-export const participantsAtom = atom<Participant[]>([]);
+// 다른 참가자들만 저장하는 atom (현재 사용자 제외)
+export const otherParticipantsAtom = atom<Participant[]>([]);
+
+// 모든 참가자를 반환하는 computed atom (현재 사용자 + 다른 참가자들)
+export const participantsAtom = atom<Participant[]>((get) => {
+  const otherParticipants = get(otherParticipantsAtom);
+  const currentParticipant = get(participantAtom);
+
+  if (currentParticipant) {
+    return [currentParticipant, ...otherParticipants];
+  }
+
+  return otherParticipants;
+});
 
 // Individual participant property atoms (primitive atoms)
 export const participantIdAtom = atom<string | null>(null);
