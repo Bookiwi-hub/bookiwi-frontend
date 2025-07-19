@@ -82,7 +82,7 @@ function LoadingKiwi() {
           <img
             src="/images/icon.webp"
             alt="Bookiwi logo"
-            className="size-16 animate-bounce"
+            className="size-16 animate-spin"
           />
         </div>
       </div>
@@ -90,7 +90,7 @@ function LoadingKiwi() {
       <div className="space-y-3 text-center">
         <h3 className="text-lg font-medium">키위를 만들고 있어요</h3>
         <p className="text-sm text-muted-foreground">
-          시간이 거릴 수 있어요. 잠시만 기다려주세요.
+          시간이 걸릴 수 있어요. 잠시만 기다려주세요.
         </p>
       </div>
     </div>
