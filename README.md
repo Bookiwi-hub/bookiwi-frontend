@@ -41,7 +41,7 @@ bookiwi-frontend/
 ### ✨Feat
 
 - [Resizable Split View](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/resizable)
-- [DOM Range와 DOMRect를 이용한 텍스트 드래그 팝업 메뉴](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Text-Selection-Menu)
+- [독서를 방해하지 않는 Text Selection Menu](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Text-Selection-Menu)
 - [게스트 모드: 로그인 없이 사용하기](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Guset-Mode)
 - [싱글톤 매니저 클래스를 사용한 IndexedDB](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/IndexedDB-Singleton-Manager-Class)
 
