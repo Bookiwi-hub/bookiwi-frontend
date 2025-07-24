@@ -76,12 +76,24 @@ export const getDeviceType = (userAgent?: string): DeviceType => {
     "i",
   );
 
-  // iPad 체크
-  if (iPadRegex.test(ua) && !macRegex.test(ua)) {
-    return DeviceType.TABLET;
+  // iPad 체크 - Macintosh + Safari인 경우 터치 지원 여부로 iPad와 Mac 구분
+  if (iPadRegex.test(ua)) {
+    // 터치 지원이 있고 Chrome/Firefox/Edge가 아니면 iPad로 판단
+    const hasTouch =
+      typeof window !== "undefined" &&
+      (window.navigator.maxTouchPoints > 0 || "ontouchstart" in window);
+    const isNonSafariBrowser = /Chrome|Firefox|Edge/i.test(ua);
+
+    if (hasTouch && !isNonSafariBrowser) {
+      return DeviceType.TABLET;
+    }
+    if (/Macintosh.*Safari/i.test(ua) && !isNonSafariBrowser) {
+      // Mac Safari는 데스크톱으로 분류
+      return DeviceType.DESKTOP;
+    }
   }
 
-  // Mac 체크
+  // Mac 체크 (Chrome, Firefox, Edge)
   if (macRegex.test(ua)) {
     return DeviceType.DESKTOP;
   }
