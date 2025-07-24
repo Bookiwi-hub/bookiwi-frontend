@@ -1,10 +1,11 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 import { Participant } from "@bookiwi/supabase/types";
 
 import { getKiwiReader } from "./-apis";
 import Header from "./-header";
-import MobileKiwi from "./-mobile";
 import AddParticipantModal from "./-modals/add-participant";
 import { ReaderProvider } from "./-reader";
 import SplitView from "./-split-view";
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/kiwi/$id")({
       },
     ],
   }),
-  component: isDesktop ? Kiwi : MobileKiwi,
+  component: Kiwi,
   pendingComponent: () => (
     <LoadingPage
       title="키위를 불러오는 중입니다"
@@ -43,9 +44,30 @@ export const Route = createFileRoute("/kiwi/$id")({
 
 function Kiwi() {
   const { epub, kiwi, participants } = Route.useLoaderData();
+  const navigate = useNavigate();
   const currentParticipant = participants.find(
     (participant) => participant.userId === userManager.userId,
   );
+
+  useEffect(() => {
+    if (!isDesktop) {
+      toast(
+        <div>
+          PC나 노트북으로만 접속해 주세요.
+          <br />
+          (크롬 권장)
+        </div>,
+        {
+          action: {
+            label: "돌아가기",
+            onClick: () => {
+              navigate({ to: "/my-kiwis" });
+            },
+          },
+        },
+      );
+    }
+  }, [navigate]);
 
   if (!currentParticipant) {
     return (
