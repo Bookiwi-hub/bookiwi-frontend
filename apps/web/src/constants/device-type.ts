@@ -11,3 +11,5 @@ export const DEVICE_TYPE = getDeviceType();
 export const isDesktop = DEVICE_TYPE === DeviceType.DESKTOP;
 export const isMobile = DEVICE_TYPE === DeviceType.MOBILE;
 export const isTablet = DEVICE_TYPE === DeviceType.TABLET;
+
+export const hasMouse = window.matchMedia("(pointer: fine)").matches;
