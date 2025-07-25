@@ -6,12 +6,13 @@ import { Participant } from "@bookiwi/supabase/types";
 
 import { getKiwiReader } from "./-apis";
 import Header from "./-header";
+import MobileKiwi from "./-mobile";
 import AddParticipantModal from "./-modals/add-participant";
 import { ReaderProvider } from "./-reader";
 import SplitView from "./-split-view";
 
 import LoadingPage from "#/components/loading";
-import { isDesktop } from "#/constants/device-type";
+import { hasMouse, isDesktop } from "#/constants/device-type";
 import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/kiwi/$id")({
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/kiwi/$id")({
       },
     ],
   }),
-  component: Kiwi,
+  component: hasMouse ? Kiwi : MobileKiwi,
   pendingComponent: () => (
     <LoadingPage
       title="키위를 불러오는 중입니다"
