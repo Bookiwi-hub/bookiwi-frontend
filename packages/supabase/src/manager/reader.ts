@@ -95,6 +95,54 @@ class SupabaseReader {
     return { id };
   }
 
+  subscribeToHighlights(
+    kiwiId: string,
+    sectionHref: string,
+    {
+      onInsert,
+      onDelete,
+    }: {
+      onInsert?: (highlight: any) => void;
+      onDelete?: (highlight: any) => void;
+    },
+  ) {
+    const channel = this.supabase
+      .channel(`kiwi-${kiwiId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "highlights",
+          filter: `kiwi_id=eq.${kiwiId}`,
+        },
+        (payload) => {
+          const highlight = payload.new;
+          if (highlight.section_href === sectionHref) {
+            onInsert?.(highlight);
+          }
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "highlights",
+          filter: `kiwi_id=eq.${kiwiId}`,
+        },
+        (payload) => {
+          const highlight = payload.old;
+          if (highlight.section_href === sectionHref) {
+            onDelete?.(highlight);
+          }
+        },
+      )
+      .subscribe();
+
+    return channel;
+  }
+
   // 참가자 작업
   async updateParticipant(participantId: string, fields: Partial<Participant>) {
     const snakeFields = camelToSnakeKeys(fields);
