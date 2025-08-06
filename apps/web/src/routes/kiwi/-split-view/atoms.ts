@@ -53,7 +53,7 @@ export const resizeAnnotationPaneAtom = atom(
 
 // annotation pane state
 export const annotationPaneStateAtom = atom<AnnotationPaneState>(
-  AnnotationPaneState.CLOSED,
+  AnnotationPaneState.PINNED,
 );
 
 export const isAnnotationOpenAtom = atom((get) => {
