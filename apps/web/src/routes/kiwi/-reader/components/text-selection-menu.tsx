@@ -8,6 +8,7 @@ import {
   AnnotationPaneState,
   annotationPaneStateAtom,
   isAnnotationOpenAtom,
+  isAnnotationPinnedAtom,
 } from "../../-split-view/atoms";
 import {
   addHighlightAtom,
@@ -36,6 +37,7 @@ function TextSelectionMenu() {
   const addHighlight = useSetAtom(addHighlightAtom);
   const removeHighlight = useSetAtom(removeHighlightAtom);
   const result = useSelectionMenu(width, height);
+  const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
 
   if (!result || !participantInfo || !kiwiId) {
     return null;
@@ -131,9 +133,12 @@ function TextSelectionMenu() {
           />
         )}
 
-        <div className="h-px w-full bg-border/50" />
-
-        <CommentButton onClick={handleComment} />
+        {!isAnnotationPinned && (
+          <>
+            <div className="h-px w-full bg-border/50" />
+            <CommentButton onClick={handleComment} />
+          </>
+        )}
       </div>
     </>
   );
