@@ -1,4 +1,4 @@
-import { Pin, X } from "lucide-react";
+import { Pin, X, Highlighter } from "lucide-react";
 import { memo } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
@@ -10,13 +10,6 @@ import {
   closeAnnotationPaneAtom,
 } from "../atoms";
 
-import {
-  setTabToHighlightListAtom,
-  setTabToHighlightAtom,
-  TabType,
-} from "./atoms";
-
-import { TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { cn } from "#/lib/utils";
 
 function AnnotationHeader() {
@@ -24,9 +17,6 @@ function AnnotationHeader() {
   const pinAnnotationPane = useSetAtom(pinAnnotationPaneAtom);
   const unpinAnnotationPane = useSetAtom(unpinAnnotationPaneAtom);
   const closeAnnotationPane = useSetAtom(closeAnnotationPaneAtom);
-
-  const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
-  const setTabToHighlightList = useSetAtom(setTabToHighlightListAtom);
 
   const handlePin = () => {
     if (isAnnotationPinned) {
@@ -37,51 +27,41 @@ function AnnotationHeader() {
   };
 
   return (
-    <div className="flex items-center justify-between gap-2 border-b border-gray-200 p-3">
-      <TabsList className="w-full">
-        <TabsTrigger
-          className="w-full"
-          value={TabType.HIGHLIGHT}
-          onClick={setTabToHighlight}
-          onMouseDown={(e) => e.preventDefault()}
-          tabIndex={-1}
-        >
-          하이라이트
-        </TabsTrigger>
-        <TabsTrigger
-          className="w-full"
-          value={TabType.HIGHLIGHT_LIST}
-          onClick={setTabToHighlightList}
-          onMouseDown={(e) => e.preventDefault()}
-          tabIndex={-1}
-        >
-          목록
-        </TabsTrigger>
-      </TabsList>
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={handlePin}
-          className={cn(
-            "rounded-md p-2",
-            isAnnotationPinned
-              ? "bg-blue-100 text-blue-600"
-              : "hover:bg-gray-100",
-          )}
-          aria-label={isAnnotationPinned ? "Unpin panel" : "Pin panel"}
-          onMouseDown={(e) => e.preventDefault()}
-          tabIndex={-1}
-        >
-          <Pin size={18} />
-        </button>
-        <button
-          type="button"
-          onClick={closeAnnotationPane}
-          className="rounded-md p-2 hover:bg-gray-100"
-          aria-label="Close panel"
-        >
-          <X size={18} />
-        </button>
+    <div className="border-b border-gray-200 bg-white">
+      <div className="flex items-center justify-between gap-2 p-2">
+        <div className="flex items-center gap-3">
+          <div className="flex size-8 items-center justify-center rounded-lg">
+            <Highlighter size={16} />
+          </div>
+          <h3 className="text-base font-semibold text-gray-900">하이라이트</h3>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handlePin}
+            className={cn(
+              "rounded-lg p-2 transition-colors",
+              isAnnotationPinned
+                ? "bg-blue-100 text-blue-600"
+                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700",
+            )}
+            aria-label={isAnnotationPinned ? "Unpin panel" : "Pin panel"}
+            onMouseDown={(e) => e.preventDefault()}
+            tabIndex={-1}
+          >
+            <Pin size={16} />
+          </button>
+
+          <button
+            type="button"
+            onClick={closeAnnotationPane}
+            className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+            aria-label="Close panel"
+          >
+            <X size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );

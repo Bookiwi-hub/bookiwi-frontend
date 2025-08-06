@@ -1,6 +1,6 @@
 import { useState, useMemo, memo, useEffect } from "react";
 
-import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
 import { Highlight } from "@bookiwi/supabase/types";
 
 import ParticipantsFilter from "./filter";
@@ -9,32 +9,22 @@ import HighlightItem from "./item";
 import { ScrollArea } from "#/components/ui/scroll-area";
 import { useLoadingError } from "#/hooks";
 import { getHighlights } from "#/routes/kiwi/-reader/apis";
-import {
-  currentSectionAtom,
-  highlightsAtom,
-  kiwiIdAtom,
-} from "#/routes/kiwi/-reader/atoms";
+import { kiwiIdAtom } from "#/routes/kiwi/-reader/atoms";
 
-function HighlightList() {
+function HighlightsPanel() {
   const kiwiId = useAtomValue(kiwiIdAtom);
-  const currentSection = useAtomValue(currentSectionAtom);
   const [totalHighlights, setTotalHighlights] = useState<Highlight[]>([]);
-  const setSectionHighlights = useSetAtom(highlightsAtom);
   const [isLoading, isError, fetchHighlights] = useLoadingError(getHighlights);
 
   useEffect(() => {
-    if (!kiwiId || !currentSection) return;
+    if (!kiwiId) return;
     const fetchData = async () => {
       const highlights = await fetchHighlights(kiwiId);
       if (!highlights) return;
-      const sectionHighlights = highlights.filter(
-        (highlight) => highlight.sectionHref === currentSection.href,
-      );
-      setSectionHighlights(sectionHighlights);
       setTotalHighlights(highlights);
     };
     fetchData();
-  }, [kiwiId, fetchHighlights, currentSection, setSectionHighlights]);
+  }, [kiwiId, fetchHighlights]);
 
   if (isLoading) {
     return null;
@@ -97,4 +87,4 @@ function HighlightListContent({
   );
 }
 
-export default memo(HighlightList);
+export default memo(HighlightsPanel);

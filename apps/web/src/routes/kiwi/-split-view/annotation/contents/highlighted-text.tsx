@@ -1,7 +1,6 @@
 import { memo } from "react";
 
-import { useTruncatedText } from "../hooks/use-truncated-text";
-
+import { useTruncatedText } from "#/hooks";
 import { truncate, formatDate } from "#/utils";
 
 interface HighlightedTextProps {
