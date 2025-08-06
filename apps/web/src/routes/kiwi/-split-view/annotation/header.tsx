@@ -10,13 +10,6 @@ import {
   closeAnnotationPaneAtom,
 } from "../atoms";
 
-import {
-  setTabToHighlightListAtom,
-  setTabToHighlightAtom,
-  TabType,
-} from "./atoms";
-
-import { TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { cn } from "#/lib/utils";
 
 function AnnotationHeader() {
@@ -24,9 +17,6 @@ function AnnotationHeader() {
   const pinAnnotationPane = useSetAtom(pinAnnotationPaneAtom);
   const unpinAnnotationPane = useSetAtom(unpinAnnotationPaneAtom);
   const closeAnnotationPane = useSetAtom(closeAnnotationPaneAtom);
-
-  const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
-  const setTabToHighlightList = useSetAtom(setTabToHighlightListAtom);
 
   const handlePin = () => {
     if (isAnnotationPinned) {
@@ -38,26 +28,7 @@ function AnnotationHeader() {
 
   return (
     <div className="flex items-center justify-between gap-2 border-b border-gray-200 p-3">
-      <TabsList className="w-full">
-        <TabsTrigger
-          className="w-full"
-          value={TabType.HIGHLIGHT}
-          onClick={setTabToHighlight}
-          onMouseDown={(e) => e.preventDefault()}
-          tabIndex={-1}
-        >
-          하이라이트
-        </TabsTrigger>
-        <TabsTrigger
-          className="w-full"
-          value={TabType.HIGHLIGHT_LIST}
-          onClick={setTabToHighlightList}
-          onMouseDown={(e) => e.preventDefault()}
-          tabIndex={-1}
-        >
-          목록
-        </TabsTrigger>
-      </TabsList>
+      <h3 className="text-sm font-medium">하이라이트</h3>
       <div className="flex items-center gap-2">
         <button
           type="button"

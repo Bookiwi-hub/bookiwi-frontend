@@ -1,4 +1,5 @@
 import { Highlighter as HighlightIcon } from "lucide-react";
+import { memo } from "react";
 
 interface NotSelectedProps {
   color: string;
@@ -26,4 +27,4 @@ function NotSelected({ color }: NotSelectedProps) {
   );
 }
 
-export default NotSelected;
+export default memo(NotSelected);
