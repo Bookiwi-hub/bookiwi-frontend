@@ -1,6 +1,7 @@
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
+import { isAnnotationPinnedAtom } from "../../-split-view/atoms";
 import {
   currentSectionAtom,
   currentViewAtom,
@@ -46,6 +47,7 @@ export const useSelectedText = (): TextSelection | null => {
   const participantId = useAtomValue(participantIdAtom);
   const currentView = useAtomValue(currentViewAtom);
   const highlights = useAtomValue(highlightsAtom);
+  const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
   if (!currentSection || !currentView) {
     return null;
   }
@@ -79,7 +81,7 @@ export const useSelectedText = (): TextSelection | null => {
     };
   }
 
-  if (highlightClicked && selectedHighlight) {
+  if (highlightClicked && selectedHighlight && !isAnnotationPinned) {
     const remove = () => {
       setHighlightClicked(false);
     };
