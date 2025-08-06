@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from "react";
 
-import { useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { Comment, Highlight, NewComment } from "@bookiwi/supabase/types";
 
 import CommentForm from "./comment-form";
@@ -13,7 +13,11 @@ import {
   addComment,
   getHighlightComments,
 } from "#/routes/kiwi/-reader/apis/comment";
-import { participantInfoAtom, navAtom } from "#/routes/kiwi/-reader/atoms";
+import {
+  participantInfoAtom,
+  navAtom,
+  removeHighlightAtom,
+} from "#/routes/kiwi/-reader/atoms";
 
 interface CommentProps {
   highlight: Highlight;
@@ -30,6 +34,9 @@ function Selected({ highlight }: CommentProps) {
     (item) => item.href === highlight.sectionHref,
   );
   const sectionLabel = annotationNav?.label;
+  const removeHighlight = useSetAtom(removeHighlightAtom);
+
+  const isMine = highlight.participantId === participantInfo?.id;
 
   useEffect(() => {
     if (!highlight.id) return;
@@ -84,6 +91,12 @@ function Selected({ highlight }: CommentProps) {
     setComments([...comments, createdComment]);
   };
 
+  const handleHighlightDelete = async () => {
+    if (highlight.id) {
+      await removeHighlight(highlight.id);
+    }
+  };
+
   return (
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
@@ -93,6 +106,8 @@ function Selected({ highlight }: CommentProps) {
           date={highlight.updatedAt}
           creatorName={highlight.name}
           sectionLabel={sectionLabel}
+          isMine={isMine}
+          onDelete={handleHighlightDelete}
         />
         {isLoading && null}
         {isError && (

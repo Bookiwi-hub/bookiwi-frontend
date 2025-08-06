@@ -1,3 +1,4 @@
+import { Trash2 } from "lucide-react";
 import { memo } from "react";
 
 import { useTruncatedText } from "#/hooks";
@@ -9,6 +10,8 @@ interface HighlightedTextProps {
   date: string;
   creatorName: string;
   sectionLabel?: string;
+  isMine?: boolean;
+  onDelete?: () => void;
 }
 
 function HighlightedText({
@@ -17,6 +20,8 @@ function HighlightedText({
   date,
   creatorName,
   sectionLabel,
+  isMine = false,
+  onDelete,
 }: HighlightedTextProps) {
   const { displayText, isTruncated, isExpanded, toggleExpanded } =
     useTruncatedText({
@@ -50,7 +55,19 @@ function HighlightedText({
           </span>
           <span className="ml-2 text-xs text-gray-600">by {creatorName}</span>
         </div>
-        <span className="text-xs text-gray-700">{formatDate(date)}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-700">{formatDate(date)}</span>
+          {isMine && (
+            <button
+              type="button"
+              className="group flex size-6 items-center justify-center rounded-full transition-colors hover:bg-red-50"
+              title="하이라이트 삭제"
+              onClick={onDelete}
+            >
+              <Trash2 className="size-4 text-gray-400 group-hover:text-red-500" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
