@@ -3,9 +3,7 @@ import { memo } from "react";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { Highlight } from "@bookiwi/supabase/types";
 
-import { setTabToHighlightAtom } from "../../atoms";
-import { useTruncatedText } from "../hooks/use-truncated-text";
-
+import { useTruncatedText } from "#/hooks";
 import {
   bookAtom,
   navAtom,
@@ -32,11 +30,9 @@ function HighlightItem({ highlight }: HighlightItemProps) {
       maxLength: 100,
     });
 
-  const setTabToHighlight = useSetAtom(setTabToHighlightAtom);
   const setSelectedHighlight = useSetAtom(selectedHighlightAtom);
 
   const handleClick = () => {
-    setTabToHighlight();
     setSelectedHighlight(highlight);
     book?.rendition.display(highlight.cfi);
   };

@@ -1,6 +1,7 @@
 import { NavType } from "../nav";
 
 import Bookmarks from "./bookmarks";
+import HighlightsPanel from "./highlights";
 import ParticipantsPanel from "./participants";
 import SearchPanel from "./search";
 import SettingsPanel from "./settings";
@@ -14,6 +15,7 @@ function SidebarPanels({ activeTab }: SidebarPanelsProps) {
   return (
     <div className="flex-1 overflow-auto px-3 py-6">
       {activeTab === "toc" && <TableOfContents />}
+      {activeTab === "highlights" && <HighlightsPanel />}
       {activeTab === "bookmark" && <Bookmarks />}
       {activeTab === "participants" && <ParticipantsPanel />}
       {activeTab === "search" && <SearchPanel />}

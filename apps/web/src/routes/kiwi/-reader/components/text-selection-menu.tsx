@@ -4,7 +4,6 @@ import { KeyboardEvent, useState } from "react";
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { NewHighlight } from "@bookiwi/supabase/types";
 
-import { tabStateAtom, TabType } from "../../-split-view/annotation/atoms";
 import {
   AnnotationPaneState,
   annotationPaneStateAtom,
@@ -27,7 +26,6 @@ const openHighlightTabAtom = atom(null, (get, set) => {
   if (!isAnnotationOpen) {
     set(annotationPaneStateAtom, AnnotationPaneState.OPEN);
   }
-  set(tabStateAtom, TabType.HIGHLIGHT);
 });
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);

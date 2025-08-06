@@ -1,4 +1,11 @@
-import { BookOpen, Bookmark, Search, Settings, Users } from "lucide-react";
+import {
+  BookOpen,
+  Bookmark,
+  Highlighter,
+  Search,
+  Settings,
+  Users,
+} from "lucide-react";
 import { ReactNode } from "react";
 
 import { cn } from "#/lib/utils";
@@ -8,7 +15,8 @@ export type NavType =
   | "bookmark"
   | "search"
   | "settings"
-  | "participants";
+  | "participants"
+  | "highlights";
 
 type NavIconProps = {
   icon: ReactNode;
@@ -23,7 +31,7 @@ function NavIconButton({ icon, isActive, onClick, label }: NavIconProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center gap-1 rounded-md p-2 transition-colors w-14",
+        "flex flex-col items-center gap-1 rounded-md p-1 transition-colors w-16",
         isActive
           ? "text-primary bg-primary/10"
           : "text-muted-foreground hover:text-foreground hover:bg-accent",
@@ -33,7 +41,7 @@ function NavIconButton({ icon, isActive, onClick, label }: NavIconProps) {
       tabIndex={-1}
     >
       {icon}
-      <span className="w-full truncate text-center text-xs">{label}</span>
+      <span className="w-full  text-center text-xs">{label}</span>
     </button>
   );
 }
@@ -45,6 +53,7 @@ interface SidebarNavProps {
 
 const navItems: Array<{ icon: ReactNode; type: NavType; label: string }> = [
   { icon: <BookOpen size={24} />, type: "toc", label: "목차" },
+  { icon: <Highlighter size={24} />, type: "highlights", label: "하이라이트" },
   { icon: <Bookmark size={24} />, type: "bookmark", label: "책갈피" },
   { icon: <Users size={24} />, type: "participants", label: "참가자" },
   { icon: <Search size={24} />, type: "search", label: "검색" },
@@ -52,7 +61,7 @@ const navItems: Array<{ icon: ReactNode; type: NavType; label: string }> = [
 ];
 function SidebarNav({ activeTab, setActiveTab }: SidebarNavProps) {
   return (
-    <nav className="flex w-16 flex-col items-center gap-6 border-r py-6">
+    <nav className="flex w-20 flex-col items-center gap-6 border-r py-6">
       {navItems.map((item) => (
         <NavIconButton
           key={item.type}

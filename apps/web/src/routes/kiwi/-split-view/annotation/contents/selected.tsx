@@ -18,7 +18,7 @@ import { participantInfoAtom, navAtom } from "#/routes/kiwi/-reader/atoms";
 interface CommentProps {
   highlight: Highlight;
 }
-function AnnotationTab({ highlight }: CommentProps) {
+function Selected({ highlight }: CommentProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, isError, fetchComments] =
     useLoadingError(getHighlightComments);
@@ -112,4 +112,4 @@ function AnnotationTab({ highlight }: CommentProps) {
   );
 }
 
-export default memo(AnnotationTab);
+export default memo(Selected);
