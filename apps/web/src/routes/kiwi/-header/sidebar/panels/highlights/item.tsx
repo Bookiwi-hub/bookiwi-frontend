@@ -9,6 +9,7 @@ import {
   navAtom,
   selectedHighlightAtom,
 } from "#/routes/kiwi/-reader/atoms";
+import { openAnnotationPaneAtom } from "#/routes/kiwi/-split-view/atoms";
 import { truncate } from "#/utils";
 import { formatDate } from "#/utils/format-date";
 
@@ -33,6 +34,7 @@ function HighlightItem({ kiwiHighlight, kiwiId }: Props) {
     });
 
   const setSelectedHighlight = useSetAtom(selectedHighlightAtom);
+  const openAnnotationPane = useSetAtom(openAnnotationPaneAtom);
 
   const handleClick = () => {
     const highlight: Highlight = {
@@ -47,6 +49,7 @@ function HighlightItem({ kiwiHighlight, kiwiId }: Props) {
       updatedAt: kiwiHighlight.updatedAt,
     };
     setSelectedHighlight(highlight);
+    openAnnotationPane();
     book?.rendition.display(kiwiHighlight.cfi);
   };
 
