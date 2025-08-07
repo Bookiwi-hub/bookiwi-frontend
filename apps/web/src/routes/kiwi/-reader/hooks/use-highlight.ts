@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
-import { useAtom, useAtomValue } from "@bookiwi/jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
+import { Highlight } from "@bookiwi/supabase/types";
 
 import { getSectionHighlights } from "../apis";
 import {
@@ -13,10 +14,29 @@ import {
 import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
+const addAtom = atom(null, (get, set, highlight: Highlight) => {
+  const highlights = get(highlightsAtom);
+  const currentSection = get(currentSectionAtom);
+  if (highlight.sectionHref !== currentSection?.href) return;
+  set(highlightsAtom, [...highlights, highlight]);
+});
+
+const deleteAtom = atom(null, (get, set, highlight: Highlight) => {
+  const highlights = get(highlightsAtom);
+  const currentSection = get(currentSectionAtom);
+  if (highlight.sectionHref !== currentSection?.href) return;
+  set(
+    highlightsAtom,
+    highlights.filter((h) => h.id !== highlight.id),
+  );
+});
+
 const useHighlight = () => {
   const [highlights, setHighlights] = useAtom(highlightsAtom);
   const currentSection = useAtomValue(currentSectionAtom);
   const participantId = useAtomValue(participantIdAtom);
+  const setHighlight = useSetAtom(addAtom);
+  const deleteHighlight = useSetAtom(deleteAtom);
   const kiwiId = useAtomValue(kiwiIdAtom);
 
   useEffect(() => {
@@ -34,23 +54,21 @@ const useHighlight = () => {
   }, [kiwiId, currentSection, setHighlights]);
 
   useEffect(() => {
-    if (!kiwiId || !currentSection || userManager.isGuest) return () => {};
+    if (!kiwiId || userManager.isGuest) return () => {};
 
     const channel = supabaseManager.reader.subscribeHighlights(kiwiId, {
       onInsert: (highlight) => {
         if (highlight.participantId === participantId) return;
-        if (highlight.sectionHref !== currentSection.href) return;
-        setHighlights((prev) => [...prev, highlight]);
+        setHighlight(highlight);
       },
       onDelete: (highlight) => {
         if (highlight.participantId === participantId) return;
-        if (highlight.sectionHref !== currentSection.href) return;
-        setHighlights((prev) => prev.filter((h) => h.id !== highlight.id));
+        deleteHighlight(highlight);
       },
     });
 
     return () => channel.unsubscribe();
-  }, [kiwiId, currentSection, setHighlights, participantId]);
+  }, [kiwiId, participantId, setHighlight, deleteHighlight]);
 
   return highlights;
 };
