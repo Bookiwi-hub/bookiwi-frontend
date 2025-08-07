@@ -22,6 +22,8 @@ function CommentForm({ onSubmit, participantColor }: CommentFormProps) {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     e.stopPropagation();
+    if (e.nativeEvent.isComposing) return;
+
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (newComment.trim()) {
