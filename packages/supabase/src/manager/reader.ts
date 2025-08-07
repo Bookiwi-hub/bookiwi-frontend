@@ -109,15 +109,14 @@ class SupabaseReader {
     return { id };
   }
 
-  subscribeToHighlights(
+  subscribeHighlights(
     kiwiId: string,
-    sectionHref: string,
     {
       onInsert,
       onDelete,
     }: {
       onInsert?: (highlight: Highlight) => void;
-      onDelete?: (highlightId: string) => void;
+      onDelete?: (highlight: Highlight) => void;
     },
   ) {
     const channel = this.supabase
@@ -132,9 +131,7 @@ class SupabaseReader {
         },
         (payload) => {
           const highlight = snakeToCamelKeys(payload.new) as Highlight;
-          if (highlight.sectionHref === sectionHref) {
-            onInsert?.(highlight);
-          }
+          onInsert?.(highlight);
         },
       )
       .on(
@@ -146,10 +143,8 @@ class SupabaseReader {
           filter: `kiwi_id=eq.${kiwiId}`,
         },
         (payload) => {
-          const highlight = payload.old;
-          if (highlight.section_href === sectionHref) {
-            onDelete?.(highlight.id);
-          }
+          const highlight = snakeToCamelKeys(payload.old) as Highlight;
+          onDelete?.(highlight);
         },
       )
       .subscribe();
