@@ -25,12 +25,10 @@ class SupabaseAuth {
     return data;
   }
 
-  async getUser(): Promise<User> {
-    const { data, error } = await this.supabase.auth.getUser();
+  async getUser(): Promise<User | null> {
+    const { data } = await this.supabase.auth.getUser();
 
-    if (error) {
-      throw new Error(error.message);
-    }
+    if (!data.user) return null;
     const { id } = data.user;
     const {
       email,

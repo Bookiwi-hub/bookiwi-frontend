@@ -13,7 +13,7 @@ class UserManager {
     this.currentUser = user;
   }
 
-  private logoutAsGuestMode() {
+  logoutAsGuestMode() {
     sessionStorage.removeItem(this.GUEST_SESSION_KEY);
     this.currentUser = null;
   }
@@ -27,21 +27,32 @@ class UserManager {
     }
   }
 
-  async isLoggedIn() {
-    // 먼저 세션에서 게스트 정보 확인
+  async isLoggedInAsGuest() {
     const guestUser = this.getGuestFromSession();
     if (guestUser) {
       this.currentUser = guestUser;
       return true;
     }
+    return false;
+  }
+
+  async isLoggedInAsUser() {
+    const user = await supabaseManager.auth.getUser();
+    if (user) {
+      this.currentUser = user;
+      return true;
+    }
+    return false;
+  }
+
+  async isLoggedIn() {
+    // 먼저 세션에서 게스트 정보 확인
+    const isGuest = await this.isLoggedInAsGuest();
+    if (isGuest) return true;
 
     // 게스트가 아니면 일반 사용자 인증 확인
-    try {
-      this.currentUser = await supabaseManager.auth.getUser();
-      return true;
-    } catch {
-      return false;
-    }
+    const isUser = await this.isLoggedInAsUser();
+    return isUser;
   }
 
   get user() {

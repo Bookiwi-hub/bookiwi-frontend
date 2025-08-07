@@ -5,39 +5,20 @@ import {
   CommentTable,
   Highlight,
   HighlightTable,
+  KiwiHighlight,
   NewComment,
   NewHighlight,
   Participant,
   ParticipantTable,
 } from "@bookiwi/supabase/types";
+import { camelToSnakeKeys, snakeToCamelKeys } from "@bookiwi/supabase/utils";
 
 import { GUEST_PARTICIPANT_ID } from "#/constants/guest";
 import idb, { IDBStore } from "#/managers/idb";
 
 export const updateGuestParticipant = async (fields: Partial<Participant>) => {
   // Participant 타입의 필드를 ParticipantTable 타입의 필드로 변환
-  const updateFields: Partial<ParticipantTable> = {};
-
-  if (fields.userId !== undefined) updateFields.user_id = fields.userId;
-  if (fields.name !== undefined) updateFields.name = fields.name;
-  if (fields.profileImage !== undefined)
-    updateFields.profile_image = fields.profileImage;
-  if (fields.color !== undefined) updateFields.color = fields.color;
-  if (fields.singlePage !== undefined)
-    updateFields.single_page = fields.singlePage;
-  if (fields.fontFamily !== undefined)
-    updateFields.font_family = fields.fontFamily;
-  if (fields.fontSize !== undefined) updateFields.font_size = fields.fontSize;
-  if (fields.fontWeight !== undefined)
-    updateFields.font_weight = fields.fontWeight;
-  if (fields.lineHeight !== undefined)
-    updateFields.line_height = fields.lineHeight;
-  if (fields.cfiStart !== undefined) updateFields.cfi_start = fields.cfiStart;
-  if (fields.cfiEnd !== undefined) updateFields.cfi_end = fields.cfiEnd;
-  if (fields.percentage !== undefined)
-    updateFields.percentage = fields.percentage;
-  if (fields.lastActivityAt !== undefined)
-    updateFields.last_activity_at = fields.lastActivityAt;
+  const updateFields: Partial<ParticipantTable> = camelToSnakeKeys(fields);
 
   // IndexedDB에서 참가자 정보 업데이트
   const updatedParticipant = await idb.update(
@@ -108,43 +89,9 @@ export const getGuestSectionHighlights = async (
     sectionHref,
   );
 
-  // 각 하이라이트에 대해 participant 정보와 댓글 개수를 가져와서 Highlight 타입으로 변환
-  const highlights = await Promise.all(
-    highlightTables.map(async (highlightTable) => {
-      // participant 정보 가져오기
-      const participant = await idb.get<ParticipantTable>(
-        IDBStore.Participants,
-        highlightTable.participant_id,
-      );
-      if (!participant) {
-        throw new Error("Participant not found");
-      }
-
-      // 댓글 개수 가져오기
-      const comments = await idb.getByIndex<CommentTable>(
-        IDBStore.Comments,
-        "highlight_id",
-        highlightTable.id,
-      );
-
-      // HighlightTable을 Highlight 타입으로 변환
-      const highlight: Highlight = {
-        id: highlightTable.id,
-        cfi: highlightTable.cfi,
-        sectionHref: highlightTable.section_href,
-        text: highlightTable.text,
-        color: highlightTable.color,
-        participantId: highlightTable.participant_id,
-        name: participant.name,
-        profileImage: participant.profile_image,
-        createdAt: highlightTable.created_at,
-        updatedAt: highlightTable.updated_at,
-        commentCount: comments.length,
-      };
-
-      return highlight;
-    }),
-  );
+  const highlights = snakeToCamelKeys<HighlightTable[]>(
+    highlightTables,
+  ) as Highlight[];
 
   return highlights;
 };
@@ -159,8 +106,24 @@ export const getGuestHighlights = async (
     kiwiId,
   );
 
+  const highlights = snakeToCamelKeys<HighlightTable[]>(
+    highlightTables,
+  ) as Highlight[];
+
+  return highlights;
+};
+
+export const getGuestKiwiHighlights = async (
+  kiwiId: string,
+): Promise<KiwiHighlight[]> => {
+  const highlightTables = await idb.getByIndex<HighlightTable>(
+    IDBStore.Highlights,
+    "kiwi_id",
+    kiwiId,
+  );
+
   // 각 하이라이트에 대해 participant 정보와 댓글 개수를 가져와서 Highlight 타입으로 변환
-  const highlights = await Promise.all(
+  const kiwiHighlights = await Promise.all(
     highlightTables.map(async (highlightTable) => {
       // participant 정보 가져오기
       const participant = await idb.get<ParticipantTable>(
@@ -179,7 +142,7 @@ export const getGuestHighlights = async (
       );
 
       // HighlightTable을 Highlight 타입으로 변환
-      const highlight: Highlight = {
+      const kiwiHighlight: KiwiHighlight = {
         id: highlightTable.id,
         cfi: highlightTable.cfi,
         sectionHref: highlightTable.section_href,
@@ -193,11 +156,11 @@ export const getGuestHighlights = async (
         commentCount: comments.length,
       };
 
-      return highlight;
+      return kiwiHighlight;
     }),
   );
 
-  return highlights;
+  return kiwiHighlights;
 };
 
 export const addGuestComment = async (

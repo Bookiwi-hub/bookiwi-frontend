@@ -17,6 +17,7 @@ import {
   participantInfoAtom,
   navAtom,
   removeHighlightAtom,
+  participantsAtom,
 } from "#/routes/kiwi/-reader/atoms";
 
 interface CommentProps {
@@ -29,6 +30,10 @@ function Selected({ highlight }: CommentProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const prevCommentsLengthRef = useRef<number>(comments.length);
   const participantInfo = useAtomValue(participantInfoAtom);
+  const participants = useAtomValue(participantsAtom);
+  const owner = participants.find(
+    (participant) => participant.id === highlight.participantId,
+  );
   const navItems = useAtomValue(navAtom);
   const annotationNav = navItems?.find(
     (item) => item.href === highlight.sectionHref,
@@ -67,7 +72,7 @@ function Selected({ highlight }: CommentProps) {
     [comments],
   );
 
-  if (!participantInfo) return null;
+  if (!participantInfo || !owner) return null;
 
   const handleCommentSubmit = async (commentText: string) => {
     const currentDate = new Date().toISOString();
@@ -104,7 +109,7 @@ function Selected({ highlight }: CommentProps) {
           color={highlight.color}
           text={highlight.text}
           date={highlight.updatedAt}
-          creatorName={highlight.name}
+          creatorName={owner.name}
           sectionLabel={sectionLabel}
           isMine={isMine}
           onDelete={handleHighlightDelete}

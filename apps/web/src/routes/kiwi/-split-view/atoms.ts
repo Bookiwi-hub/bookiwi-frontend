@@ -69,6 +69,8 @@ export const isAnnotationPinnedAtom = atom((get) => {
 });
 
 export const openAnnotationPaneAtom = atom(null, (get, set) => {
+  const isOpen = get(isAnnotationOpenAtom);
+  if (isOpen) return;
   set(annotationPaneStateAtom, AnnotationPaneState.OPEN);
 });
 

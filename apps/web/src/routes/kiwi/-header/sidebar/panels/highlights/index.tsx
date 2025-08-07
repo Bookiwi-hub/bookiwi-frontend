@@ -1,30 +1,33 @@
 import { useState, useMemo, memo, useEffect } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
-import { Highlight } from "@bookiwi/supabase/types";
+import { KiwiHighlight } from "@bookiwi/supabase/types";
 
 import ParticipantsFilter from "./filter";
 import HighlightItem from "./item";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
 import { useLoadingError } from "#/hooks";
-import { getHighlights } from "#/routes/kiwi/-reader/apis";
+import { getKiwiHighlights } from "#/routes/kiwi/-reader/apis";
 import { kiwiIdAtom } from "#/routes/kiwi/-reader/atoms";
 
 function HighlightsPanel() {
   const kiwiId = useAtomValue(kiwiIdAtom);
-  const [totalHighlights, setTotalHighlights] = useState<Highlight[]>([]);
-  const [isLoading, isError, fetchHighlights] = useLoadingError(getHighlights);
+  const [totalHighlights, setTotalHighlights] = useState<KiwiHighlight[]>([]);
+  const [isLoading, isError, fetchHighlights] =
+    useLoadingError(getKiwiHighlights);
 
   useEffect(() => {
     if (!kiwiId) return;
     const fetchData = async () => {
-      const highlights = await fetchHighlights(kiwiId);
-      if (!highlights) return;
-      setTotalHighlights(highlights);
+      const kiwiHighlights = await fetchHighlights(kiwiId);
+      if (!kiwiHighlights) return;
+      setTotalHighlights(kiwiHighlights);
     };
     fetchData();
   }, [kiwiId, fetchHighlights]);
+
+  if (!kiwiId) return null;
 
   if (isLoading) {
     return null;
@@ -38,13 +41,17 @@ function HighlightsPanel() {
     );
   }
 
-  return <HighlightListContent totalHighlights={totalHighlights} />;
+  return (
+    <HighlightListContent totalHighlights={totalHighlights} kiwiId={kiwiId} />
+  );
 }
 
 function HighlightListContent({
   totalHighlights,
+  kiwiId,
 }: {
-  totalHighlights: Highlight[];
+  totalHighlights: KiwiHighlight[];
+  kiwiId: string;
 }) {
   const [selectedParticipantsIds, setSelectedParticipantsIds] = useState<
     string[]
@@ -75,7 +82,11 @@ function HighlightListContent({
       <ScrollArea className="size-full px-4 pb-4">
         {filteredHighlights.length > 0 ? (
           filteredHighlights.map((highlight) => (
-            <HighlightItem key={highlight.id} highlight={highlight} />
+            <HighlightItem
+              key={highlight.id}
+              kiwiHighlight={highlight}
+              kiwiId={kiwiId}
+            />
           ))
         ) : (
           <div className="flex h-full items-center justify-center text-gray-500">

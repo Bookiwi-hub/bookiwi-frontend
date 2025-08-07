@@ -5,6 +5,7 @@ import { NewHighlight } from "@bookiwi/supabase/types";
 import {
   addGuestHighlight,
   getGuestHighlights,
+  getGuestKiwiHighlights,
   getGuestSectionHighlights,
   removeGuestHighlight,
 } from "./guest";
@@ -44,6 +45,14 @@ export const getHighlights = async (kiwiId: string) => {
   }
   const highlights = await supabaseManager.reader.getHighlights(kiwiId);
   return highlights;
+};
+export const getKiwiHighlights = async (kiwiId: string) => {
+  if (userManager.isGuest) {
+    const kiwiHighlights = await getGuestKiwiHighlights(kiwiId);
+    return kiwiHighlights;
+  }
+  const kiwiHighlights = await supabaseManager.reader.getKiwiHighlights(kiwiId);
+  return kiwiHighlights;
 };
 
 export const addHighlight = async (newHighlight: NewHighlight) => {
