@@ -5,8 +5,6 @@ import { useAtom, useAtomValue } from "@bookiwi/jotai";
 import { getSectionHighlights } from "../apis";
 import { currentSectionAtom, highlightsAtom, kiwiIdAtom } from "../atoms";
 
-import supabaseManager from "#/managers/supabase";
-
 const useHighlight = () => {
   const [highlights, setHighlights] = useAtom(highlightsAtom);
   const currentSection = useAtomValue(currentSectionAtom);
@@ -25,17 +23,9 @@ const useHighlight = () => {
 
     fetchSectionHighlights();
 
-    const channel = supabaseManager.reader.subscribeToHighlights(
-      kiwiId,
-      currentSection.href,
-      {
-        onInsert: (highlight) => setHighlights((prev) => [...prev, highlight]),
-        onDelete: (highlight) =>
-          setHighlights((prev) => prev.filter((h) => h.id !== highlight.id)),
-      },
-    );
+    const interval = setInterval(fetchSectionHighlights, 1 * 60 * 1000);
 
-    return () => channel.unsubscribe();
+    return () => clearInterval(interval);
   }, [kiwiId, currentSection, setHighlights]);
 
   return highlights;

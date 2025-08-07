@@ -26,9 +26,6 @@ export const addHighlightAtom = atom(
     const newHighlight: Highlight = {
       ...highlight,
       id,
-      commentCount: 0,
-      name: participant.name,
-      profileImage: participant.profileImage,
     };
     set(highlightsAtom, [...get(highlightsAtom), newHighlight]);
     set(setSelectedHighlightAtom, newHighlight);

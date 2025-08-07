@@ -85,7 +85,7 @@ export interface Bookmark {
   createdAt: string;
 }
 
-export interface Highlight {
+export interface KiwiHighlight {
   id: string;
   cfi: string;
   sectionHref: string;
@@ -97,6 +97,18 @@ export interface Highlight {
   createdAt: string;
   updatedAt: string;
   commentCount: number;
+}
+
+export interface Highlight {
+  id: string;
+  kiwiId: string;
+  participantId: string;
+  cfi: string;
+  text: string;
+  color: string;
+  sectionHref: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Comment {
@@ -111,23 +123,23 @@ export interface Comment {
   updatedAt: string;
 }
 
-export interface Annotation {
-  id: string;
-  cfi: string;
-  text: string;
-  color: string;
-  participantId: string;
-  createdAt: string;
-  updatedAt: string;
-  sectionHref: string;
-  comments: {
-    id: string;
-    text: string;
-    createdAt: string;
-    updatedAt: string;
-    participantId: string;
-  }[];
-}
+// export interface Annotation {
+//   id: string;
+//   cfi: string;
+//   text: string;
+//   color: string;
+//   participantId: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   sectionHref: string;
+//   comments: {
+//     id: string;
+//     text: string;
+//     createdAt: string;
+//     updatedAt: string;
+//     participantId: string;
+//   }[];
+// }
 
 export interface GetKiwiReaderResponse {
   kiwi: Kiwi;

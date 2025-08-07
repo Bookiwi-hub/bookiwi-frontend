@@ -1,7 +1,7 @@
 import { memo } from "react";
 
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
-import { Highlight } from "@bookiwi/supabase/types";
+import { Highlight, KiwiHighlight } from "@bookiwi/supabase/types";
 
 import { useTruncatedText } from "#/hooks";
 import {
@@ -12,14 +12,16 @@ import {
 import { truncate } from "#/utils";
 import { formatDate } from "#/utils/format-date";
 
-interface HighlightItemProps {
-  highlight: Highlight;
+interface Props {
+  kiwiHighlight: KiwiHighlight;
+  kiwiId: string;
 }
 
-function HighlightItem({ highlight }: HighlightItemProps) {
+function HighlightItem({ kiwiHighlight, kiwiId }: Props) {
   const navItems = useAtomValue(navAtom);
   const book = useAtomValue(bookAtom);
-  const { text, color, name, sectionHref, createdAt, commentCount } = highlight;
+  const { text, color, name, sectionHref, createdAt, commentCount } =
+    kiwiHighlight;
   const sectionLabel = navItems?.find(
     (item) => item.href === sectionHref,
   )?.label;
@@ -33,8 +35,19 @@ function HighlightItem({ highlight }: HighlightItemProps) {
   const setSelectedHighlight = useSetAtom(selectedHighlightAtom);
 
   const handleClick = () => {
+    const highlight: Highlight = {
+      id: kiwiHighlight.id,
+      kiwiId,
+      participantId: kiwiHighlight.participantId,
+      cfi: kiwiHighlight.cfi,
+      text: kiwiHighlight.text,
+      color: kiwiHighlight.color,
+      sectionHref: kiwiHighlight.sectionHref,
+      createdAt: kiwiHighlight.createdAt,
+      updatedAt: kiwiHighlight.updatedAt,
+    };
     setSelectedHighlight(highlight);
-    book?.rendition.display(highlight.cfi);
+    book?.rendition.display(kiwiHighlight.cfi);
   };
 
   return (

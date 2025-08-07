@@ -5,11 +5,13 @@ import {
   CommentTable,
   Highlight,
   HighlightTable,
+  KiwiHighlight,
   NewComment,
   NewHighlight,
   Participant,
   ParticipantTable,
 } from "@bookiwi/supabase/types";
+import { snakeToCamelKeys } from "@bookiwi/supabase/utils";
 
 import { GUEST_PARTICIPANT_ID } from "#/constants/guest";
 import idb, { IDBStore } from "#/managers/idb";
@@ -108,43 +110,47 @@ export const getGuestSectionHighlights = async (
     sectionHref,
   );
 
+  const highlights = snakeToCamelKeys<HighlightTable[]>(
+    highlightTables,
+  ) as Highlight[];
+
   // 각 하이라이트에 대해 participant 정보와 댓글 개수를 가져와서 Highlight 타입으로 변환
-  const highlights = await Promise.all(
-    highlightTables.map(async (highlightTable) => {
-      // participant 정보 가져오기
-      const participant = await idb.get<ParticipantTable>(
-        IDBStore.Participants,
-        highlightTable.participant_id,
-      );
-      if (!participant) {
-        throw new Error("Participant not found");
-      }
+  // const highlights = await Promise.all(
+  //   highlightTables.map(async (highlightTable) => {
+  //     // participant 정보 가져오기
+  //     const participant = await idb.get<ParticipantTable>(
+  //       IDBStore.Participants,
+  //       highlightTable.participant_id,
+  //     );
+  //     if (!participant) {
+  //       throw new Error("Participant not found");
+  //     }
 
-      // 댓글 개수 가져오기
-      const comments = await idb.getByIndex<CommentTable>(
-        IDBStore.Comments,
-        "highlight_id",
-        highlightTable.id,
-      );
+  //     // 댓글 개수 가져오기
+  //     const comments = await idb.getByIndex<CommentTable>(
+  //       IDBStore.Comments,
+  //       "highlight_id",
+  //       highlightTable.id,
+  //     );
 
-      // HighlightTable을 Highlight 타입으로 변환
-      const highlight: Highlight = {
-        id: highlightTable.id,
-        cfi: highlightTable.cfi,
-        sectionHref: highlightTable.section_href,
-        text: highlightTable.text,
-        color: highlightTable.color,
-        participantId: highlightTable.participant_id,
-        name: participant.name,
-        profileImage: participant.profile_image,
-        createdAt: highlightTable.created_at,
-        updatedAt: highlightTable.updated_at,
-        commentCount: comments.length,
-      };
+  //     // HighlightTable을 Highlight 타입으로 변환
+  //     const highlight: Highlight = {
+  //       id: highlightTable.id,
+  //       cfi: highlightTable.cfi,
+  //       sectionHref: highlightTable.section_href,
+  //       text: highlightTable.text,
+  //       color: highlightTable.color,
+  //       participantId: highlightTable.participant_id,
+  //       name: participant.name,
+  //       profileImage: participant.profile_image,
+  //       createdAt: highlightTable.created_at,
+  //       updatedAt: highlightTable.updated_at,
+  //       commentCount: comments.length,
+  //     };
 
-      return highlight;
-    }),
-  );
+  //     return highlight;
+  //   }),
+  // );
 
   return highlights;
 };
@@ -159,8 +165,62 @@ export const getGuestHighlights = async (
     kiwiId,
   );
 
+  const highlights = snakeToCamelKeys<HighlightTable[]>(
+    highlightTables,
+  ) as Highlight[];
+
   // 각 하이라이트에 대해 participant 정보와 댓글 개수를 가져와서 Highlight 타입으로 변환
-  const highlights = await Promise.all(
+  // const highlights = await Promise.all(
+  //   highlightTables.map(async (highlightTable) => {
+  //     // participant 정보 가져오기
+  //     const participant = await idb.get<ParticipantTable>(
+  //       IDBStore.Participants,
+  //       highlightTable.participant_id,
+  //     );
+  //     if (!participant) {
+  //       throw new Error("Participant not found");
+  //     }
+
+  //     // 댓글 개수 가져오기
+  //     const comments = await idb.getByIndex<CommentTable>(
+  //       IDBStore.Comments,
+  //       "highlight_id",
+  //       highlightTable.id,
+  //     );
+
+  //     // HighlightTable을 Highlight 타입으로 변환
+  //     const highlight: Highlight = {
+  //       id: highlightTable.id,
+  //       cfi: highlightTable.cfi,
+  //       sectionHref: highlightTable.section_href,
+  //       text: highlightTable.text,
+  //       color: highlightTable.color,
+  //       participantId: highlightTable.participant_id,
+  //       name: participant.name,
+  //       profileImage: participant.profile_image,
+  //       createdAt: highlightTable.created_at,
+  //       updatedAt: highlightTable.updated_at,
+  //       commentCount: comments.length,
+  //     };
+
+  //     return highlight;
+  //   }),
+  // );
+
+  return highlights;
+};
+
+export const getGuestKiwiHighlights = async (
+  kiwiId: string,
+): Promise<KiwiHighlight[]> => {
+  const highlightTables = await idb.getByIndex<HighlightTable>(
+    IDBStore.Highlights,
+    "kiwi_id",
+    kiwiId,
+  );
+
+  // 각 하이라이트에 대해 participant 정보와 댓글 개수를 가져와서 Highlight 타입으로 변환
+  const kiwiHighlights = await Promise.all(
     highlightTables.map(async (highlightTable) => {
       // participant 정보 가져오기
       const participant = await idb.get<ParticipantTable>(
@@ -179,7 +239,7 @@ export const getGuestHighlights = async (
       );
 
       // HighlightTable을 Highlight 타입으로 변환
-      const highlight: Highlight = {
+      const kiwiHighlight: KiwiHighlight = {
         id: highlightTable.id,
         cfi: highlightTable.cfi,
         sectionHref: highlightTable.section_href,
@@ -193,11 +253,11 @@ export const getGuestHighlights = async (
         commentCount: comments.length,
       };
 
-      return highlight;
+      return kiwiHighlight;
     }),
   );
 
-  return highlights;
+  return kiwiHighlights;
 };
 
 export const addGuestComment = async (

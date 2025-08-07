@@ -9,6 +9,7 @@ import {
   Highlight,
   Comment,
   NewComment,
+  KiwiHighlight,
 } from "../types";
 import { camelToSnakeKeys, snakeToCamelKeys } from "../utils";
 
@@ -44,26 +45,39 @@ class SupabaseReader {
     sectionHref: string,
   ): Promise<Highlight[]> {
     const { data, error } = await this.supabase
-      .from("kiwi_highlights_view")
+      .from("highlights")
       .select("*")
-      .eq("kiwiId", kiwiId)
-      .eq("sectionHref", sectionHref);
+      .eq("kiwi_id", kiwiId)
+      .eq("section_href", sectionHref);
 
     if (error || !data) {
       throw new Error(error?.message || "Failed to get section highlights");
     }
 
-    return data;
+    return data.map((highlight) => snakeToCamelKeys(highlight)) as Highlight[];
   }
 
   async getHighlights(kiwiId: string): Promise<Highlight[]> {
+    const { data, error } = await this.supabase
+      .from("highlights")
+      .select("*")
+      .eq("kiwi_id", kiwiId);
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to get highlights");
+    }
+
+    return data.map((highlight) => snakeToCamelKeys(highlight)) as Highlight[];
+  }
+
+  async getKiwiHighlights(kiwiId: string): Promise<KiwiHighlight[]> {
     const { data, error } = await this.supabase
       .from("kiwi_highlights_view")
       .select("*")
       .eq("kiwiId", kiwiId);
 
     if (error || !data) {
-      throw new Error(error?.message || "Failed to get highlights");
+      throw new Error(error?.message || "Failed to get kiwi highlights");
     }
 
     return data;
@@ -102,8 +116,8 @@ class SupabaseReader {
       onInsert,
       onDelete,
     }: {
-      onInsert?: (highlight: any) => void;
-      onDelete?: (highlight: any) => void;
+      onInsert?: (highlight: Highlight) => void;
+      onDelete?: (highlightId: string) => void;
     },
   ) {
     const channel = this.supabase
@@ -117,8 +131,8 @@ class SupabaseReader {
           filter: `kiwi_id=eq.${kiwiId}`,
         },
         (payload) => {
-          const highlight = payload.new;
-          if (highlight.section_href === sectionHref) {
+          const highlight = snakeToCamelKeys(payload.new) as Highlight;
+          if (highlight.sectionHref === sectionHref) {
             onInsert?.(highlight);
           }
         },
@@ -134,7 +148,7 @@ class SupabaseReader {
         (payload) => {
           const highlight = payload.old;
           if (highlight.section_href === sectionHref) {
-            onDelete?.(highlight);
+            onDelete?.(highlight.id);
           }
         },
       )
