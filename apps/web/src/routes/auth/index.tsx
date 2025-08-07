@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 
 import { primaryColor } from "@bookiwi/color";
@@ -9,6 +9,17 @@ import supabaseManager from "#/managers/supabase";
 import userManager from "#/managers/user";
 
 export const Route = createFileRoute("/auth/")({
+  beforeLoad: async () => {
+    const isLoggedInAsGuest = await userManager.isLoggedInAsGuest();
+    if (isLoggedInAsGuest) {
+      userManager.logoutAsGuestMode();
+      return;
+    }
+    const isLoggedInAsUser = await userManager.isLoggedInAsUser();
+    if (isLoggedInAsUser) {
+      throw redirect({ to: "/my-kiwis" });
+    }
+  },
   head: () => ({
     meta: [
       {

@@ -9,6 +9,7 @@ import {
   Highlight,
   Comment,
   NewComment,
+  KiwiHighlight,
 } from "../types";
 import { camelToSnakeKeys, snakeToCamelKeys } from "../utils";
 
@@ -44,26 +45,39 @@ class SupabaseReader {
     sectionHref: string,
   ): Promise<Highlight[]> {
     const { data, error } = await this.supabase
-      .from("kiwi_highlights_view")
+      .from("highlights")
       .select("*")
-      .eq("kiwiId", kiwiId)
-      .eq("sectionHref", sectionHref);
+      .eq("kiwi_id", kiwiId)
+      .eq("section_href", sectionHref);
 
     if (error || !data) {
       throw new Error(error?.message || "Failed to get section highlights");
     }
 
-    return data;
+    return data.map((highlight) => snakeToCamelKeys(highlight)) as Highlight[];
   }
 
   async getHighlights(kiwiId: string): Promise<Highlight[]> {
+    const { data, error } = await this.supabase
+      .from("highlights")
+      .select("*")
+      .eq("kiwi_id", kiwiId);
+
+    if (error || !data) {
+      throw new Error(error?.message || "Failed to get highlights");
+    }
+
+    return data.map((highlight) => snakeToCamelKeys(highlight)) as Highlight[];
+  }
+
+  async getKiwiHighlights(kiwiId: string): Promise<KiwiHighlight[]> {
     const { data, error } = await this.supabase
       .from("kiwi_highlights_view")
       .select("*")
       .eq("kiwiId", kiwiId);
 
     if (error || !data) {
-      throw new Error(error?.message || "Failed to get highlights");
+      throw new Error(error?.message || "Failed to get kiwi highlights");
     }
 
     return data;
@@ -93,6 +107,49 @@ class SupabaseReader {
       throw new Error(error?.message || "Failed to remove highlight");
     }
     return { id };
+  }
+
+  subscribeHighlights(
+    kiwiId: string,
+    {
+      onInsert,
+      onDelete,
+    }: {
+      onInsert?: (highlight: Highlight) => void;
+      onDelete?: (highlight: Highlight) => void;
+    },
+  ) {
+    const channel = this.supabase
+      .channel(`kiwi-${kiwiId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "highlights",
+          filter: `kiwi_id=eq.${kiwiId}`,
+        },
+        (payload) => {
+          const highlight = snakeToCamelKeys(payload.new) as Highlight;
+          onInsert?.(highlight);
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "highlights",
+          filter: `kiwi_id=eq.${kiwiId}`,
+        },
+        (payload) => {
+          const highlight = snakeToCamelKeys(payload.old) as Highlight;
+          onDelete?.(highlight);
+        },
+      )
+      .subscribe();
+
+    return channel;
   }
 
   // 참가자 작업
