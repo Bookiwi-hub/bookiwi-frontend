@@ -4,6 +4,7 @@ import { Children, KeyboardEvent, ReactNode, useState } from "react";
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { NewHighlight } from "@bookiwi/supabase/types";
 
+import { tabStateAtom, TabType } from "../../-split-view/annotation/atoms";
 import {
   AnnotationPaneState,
   annotationPaneStateAtom,
@@ -27,13 +28,24 @@ const openHighlightTabAtom = atom(null, (get, set) => {
   if (!isAnnotationOpen) {
     set(annotationPaneStateAtom, AnnotationPaneState.OPEN);
   }
+  set(tabStateAtom, TabType.COMMENT);
 });
+
+const openAiChatAtom = atom(null, (get, set) => {
+  const isAnnotationOpen = get(isAnnotationOpenAtom);
+  if (!isAnnotationOpen) {
+    set(annotationPaneStateAtom, AnnotationPaneState.OPEN);
+  }
+  set(tabStateAtom, TabType.AI);
+});
+
 function TextSelectionMenu() {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const participantInfo = useAtomValue(participantInfoAtom);
   const kiwiId = useAtomValue(kiwiIdAtom);
   const openHighlightTab = useSetAtom(openHighlightTabAtom);
+  const openAiChat = useSetAtom(openAiChatAtom);
   const addHighlight = useSetAtom(addHighlightAtom);
   const removeHighlight = useSetAtom(removeHighlightAtom);
   const result = useSelectionMenu(width, height);
@@ -90,6 +102,10 @@ function TextSelectionMenu() {
   };
 
   const handleAiChat = async () => {
+    if (!selectedText.status.isAlreadyExists) {
+      await addNewHighlight();
+    }
+    openAiChat();
     hide();
   };
 
