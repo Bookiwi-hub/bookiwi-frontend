@@ -3,9 +3,10 @@ import { memo, useEffect, useRef, useState } from "react";
 import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { Comment, Highlight, NewComment } from "@bookiwi/supabase/types";
 
+import HighlightedText from "../highlighted-text";
+
 import CommentForm from "./comment-form";
 import Comments from "./comments";
-import HighlightedText from "./highlighted-text";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
 import { useLoadingError } from "#/hooks";

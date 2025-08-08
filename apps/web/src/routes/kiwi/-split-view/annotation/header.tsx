@@ -42,7 +42,7 @@ function AnnotationHeader() {
           onMouseDown={(e) => e.preventDefault()}
           tabIndex={-1}
         >
-          코멘트
+          하이라이트
         </TabsTrigger>
         <TabsTrigger
           className="w-full"
