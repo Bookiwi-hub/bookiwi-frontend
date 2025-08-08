@@ -1,5 +1,5 @@
 import { Highlighter, MessageSquare, Trash2 } from "lucide-react";
-import { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, ReactNode, useState } from "react";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { NewHighlight } from "@bookiwi/supabase/types";
@@ -125,18 +125,41 @@ function TextSelectionMenu() {
         onKeyDown={handleKeyDown}
       >
         {isAlreadyExists ? (
-          isMine && <RemoveHighlightButton onClick={handleRemoveHighlight} />
+          isMine && (
+            <SelectionMenuButton
+              onClick={handleRemoveHighlight}
+              title="하이라이트 삭제"
+              label="삭제"
+              shortcut="Ctrl+D"
+              icon={<Trash2 className="size-3.5" />}
+            />
+          )
         ) : (
-          <AddHighlightButton
-            participantColor={participantInfo.color}
+          <SelectionMenuButton
             onClick={handleAddHighlight}
+            title="하이라이트 (Ctrl+H)"
+            label="하이라이트"
+            shortcut="Ctrl+H"
+            icon={
+              <Highlighter
+                className="size-3.5"
+                strokeWidth={4}
+                style={{ color: participantInfo.color || "rgba(186, 230, 55)" }}
+              />
+            }
           />
         )}
 
         {!isAnnotationPinned && (
           <>
             <div className="h-px w-full bg-border/50" />
-            <CommentButton onClick={handleComment} />
+            <SelectionMenuButton
+              onClick={handleComment}
+              title="코멘트 (Ctrl+M)"
+              label="코멘트"
+              shortcut="Ctrl+M"
+              icon={<MessageSquare className="size-3.5 text-blue-600" />}
+            />
           </>
         )}
       </div>
@@ -144,12 +167,18 @@ function TextSelectionMenu() {
   );
 }
 
-function AddHighlightButton({
-  participantColor,
+function SelectionMenuButton({
   onClick,
+  title,
+  label,
+  shortcut,
+  icon,
 }: {
-  participantColor: string;
   onClick: () => void;
+  title: string;
+  label: string;
+  shortcut?: string;
+  icon: ReactNode;
 }) {
   return (
     <Button
@@ -157,49 +186,15 @@ function AddHighlightButton({
       size="sm"
       onClick={onClick}
       className="flex h-8 justify-between px-2 text-xs"
-      title="하이라이트 (Ctrl+H)"
+      title={title}
     >
-      <Highlighter
-        className="size-3.5"
-        strokeWidth={4}
-        style={{
-          color: participantColor || "rgba(186, 230, 55)",
-        }}
-      />
-      <span className="ml-1.5 text-muted-foreground">하이라이트</span>
-      <span className="ml-1 text-[10px] text-muted-foreground/60">Ctrl+H</span>
-    </Button>
-  );
-}
-
-function RemoveHighlightButton({ onClick }: { onClick: () => void }) {
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={onClick}
-      className="flex h-8 justify-between px-2 text-xs"
-      title="하이라이트 삭제"
-    >
-      <Trash2 className="size-3.5" />
-      <span className="ml-1.5 text-muted-foreground">삭제</span>
-      <span className="ml-1 text-[10px] text-muted-foreground/60">Ctrl+D</span>
-    </Button>
-  );
-}
-
-function CommentButton({ onClick }: { onClick: () => void }) {
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={onClick}
-      className="flex h-8 justify-between px-2 text-xs"
-      title="코멘트 (Ctrl+M)"
-    >
-      <MessageSquare className="size-3.5 text-blue-600" />
-      <span className="ml-1.5 text-muted-foreground">코멘트</span>
-      <span className="ml-1 text-[10px] text-muted-foreground/60">Ctrl+M</span>
+      {icon}
+      <span className="ml-1.5 text-muted-foreground">{label}</span>
+      {shortcut && (
+        <span className="ml-1 text-[10px] text-muted-foreground/60">
+          {shortcut}
+        </span>
+      )}
     </Button>
   );
 }
