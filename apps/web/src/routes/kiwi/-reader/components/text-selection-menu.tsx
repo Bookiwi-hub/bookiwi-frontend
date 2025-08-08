@@ -1,5 +1,5 @@
-import { Highlighter, MessageSquare, Trash2 } from "lucide-react";
-import { KeyboardEvent, ReactNode, useState } from "react";
+import { Bot, Highlighter, MessageSquare, Trash2 } from "lucide-react";
+import { Children, KeyboardEvent, ReactNode, useState } from "react";
 
 import { atom, useAtomValue, useSetAtom } from "@bookiwi/jotai";
 import { NewHighlight } from "@bookiwi/supabase/types";
@@ -89,6 +89,10 @@ function TextSelectionMenu() {
     hide();
   };
 
+  const handleAiChat = async () => {
+    hide();
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (e.key === "Escape") {
@@ -102,6 +106,9 @@ function TextSelectionMenu() {
     } else if (e.key === "d" && e.ctrlKey) {
       e.preventDefault();
       handleRemoveHighlight();
+    } else if (e.key === "i" && e.ctrlKey) {
+      e.preventDefault();
+      handleAiChat();
     }
   };
 
@@ -114,7 +121,7 @@ function TextSelectionMenu() {
         role="toolbar"
         ref={refFunc}
         className={cn(
-          "absolute z-50 flex flex-col items-stretch gap-1 rounded-lg border border-border/50 bg-background/95 p-1 shadow-xl backdrop-blur-md",
+          "absolute z-50 rounded-lg border border-border/50 bg-background/95 p-1 shadow-xl backdrop-blur-md",
           "animate-in fade-in-0 zoom-in-95 duration-150 focus:outline-none",
         )}
         style={{
@@ -124,35 +131,36 @@ function TextSelectionMenu() {
         tabIndex={-1}
         onKeyDown={handleKeyDown}
       >
-        {isAlreadyExists ? (
-          isMine && (
-            <SelectionMenuButton
-              onClick={handleRemoveHighlight}
-              title="하이라이트 삭제"
-              label="삭제"
-              shortcut="Ctrl+D"
-              icon={<Trash2 className="size-3.5" />}
-            />
-          )
-        ) : (
-          <SelectionMenuButton
-            onClick={handleAddHighlight}
-            title="하이라이트 (Ctrl+H)"
-            label="하이라이트"
-            shortcut="Ctrl+H"
-            icon={
-              <Highlighter
-                className="size-3.5"
-                strokeWidth={4}
-                style={{ color: participantInfo.color || "rgba(186, 230, 55)" }}
+        <ButtonGroup>
+          {isAlreadyExists ? (
+            isMine && (
+              <SelectionMenuButton
+                onClick={handleRemoveHighlight}
+                title="하이라이트 삭제"
+                label="삭제"
+                shortcut="Ctrl+D"
+                icon={<Trash2 className="size-3.5" />}
               />
-            }
-          />
-        )}
+            )
+          ) : (
+            <SelectionMenuButton
+              onClick={handleAddHighlight}
+              title="하이라이트 (Ctrl+H)"
+              label="하이라이트"
+              shortcut="Ctrl+H"
+              icon={
+                <Highlighter
+                  className="size-3.5"
+                  strokeWidth={4}
+                  style={{
+                    color: participantInfo.color || "rgba(186, 230, 55)",
+                  }}
+                />
+              }
+            />
+          )}
 
-        {!isAnnotationPinned && (
-          <>
-            <div className="h-px w-full bg-border/50" />
+          {!isAnnotationPinned && (
             <SelectionMenuButton
               onClick={handleComment}
               title="코멘트 (Ctrl+M)"
@@ -160,8 +168,18 @@ function TextSelectionMenu() {
               shortcut="Ctrl+M"
               icon={<MessageSquare className="size-3.5 text-blue-600" />}
             />
-          </>
-        )}
+          )}
+
+          {(!isAlreadyExists || !isMine) && (
+            <SelectionMenuButton
+              onClick={handleAiChat}
+              title="AI 채팅 (Ctrl+I)"
+              label="AI 채팅"
+              shortcut="Ctrl+I"
+              icon={<Bot className="size-3.5" />}
+            />
+          )}
+        </ButtonGroup>
       </div>
     </>
   );
@@ -196,6 +214,22 @@ function SelectionMenuButton({
         </span>
       )}
     </Button>
+  );
+}
+
+function ButtonGroup({ children }: { children: ReactNode }) {
+  const childList = Children.toArray(children);
+  if (!childList.length) return null;
+  return (
+    <div className="flex flex-col items-stretch gap-1">
+      {childList.reduce((prevButtons, currentButton) => (
+        <>
+          {prevButtons}
+          <div className="h-px w-full bg-border/50" />
+          {currentButton}
+        </>
+      ))}
+    </div>
   );
 }
 
