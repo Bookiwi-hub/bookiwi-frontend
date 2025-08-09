@@ -136,7 +136,7 @@ function AuthPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              className="w-full rounded-2xl border border-gray-200 bg-white px-6 py-4 text-gray-700 shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-gray-50 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-200 active:scale-[0.98]"
+              className="w-full rounded-2xl border border-gray-200 bg-white px-6 py-4 text-gray-700 shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-gray-50 hover:shadow-xl focus:outline-none active:scale-[0.98]"
               aria-label="구글로 로그인하기"
             >
               <div className="flex items-center justify-center space-x-3">
