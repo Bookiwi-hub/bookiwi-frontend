@@ -9,6 +9,7 @@ import ChatForm from "./chat-form";
 import ChatMessages, { ChatMessage } from "./chat-messages";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
+import { askAi } from "#/routes/kiwi/-reader/apis";
 import { participantInfoAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface SelectedProps {
@@ -22,17 +23,26 @@ function Selected({ highlight }: SelectedProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const callAiApi = async (userMessage: string): Promise<string> =>
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // 50% 확률로 오류 발생 (테스트용)
-        if (Math.random() > 0.5) {
-          resolve(`AI가 응답함: ${userMessage}`);
-        } else {
-          reject(new Error("AI 응답 오류"));
-        }
-      }, 3000);
+  const callAiApi = async (
+    userMessage: string,
+    aiMessageId: string,
+  ): Promise<string> => {
+    const history: { role: "user" | "assistant"; content: string }[] = messages
+      .filter((m) => m.id !== aiMessageId)
+      .map((m) => ({
+        role:
+          m.participantId === participantInfo?.id
+            ? ("user" as const)
+            : ("assistant" as const),
+        content: m.text,
+      }))
+      .filter((h) => h.content && h.content.trim().length > 0);
+
+    return askAi(userMessage, {
+      highlightText: highlight.text,
+      history,
     });
+  };
 
   const handleSendMessage = async (message: Comment) => {
     // 1. 사용자 메시지를 즉시 추가
@@ -66,8 +76,8 @@ function Selected({ highlight }: SelectedProps) {
     setIsLoading(true);
 
     try {
-      // 3. AI API 호출
-      const aiResponse = await callAiApi(userText);
+      // 3. AI API 호출 (대화 기록 포함)
+      const aiResponse = await callAiApi(userText, aiMessageId);
 
       // 4. 성공 시 AI 응답으로 업데이트
       setMessages((prev) =>
