@@ -9,10 +9,13 @@ export const highlightsAtom = atom<Highlight[]>([]);
 
 export const selectedHighlightAtom = atom<Highlight | null>(null);
 
+export const selectedTextAtom = atom<string | null>(null);
+
 export const setSelectedHighlightAtom = atom(
   null,
   (get, set, highlight: Highlight | null) => {
     set(selectedHighlightAtom, highlight);
+    set(selectedTextAtom, highlight?.text ?? null);
   },
 );
 

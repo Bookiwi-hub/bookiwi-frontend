@@ -1,7 +1,7 @@
 import { Send } from "lucide-react";
 import { useState } from "react";
 
-import { Comment, Highlight } from "@bookiwi/supabase/types";
+import { Comment } from "@bookiwi/supabase/types";
 
 import { Button } from "#/components/ui/button";
 import { Textarea } from "#/components/ui/textarea";
@@ -14,14 +14,12 @@ interface ChatFormProps {
     profileImage: string | null;
     color: string;
   };
-  highlight: Highlight;
   isLoading?: boolean;
 }
 
 function ChatForm({
   onSubmit,
   participantInfo,
-  highlight,
   isLoading = false,
 }: ChatFormProps) {
   const [message, setMessage] = useState("");
@@ -32,7 +30,7 @@ function ChatForm({
 
     const newMessage: Comment = {
       id: "",
-      highlightId: highlight.id,
+      highlightId: new Date().toISOString(),
       text: message,
       participantId: participantInfo.id,
       name: participantInfo.name,
