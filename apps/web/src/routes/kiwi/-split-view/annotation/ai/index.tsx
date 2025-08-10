@@ -5,16 +5,16 @@ import { useAtomValue } from "@bookiwi/jotai";
 import NotSelected from "./not-selected";
 import Selected from "./selected";
 
-import { selectedHighlightAtom } from "#/routes/kiwi/-reader/atoms";
+import { selectedTextAtom } from "#/routes/kiwi/-reader/atoms";
 
 function AiChatTab() {
-  const selectedHighlight = useAtomValue(selectedHighlightAtom);
+  const selectedText = useAtomValue(selectedTextAtom);
 
-  if (!selectedHighlight) {
+  if (!selectedText) {
     return <NotSelected />;
   }
 
-  return <Selected key={selectedHighlight.id} highlight={selectedHighlight} />;
+  return <Selected text={selectedText} />;
 }
 
 export default memo(AiChatTab);

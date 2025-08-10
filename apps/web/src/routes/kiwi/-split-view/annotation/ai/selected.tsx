@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, memo } from "react";
 
 import { useAtomValue } from "@bookiwi/jotai";
-import { Comment, Highlight } from "@bookiwi/supabase/types";
+import { Comment } from "@bookiwi/supabase/types";
 
 import HighlightedText from "../highlighted-text";
 
@@ -13,10 +13,10 @@ import { askAi } from "#/routes/kiwi/-reader/apis";
 import { participantInfoAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface SelectedProps {
-  highlight: Highlight;
+  text: string;
 }
 
-function Selected({ highlight }: SelectedProps) {
+function Selected({ text }: SelectedProps) {
   const participantInfo = useAtomValue(participantInfoAtom);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const prevMessagesLengthRef = useRef<number>(messages.length);
@@ -39,7 +39,7 @@ function Selected({ highlight }: SelectedProps) {
       .filter((h) => h.content && h.content.trim().length > 0);
 
     return askAi(userMessage, {
-      highlightText: highlight.text,
+      highlightText: text,
       history,
     });
   };
@@ -56,7 +56,7 @@ function Selected({ highlight }: SelectedProps) {
     const aiMessageId = `ai-${Date.now()}`;
     const aiLoadingMessage: ChatMessage = {
       id: aiMessageId,
-      highlightId: highlight.id,
+      highlightId: "",
       text: "",
       participantId: "",
       name: "",
@@ -161,7 +161,7 @@ function Selected({ highlight }: SelectedProps) {
   return (
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
-        <HighlightedText text={highlight.text} />
+        <HighlightedText text={text} />
         <ChatMessages
           messages={messages}
           participantId={participantInfo.id}
@@ -172,7 +172,6 @@ function Selected({ highlight }: SelectedProps) {
       <ChatForm
         onSubmit={handleSendMessage}
         participantInfo={participantInfo}
-        highlight={highlight}
         isLoading={isLoading}
       />
     </div>
