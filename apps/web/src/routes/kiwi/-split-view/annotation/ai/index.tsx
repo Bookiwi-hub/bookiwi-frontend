@@ -14,7 +14,7 @@ function AiChatTab() {
     return <NotSelected />;
   }
 
-  return <Selected text={selectedText} />;
+  return <Selected key={selectedText} text={selectedText} />;
 }
 
 export default memo(AiChatTab);
