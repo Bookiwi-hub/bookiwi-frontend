@@ -16,6 +16,7 @@ import {
   participantInfoAtom,
   kiwiIdAtom,
   removeHighlightAtom,
+  selectedTextAtom,
 } from "../atoms";
 import { useSelectionMenu } from "../hooks";
 
@@ -48,6 +49,7 @@ function TextSelectionMenu() {
   const openAiChat = useSetAtom(openAiChatAtom);
   const addHighlight = useSetAtom(addHighlightAtom);
   const removeHighlight = useSetAtom(removeHighlightAtom);
+  const setSelectedText = useSetAtom(selectedTextAtom);
   const result = useSelectionMenu(width, height);
   const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
 
@@ -102,9 +104,7 @@ function TextSelectionMenu() {
   };
 
   const handleAiChat = async () => {
-    if (!selectedText.status.isAlreadyExists) {
-      await addNewHighlight();
-    }
+    setSelectedText(selectedText.text);
     openAiChat();
     hide();
   };
