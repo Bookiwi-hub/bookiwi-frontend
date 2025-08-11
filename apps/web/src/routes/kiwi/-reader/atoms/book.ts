@@ -2,9 +2,10 @@ import { Book, Location, NavItem } from "@bookiwi/epubjs";
 import IframeView from "@bookiwi/epubjs/types/managers/iframe";
 import Section from "@bookiwi/epubjs/types/section";
 import { atom } from "@bookiwi/jotai";
+import { Epub } from "@bookiwi/supabase/types";
 
 export const bookAtom = atom<Book | null>(null);
-
+export const epubAtom = atom<Epub | null>(null);
 export const currentSectionAtom = atom<Section>();
 export const currentLocationAtom = atom<Location>();
 export const currentViewAtom = atom<IframeView>();
