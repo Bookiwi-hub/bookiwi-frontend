@@ -44,6 +44,7 @@ bookiwi-frontend/
 - [독서를 방해하지 않는 Text Selection Menu](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Text-Selection-Menu)
 - [모바일/태블릿 접근 제한](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/pointer-devices-only)
 - [게스트 모드: 로그인 없이 사용하기](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Guset-Mode)
+- [AI와 함께 독서: AI-Chat with GPT](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/AI-Chat)
 - [싱글톤 매니저 클래스를 사용한 IndexedDB](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/IndexedDB-Singleton-Manager-Class)
 
 ### ❗ Error
