@@ -34,7 +34,7 @@ export const askAi = async (
       "사용자가 추가 질문을 하도록 유도하지 마.",
       "가능하면 하이라이트 문장을 우선적인 근거로 활용해.",
       "답변은 핵심만 2~3문장으로 짧게.",
-      "말투는 친근하고 친절하게.",
+      "말투는 친근하고 친절하지만 존대말을 사용해.",
     ].join(" ");
 
   messages.push({ role: "system", content: baseSystemPrompt });
