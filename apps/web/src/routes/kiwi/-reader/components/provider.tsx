@@ -23,6 +23,7 @@ import {
   setParticipantAtom,
   highlightsAtom,
   otherParticipantsAtom,
+  epubAtom,
 } from "../atoms";
 
 interface ReaderProviderProps {
@@ -89,6 +90,7 @@ function ReaderProvider({
 
   // book
   readerStore.set(bookAtom, null);
+  readerStore.set(epubAtom, epub);
 
   // kiwi
   readerStore.set(kiwiAtom, kiwi);

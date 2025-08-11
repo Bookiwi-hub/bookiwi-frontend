@@ -15,7 +15,7 @@ function EmptyChat() {
       </Avatar>
       <p className="text-sm text-gray-600">키위새 AI와 대화를 시작해보세요.</p>
       <p className="text-xs text-gray-500">
-        선택한 하이라이트에 대해 AI에게 질문할 수 있습니다.
+        문장을 선택하고 AI에게 질문할 수 있습니다.
       </p>
     </div>
   );
