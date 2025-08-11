@@ -1,7 +1,7 @@
 type ChatRole = "system" | "user" | "assistant";
 
 interface AskAiOptions {
-  highlightText?: string;
+  highlightText?: string | null;
   systemPrompt?: string;
   signal?: AbortSignal;
   history?: Array<{
