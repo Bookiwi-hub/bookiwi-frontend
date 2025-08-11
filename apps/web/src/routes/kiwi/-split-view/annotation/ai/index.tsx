@@ -24,6 +24,7 @@ function AiChatTab() {
   const prevMessagesLengthRef = useRef<number>(messages.length);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const callAiApi = async (
     userMessage: string,
@@ -45,9 +46,14 @@ function AiChatTab() {
       author: epub?.author || "",
     };
 
+    // 새로운 AbortController 생성
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     return askAi(userMessage, bookInfo, {
       highlightText: selectedText,
       history,
+      signal: abortController.signal,
     });
   };
 
@@ -100,6 +106,11 @@ function AiChatTab() {
         ),
       );
     } catch (error) {
+      // AbortError인 경우 (요청이 취소된 경우) 아무것도 하지 않음
+      if (error instanceof Error && error.name === "AbortError") {
+        return;
+      }
+
       // 5. 오류 시 오류 메시지로 업데이트
       setMessages((prev) =>
         prev.map((msg) =>
@@ -115,6 +126,7 @@ function AiChatTab() {
       );
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   };
 
@@ -143,6 +155,22 @@ function AiChatTab() {
       await processAiResponse(messageId, userMessage.text);
     }
   };
+
+  useEffect(() => {
+    // 로딩 상태 해제
+    setIsLoading(false);
+
+    // 메시지 초기화
+    setMessages([]);
+    prevMessagesLengthRef.current = 0;
+
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+    };
+  }, [selectedText]);
 
   useEffect(
     () => {
