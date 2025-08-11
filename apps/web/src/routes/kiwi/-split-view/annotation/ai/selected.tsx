@@ -38,9 +38,13 @@ function Selected({ text }: SelectedProps) {
         content: m.text,
       }))
       .filter((h) => h.content && h.content.trim().length > 0);
-    const bookTitle = epub?.title || "";
 
-    return askAi(userMessage, bookTitle, {
+    const bookInfo = {
+      title: epub?.title || "",
+      author: epub?.author || "",
+    };
+
+    return askAi(userMessage, bookInfo, {
       highlightText: text,
       history,
     });

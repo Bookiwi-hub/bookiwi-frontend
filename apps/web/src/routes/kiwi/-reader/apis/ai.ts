@@ -12,7 +12,7 @@ interface AskAiOptions {
 
 export const askAi = async (
   userMessage: string,
-  bookInfo: string,
+  bookInfo: { title: string; author: string },
   options: AskAiOptions = {},
 ): Promise<string> => {
   const apiKey = import.meta.env.VITE_OPENAI_KEY as string | undefined;
@@ -28,11 +28,13 @@ export const askAi = async (
     systemPrompt ||
     [
       "너는 '키위 AI'라는 간결한 독서 도우미야.",
-      `지금 읽고 있는 책 제목은 ${bookTitle}이야.`,
+      `지금 읽고 있는 책은 ${bookInfo.title}이야.`,
+      `저자는 ${bookInfo.author}이야.`,
       "반드시 한국어로 답변해.",
       "사용자가 추가 질문을 하도록 유도하지 마.",
       "가능하면 하이라이트 문장을 우선적인 근거로 활용해.",
       "답변은 핵심만 2~3문장으로 짧게.",
+      "말투는 친근하고 친절하게.",
     ].join(" ");
 
   messages.push({ role: "system", content: baseSystemPrompt });
