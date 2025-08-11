@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Trash2, Eraser } from "lucide-react";
 import { memo } from "react";
 
 import { useTruncatedText } from "#/hooks";
@@ -12,6 +12,7 @@ interface HighlightedTextProps {
   sectionLabel?: string;
   isMine?: boolean;
   onDelete?: () => void;
+  onErase?: () => void;
 }
 
 function HighlightedText({
@@ -22,6 +23,7 @@ function HighlightedText({
   sectionLabel,
   isMine = false,
   onDelete,
+  onErase,
 }: HighlightedTextProps) {
   const { displayText, isTruncated, isExpanded, toggleExpanded } =
     useTruncatedText({
@@ -55,24 +57,28 @@ function HighlightedText({
         date={date}
         isMine={isMine}
         onDelete={onDelete}
+        onErase={onErase}
       />
     </div>
   );
 }
 
+interface FooterProps {
+  sectionLabel?: string;
+  creatorName?: string;
+  date?: string;
+  isMine?: boolean;
+  onDelete?: () => void;
+  onErase?: () => void;
+}
 function Footer({
   sectionLabel,
   creatorName,
   date,
   isMine,
   onDelete,
-}: {
-  sectionLabel?: string;
-  creatorName?: string;
-  date?: string;
-  isMine?: boolean;
-  onDelete?: () => void;
-}) {
+  onErase,
+}: FooterProps) {
   return (
     <div className="mt-2 flex items-center justify-between">
       <div>
@@ -95,6 +101,16 @@ function Footer({
             onClick={onDelete}
           >
             <Trash2 className="size-4 text-gray-400 group-hover:text-red-500" />
+          </button>
+        )}
+        {onErase && (
+          <button
+            type="button"
+            className="group flex size-6 items-center justify-center rounded-full transition-colors hover:bg-red-50"
+            title="텍스트 지우기"
+            onClick={onErase}
+          >
+            <Eraser className="size-4 text-gray-400 group-hover:text-red-500" />
           </button>
         )}
       </div>

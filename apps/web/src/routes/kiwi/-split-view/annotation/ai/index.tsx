@@ -172,8 +172,7 @@ function AiChatTab() {
           <HighlightedText
             text={selectedText}
             creatorName={participantInfo.name}
-            isMine
-            onDelete={() => setSelectedText(null)}
+            onErase={() => setSelectedText(null)}
           />
         )}
         <ChatMessages
