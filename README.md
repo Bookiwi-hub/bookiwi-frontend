@@ -16,7 +16,7 @@ Bookiwi는 소셜 이북 리더기 앱입니다. 여러 사용자가 하나의 E
 
 키위는 여러 유저가 함께 책을 읽는 방을 의미합니다.
 
-<img width="" height="" alt="Bookiwi" src="https://github.com/user-attachments/assets/07d0e291-b54f-45d7-982b-25969a12c5b8" />
+<img width="" height="" alt="Bookiwi" src="https://github.com/user-attachments/assets/9e5d0b8b-9cd9-4472-b16a-8a772645a3b1" />
 
 ## 🔲 Architecture
 
