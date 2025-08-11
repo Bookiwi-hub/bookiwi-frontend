@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, memo } from "react";
 
-import { useAtomValue } from "@bookiwi/jotai";
+import { useAtom, useAtomValue } from "@bookiwi/jotai";
 import { Comment } from "@bookiwi/supabase/types";
 
 import HighlightedText from "../highlighted-text";
@@ -17,7 +17,7 @@ import {
 } from "#/routes/kiwi/-reader/atoms";
 
 function AiChatTab() {
-  const selectedText = useAtomValue(selectedTextAtom);
+  const [selectedText, setSelectedText] = useAtom(selectedTextAtom);
   const participantInfo = useAtomValue(participantInfoAtom);
   const epub = useAtomValue(epubAtom);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -168,7 +168,14 @@ function AiChatTab() {
   return (
     <div className="flex size-full flex-col justify-between">
       <ScrollArea className="flex flex-col p-4" ref={scrollAreaRef}>
-        {selectedText && <HighlightedText text={selectedText} />}
+        {selectedText && (
+          <HighlightedText
+            text={selectedText}
+            creatorName={participantInfo.name}
+            isMine
+            onDelete={() => setSelectedText(null)}
+          />
+        )}
         <ChatMessages
           messages={messages}
           participantId={participantInfo.id}

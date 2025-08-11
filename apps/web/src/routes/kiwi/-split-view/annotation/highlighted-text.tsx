@@ -73,10 +73,6 @@ function Footer({
   isMine?: boolean;
   onDelete?: () => void;
 }) {
-  if (!creatorName || !date) {
-    return null;
-  }
-
   return (
     <div className="mt-2 flex items-center justify-between">
       <div>
