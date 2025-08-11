@@ -10,7 +10,7 @@ import ChatMessages, { ChatMessage } from "./chat-messages";
 
 import { ScrollArea } from "#/components/ui/scroll-area";
 import { askAi } from "#/routes/kiwi/-reader/apis";
-import { participantInfoAtom } from "#/routes/kiwi/-reader/atoms";
+import { epubAtom, participantInfoAtom } from "#/routes/kiwi/-reader/atoms";
 
 interface SelectedProps {
   text: string;
@@ -18,6 +18,7 @@ interface SelectedProps {
 
 function Selected({ text }: SelectedProps) {
   const participantInfo = useAtomValue(participantInfoAtom);
+  const epub = useAtomValue(epubAtom);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const prevMessagesLengthRef = useRef<number>(messages.length);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -37,8 +38,9 @@ function Selected({ text }: SelectedProps) {
         content: m.text,
       }))
       .filter((h) => h.content && h.content.trim().length > 0);
+    const bookTitle = epub?.title || "";
 
-    return askAi(userMessage, {
+    return askAi(userMessage, bookTitle, {
       highlightText: text,
       history,
     });
