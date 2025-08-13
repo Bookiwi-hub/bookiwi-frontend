@@ -16,7 +16,7 @@ Bookiwi는 소셜 이북 리더기 앱입니다. 여러 사용자가 하나의 E
 
 키위는 여러 유저가 함께 책을 읽는 방을 의미합니다.
 
-<img width="" height="" alt="Bookiwi" src="https://github.com/user-attachments/assets/9e5d0b8b-9cd9-4472-b16a-8a772645a3b1" />
+<img width="" height="" alt="북키위" src="https://github.com/user-attachments/assets/16fe5797-57f7-4a69-ae85-6ccabc02bf00" />
 
 ## 🔲 Architecture
 
@@ -45,6 +45,7 @@ bookiwi-frontend/
 - [모바일/태블릿 접근 제한](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/pointer-devices-only)
 - [게스트 모드: 로그인 없이 사용하기](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Guset-Mode)
 - [AI와 함께 독서: AI-Chat with GPT](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/AI-Chat)
+- [Sentry 에러 모니터링](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/Sentry)
 - [싱글톤 매니저 클래스를 사용한 IndexedDB](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/IndexedDB-Singleton-Manager-Class)
 
 ### ❗ Error
