@@ -75,7 +75,7 @@ bookiwi-frontend/
 - [요소 위치 및 크기 설정을 위한 DOMRect](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/DOMRect)
 
 ### ⚙️ Setup
-
+- [AI 코드 리뷰: CodeRabbit](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/CodeRabbit)
 - [Husky lint-staged in monorepo](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/husky-monorepo).
 - [cross-env](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/cross-env).
 - [Generate js file during build Issue](https://github.com/Bookiwi-hub/bookiwi-frontend/wiki/noEmit).
