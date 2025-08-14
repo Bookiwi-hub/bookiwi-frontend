@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useRef, useEffect } from "react";
 
 import { useAtom, useAtomValue } from "@bookiwi/jotai";
 
@@ -13,6 +13,7 @@ function ReaderPageProgress() {
   const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
   const percentage = useAtomValue(percentageAtom);
   const [localPercentage, setLocalPercentage] = useState<number | null>(null);
+  const isDragging = useRef(false);
 
   // 작은 책에서의 부드러운 슬라이더 동작을 위한 로직
   const { sliderStep, totalLocations } = useMemo(() => {
@@ -20,10 +21,10 @@ function ReaderPageProgress() {
 
     const total = book.locations.length();
     // 총 위치가 100개 미만인 경우 더 세밀한 스텝 사용
-    const step = total < 100 ? 100 / total : 1;
+    const step = total < 100 ? Math.max(0.1, 100 / (total * 5)) : 1;
 
     return {
-      sliderStep: Math.max(0.1, step),
+      sliderStep: step,
       totalLocations: total,
     };
   }, [book?.locations]);
@@ -41,7 +42,7 @@ function ReaderPageProgress() {
 
       const cfi = book.locations.cfiFromPercentage(targetPercentage);
       book.rendition.display(cfi);
-    }, 150);
+    }, 200);
   }, [book, totalLocations]);
 
   const handleChangeSlider = useCallback(
@@ -49,14 +50,22 @@ function ReaderPageProgress() {
       if (!book || value[0] === undefined || !throttledDisplay) return;
 
       const newValue = value[0];
+      isDragging.current = true;
       setLocalPercentage(newValue);
       throttledDisplay(newValue);
     },
     [book, throttledDisplay],
   );
 
-  // 로컬 퍼센티지가 있으면 우선 사용, 없으면 실제 퍼센티지 사용
-  const displayPercentage = localPercentage ?? percentage;
+  const handleSliderCommit = () => {
+    isDragging.current = false;
+  };
+
+  useEffect(() => {
+    if (!isDragging.current) {
+      setLocalPercentage(percentage);
+    }
+  }, [percentage]);
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -68,13 +77,14 @@ function ReaderPageProgress() {
         )}
       >
         <div className="flex size-full items-center justify-end text-sm text-black">
-          <span>{`${Math.round(displayPercentage || 0)}%`}</span>
+          <span>{`${Math.round(localPercentage || 0)}%`}</span>
         </div>
-        {displayPercentage !== null && (
+        {localPercentage !== null && (
           <Slider
             className="w-full"
-            value={[displayPercentage]}
+            value={[localPercentage]}
             onValueChange={handleChangeSlider}
+            onValueCommit={handleSliderCommit}
             step={sliderStep}
             min={0}
             max={100}
