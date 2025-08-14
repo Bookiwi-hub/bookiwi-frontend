@@ -4,14 +4,25 @@ import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
 import { bookAtom, isCenterTouchedAtom } from "../atoms";
 
-function ReaderPrevPageButton(props: ComponentProps<"button">) {
+type ReaderPageButtonProps = ComponentProps<"button"> & {
+  direction: "prev" | "next";
+};
+
+function ReaderPageButton({
+  direction,
+  children,
+  ...rest
+}: ReaderPageButtonProps) {
   const book = useAtomValue(bookAtom);
-  const { children, ...rest } = props;
   const setCenterTouched = useSetAtom(isCenterTouchedAtom);
 
-  const goToPrevPage = () => {
+  const goToPage = () => {
     if (book && book.rendition) {
-      book.rendition.prev();
+      if (direction === "prev") {
+        book.rendition.prev();
+      } else {
+        book.rendition.next();
+      }
       setCenterTouched(false);
     }
   };
@@ -20,7 +31,7 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
     <button
       type="button"
       {...rest}
-      onClick={goToPrevPage}
+      onClick={goToPage}
       onMouseDown={(e) => e.preventDefault()}
       tabIndex={-1}
     >
@@ -29,29 +40,4 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
   );
 }
 
-function ReaderNextPageButton(props: ComponentProps<"button">) {
-  const book = useAtomValue(bookAtom);
-  const { children, ...rest } = props;
-  const setCenterTouched = useSetAtom(isCenterTouchedAtom);
-
-  const goToNextPage = () => {
-    if (book && book.rendition) {
-      book.rendition.next();
-      setCenterTouched(false);
-    }
-  };
-
-  return (
-    <button
-      type="button"
-      {...rest}
-      onClick={goToNextPage}
-      onMouseDown={(e) => e.preventDefault()}
-      tabIndex={-1}
-    >
-      {children}
-    </button>
-  );
-}
-
-export { ReaderPrevPageButton, ReaderNextPageButton };
+export default ReaderPageButton;
