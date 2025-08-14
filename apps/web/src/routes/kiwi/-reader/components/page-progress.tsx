@@ -46,7 +46,7 @@ function ReaderPageProgress() {
 
   const handleChangeSlider = useCallback(
     (value: number[]) => {
-      if (!book || !value[0] || !throttledDisplay) return;
+      if (!book || value[0] === undefined || !throttledDisplay) return;
 
       const newValue = value[0];
       setLocalPercentage(newValue);
