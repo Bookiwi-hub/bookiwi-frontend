@@ -1,16 +1,18 @@
 import { ComponentProps } from "react";
 
-import { useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue, useSetAtom } from "@bookiwi/jotai";
 
-import { bookAtom } from "../atoms";
+import { bookAtom, isCenterTouchedAtom } from "../atoms";
 
 function ReaderPrevPageButton(props: ComponentProps<"button">) {
   const book = useAtomValue(bookAtom);
   const { children, ...rest } = props;
+  const setCenterTouched = useSetAtom(isCenterTouchedAtom);
 
   const goToPrevPage = () => {
     if (book && book.rendition) {
       book.rendition.prev();
+      setCenterTouched(false);
     }
   };
 
@@ -30,10 +32,12 @@ function ReaderPrevPageButton(props: ComponentProps<"button">) {
 function ReaderNextPageButton(props: ComponentProps<"button">) {
   const book = useAtomValue(bookAtom);
   const { children, ...rest } = props;
+  const setCenterTouched = useSetAtom(isCenterTouchedAtom);
 
   const goToNextPage = () => {
     if (book && book.rendition) {
       book.rendition.next();
+      setCenterTouched(false);
     }
   };
 
