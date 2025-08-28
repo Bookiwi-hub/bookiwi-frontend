@@ -19,7 +19,6 @@ import {
   hasCfiPassed,
   isForwardSelection,
   createCfiFromSelectionToPageEnd,
-  createRangeFromCfi,
 } from "../utils";
 
 interface TextSelection {
@@ -59,7 +58,6 @@ export const useSelectedText = (): TextSelection | null => {
 
   if (selection) {
     const selectedRange = selection.getRangeAt(0);
-    const selectedText = selectedRange.toString();
     const selectedCfi = currentSection.cfiFromRange(selectedRange);
     const isForward = isForwardSelection(selection);
     const existingHighlight = highlights.find((a) => a.cfi === selectedCfi);
@@ -72,22 +70,13 @@ export const useSelectedText = (): TextSelection | null => {
     if (hasCfiPassed(selectedCfi, currentCfi.end)) {
       // 선택 영역이 현재 페이지를 벗어난 경우
       cfi = createCfiFromSelectionToPageEnd(selectedCfi, currentCfi.end);
-
-      // 새로운 CFI로부터 Range 생성
-      const newRange = createRangeFromCfi(cfi, currentView);
-      if (newRange) {
-        range = newRange;
-        text = newRange.toString();
-      } else {
-        // Range 생성에 실패한 경우 원본 사용
-        range = selectedRange;
-        text = selectedText;
-      }
+      range = currentView.contents.range(cfi);
+      text = range.toString();
     } else {
       // 선택 영역이 현재 페이지 내에 있는 경우
       cfi = selectedCfi;
       range = selectedRange;
-      text = selectedText;
+      text = selectedRange.toString();
     }
 
     const remove = () => {

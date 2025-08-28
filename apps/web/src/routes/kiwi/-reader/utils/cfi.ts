@@ -83,24 +83,3 @@ export const createCfiFromSelectionToPageEnd = (
 
   return `epubcfi(${base},${startPath},${endPath})`;
 };
-
-/**
- * CFI로부터 Range 객체를 생성합니다.
- * @param {string} cfi CFI 문자열
- * @param {any} currentView 현재 뷰 객체 (contents 속성을 가진)
- * @returns {Range | null} 생성된 Range 객체 또는 null
- */
-export const createRangeFromCfi = (
-  cfi: string,
-  currentView: any,
-): Range | null => {
-  try {
-    if (!currentView?.contents) {
-      return null;
-    }
-    return currentView.contents.range(cfi);
-  } catch (error) {
-    console.error("Failed to create range from CFI:", error);
-    return null;
-  }
-};
