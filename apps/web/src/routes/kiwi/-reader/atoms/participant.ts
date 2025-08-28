@@ -9,6 +9,7 @@ import {
   updateLineHeight,
   updateSinglePage,
 } from "../apis";
+import { Cfi } from "../types";
 import { updateCustomStyle } from "../utils";
 
 import { bookAtom } from "./book";
@@ -164,11 +165,6 @@ export const participantSettingsAtom = atom<{
     fontWeight,
   };
 });
-
-export interface Cfi {
-  start: string;
-  end: string;
-}
 
 export const currentCfiAtom = atom<Cfi | null>((get) => {
   const cfiStart = get(participantCfiStartAtom);

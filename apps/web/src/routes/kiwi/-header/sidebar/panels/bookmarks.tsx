@@ -6,9 +6,9 @@ import { Bookmark } from "@bookiwi/supabase/types";
 import {
   bookAtom,
   bookmarksAtom,
-  Cfi,
   removeBookmarkAtom,
 } from "#/routes/kiwi/-reader/atoms";
+import { Cfi } from "#/routes/kiwi/-reader/types";
 import { formatDate } from "#/utils/format-date";
 
 function EmptyBookmarksView() {

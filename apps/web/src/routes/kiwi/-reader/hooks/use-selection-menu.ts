@@ -10,12 +10,16 @@ import {
   selectedHighlightAtom,
   selectionAtom,
   highlightsAtom,
+  currentCfiAtom,
 } from "../atoms";
 import {
   AnchorMode,
   AnchorPosition,
   calculateAnchorOffset,
+  hasCfiPassed,
   isForwardSelection,
+  extractStartCfiFromRange,
+  buildRangeCfi,
 } from "../utils";
 
 interface TextSelection {
@@ -48,17 +52,36 @@ export const useSelectedText = (): TextSelection | null => {
   const currentView = useAtomValue(currentViewAtom);
   const highlights = useAtomValue(highlightsAtom);
   const isAnnotationPinned = useAtomValue(isAnnotationPinnedAtom);
-  if (!currentSection || !currentView) {
+  const currentCfi = useAtomValue(currentCfiAtom);
+  if (!currentSection || !currentView || !currentCfi) {
     return null;
   }
 
   if (selection) {
-    const range = selection.getRangeAt(0);
-    const text = range.toString();
-    const cfi = currentSection.cfiFromRange(range);
+    const selectedRange = selection.getRangeAt(0);
+    const selectedCfi = currentSection.cfiFromRange(selectedRange);
     const isForward = isForwardSelection(selection);
-    const existingHighlight = highlights.find((a) => a.cfi === cfi);
+    const existingHighlight = highlights.find((a) => a.cfi === selectedCfi);
     const isMine = existingHighlight?.participantId === participantId;
+
+    let cfi: string;
+    let range: Range;
+    let text: string;
+
+    if (hasCfiPassed(selectedCfi, currentCfi.end)) {
+      // 선택 영역이 현재 페이지를 벗어난 경우
+
+      // 선택 영역이 현재 페이지를 벗어난 경우, 선택 영역의 시작점부터 페이지 끝까지의 범위 CFI를 생성
+      const startCfi = extractStartCfiFromRange(selectedCfi);
+      cfi = buildRangeCfi(startCfi, currentCfi.end);
+      range = currentView.contents.range(cfi);
+      text = range.toString();
+    } else {
+      // 선택 영역이 현재 페이지 내에 있는 경우
+      cfi = selectedCfi;
+      range = selectedRange;
+      text = selectedRange.toString();
+    }
 
     const remove = () => {
       selection.removeAllRanges();
