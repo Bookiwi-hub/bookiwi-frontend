@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { useAtom, useAtomValue } from "@bookiwi/jotai";
+import { useAtomValue } from "@bookiwi/jotai";
 
 import { bookAtom, isCenterTouchedAtom, percentageAtom } from "../atoms";
 
@@ -8,18 +8,14 @@ import { Slider } from "#/components/ui/slider";
 import { throttle } from "#/utils/throttle";
 
 function ReaderPageProgress() {
-  const [isProgressBarOpen, setProgressBarOpen] = useAtom(isCenterTouchedAtom);
+  const isProgressBarOpen = useAtomValue(isCenterTouchedAtom);
 
   if (!isProgressBarOpen) return null;
 
-  return <ProgressBar setProgressBarOpen={setProgressBarOpen} />;
+  return <ProgressBar />;
 }
 
-function ProgressBar({
-  setProgressBarOpen,
-}: {
-  setProgressBarOpen: (value: boolean) => void;
-}) {
+function ProgressBar() {
   const book = useAtomValue(bookAtom);
   const storedPercentage = useAtomValue(percentageAtom);
   const [percentage, setPercentage] = useState(storedPercentage);
@@ -39,8 +35,7 @@ function ProgressBar({
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div className="size-full" onClick={() => setProgressBarOpen(true)}>
+    <div className="size-full">
       <div className="w-full space-y-2 bg-zinc-50 px-3 pt-2 transition-opacity duration-200">
         <div className="flex size-full justify-end text-sm text-black">
           <span>{`${percentage}%`}</span>
