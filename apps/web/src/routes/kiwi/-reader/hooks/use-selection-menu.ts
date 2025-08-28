@@ -18,7 +18,8 @@ import {
   calculateAnchorOffset,
   hasCfiPassed,
   isForwardSelection,
-  createCfiFromSelectionToPageEnd,
+  extractStartCfiFromRange,
+  buildRangeCfi,
 } from "../utils";
 
 interface TextSelection {
@@ -69,7 +70,10 @@ export const useSelectedText = (): TextSelection | null => {
 
     if (hasCfiPassed(selectedCfi, currentCfi.end)) {
       // 선택 영역이 현재 페이지를 벗어난 경우
-      cfi = createCfiFromSelectionToPageEnd(selectedCfi, currentCfi.end);
+
+      // 선택 영역이 현재 페이지를 벗어난 경우, 선택 영역의 시작점부터 페이지 끝까지의 범위 CFI를 생성
+      const startCfi = extractStartCfiFromRange(selectedCfi);
+      cfi = buildRangeCfi(startCfi, currentCfi.end);
       range = currentView.contents.range(cfi);
       text = range.toString();
     } else {

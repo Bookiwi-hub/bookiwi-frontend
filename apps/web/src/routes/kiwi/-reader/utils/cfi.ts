@@ -40,46 +40,70 @@ export const hasCfiPassed = (
 };
 
 /**
- * 선택한 텍스트의 시작점부터 현재 페이지 끝까지의 CFI 범위를 생성합니다.
- * @param {string} selectedCfi 선택된 텍스트의 CFI (단일 CFI 또는 범위 CFI)
- * @param {string} pageEndCfi 현재 페이지 끝의 CFI
- * @returns {string} 선택 시작점부터 페이지 끝까지의 CFI 범위
+ * 범위 CFI에서 시작점 CFI를 추출합니다.
+ * @param {string} cfi 범위 CFI 또는 단일 CFI
+ * @returns {string} 시작점 CFI
  */
-export const createCfiFromSelectionToPageEnd = (
-  selectedCfi: string,
-  pageEndCfi: string,
-): string => {
-  // 선택된 CFI가 범위 CFI인지 확인 (쉼표로 구분되는지 체크)
-  const isRangeCfi = selectedCfi.includes(",");
+export const extractStartCfiFromRange = (cfi: string): string => {
+  const isRangeCfi = cfi.includes(",");
 
-  let startCfi: string;
-
-  if (isRangeCfi) {
-    const rangeParts = selectedCfi.split(",");
-    if (rangeParts.length >= 2 && rangeParts[0] && rangeParts[1]) {
-      const basePath = rangeParts[0];
-      const startPath = rangeParts[1];
-      startCfi = basePath + startPath;
-    } else {
-      startCfi = selectedCfi;
-    }
-  } else {
-    startCfi = selectedCfi;
+  if (!isRangeCfi) {
+    return cfi;
   }
 
-  const basePart = startCfi.substring(8);
+  const rangeParts = cfi.split(",");
+  if (rangeParts.length >= 2 && rangeParts[0] && rangeParts[1]) {
+    const basePath = rangeParts[0];
+    const startPath = rangeParts[1];
+    return basePath + startPath;
+  }
+
+  return cfi;
+};
+
+/**
+ * CFI 문자열에서 경로 구성 요소들을 파싱합니다.
+ * @param {string} cfi CFI 문자열
+ * @returns {object} 파싱된 CFI 구성 요소들
+ */
+export const parseCfiComponents = (cfi: string) => {
+  const basePart = cfi.substring(8); // "epubcfi(" 제거
   const baseIndex = basePart.indexOf("!");
 
   if (baseIndex === -1) {
-    return `epubcfi(${basePart},${pageEndCfi.substring(8, pageEndCfi.length - 1)})`;
+    return {
+      hasBase: false,
+      basePart,
+      base: "",
+      path: "",
+    };
   }
 
   const base = basePart.substring(0, baseIndex + 1);
-  const startPath = basePart.substring(baseIndex + 1, basePart.length - 1);
-  const endPath = pageEndCfi.substring(
-    pageEndCfi.indexOf("!") + 1,
-    pageEndCfi.length - 1,
-  );
+  const path = basePart.substring(baseIndex + 1, basePart.length - 1);
 
-  return `epubcfi(${base},${startPath},${endPath})`;
+  return {
+    hasBase: true,
+    basePart,
+    base,
+    path,
+  };
+};
+
+/**
+ * 두 CFI를 사용해서 범위 CFI를 구성합니다.
+ * @param {string} startCfi 시작점 CFI
+ * @param {string} endCfi 끝점 CFI
+ * @returns {string} 구성된 범위 CFI
+ */
+export const buildRangeCfi = (startCfi: string, endCfi: string): string => {
+  const startComponents = parseCfiComponents(startCfi);
+
+  if (!startComponents.hasBase) {
+    return `epubcfi(${startComponents.basePart},${endCfi.substring(8, endCfi.length - 1)})`;
+  }
+
+  const endPath = endCfi.substring(endCfi.indexOf("!") + 1, endCfi.length - 1);
+
+  return `epubcfi(${startComponents.base},${startComponents.path},${endPath})`;
 };
